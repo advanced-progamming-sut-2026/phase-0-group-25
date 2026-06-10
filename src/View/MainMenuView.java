@@ -1,4 +1,4 @@
 package View;
 
-public class MainMenuView extends BaseView{
+public interface MainMenuView extends BaseView{
 }

@@ -9,4 +9,7 @@ public class MenuManager {
     public void changeMenu(){
 
     }
+    public void runMenu(){
+
+    }
 }

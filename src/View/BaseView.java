@@ -1,4 +1,5 @@
 package View;
 
-public abstract class BaseView {
+public interface BaseView {
+    void showCurrentMenu();
 }

@@ -1,4 +1,4 @@
 package View;
 
-public class LoginMenuView extends BaseView{
+public interface LoginMenuView extends BaseView{
 }
