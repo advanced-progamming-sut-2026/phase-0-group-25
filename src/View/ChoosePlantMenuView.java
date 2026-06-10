@@ -1,4 +1,7 @@
 package View;
 
-public class ChoosePlantMenuView extends BaseView{
+public interface ChoosePlantMenuView extends BaseView {
+    void showAllPlants();
+
+    void showAvailablePlants();
 }

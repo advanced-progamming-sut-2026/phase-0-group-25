@@ -1,4 +1,4 @@
 package View;
 
-public class GameMenuView extends BaseView{
+public interface GameMenuView extends BaseView{
 }

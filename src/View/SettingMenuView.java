@@ -1,4 +1,4 @@
 package View;
 
-public class SettingMenuView extends BaseView{
+public interface SettingMenuView extends BaseView{
 }

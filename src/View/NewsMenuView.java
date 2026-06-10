@@ -1,13 +1,7 @@
 package View;
 
-public class NewsMenuView extends BaseView{
-    public void update(){
+public interface NewsMenuView extends BaseView{
 
-    }
-    public void showAllNews(){
-
-    }
-    public void showCurrentNews(){
-
-    }
+     void showUnreadNew();
+     void showAllNews();
 }
