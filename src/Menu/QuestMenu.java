@@ -1,6 +1,6 @@
-package Menu;
+package src.Menu;
 
-import View.QuestMenuView;
+import src.View.ViewInterfaces.QuestMenuView;
 
 public class QuestMenu extends Menu{
     private QuestMenuView questMenuView;

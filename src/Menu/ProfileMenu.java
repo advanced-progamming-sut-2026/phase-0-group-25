@@ -1,6 +1,6 @@
-package Menu;
+package src.Menu;
 
-import View.ProfileMenuView;
+import src.View.ViewInterfaces.ProfileMenuView;
 
 public class ProfileMenu extends Menu{
     private ProfileMenuView profileMenuView;

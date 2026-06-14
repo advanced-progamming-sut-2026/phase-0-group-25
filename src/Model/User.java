@@ -1,6 +1,7 @@
-package Model;
+package src.Model;
 
-import Enums.GenderType;
+import src.Enums.GenderType;
+import src.Model.ChaptersAndLevels.Chapter;
 
 import java.util.ArrayList;
 
@@ -11,6 +12,9 @@ public class User {
     private String email;
     private GenderType genderType;
     private ArrayList<Chapter> unlockedChapters;
-    private ArrayList<Model.PlantsAndZombies.Zombie> unlockedZombies;
-    private ArrayList<Model.PlantsAndZombies.Plant> unlockedPlants;
+    private ArrayList<src.Model.PlantsAndZombies.Zombie> unlockedZombies;
+    private ArrayList<src.Model.PlantsAndZombies.Plant> unlockedPlants;
+    private int gemsCount;
+    private int coinsCount;
+
 }

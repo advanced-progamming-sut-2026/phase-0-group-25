@@ -1,6 +1,6 @@
-package Menu;
+package src.Menu;
 
-import Enums.MenuType;
+import src.Enums.MenuType;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package Model.GamePlayType;
+package src.Model.GamePlayType;
 
 public class ConveyorBeltLevel extends GamePlay {
     public void getPlants() {}

@@ -1,6 +1,6 @@
-package Menu;
+package src.Menu;
 
-import View.ShopMenuView;
+import src.View.ViewInterfaces.ShopMenuView;
 
 public class ShopMenu extends Menu{
     private ShopMenuView shopMenuView;

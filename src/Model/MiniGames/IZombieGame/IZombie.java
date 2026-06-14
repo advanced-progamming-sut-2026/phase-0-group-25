@@ -1,11 +1,11 @@
-package Model.MiniGames.IZombieGame;
+package src.Model.MiniGames.IZombieGame;
 
-import Model.PlantsAndZombies.Zombie;
-import Model.PlayGroundType.PlayGround;
+import src.Model.PlayGroundType.PlayGround;
+import src.Model.PlantsAndZombies.Zombie;
 
 import java.util.ArrayList;
 
-public class IZombie {
+public class IZombie{
     private int mySuns;
     private PlayGround playGround;
     private ArrayList<Zombie> myZombies;

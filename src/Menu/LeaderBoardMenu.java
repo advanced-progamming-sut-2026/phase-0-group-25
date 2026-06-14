@@ -1,6 +1,6 @@
-package Menu;
+package src.Menu;
 
-import View.LeaderBoardMenuView;
+import src.View.ViewInterfaces.LeaderBoardMenuView;
 
 public class LeaderBoardMenu extends Menu{
     private LeaderBoardMenuView leaderBoardMenuView;

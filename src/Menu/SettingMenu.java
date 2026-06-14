@@ -1,6 +1,6 @@
-package Menu;
+package src.Menu;
 
-import View.SettingMenuView;
+import src.View.ViewInterfaces.SettingMenuView;
 
 public class SettingMenu extends Menu{
     private SettingMenuView settingMenuView;

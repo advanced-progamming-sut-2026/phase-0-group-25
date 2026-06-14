@@ -1,12 +1,12 @@
-package Model.PlayGroundType;
-import Model.Mower;
-import Model.PlantsAndZombies.Tile;
+package src.Model.PlayGroundType;
+import src.Model.Mower;
+import src.Model.PlantsAndZombies.Tile;
 
 import java.util.ArrayList;
 
-public class PlayGround {
+public abstract class PlayGround {
     private ArrayList<Mower> mowers;
     private ArrayList<Tile> tiles;
 
-    public void makeGround() {}
+    public abstract void makeGround();
 }

@@ -1,6 +1,6 @@
-package Menu;
+package src.Menu;
 
-import View.CoinWalletMenuView;
+import src.View.ViewInterfaces.CoinWalletMenuView;
 
 public class CoinWalletMenu extends Menu{
     private CoinWalletMenuView coinWalletMenuView;

@@ -1,8 +1,12 @@
-package Model;
+package src.Model;
 
-import Model.PlantsAndZombies.Position;
+import src.Model.PlantsAndZombies.Position;
 
 public class Mower {
     private Position position;
     private boolean isUsed;
+
+    public void killZombies(){
+
+    }
 }

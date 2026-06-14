@@ -1,4 +1,4 @@
-package Model.PlantsAndZombies;
+package src.Model.PlantsAndZombies;
 
 public class Tile {
     private Plant plant;

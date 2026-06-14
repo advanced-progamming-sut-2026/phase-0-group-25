@@ -1,6 +1,6 @@
-package Model.PlantsAndZombies;
+package src.Model.PlantsAndZombies;
 
-import Enums.PlantCategory;
+import src.Enums.PlantCategory;
 
 public abstract class Plant extends Entity {
     protected String name;

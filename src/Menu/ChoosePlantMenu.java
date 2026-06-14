@@ -1,6 +1,6 @@
-package Menu;
+package src.Menu;
 
-import View.ChoosePlantMenuView;
+import src.View.ViewInterfaces.ChoosePlantMenuView;
 
 public class ChoosePlantMenu extends Menu{
     private ChoosePlantMenuView choosePlantMenuView;

@@ -1,9 +1,9 @@
-package Model.MiniGames.VasebreakerGame;
+package src.Model.MiniGames.VasebreakerGame;
 
 
 
 public abstract class Jar {
-    private  Model.PlantsAndZombies.Position position;
-    private static Model.PlantsAndZombies.Entity content;
+    private  src.Model.PlantsAndZombies.Position position;
+    private static src.Model.PlantsAndZombies.Entity content;
     private static boolean isBroken;
 }

@@ -1,6 +1,6 @@
-package Menu;
+package src.Menu;
 
-import View.GameMenuView;
+import src.View.ViewInterfaces.GameMenuView;
 
 public class GameMenu extends Menu{
     private GameMenuView gameMenuView;

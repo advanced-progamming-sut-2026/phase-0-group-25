@@ -1,6 +1,6 @@
-package Menu;
+package src.Menu;
 
-import View.GemWalletMenuView;
+import src.View.ViewInterfaces.GemWalletMenuView;
 
 public class GemWalletMenu extends Menu{
 

@@ -1,15 +1,23 @@
-package Model.GamePlayType;
+package src.Model.GamePlayType;
 
-import Model.PlayGroundType.PlayGround;
+import src.Model.PlayGroundType.PlayGround;
 
 public abstract class GamePlay {
     private int numOfPlantFood;
     private int mySuns;
     private PlayGround playGround;
+    private boolean isPaused;
+    private int waveCount;
+    public void addWave(){
+
+    }
 
     public abstract void update();
 
     public void finishGame() {
+    }
+    public void Pause(){
+
     }
 
     public void advanceTime() {
@@ -19,6 +27,10 @@ public abstract class GamePlay {
     }
 
     public void planting() {
+    }
+
+    public void spawnZombies(){
+
     }
 
     public void plucking() {
@@ -35,6 +47,8 @@ public abstract class GamePlay {
 
     public void feedPlant() {
     }
+
+
 
 
 

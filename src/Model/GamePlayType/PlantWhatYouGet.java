@@ -1,4 +1,4 @@
-package Model.GamePlayType;
+package src.Model.GamePlayType;
 
 public class PlantWhatYouGet extends GamePlay {
     @Override

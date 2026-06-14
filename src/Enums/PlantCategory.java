@@ -1,4 +1,4 @@
-package Enums;
+package src.Enums;
 
 public enum PlantCategory {
     SUN_PRODUCER,
@@ -10,6 +10,7 @@ public enum PlantCategory {
     MODIFIER,
     STRIKE_THROUGH,
     HOMING,
-    MINT;
+    MINT,
+    MARIGOLD;
 
 }

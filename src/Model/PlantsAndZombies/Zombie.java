@@ -1,6 +1,8 @@
-package Model.PlantsAndZombies;
+package src.Model.PlantsAndZombies;
 
-import java.util.ArrayList;
+import src.Model.PlantsAndZombies.Abilities.Ability;
+
+import java.util.*;
 
 public class Zombie extends Entity {
     private String name;

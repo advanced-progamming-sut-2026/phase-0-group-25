@@ -1,6 +1,6 @@
-package Menu;
+package src.Menu;
 
-import View.SignUpMenuView;
+import src.View.ViewInterfaces.SignUpMenuView;
 
 public class SignUpMenu extends Menu{
     private SignUpMenuView signUpMenuView;

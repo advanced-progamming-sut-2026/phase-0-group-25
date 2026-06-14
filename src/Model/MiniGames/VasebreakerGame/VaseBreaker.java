@@ -1,6 +1,6 @@
-package Model.MiniGames.VasebreakerGame;
+package src.Model.MiniGames.VasebreakerGame;
 
-import Model.GamePlayType.GamePlay;
+import src.Model.GamePlayType.GamePlay;
 
 public class VaseBreaker extends GamePlay {
 

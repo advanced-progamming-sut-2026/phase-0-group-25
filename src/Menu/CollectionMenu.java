@@ -1,6 +1,6 @@
-package Menu;
+package src.Menu;
 
-import View.CollectionMenuView;
+import src.View.ViewInterfaces.CollectionMenuView;
 
 public class CollectionMenu extends Menu{
     private CollectionMenuView collectionMenuView;

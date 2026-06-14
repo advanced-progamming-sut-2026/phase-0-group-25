@@ -1,11 +1,11 @@
-package Model.Greenhouse;
+package src.Model.Greenhouse;
 
-import Model.PlantsAndZombies.Plant;
+import src.Model.PlantsAndZombies.Plant;
 
 public class GreenhousePlant extends Plant {
     private double timeToHarvest;
-    protected int currentSeedPacket;
-    protected int levelSeedPacket;
+    private int currentSeedPacket;
+    private int levelSeedPacket;
 
 
     @Override

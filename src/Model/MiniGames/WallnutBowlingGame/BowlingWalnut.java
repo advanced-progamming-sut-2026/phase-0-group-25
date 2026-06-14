@@ -1,4 +1,4 @@
-package Model.MiniGames.WallnutBowlingGame;
+package src.Model.MiniGames.WallnutBowlingGame;
 
 public class BowlingWalnut extends Walnut {
     @Override

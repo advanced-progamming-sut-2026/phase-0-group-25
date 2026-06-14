@@ -1,8 +1,9 @@
-package Model.PlantsAndZombies;
+package src.Model.PlantsAndZombies;
 
-import Enums.Tag;
+import src.Enums.Tag;
+import src.Model.PlantsAndZombies.Abilities.Ability;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class BattlePlant extends Plant {
     private ArrayList<Tag> tags;

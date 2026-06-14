@@ -1,7 +1,7 @@
-package Menu;
+package src.Menu;
 
-import Model.Greenhouse.Greenhouse;
-import View.GreenHouseMenuView;
+import src.Model.Greenhouse.Greenhouse;
+import src.View.ViewInterfaces.GreenHouseMenuView;
 
 public class GreenHouseMenu extends Menu{
     private GreenHouseMenuView greenHouseMenuView;
