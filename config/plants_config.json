@@ -1,0 +1,484 @@
+{
+  "SUNFLOWER": [
+    { "baseHP": 300, "cost": 50, "actionInterval": 24, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "TWIN_SUNFLOWER": [
+    { "baseHP": 300, "cost": 125, "actionInterval": 24, "rechargeTime": 15, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "SUN_SHROOM": [
+    { "baseHP": 300, "cost": 25, "actionInterval": 24, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "PRIMAL_SUNFLOWER": [
+    { "baseHP": 300, "cost": 75, "actionInterval": 24, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "GOLD_BLOOM": [
+    { "baseHP": 300, "cost": 0, "actionInterval": 0, "rechargeTime": 75, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "PEASHOOTER": [
+    { "baseHP": 300, "cost": 100, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "REPEATER": [
+    { "baseHP": 300, "cost": 200, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "THREEPEATER": [
+    { "baseHP": 300, "cost": 300, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "SNOW_PEA": [
+    { "baseHP": 300, "cost": 150, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "ROTOBAGA": [
+    { "baseHP": 300, "cost": 150, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "PEA_POD": [
+    { "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "SPLIT_PEA": [
+    { "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "CITRON": [
+    { "baseHP": 300, "cost": 350, "actionInterval": 9, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "CAULIPOWER": [
+    { "baseHP": 300, "cost": 250, "actionInterval": 12, "rechargeTime": 15, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "ELECTRIC_BLUEBERRY": [
+    { "baseHP": 300, "cost": 150, "actionInterval": 12, "rechargeTime": 15, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "BOWLING_BULB": [
+    { "baseHP": 300, "cost": 200, "actionInterval": 2, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "CACTUS": [
+    { "baseHP": 300, "cost": 175, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "FIRE_PEASHOOTER": [
+    { "baseHP": 300, "cost": 175, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "STARFRUIT": [
+    { "baseHP": 300, "cost": 150, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "GOO_PEASHOOTER": [
+    { "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "MEGA_GATLING_PEA": [
+    { "baseHP": 300, "cost": 400, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "SEA_SHROOM": [
+    { "baseHP": 300, "cost": 0, "actionInterval": 1.5, "rechargeTime": 15, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "PUFF_SHROOM": [
+    { "baseHP": 300, "cost": 0, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "FUME_SHROOM": [
+    { "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "CABBAGE_PULT": [
+    { "baseHP": 300, "cost": 100, "actionInterval": 2.9, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "KERNEL_PULT": [
+    { "baseHP": 300, "cost": 100, "actionInterval": 2.9, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "MELON_PULT": [
+    { "baseHP": 300, "cost": 325, "actionInterval": 2.9, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "WINTER_MELON": [
+    { "baseHP": 300, "cost": 500, "actionInterval": 2.9, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "PEPPER_PULT": [
+    { "baseHP": 300, "cost": 200, "actionInterval": 2.9, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "POTATO_MINE": [
+    { "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 25, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "PRIMAL_POTATO_MINE": [
+    { "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "CHERRY_BOMB": [
+    { "baseHP": 0, "cost": 150, "actionInterval": 0, "rechargeTime": 35, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "SQUASH": [
+    { "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 20, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "GRAPESHOT": [
+    { "baseHP": 0, "cost": 150, "actionInterval": 0, "rechargeTime": 35, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "JALAPENO": [
+    { "baseHP": 0, "cost": 125, "actionInterval": 0, "rechargeTime": 35, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "DOOM_SHROOM": [
+    { "baseHP": 0, "cost": 125, "actionInterval": 0, "rechargeTime": 15, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "TANGLE_KELP": [
+    { "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 15, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "ICEBERG_LETTUCE": [
+    { "baseHP": 300, "cost": 0, "actionInterval": 0, "rechargeTime": 20, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "BONK_CHOY": [
+    { "baseHP": 300, "cost": 150, "actionInterval": 0.25, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "PHAT_BEET": [
+    { "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "CHOMPER": [
+    { "baseHP": 300, "cost": 150, "actionInterval": 40, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "WASABI_WHIP": [
+    { "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "KIWIBEAST": [
+    { "baseHP": 300, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "WALL_NUT": [
+    { "baseHP": 4000, "cost": 50, "actionInterval": 0, "rechargeTime": 20, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "TALL_NUT": [
+    { "baseHP": 8000, "cost": 125, "actionInterval": 0, "rechargeTime": 20, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "ENDURIAN": [
+    { "baseHP": 3000, "cost": 100, "actionInterval": 0, "rechargeTime": 15, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "GARLIC": [
+    { "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 20, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "SWEET_POTATO": [
+    { "baseHP": 3000, "cost": 150, "actionInterval": 0, "rechargeTime": 20, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "EXPLODE_O_NUT": [
+    { "baseHP": 4000, "cost": 50, "actionInterval": 0, "rechargeTime": 20, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "PUMPKIN": [
+    { "baseHP": 4000, "cost": 150, "actionInterval": 0, "rechargeTime": 20, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "SUN_BEAN": [
+    { "baseHP": 1000, "cost": 50, "actionInterval": 0, "rechargeTime": 20, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "TORCHWOOD": [
+    { "baseHP": 300, "cost": 175, "actionInterval": 0, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "MAGNET_SHROOM": [
+    { "baseHP": 300, "cost": 100, "actionInterval": 10, "rechargeTime": 15, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "HYPNO_SHROOM": [
+    { "baseHP": 300, "cost": 125, "actionInterval": 0, "rechargeTime": 20, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "CAT_TAIL": [
+    { "baseHP": 300, "cost": 175, "actionInterval": 1.5, "rechargeTime": 20, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "IMITATER": [
+    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 0, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "ICE_SHROOM": [
+    { "baseHP": 0, "cost": 75, "actionInterval": 0, "rechargeTime": 50, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "LILY_PAD": [
+    { "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "HOT_POTATO": [
+    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "GRAVE_BUSTER": [
+    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 10, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "ENLIGHTEN_MINT": [
+    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 85, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "APPEASE_MINT": [
+    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 85, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "ARMA_MINT": [
+    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 85, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "BOMBARD_MINT": [
+    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 85, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "ENFORCE_MINT": [
+    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 85, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "REINFORCE_MINT": [
+    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 85, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "ENCHANT_MINT": [
+    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 85, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "PIERCE_MINT": [
+    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 85, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ],
+
+  "CATTAIL_MINT": [
+    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 85, "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+  ]
+}
