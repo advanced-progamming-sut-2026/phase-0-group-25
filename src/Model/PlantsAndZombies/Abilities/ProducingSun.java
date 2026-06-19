@@ -1,9 +1,9 @@
 package src.Model.PlantsAndZombies.Abilities;
 
-import src.Model.Sun.Sun;
+import src.Model.PlantsAndZombies.BattlePlant;
 
 public class ProducingSun implements Ability {
-    private Sun sun;
+    private BattlePlant plant;
 
     @Override
     public void executeAbility() {

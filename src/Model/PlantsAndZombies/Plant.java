@@ -5,7 +5,6 @@ import src.Enums.PlantCategory;
 public abstract class Plant extends Entity {
     protected String name;
     protected PlantCategory category;
-    protected int level;
     private boolean hasBoost;
 
 
