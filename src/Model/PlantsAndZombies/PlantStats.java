@@ -25,6 +25,10 @@ public class PlantStats {
         return cost;
     }
 
+    public int getBaseHP() {
+        return baseHP;
+    }
+
     public Map<String, Integer> getAttributes() {
         return attributes;
     }
