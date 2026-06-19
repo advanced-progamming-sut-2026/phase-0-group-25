@@ -9,4 +9,12 @@ public class BattlePlant extends Plant {
     public void update() {
 
     }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public PlantStats getPlantStats() {
+        return plantStats;
+    }
 }

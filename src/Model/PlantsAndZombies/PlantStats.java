@@ -22,7 +22,11 @@ public class PlantStats {
     }
 
     public int getCost() {
-        return this.cost;
+        return cost;
+    }
+
+    public Map<String, Integer> getAttributes() {
+        return attributes;
     }
 
     public void upgradePlant() {
