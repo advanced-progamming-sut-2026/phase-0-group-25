@@ -8,10 +8,6 @@ public abstract class Plant extends Entity {
     protected int level;
     private boolean hasBoost;
 
-
-
-
     public abstract void update();
-
 
 }

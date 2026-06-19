@@ -7,8 +7,8 @@ public class Sun {
     private Position position;
     private double timeToReach;
 
-
-
-
+    public int getNumberOfSun() {
+        return numberOfSun;
+    }
 }
 
