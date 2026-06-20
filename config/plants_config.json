@@ -35,10 +35,10 @@
   ],
 
   "PEASHOOTER": [
-    { "baseHP": 300, "cost": 100, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 100, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  20} },
+    { "baseHP": 300, "cost": 100, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  30} },
+    { "baseHP": 450, "cost": 100, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  30} },
+    { "baseHP": 450, "cost": 75, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  30} }
   ],
 
   "REPEATER": [
