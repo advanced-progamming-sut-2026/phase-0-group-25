@@ -1,37 +1,37 @@
 {
   "SUNFLOWER": [
-    { "baseHP": 300, "cost": 50, "actionInterval": 24, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 50, "actionInterval": 24, "rechargeTime": 5, "abilities": [], "tags": ["day"], "attributes": {"sun_quantity": 50} },
+    { "baseHP": 300, "cost": 50, "actionInterval": 22, "rechargeTime": 5, "abilities": [], "tags": ["day"], "attributes": {"sun_quantity": 50} },
+    { "baseHP": 450, "cost": 50, "actionInterval": 22, "rechargeTime": 5, "abilities": [], "tags": ["day"], "attributes": {"sun_quantity": 50} },
+    { "baseHP": 450, "cost": 50, "actionInterval": 22, "rechargeTime": 5, "abilities": [], "tags": ["day"], "attributes": {"sun_quantity": 100} }
   ],
 
   "TWIN_SUNFLOWER": [
-    { "baseHP": 300, "cost": 125, "actionInterval": 24, "rechargeTime": 15, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 125, "actionInterval": 24, "rechargeTime": 15, "abilities": [], "tags": ["day"], "attributes": {"sun_quantity": 100} },
+    { "baseHP": 300, "cost": 125, "actionInterval": 22, "rechargeTime": 15, "abilities": [], "tags": ["day"], "attributes": {"sun_quantity": 100} },
+    { "baseHP": 450, "cost": 125, "actionInterval": 22, "rechargeTime": 15, "abilities": [], "tags": ["day"], "attributes": {"sun_quantity": 100} },
+    { "baseHP": 450, "cost": 100, "actionInterval": 22, "rechargeTime": 15, "abilities": [], "tags": ["day"], "attributes": {"sun_quantity": 100} }
   ],
 
   "SUN_SHROOM": [
-    { "baseHP": 300, "cost": 25, "actionInterval": 24, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 25, "actionInterval": 24, "rechargeTime": 5, "abilities": [], "tags": ["shroom", "wramp-up", "night"], "attributes": {"growth_time": [24, 72], "sun_quantity": [25, 50, 75]} },
+    { "baseHP": 300, "cost": 25, "actionInterval": 24, "rechargeTime": 5, "abilities": [], "tags": ["shroom", "wramp-up", "night"], "attributes": {"growth_time": [19, 62], "sun_quantity": [25, 50, 75]} },
+    { "baseHP": 450, "cost": 25, "actionInterval": 24, "rechargeTime": 5, "abilities": [], "tags": ["shroom", "wramp-up", "night"], "attributes": {"growth_time": [19, 62], "sun_quantity": [25, 50, 75]} },
+    { "baseHP": 450, "cost": 25, "actionInterval": 24, "rechargeTime": 5, "abilities": [], "tags": ["shroom", "wramp-up", "night"], "attributes": {"growth_time": [19, 62], "sun_quantity": [50, 100, 150]} }
   ],
 
   "PRIMAL_SUNFLOWER": [
-    { "baseHP": 300, "cost": 75, "actionInterval": 24, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 75, "actionInterval": 24, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {"sun_quantity": 75} },
+    { "baseHP": 300, "cost": 75, "actionInterval": 22, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {"sun_quantity": 75} },
+    { "baseHP": 450, "cost": 75, "actionInterval": 22, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {"sun_quantity": 75} },
+    { "baseHP": 450, "cost": 50, "actionInterval": 22, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {"sun_quantity": 75} }
   ],
 
   "GOLD_BLOOM": [
-    { "baseHP": 300, "cost": 0, "actionInterval": 0, "rechargeTime": 75, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 75, "abilities": [], "tags": [], "attributes": {"sun_quantity": 375} },
+    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 70, "abilities": [], "tags": [], "attributes": {"sun_quantity": 375} },
+    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 70, "abilities": [], "tags": [], "attributes": {"sun_quantity": 425} },
+    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 70, "abilities": [], "tags": [], "attributes": {"sun_quantity": 425} }
   ],
 
   "PEASHOOTER": [
