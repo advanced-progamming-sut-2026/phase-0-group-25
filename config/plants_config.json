@@ -28,66 +28,66 @@
   ],
 
   "GOLD_BLOOM": [
-    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 75, "abilities": [], "tags": [], "attributes": {"sun_quantity": 375} },
-    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 70, "abilities": [], "tags": [], "attributes": {"sun_quantity": 375} },
-    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 70, "abilities": [], "tags": [], "attributes": {"sun_quantity": 425} },
-    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 70, "abilities": [], "tags": [], "attributes": {"sun_quantity": 425} }
+    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 75, "abilities": [], "tags": [], "attributes": {"sun_quantity": 375, "life_span": 0} },
+    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 70, "abilities": [], "tags": [], "attributes": {"sun_quantity": 375, "life_span": 0} },
+    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 70, "abilities": [], "tags": [], "attributes": {"sun_quantity": 425, "life_span": 0} },
+    { "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 70, "abilities": [], "tags": [], "attributes": {"sun_quantity": 425, "life_span": 0} }
   ],
 
   "PEASHOOTER": [
-    { "baseHP": 300, "cost": 100, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  20} },
-    { "baseHP": 300, "cost": 100, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  30} },
-    { "baseHP": 450, "cost": 100, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  30} },
-    { "baseHP": 450, "cost": 75, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  30} }
+    { "baseHP": 300, "cost": 100, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  [20], "direction":  [[0, 1, 0]]} },
+    { "baseHP": 300, "cost": 100, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  [30], "direction":  [[0, 1, 0]]} },
+    { "baseHP": 450, "cost": 100, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  [30], "direction":  [[0, 1, 0]]} },
+    { "baseHP": 450, "cost": 75, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  [30], "direction":  [[0, 1, 0]]} }
   ],
 
   "REPEATER": [
-    { "baseHP": 300, "cost": 200, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 200, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  [20, 20], "direction":  [[0, 1, 0], [0, 1, 0]]} },
+    { "baseHP": 300, "cost": 200, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  [30, 30], "direction":  [[0, 1, 0], [0, 1, 0]]} },
+    { "baseHP": 500, "cost": 200, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  [30, 30], "direction":  [[0, 1, 0], [0, 1, 0]]} },
+    { "baseHP": 500, "cost": 175, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  [30, 30], "direction":  [[0, 1, 0], [0, 1, 0]]} }
   ],
 
   "THREEPEATER": [
-    { "baseHP": 300, "cost": 300, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 300, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  [20, 20, 20], "direction":  [[-1, 1, 0], [0, 1, 0], [1, 1, 0]]} },
+    { "baseHP": 300, "cost": 275, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  [20, 20, 20], "direction":  [[-1, 1, 0], [0, 1, 0], [1, 1, 0]]} },
+    { "baseHP": 300, "cost": 275, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  [30, 30, 30], "direction":  [[-1, 1, 0], [0, 1, 0], [1, 1, 0]]} },
+    { "baseHP": 500, "cost": 275, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  [30, 30, 30], "direction":  [[-1, 1, 0], [0, 1, 0], [1, 1, 0]]} }
   ],
 
   "SNOW_PEA": [
-    { "baseHP": 300, "cost": 150, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 150, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["ice", "pea"], "attributes": {"damage":  [20], "direction":  [[0, 1, 0]]} },
+    { "baseHP": 300, "cost": 150, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["ice", "pea"], "attributes": {"damage":  [30], "direction":  [[0, 1, 0]]} },
+    { "baseHP": 300, "cost": 150, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["ice", "pea"], "attributes": {"damage":  [30], "direction":  [[0, 1, 0]]} },
+    { "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["ice", "pea"], "attributes": {"damage":  [30], "direction":  [[0, 1, 0]]} }
   ],
 
   "ROTOBAGA": [
-    { "baseHP": 300, "cost": 150, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 150, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {"damage":  [10, 10, 10, 10], "direction":  [[0, 1, 1], [0, 1, -1], [0, -1, 1], [0, -1, -1]]} },
+    { "baseHP": 300, "cost": 150, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {"damage":  [20, 20, 20, 20], "direction":  [[0, 1, 1], [0, 1, -1], [0, -1, 1], [0, -1, -1]]} },
+    { "baseHP": 450, "cost": 150, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {"damage":  [20, 20, 20, 20], "direction":  [[0, 1, 1], [0, 1, -1], [0, -1, 1], [0, -1, -1]]} },
+    { "baseHP": 450, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {"damage":  [20, 20, 20, 20], "direction":  [[0, 1, 1], [0, 1, -1], [0, -1, 1], [0, -1, -1]]} }
   ],
 
   "PEA_POD": [
-    { "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {"damage":  [20, 20, 20], "direction":  [[0, 1, 0], [0, -1, 0], [0, -1, 0]]} },
+    { "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {"damage":  [20, 20, 20], "direction":  [[0, 1, 0], [0, -1, 0], [0, -1, 0]]} },
+    { "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {"damage":  [20, 20, 20], "direction":  [[0, 1, 0], [0, -1, 0], [0, -1, 0]]} },
+    { "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {"damage":  [20, 20, 20], "direction":  [[0, 1, 0], [0, -1, 0], [0, -1, 0]]} }
   ],
 
   "SPLIT_PEA": [
-    { "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  [20, 20, 20], "direction":  [[0, 1, 0], [0, -1, 0], [0, -1, 0]]} },
+    { "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  [30, 30, 30], "direction":  [[0, 1, 0], [0, -1, 0], [0, -1, 0]]} },
+    { "baseHP": 500, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  [30, 30, 30], "direction":  [[0, 1, 0], [0, -1, 0], [0, -1, 0]]} },
+    { "baseHP": 500, "cost": 100, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  [30, 30, 30], "direction":  [[0, 1, 0], [0, -1, 0], [0, -1, 0]]} }
   ],
 
   "CITRON": [
-    { "baseHP": 300, "cost": 350, "actionInterval": 9, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 350, "actionInterval": 9, "rechargeTime": 5, "abilities": [], "tags": ["charge"], "attributes": {"damage":  [800], "direction":  [[0, 1, 0]]} },
+    { "baseHP": 300, "cost": 350, "actionInterval": 8, "rechargeTime": 5, "abilities": [], "tags": ["charge"], "attributes": {"damage":  [800], "direction":  [[0, 1, 0]]} },
+    { "baseHP": 300, "cost": 350, "actionInterval": 8, "rechargeTime": 5, "abilities": [], "tags": ["charge"], "attributes": {"damage":  [950], "direction":  [[0, 1, 0]]} },
+    { "baseHP": 300, "cost": 300, "actionInterval": 8, "rechargeTime": 5, "abilities": [], "tags": ["charge"], "attributes": {"damage":  [950], "direction":  [[0, 1, 0]]} }
   ],
 
   "CAULIPOWER": [
@@ -105,10 +105,10 @@
   ],
 
   "BOWLING_BULB": [
-    { "baseHP": 300, "cost": 200, "actionInterval": 2, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 200, "actionInterval": 2, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {, "direction":  []} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {, "direction":  []} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {, "direction":  []} },
+    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {, "direction":  []} }
   ],
 
   "CACTUS": [
@@ -119,45 +119,45 @@
   ],
 
   "FIRE_PEASHOOTER": [
-    { "baseHP": 300, "cost": 175, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 175, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["fire", "pea"], "attributes": {"damage":  [40], "direction":  [[0, 1, 0]]} },
+    { "baseHP": 300, "cost": 175, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["fire", "pea"], "attributes": {"damage":  [50], "direction":  [[0, 1, 0]]} },
+    { "baseHP": 500, "cost": 175, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["fire", "pea"], "attributes": {"damage":  [50], "direction":  [[0, 1, 0]]} },
+    { "baseHP": 500, "cost": 150, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["fire", "pea"], "attributes": {"damage":  [50], "direction":  [[0, 1, 0]]} }
   ],
 
   "STARFRUIT": [
-    { "baseHP": 300, "cost": 150, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 150, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes":  {"damage":  [20, 20, 20, 20, 20], "direction":  [[0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 1, -1], [0, -1, -1]]} },
+    { "baseHP": 300, "cost": 150, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes":  {"damage":  [20, 20, 20, 20, 20], "direction":  [[0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 1, -1], [0, -1, -1]]} },
+    { "baseHP": 300, "cost": 150, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes":  {"damage":  [30, 30, 30, 30, 30], "direction":  [[0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 1, -1], [0, -1, -1]]} },
+    { "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes":  {"damage":  [30, 30, 30, 30, 30], "direction":  [[0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 1, -1], [0, -1, -1]]} }
   ],
 
   "GOO_PEASHOOTER": [
-    { "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["poison"], "attributes": {"damage": [50], "direction": [[0, 1, 0]]} },
+    { "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["poison"], "attributes": {"damage": [50], "direction": [[0, 1, 0]]} },
+    { "baseHP": 450, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["poison"], "attributes": {"damage": [50], "direction": [[0, 1, 0]]} },
+    { "baseHP": 450, "cost": 100, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["poison"], "attributes": {"damage": [50], "direction": [[0, 1, 0]]} }
   ],
 
   "MEGA_GATLING_PEA": [
-    { "baseHP": 300, "cost": 400, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 400, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  [20, 20, 20, 20], "direction":  [[0, 1.5, 0], [0, 1.5, 0], [0, 1.5, ], [0, 1.5, 0]]} },
+    { "baseHP": 300, "cost": 400, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  [30, 30, 30, 30], "direction":  [[0, 1.5, 0], [0, 1.5, 0], [0, 1.5, ], [0, 1.5, 0]]} },
+    { "baseHP": 300, "cost": 400, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  [30, 30, 30, 30], "direction":  [[0, 1.5, 0], [0, 1.5, 0], [0, 1.5, ], [0, 1.5, 0]]} },
+    { "baseHP": 300, "cost": 350, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["pea"], "attributes": {"damage":  [30, 30, 30, 30], "direction":  [[0, 1.5, 0], [0, 1.5, 0], [0, 1.5, ], [0, 1.5, 0]]} }
   ],
 
   "SEA_SHROOM": [
-    { "baseHP": 300, "cost": 0, "actionInterval": 1.5, "rechargeTime": 15, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 0, "actionInterval": 1.5, "rechargeTime": 15, "abilities": [], "tags": ["shroom", "water", "short-range"], "attributes": {"damage": [20], "direction": [[0, 1, 0]], "life_span": 60, "range": 2} },
+    { "baseHP": 300, "cost": 0, "actionInterval": 1.5, "rechargeTime": 15, "abilities": [], "tags": ["shroom", "water", "short-range"], "attributes": {"damage": [20], "direction": [[0, 1, 0]], "life_span": 60, "range": 3} },
+    { "baseHP": 300, "cost": 0, "actionInterval": 1.5, "rechargeTime": 15, "abilities": [], "tags": ["shroom", "water", "short-range"], "attributes": {"damage": [25], "direction": [[0, 1, 0]], "life_span": 60, "range": 3} },
+    { "baseHP": 300, "cost": 0, "actionInterval": 1.5, "rechargeTime": 15, "abilities": [], "tags": ["shroom", "water", "short-range"], "attributes": {"damage": [25], "direction": [[0, 1, 0]], "life_span": 70, "range": 3} }
   ],
 
   "PUFF_SHROOM": [
-    { "baseHP": 300, "cost": 0, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 0, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["shroom", "short-range"], "attributes": {"damage": [20], "direction": [[0, 1, 0]], "life_span": 60, "range": 2} },
+    { "baseHP": 300, "cost": 0, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["shroom", "short-range"], "attributes": {"damage": [20], "direction": [[0, 1, 0]], "life_span": 70, "range": 2} },
+    { "baseHP": 300, "cost": 0, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["shroom", "short-range"], "attributes": {"damage": [30], "direction": [[0, 1, 0]], "life_span": 70, "range": 2} },
+    { "baseHP": 300, "cost": 0, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["shroom", "short-range"], "attributes": {"damage": [30], "direction": [[0, 1, 0]], "life_span": 70, "range": 3} }
   ],
 
   "FUME_SHROOM": [
