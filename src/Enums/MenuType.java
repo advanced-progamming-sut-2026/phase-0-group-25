@@ -1,21 +1,31 @@
 package src.Enums;
 
 public enum MenuType {
-    Login,
-    Signup,
-    Game,
-    ChoosePlant,
-    CoinWallet,
-    Collection,
-    GamePlay,
-    GemWallet,
-    GreenHouse,
-    LeaderBoard,
-    Main,
-    News,
-    Profile,
-    Quest,
-    Setting,
-    Shop,
-    Network;
+    Login("login"),
+    Signup("signup"),
+    Game("game"),
+    ChoosePlant("choose plant"),
+    CoinWallet("coin wallet"),
+    Collection("collection"),
+    GamePlay("game play"),
+    GemWallet("gem wallet"),
+    GreenHouse("greenhouse"),
+    LeaderBoard("leader board"),
+    Main("main"),
+    News("news"),
+    Profile("profile"),
+    Quest("quest"),
+    Setting("settings"),
+    Shop("shop"),
+    Network("network"),
+    TravelLog("travel log");
+
+    private final String string;
+    MenuType(String string) {
+        this.string = string;
+    }
+
+    public String getString() {
+        return string;
+    }
 }

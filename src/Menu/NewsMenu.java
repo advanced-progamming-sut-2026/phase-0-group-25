@@ -5,4 +5,7 @@ import src.View.ViewInterfaces.NewsMenuView;
 public class NewsMenu extends Menu{
     private NewsMenuView newsMenuView;
 
+    public NewsMenu(NewsMenuView newsMenuView) {
+        this.newsMenuView = newsMenuView;
+    }
 }

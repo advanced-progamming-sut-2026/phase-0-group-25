@@ -1,10 +1,12 @@
 package src.Enums;
 
-public enum Commands {
-    changeMenu("menu enter (.+?)");
+public enum Command {
+    changeMenu("menu enter (.+?)"),
+    ShowMenu("menu show current"),
+    Exit("menu exit");
 
     private final String regex;
-    Commands(String regex) {
+    Command(String regex) {
         this.regex = regex;
     }
 

@@ -7,6 +7,9 @@ public class GreenHouseMenu extends Menu{
     private GreenHouseMenuView greenHouseMenuView;
     private Greenhouse greenhouse;
 
+    public GreenHouseMenu(GreenHouseMenuView greenHouseMenuView) {
+        this.greenHouseMenuView = greenHouseMenuView;
+    }
 
     public void updateGreenhouse() {
 
