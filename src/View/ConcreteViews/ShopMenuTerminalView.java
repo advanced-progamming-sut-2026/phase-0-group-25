@@ -4,7 +4,7 @@ import src.View.ViewInterfaces.ShopMenuView;
 
 import java.util.Scanner;
 
-public class ShopMenuTerminalView implements ShopMenuView {
+public class ShopMenuTerminalView extends AbstractTerminalView implements ShopMenuView {
 
     @Override
     public void showShopList() {

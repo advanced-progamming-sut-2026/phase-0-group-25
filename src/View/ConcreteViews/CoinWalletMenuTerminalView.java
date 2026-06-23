@@ -4,7 +4,7 @@ import src.View.ViewInterfaces.CoinWalletMenuView;
 
 import java.util.Scanner;
 
-public class CoinWalletMenuTerminalView implements CoinWalletMenuView {
+public class CoinWalletMenuTerminalView extends AbstractTerminalView implements CoinWalletMenuView {
 
     @Override
     public void showCurrentMenu() {

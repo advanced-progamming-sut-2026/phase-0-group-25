@@ -4,7 +4,7 @@ import src.View.ViewInterfaces.LoginMenuView;
 
 import java.util.Scanner;
 
-public class LoginMenuTerminalView implements LoginMenuView {
+public class LoginMenuTerminalView extends AbstractTerminalView implements LoginMenuView {
 
     @Override
     public void showCurrentMenu() {

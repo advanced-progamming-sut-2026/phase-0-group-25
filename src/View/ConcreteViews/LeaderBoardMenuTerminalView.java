@@ -4,7 +4,7 @@ import src.View.ViewInterfaces.LeaderBoardMenuView;
 
 import java.util.Scanner;
 
-public class LeaderBoardMenuTerminalView implements LeaderBoardMenuView {
+public class LeaderBoardMenuTerminalView extends AbstractTerminalView implements LeaderBoardMenuView {
 
     @Override
     public void showCurrentMenu() {

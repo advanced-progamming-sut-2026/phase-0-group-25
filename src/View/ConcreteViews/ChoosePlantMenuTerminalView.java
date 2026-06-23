@@ -4,7 +4,7 @@ import src.View.ViewInterfaces.ChoosePlantMenuView;
 
 import java.util.Scanner;
 
-public class ChoosePlantMenuTerminalView  implements ChoosePlantMenuView {
+public class ChoosePlantMenuTerminalView extends AbstractTerminalView implements ChoosePlantMenuView{
 
     @Override
     public void showAllPlants() {

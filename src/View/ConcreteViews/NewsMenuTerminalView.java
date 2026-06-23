@@ -4,7 +4,7 @@ import src.View.ViewInterfaces.NewsMenuView;
 
 import java.util.Scanner;
 
-public class NewsMenuTerminalView implements NewsMenuView {
+public class NewsMenuTerminalView extends AbstractTerminalView implements NewsMenuView {
 
     @Override
     public void showUnreadNew() {

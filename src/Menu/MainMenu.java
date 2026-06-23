@@ -1,13 +1,14 @@
 package src.Menu;
 
 import src.Enums.MenuType;
+import src.View.ViewInterfaces.BaseView;
 import src.View.ViewInterfaces.MainMenuView;
 
 public class MainMenu extends Menu{
     private final MainMenuView mainMenuView;
 
     public MainMenu(MainMenuView mainMenuView) {
-        super(null);
+        super(MenuType.Signup);
         this.mainMenuView = mainMenuView;
         addChangeableMenuType(MenuType.Game);
         addChangeableMenuType(MenuType.Setting);
@@ -16,14 +17,21 @@ public class MainMenu extends Menu{
         addChangeableMenuType(MenuType.Profile);
     }
 
-    @Override
-    public void exit() {
-        MenuManager.getInstance().setMustExit();
-    }
+
 
     @Override
     public void processCommand(String input) {
 
+    }
+
+    @Override
+    public void handleSpecificCommands(String input) {
+
+    }
+
+    @Override
+    public BaseView getView() {
+        return mainMenuView;
     }
 
     public void logOut(){

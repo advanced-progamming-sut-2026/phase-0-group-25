@@ -4,7 +4,7 @@ import src.View.ViewInterfaces.GameMenuView;
 
 import java.util.Scanner;
 
-public class GameMenuTerminalView  implements GameMenuView {
+public class GameMenuTerminalView extends AbstractTerminalView implements GameMenuView {
 
     @Override
     public void showCurrentMenu() {

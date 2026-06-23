@@ -4,7 +4,7 @@ import src.View.ViewInterfaces.QuestMenuView;
 
 import java.util.Scanner;
 
-public class QuestMenuTerminalView implements QuestMenuView {
+public class QuestMenuTerminalView extends AbstractTerminalView implements QuestMenuView {
 
     @Override
     public void showCurrentMenu() {

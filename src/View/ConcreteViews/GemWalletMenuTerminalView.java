@@ -4,7 +4,7 @@ import src.View.ViewInterfaces.GemWalletMenuView;
 
 import java.util.Scanner;
 
-public class GemWalletMenuTerminalView implements GemWalletMenuView {
+public class GemWalletMenuTerminalView extends AbstractTerminalView implements GemWalletMenuView {
 
     @Override
     public void showCurrentMenu() {

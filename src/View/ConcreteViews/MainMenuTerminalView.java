@@ -4,7 +4,7 @@ import src.View.ViewInterfaces.MainMenuView;
 
 import java.util.Scanner;
 
-public class MainMenuTerminalView implements MainMenuView {
+public class MainMenuTerminalView extends AbstractTerminalView implements MainMenuView {
 
     @Override
     public void showCurrentMenu() {

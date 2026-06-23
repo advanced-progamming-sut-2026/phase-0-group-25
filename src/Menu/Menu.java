@@ -2,6 +2,7 @@ package src.Menu;
 
 import src.Enums.Command;
 import src.Enums.MenuType;
+import src.View.ViewInterfaces.BaseView;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -46,11 +47,17 @@ public abstract class Menu {
                     return;
                 }
             }
-
+            getView().showError("menu not found!");
+            return;
         }
-
+        else if((matcher = getMatcher(input, Command.ShowMenu)) != null){
+            getView().showCurrentMenu();
+            return;
+        }
+        handleSpecificCommands(input);
     }
 
     public abstract void handleSpecificCommands(String input);
+    public abstract BaseView getView();
 
 }

@@ -4,7 +4,7 @@ import src.View.ViewInterfaces.GamePlayMenuView;
 
 import java.util.Scanner;
 
-public class GamePlayMenuTerminalView implements GamePlayMenuView {
+public class GamePlayMenuTerminalView extends AbstractTerminalView implements GamePlayMenuView {
 
     @Override
     public void showTileStatus() {

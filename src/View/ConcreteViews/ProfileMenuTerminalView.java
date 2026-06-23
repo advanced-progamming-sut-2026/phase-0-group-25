@@ -4,7 +4,7 @@ import src.View.ViewInterfaces.ProfileMenuView;
 
 import java.util.Scanner;
 
-public class ProfileMenuTerminalView implements ProfileMenuView {
+public class ProfileMenuTerminalView extends AbstractTerminalView implements ProfileMenuView {
 
     @Override
     public void showInfo() {

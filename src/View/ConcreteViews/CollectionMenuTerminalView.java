@@ -5,7 +5,7 @@ import src.View.ViewInterfaces.CollectionMenuView;
 
 import java.util.Scanner;
 
-public class CollectionMenuTerminalView implements CollectionMenuView {
+public class CollectionMenuTerminalView extends AbstractTerminalView implements CollectionMenuView {
 
 
     @Override
