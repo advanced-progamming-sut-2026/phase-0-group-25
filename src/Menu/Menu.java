@@ -23,7 +23,7 @@ public abstract class Menu {
     }
 
     public void exit() {
-        MenuManager.getInstance().changeMenu(previousMenu.getString());
+        MenuManager.getInstance().changeMenu(previousMenu);
     }
 
     public Matcher getMatcher(String input, Command command) {
@@ -43,7 +43,7 @@ public abstract class Menu {
         else if((matcher = getMatcher(input, Command.changeMenu)) != null){
             for (MenuType menuType: changeableMenuTypes){
                 if(matcher.group(1).equals(menuType.getString())){
-                    MenuManager.getInstance().changeMenu(menuType.getString());
+                    MenuManager.getInstance().changeMenu(menuType);
                     return;
                 }
             }
