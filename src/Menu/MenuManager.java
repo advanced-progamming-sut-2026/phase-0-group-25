@@ -41,6 +41,7 @@ public class MenuManager {
         menusAndTheirNames.put(MenuType.Shop, new ShopMenu(new ShopMenuTerminalView()));
         menusAndTheirNames.put(MenuType.Signup, new SignUpMenu(new SignUpMenuTerminalView()));
         menusAndTheirNames.put(MenuType.TravelLog, new TravelLogMenu(new TravelLogMenuTerminalView()));
+        menusAndTheirNames.put(MenuType.Network, new NetworkMenu(new NetworkMenuTerminalView()));
         currentMenu = menusAndTheirNames.get(MenuType.Signup);
     }
 
