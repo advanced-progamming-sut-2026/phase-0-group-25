@@ -12,11 +12,6 @@ public class Sun {
         this.position = position;
     }
 
-    public Sun(int numberOfSun, Position position) {
-        this.numberOfSun = numberOfSun;
-        this.position = position;
-    }
-
     public Sun(int numberOfSun, Position position, double timeToReach) {
         this.numberOfSun = numberOfSun;
         this.position = position;
