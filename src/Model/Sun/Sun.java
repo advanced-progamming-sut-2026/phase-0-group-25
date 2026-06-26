@@ -7,8 +7,21 @@ public class Sun {
     private Position position;
     private double timeToReach;
 
+
+    public Sun(int numberOfSun, Position position) {
+        this.numberOfSun = numberOfSun;
+        this.position = position;
+    }
+
+    public Sun(int numberOfSun, Position position, double timeToReach) {
+        this.numberOfSun = numberOfSun;
+        this.position = position;
+        this.timeToReach = timeToReach;
+    }
+
     public int getNumberOfSun() {
         return numberOfSun;
     }
 }
+
 
