@@ -2,7 +2,10 @@ package src.View.ConcreteViews;
 
 import src.View.ViewInterfaces.NewsMenuView;
 
-public class NewsMenuTerminalView implements NewsMenuView {
+import java.util.Scanner;
+
+public class NewsMenuTerminalView extends AbstractTerminalView implements NewsMenuView {
+
     @Override
     public void showUnreadNew() {
 
@@ -15,6 +18,6 @@ public class NewsMenuTerminalView implements NewsMenuView {
 
     @Override
     public void showCurrentMenu() {
-
+        System.out.println("news menu");
     }
 }

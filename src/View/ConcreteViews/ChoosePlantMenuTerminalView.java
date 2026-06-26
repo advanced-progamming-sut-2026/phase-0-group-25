@@ -2,7 +2,10 @@ package src.View.ConcreteViews;
 
 import src.View.ViewInterfaces.ChoosePlantMenuView;
 
-public class ChoosePlantMenuTerminalView implements ChoosePlantMenuView {
+import java.util.Scanner;
+
+public class ChoosePlantMenuTerminalView extends AbstractTerminalView implements ChoosePlantMenuView{
+
     @Override
     public void showAllPlants() {
 
@@ -15,6 +18,6 @@ public class ChoosePlantMenuTerminalView implements ChoosePlantMenuView {
 
     @Override
     public void showCurrentMenu() {
-
+        System.out.println("choose plant menu");
     }
 }

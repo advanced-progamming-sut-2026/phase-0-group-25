@@ -2,7 +2,10 @@ package src.View.ConcreteViews;
 
 import src.View.ViewInterfaces.GamePlayMenuView;
 
-public class GamePlayMenuTerminalView implements GamePlayMenuView {
+import java.util.Scanner;
+
+public class GamePlayMenuTerminalView extends AbstractTerminalView implements GamePlayMenuView {
+
     @Override
     public void showTileStatus() {
 
@@ -15,6 +18,6 @@ public class GamePlayMenuTerminalView implements GamePlayMenuView {
 
     @Override
     public void showCurrentMenu() {
-
+        System.out.println("game play menu");
     }
 }

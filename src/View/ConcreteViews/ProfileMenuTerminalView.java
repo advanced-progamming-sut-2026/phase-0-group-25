@@ -2,7 +2,10 @@ package src.View.ConcreteViews;
 
 import src.View.ViewInterfaces.ProfileMenuView;
 
-public class ProfileMenuTerminalView implements ProfileMenuView {
+import java.util.Scanner;
+
+public class ProfileMenuTerminalView extends AbstractTerminalView implements ProfileMenuView {
+
     @Override
     public void showInfo() {
 
@@ -10,6 +13,6 @@ public class ProfileMenuTerminalView implements ProfileMenuView {
 
     @Override
     public void showCurrentMenu() {
-
+        System.out.println("profile menu");
     }
 }
