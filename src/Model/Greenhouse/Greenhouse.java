@@ -1,6 +1,6 @@
 package src.Model.Greenhouse;
 
-import src.Model.PlantsAndZombies.Tile;
+import src.Model.Tile;
 
 import java.util.*;
 
