@@ -19,6 +19,7 @@ public class Sun {
         this.timeToReach = timeToReach;
     }
 
+
     public int getNumberOfSun() {
         return numberOfSun;
     }
