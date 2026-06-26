@@ -1,10 +1,12 @@
 package src.Model.PlantsAndZombies.Abilities;
 
-public class Throwing implements Ability{
+import src.Model.PlantsAndZombies.Entity;
+
+public class Throwing implements Ability {
 
 
     @Override
-    public void executeAbility() {
+    public void executeAbility(Entity entity) {
 
     }
 }

@@ -7,7 +7,7 @@ public class Moving implements Ability {
     private Entity entity;
 
     @Override
-    public void executeAbility() {
+    public void executeAbility(Entity entity) {
 
     }
 }

@@ -33,6 +33,10 @@ public class PlantStats {
         return attributes;
     }
 
+    public ArrayList<String> getTags() {
+        return tags;
+    }
+
     public void upgradePlant() {
 
     }
