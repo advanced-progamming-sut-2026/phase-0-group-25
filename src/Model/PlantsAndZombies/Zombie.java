@@ -14,5 +14,8 @@ public class Zombie extends Entity {
 
     }
 
+    public Position getPosition() {
+        return position;
+    }
 
 }

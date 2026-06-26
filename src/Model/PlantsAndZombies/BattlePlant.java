@@ -4,6 +4,8 @@ public class BattlePlant extends Plant {
     private double lastActionTime;
     private double timeElapsedAsAlive;
     private PlantStats plantStats;
+    private int row;
+    private int column;
 
     public BattlePlant(PlantStats plantStats, String name) {
         this.lastActionTime = 0;
@@ -29,5 +31,13 @@ public class BattlePlant extends Plant {
 
     public double getTimeElapsedAsAlive() {
         return timeElapsedAsAlive;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public int getRow() {
+        return row;
     }
 }
