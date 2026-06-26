@@ -1,8 +1,92 @@
 package src.Model.PlantsAndZombies;
 
 public class Projectile {
-    private double velocity;
-    private double damage;
+    private double velocityX;
+    private double velocityY;
+
+    private int damage;
+
     private Position position;
-    private boolean isAbleToStrikeThrough;
+    private int pierceAmount;
+    private int range;
+
+    private int baseRow;
+    private int baseColumn;
+    private int currentRow;
+    private int currentColumn;
+
+    protected boolean isActive;
+
+    public Projectile() {
+
+    }
+
+    public Projectile(double velocityX, double velocityY, BattlePlant plant,
+                      int damage, int pierceAmount, int range) {
+        this.velocityX = velocityX;
+        this.velocityY = velocityY;
+        this.position = plant.getPosition();
+        this.baseColumn = plant.getColumn();
+        this.baseRow = plant.getRow();
+        this.currentColumn = baseColumn;
+        this.currentRow = baseRow;
+
+        this.damage = damage;
+
+        this.pierceAmount = pierceAmount;
+        this.range = range;
+        this.isActive = true;
+    }
+
+
+    public int getBaseRow() {
+        return baseRow;
+    }
+
+    public int getBaseColumn() {
+        return baseColumn;
+    }
+
+    public int getCurrentRow() {
+        return currentRow;
+    }
+
+    public int getCurrentColumn() {
+        return currentColumn;
+    }
+
+    public void setCurrentRow(int currentRow) {
+        this.currentRow = currentRow;
+    }
+
+    public void setCurrentColumn(int currentColumn) {
+        this.currentColumn = currentColumn;
+    }
+
+    public void update() {
+        position.setX(position.getX() + (0.1 * velocityX));
+        position.setY(position.getY() + (0.1 * velocityY));
+
+        //todo: updating the mechanism of row and column
+
+        updateActivation();
+
+        checkCollision();
+    }
+
+    public void updateActivation() {
+        if (((this.currentRow - this.baseRow) > this.range) ||
+                ((this.currentColumn - this.baseColumn) > this.range)) {
+            this.isActive = false;
+        }
+    }
+
+    public void checkCollision() {
+
+        for (Zombie zombie : game.getAliveZombies()) {
+            if (position.equals(zombie.getPosition())) {
+                //todo: reduce hp of zombie or its armor
+            }
+        }
+    }
 }

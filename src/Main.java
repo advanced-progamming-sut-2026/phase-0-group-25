@@ -1,18 +1,32 @@
 package src;
 
+import src.Enums.GenderType;
+import src.Menu.MenuManager;
+import src.Model.PlantsAndZombies.GameDataLoader;
+import src.Model.PlantsAndZombies.PlantStats;
+import src.Model.User.User;
+import src.Model.User.UsersManager;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+//        MenuManager menuManager = MenuManager.getInstance();
+//        menuManager.startAppLoop();
+        User user = new User("amir", "asdf", "asdfsa", "asdfasf", GenderType.Male);
+        UsersManager usersManager = new UsersManager();
+//        List<User> users = usersManager.readUsers();
+//        users.add(user);
+        usersManager.writeUsers();
+//        User user = users.get(0);
+
+//        users.add(user);
+//        usersManager.writeUsers(users);
 
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i =  " + i);
-        }
     }
 }

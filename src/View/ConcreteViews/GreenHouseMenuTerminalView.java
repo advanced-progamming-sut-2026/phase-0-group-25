@@ -2,7 +2,10 @@ package src.View.ConcreteViews;
 
 import src.View.ViewInterfaces.GreenHouseMenuView;
 
-public class GreenHouseMenuTerminalView implements GreenHouseMenuView {
+import java.util.Scanner;
+
+public class GreenHouseMenuTerminalView extends AbstractTerminalView implements GreenHouseMenuView {
+
     @Override
     public void ShowGreenHouse() {
 
@@ -10,6 +13,6 @@ public class GreenHouseMenuTerminalView implements GreenHouseMenuView {
 
     @Override
     public void showCurrentMenu() {
-
+        System.out.println("greenhouse menu");
     }
 }

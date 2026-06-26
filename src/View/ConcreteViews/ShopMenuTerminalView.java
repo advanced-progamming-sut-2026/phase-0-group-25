@@ -2,7 +2,10 @@ package src.View.ConcreteViews;
 
 import src.View.ViewInterfaces.ShopMenuView;
 
-public class ShopMenuTerminalView implements ShopMenuView {
+import java.util.Scanner;
+
+public class ShopMenuTerminalView extends AbstractTerminalView implements ShopMenuView {
+
     @Override
     public void showShopList() {
 
@@ -10,6 +13,6 @@ public class ShopMenuTerminalView implements ShopMenuView {
 
     @Override
     public void showCurrentMenu() {
-
+        System.out.println("shop menu");
     }
 }
