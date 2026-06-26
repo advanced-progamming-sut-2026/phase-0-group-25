@@ -1,6 +1,6 @@
 package src.Model.PlayGroundType;
 import src.Model.Mower;
-import src.Model.PlantsAndZombies.Tile;
+import src.Model.Tile;
 
 import java.util.ArrayList;
 

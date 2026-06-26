@@ -5,6 +5,9 @@ public abstract class Entity {
     protected boolean isAlive;
     protected Position position;
 
-
     public abstract void update();
+
+    public boolean isAlive() {
+        return this.isAlive;
+    }
 }

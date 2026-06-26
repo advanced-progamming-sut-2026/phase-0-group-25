@@ -1,10 +1,24 @@
 package src.Model.GamePlayType;
 
+import src.Model.PlantsAndZombies.*;
 import java.util.ArrayList;
 
 public class Simple extends GamePlay {
     private ArrayList<src.Model.PlantsAndZombies.Plant> myPlants;
+    protected int totalTicksPassed = 0;
 
     @Override
-    public void update() {}
+    public void update() {
+        if (isPaused) return;
+        totalTicksPassed++;
+        sunMaker();
+
+        for (Plant plant : gamePlants) {
+            if(plant.isAlive()) plant.update();
+        }
+
+        for (Zombie zombie : gameZombies) {
+            if(zombie.isAlive()) zombie.update();
+        }
+    }
 }

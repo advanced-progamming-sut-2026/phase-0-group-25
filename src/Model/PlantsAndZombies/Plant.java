@@ -7,10 +7,6 @@ public abstract class Plant extends Entity {
     protected PlantCategory category;
     private boolean hasBoost;
 
-
-
-
     public abstract void update();
-
 
 }
