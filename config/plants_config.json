@@ -301,59 +301,59 @@
   ],
 
   "WALL_NUT": [
-    { "baseHP": 4000, "cost": 50, "actionInterval": 0, "rechargeTime": 20, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 4000, "cost": 50, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": [], "attributes": {} },
+    { "baseHP": 5000, "cost": 50, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": [], "attributes": {} },
+    { "baseHP": 5000, "cost": 50, "actionInterval": 0, "rechargeTime": 15, "abilities": ["wall-nut"], "tags": [], "attributes": {} },
+    { "baseHP": 6500, "cost": 50, "actionInterval": 0, "rechargeTime": 15, "abilities": ["wall-nut"], "tags": [], "attributes": {} }
   ],
 
   "TALL_NUT": [
-    { "baseHP": 8000, "cost": 125, "actionInterval": 0, "rechargeTime": 20, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 8000, "cost": 125, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["block_flying"], "attributes": {} },
+    { "baseHP": 10000, "cost": 125, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["block_flying"], "attributes": {} },
+    { "baseHP": 10000, "cost": 125, "actionInterval": 0, "rechargeTime": 15, "abilities": ["wall-nut"], "tags": ["block_flying"], "attributes": {} },
+    { "baseHP": 13000, "cost": 125, "actionInterval": 0, "rechargeTime": 15, "abilities": ["wall-nut"], "tags": ["block_flying"], "attributes": {} }
   ],
 
   "ENDURIAN": [
-    { "baseHP": 3000, "cost": 100, "actionInterval": 0, "rechargeTime": 15, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 3000, "cost": 100, "actionInterval": 0, "rechargeTime": 15, "abilities": ["wall-nut"], "tags": ["reflection"], "attributes": {"damage":  20} },
+    { "baseHP": 3000, "cost": 100, "actionInterval": 0, "rechargeTime": 15, "abilities": ["wall-nut"], "tags": ["reflection"], "attributes": {"damage":  25} },
+    { "baseHP": 4000, "cost": 100, "actionInterval": 0, "rechargeTime": 15, "abilities": ["wall-nut"], "tags": ["reflection"], "attributes": {"damage":  25} },
+    { "baseHP": 4000, "cost": 75, "actionInterval": 0, "rechargeTime": 15, "abilities": ["wall-nut"], "tags": ["reflection"], "attributes": {"damage":  25} }
   ],
 
   "GARLIC": [
-    { "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 20, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["move-zombies"], "attributes": {} },
+    { "baseHP": 450, "cost": 50, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["move-zombies"], "attributes": {} },
+    { "baseHP": 450, "cost": 50, "actionInterval": 0, "rechargeTime": 17, "abilities": ["wall-nut"], "tags": ["move-zombies"], "attributes": {} },
+    { "baseHP": 700, "cost": 50, "actionInterval": 0, "rechargeTime": 17, "abilities": ["wall-nut"], "tags": ["move-zombies"], "attributes": {} }
   ],
 
   "SWEET_POTATO": [
-    { "baseHP": 3000, "cost": 150, "actionInterval": 0, "rechargeTime": 20, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 3000, "cost": 150, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["move-zombies"], "attributes": {} },
+    { "baseHP": 4000, "cost": 150, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["move-zombies"], "attributes": {} },
+    { "baseHP": 4000, "cost": 150, "actionInterval": 0, "rechargeTime": 15, "abilities": ["wall-nut"], "tags": ["move-zombies"], "attributes": {} },
+    { "baseHP": 5500, "cost": 150, "actionInterval": 0, "rechargeTime": 15, "abilities": ["wall-nut"], "tags": ["move-zombies"], "attributes": {} }
   ],
 
   "EXPLODE_O_NUT": [
-    { "baseHP": 4000, "cost": 50, "actionInterval": 0, "rechargeTime": 20, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 4000, "cost": 50, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["explosion"], "attributes": {"damage":  1800, "range":  1} },
+    { "baseHP": 5000, "cost": 50, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["explosion"], "attributes": {"damage":  1800, "range":  1} },
+    { "baseHP": 5000, "cost": 50, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["explosion"], "attributes": {"damage":  2000, "range":  1} },
+    { "baseHP": 5000, "cost": 25, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["explosion"], "attributes": {"damage":  2000, "range":  1} }
   ],
 
   "PUMPKIN": [
-    { "baseHP": 4000, "cost": 150, "actionInterval": 0, "rechargeTime": 20, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 4000, "cost": 150, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["stack"], "attributes": {} },
+    { "baseHP": 5000, "cost": 150, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["stack"], "attributes": {} },
+    { "baseHP": 5000, "cost": 150, "actionInterval": 0, "rechargeTime": 15, "abilities": ["wall-nut"], "tags": ["stack"], "attributes": {} },
+    { "baseHP": 6500, "cost": 150, "actionInterval": 0, "rechargeTime": 15, "abilities": ["wall-nut"], "tags": ["stack"], "attributes": {} }
   ],
 
   "SUN_BEAN": [
-    { "baseHP": 1000, "cost": 50, "actionInterval": 0, "rechargeTime": 20, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 1000, "cost": 50, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["sun"], "attributes": {"sun_quantity": 5} },
+    { "baseHP": 1000, "cost": 50, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["sun"], "attributes": {"sun_quantity": 10} },
+    { "baseHP": 1150, "cost": 50, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["sun"], "attributes": {"sun_quantity": 10} },
+    { "baseHP": 1150, "cost": 25, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["sun"], "attributes": {"sun_quantity": 10} }
   ],
 
   "TORCHWOOD": [
