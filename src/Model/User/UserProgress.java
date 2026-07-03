@@ -1,5 +1,8 @@
 package src.Model.User;
 
+import src.Enums.ChapterType;
+import src.Enums.PlantType;
+import src.Enums.ZombieType;
 import src.Model.ChaptersAndLevels.Chapter;
 import src.Model.PlantsAndZombies.Plant;
 import src.Model.PlantsAndZombies.Zombie;
@@ -7,36 +10,42 @@ import src.Model.PlantsAndZombies.Zombie;
 import java.util.ArrayList;
 
 public class UserProgress {
-    private ArrayList<Chapter> unlockedChapters;
-    private ArrayList<src.Model.PlantsAndZombies.Zombie> unlockedZombies;
-    private ArrayList<src.Model.PlantsAndZombies.Plant> unlockedPlants;
+    private ArrayList<ChapterType> unlockedChapters;
+    private ArrayList<ZombieType> unlockedZombies;
+    private ArrayList<PlantType> unlockedPlants;
     private int gemsCount;
     private int coinsCount;
 
     public UserProgress() {
+        this.unlockedChapters = new ArrayList<>();
+        this.unlockedZombies = new ArrayList<>();
+        this.unlockedPlants = new ArrayList<>();
+
+        this.gemsCount = 0;
+        this.coinsCount = 0;
     }
 
-    public ArrayList<Chapter> getUnlockedChapters() {
+    public ArrayList<ChapterType> getUnlockedChapters() {
         return unlockedChapters;
     }
 
-    public void setUnlockedChapters(ArrayList<Chapter> unlockedChapters) {
+    public void setUnlockedChapters(ArrayList<ChapterType> unlockedChapters) {
         this.unlockedChapters = unlockedChapters;
     }
 
-    public ArrayList<Zombie> getUnlockedZombies() {
+    public ArrayList<ZombieType> getUnlockedZombies() {
         return unlockedZombies;
     }
 
-    public void setUnlockedZombies(ArrayList<Zombie> unlockedZombies) {
+    public void setUnlockedZombies(ArrayList<ZombieType> unlockedZombies) {
         this.unlockedZombies = unlockedZombies;
     }
 
-    public ArrayList<Plant> getUnlockedPlants() {
+    public ArrayList<PlantType> getUnlockedPlants() {
         return unlockedPlants;
     }
 
-    public void setUnlockedPlants(ArrayList<Plant> unlockedPlants) {
+    public void setUnlockedPlants(ArrayList<PlantType> unlockedPlants) {
         this.unlockedPlants = unlockedPlants;
     }
 
@@ -55,4 +64,5 @@ public class UserProgress {
     public void setCoinsCount(int coinsCount) {
         this.coinsCount = coinsCount;
     }
+
 }

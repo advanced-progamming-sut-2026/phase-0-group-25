@@ -1,0 +1,34 @@
+{
+  "test2" : {
+    "email" : "test@gmail.com",
+    "genderType" : "Male",
+    "nickName" : "sdfasfd",
+    "password" : "123AAERAERfaf#",
+    "securityAnswer" : "dog",
+    "securityQuestion" : "FIRST_PET",
+    "userName" : "test2",
+    "userProgress" : {
+      "coinsCount" : 0,
+      "gemsCount" : 0,
+      "unlockedChapters" : [ ],
+      "unlockedPlants" : [ ],
+      "unlockedZombies" : [ ]
+    }
+  },
+  "test" : {
+    "email" : "test@gmail.com",
+    "genderType" : "Male",
+    "nickName" : "sdfasfd",
+    "password" : "123AAERAERfaf#",
+    "securityAnswer" : "cat",
+    "securityQuestion" : "FIRST_PET",
+    "userName" : "test",
+    "userProgress" : {
+      "coinsCount" : 0,
+      "gemsCount" : 0,
+      "unlockedChapters" : [ ],
+      "unlockedPlants" : [ ],
+      "unlockedZombies" : [ ]
+    }
+  }
+}
