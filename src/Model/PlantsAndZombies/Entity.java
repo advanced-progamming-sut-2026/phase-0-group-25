@@ -6,6 +6,8 @@ public abstract class Entity {
     protected Position position;
 
 
+
+
     public abstract void update();
 
 
