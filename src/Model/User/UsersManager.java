@@ -8,9 +8,12 @@ import java.util.HashMap;
 import java.util.regex.Pattern;
 
 public class UsersManager {
+    private static UsersManager instance;
     private static final String FILE_PATH = "users.json";
+    private static final String STATE_FILE = "loginstate.json";
     private final ObjectMapper mapper = new ObjectMapper();
     private HashMap<String, User> userCache = new HashMap<>();
+    private User loggedInUser = null;
 
     private static final Pattern USERNAME_CHAR_REGEX = Pattern.compile("^[a-zA-Z0-9_]+$");
 
@@ -26,8 +29,15 @@ public class UsersManager {
             "^[a-zA-Z0-9](?:[a-zA-Z0-9.-]*[a-zA-Z0-9])?\\.[a-zA-Z0-9]{2,}$"
     );
 
-    public UsersManager() {
-            loadUsers();
+    private UsersManager() {
+        loadUsers();
+    }
+
+    public static UsersManager getInstance() {
+        if (instance == null) {
+            instance = new UsersManager();
+        }
+        return instance;
     }
 
     private void loadUsers() {
@@ -45,10 +55,11 @@ public class UsersManager {
     }
     public void addUser(User user){
         userCache.put(user.getUserName(), user);
+        writeUsers();
     }
 
 
-    public void writeUsers() {
+    private void writeUsers() {
         try {
             mapper.writerWithDefaultPrettyPrinter()
                     .writeValue(new File(FILE_PATH), userCache);
@@ -84,9 +95,6 @@ public class UsersManager {
         if (nickname.length() < 3 || nickname.length() > 30) {
             return "Invalid nickname length: Must be between 3 and 30 characters.";
         }
-        if (!nickname.trim().equals(nickname)) {
-            return "Invalid nickname: Leading or trailing whitespaces are not allowed.";
-        }
 
         if (email.length() > 200) {
             return "Invalid email: Length cannot exceed 200 characters.";
@@ -106,6 +114,86 @@ public class UsersManager {
             return "Invalid gender: Choice must be exactly 'Male' or 'Female'.";
         }
 
+        return null;
+    }
+
+    public boolean checkAndLoadStayLoggedIn() {
+        File file = new File(STATE_FILE);
+        if (!file.exists() || file.length() == 0) return false;
+
+        try {
+            String savedUsername = mapper.readValue(file, String.class);
+            if (userCache.containsKey(savedUsername)) {
+                this.loggedInUser = userCache.get(savedUsername);
+                return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return false;
+    }
+
+    public String authenticateUser(String username, String password, boolean stayLoggedIn) {
+        if (!userCache.containsKey(username)) {
+            return "Entered username does not exist in the system.";
+        }
+
+        User user = userCache.get(username);
+        if (!user.getPassword().equals(password)) {
+            return "Invalid password credentials.";
+        }
+
+        this.loggedInUser = user;
+
+        if (stayLoggedIn) {
+            try {
+                mapper.writeValue(new File(STATE_FILE), username);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to save login state data.", e);
+            }
+        }
+        return null;
+    }
+
+    public User getLoggedInUser() {
+        return loggedInUser;
+    }
+
+    public void logoutCurrentUser() {
+        this.loggedInUser = null;
+        File file = new File(STATE_FILE);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+    public String updateUserPassword(String username, String newPassword) {
+        if (newPassword.contains(" ")) {
+            return "Weak password: Spaces are not allowed within password strings.";
+        }
+        if (!PASSWORD_COMPLEXITY_REGEX.matcher(newPassword).matches()) {
+            return "Weak password: Must be at least 8 characters long and include numbers, " +
+                    "uppercase/lowercase letters, and special characters.";
+        }
+
+        User user = userCache.get(username);
+        if (user != null) {
+            user.setPassword(newPassword);
+            writeUsers();
+        }
+        return null;
+    }
+
+    public String validateForgetPasswordRequest(String username, String email, String answer) {
+        if (!userCache.containsKey(username)) {
+            return "Error: Entered username does not exist in the system.";
+        }
+        User user = userCache.get(username);
+        if (!user.getEmail().equalsIgnoreCase(email)) {
+            return "Error: Provided email does not match registered user profile.";
+        }
+        if (user.getSecurityAnswer() == null || !user.getSecurityAnswer().equalsIgnoreCase(answer)) {
+            return "Error: Security challenge answer is incorrect.";
+        }
         return null;
     }
 

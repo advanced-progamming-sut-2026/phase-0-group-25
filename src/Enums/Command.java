@@ -5,7 +5,10 @@ public enum Command {
     ShowMenu("menu show current"),
     Exit("menu exit"),
     RegisterAccount("register -u (.+?) -p (.+?) (.+?) -n (.+?) -e (.+?) -g (.+?)"),
-    PickQuestion("pick question -q (.+?) -a (.+?) -c (.+?)");
+    PickQuestion("pick question -q (.+?) -a (.+?) -c (.+?)"),
+    LoginAccount("login -u (\\S+) -p (\\S+)( -stay-logged-in)?"),
+    ForgetPassword("forget password -u (\\S+) -e (\\S+) answer -a (.+?)"),
+    SetNewPassword("set password -p (\\S+)");
 
     private final String regex;
     Command(String regex) {

@@ -19,10 +19,7 @@ public class MainMenu extends Menu{
 
 
 
-    @Override
-    public void processCommand(String input) {
 
-    }
 
     @Override
     public void handleSpecificCommands(String input) {

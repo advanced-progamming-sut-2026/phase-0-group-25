@@ -30,5 +30,21 @@
       "unlockedPlants" : [ ],
       "unlockedZombies" : [ ]
     }
+  },
+  "amir" : {
+    "email" : "test@gmail.com",
+    "genderType" : "Male",
+    "nickName" : "amir",
+    "password" : "1234#aBcD",
+    "securityAnswer" : "blue",
+    "securityQuestion" : "FAVORITE_COLOR",
+    "userName" : "amir",
+    "userProgress" : {
+      "coinsCount" : 0,
+      "gemsCount" : 0,
+      "unlockedChapters" : [ ],
+      "unlockedPlants" : [ ],
+      "unlockedZombies" : [ ]
+    }
   }
 }
