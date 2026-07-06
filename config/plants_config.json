@@ -91,17 +91,17 @@
   ],
 
   "CAULIPOWER": [
-    { "baseHP": 300, "cost": 250, "actionInterval": 12, "rechargeTime": 15, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 250, "actionInterval": 12, "rechargeTime": 15, "abilities": [], "tags": ["magic", "charge", "hypnotize", "random-direction"], "attributes": {} },
+    { "baseHP": 300, "cost": 250, "actionInterval": 12, "rechargeTime": 13, "abilities": [], "tags": ["magic", "charge", "hypnotize", "random-direction"], "attributes": {} },
+    { "baseHP": 450, "cost": 250, "actionInterval": 12, "rechargeTime": 13, "abilities": [], "tags": ["magic", "charge", "hypnotize", "random-direction"], "attributes": {} },
+    { "baseHP": 450, "cost": 200, "actionInterval": 12, "rechargeTime": 13, "abilities": [], "tags": ["magic", "charge", "hypnotize", "random-direction"], "attributes": {} }
   ],
 
   "ELECTRIC_BLUEBERRY": [
-    { "baseHP": 300, "cost": 150, "actionInterval": 12, "rechargeTime": 15, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 150, "actionInterval": 12, "rechargeTime": 15, "abilities": [], "tags": ["charge", "random-direction"], "attributes": {"damage":  5000} },
+    { "baseHP": 300, "cost": 150, "actionInterval": 12, "rechargeTime": 13, "abilities": [], "tags": ["charge", "random-direction"], "attributes": {"damage":  5000} },
+    { "baseHP": 300, "cost": 150, "actionInterval": 12, "rechargeTime": 13, "abilities": [], "tags": ["charge", "healthiest"], "attributes": {"damage":  5000} },
+    { "baseHP": 300, "cost": 125, "actionInterval": 12, "rechargeTime": 13, "abilities": [], "tags": ["charge", "healthiest"], "attributes": {"damage":  5000} }
   ],
 
   "BOWLING_BULB": [
@@ -364,10 +364,10 @@
   ],
 
   "MAGNET_SHROOM": [
-    { "baseHP": 300, "cost": 100, "actionInterval": 10, "rechargeTime": 15, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 100, "actionInterval": 10, "rechargeTime": 15, "abilities": [], "tags": ["shroom", "magic", "disarmament"], "attributes": {"front-range": 1} },
+    { "baseHP": 300, "cost": 100, "actionInterval": 10, "rechargeTime": 15, "abilities": [], "tags": ["shroom", "magic", "disarmament"], "attributes": {"front-range": 2} },
+    { "baseHP": 300, "cost": 100, "actionInterval": 10, "rechargeTime": 10, "abilities": [], "tags": ["shroom", "magic", "disarmament"], "attributes": {"front-range": 2} },
+    { "baseHP": 500, "cost": 100, "actionInterval": 10, "rechargeTime": 10, "abilities": [], "tags": ["shroom", "magic", "disarmament"], "attributes": {"front-range": 2} }
   ],
 
   "HYPNO_SHROOM": [
@@ -378,10 +378,10 @@
   ],
 
   "CAT_TAIL": [
-    { "baseHP": 300, "cost": 175, "actionInterval": 1.5, "rechargeTime": 20, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "baseHP": 300, "cost": 175, "actionInterval": 1.5, "rechargeTime": 20, "abilities": [], "tags": ["directed"], "attributes": {"damage": 15} },
+    { "baseHP": 300, "cost": 175, "actionInterval": 1.5, "rechargeTime": 20, "abilities": [], "tags": ["directed"], "attributes": {"damage": 25} },
+    { "baseHP": 500, "cost": 175, "actionInterval": 1.5, "rechargeTime": 20, "abilities": [], "tags": ["directed"], "attributes": {"damage": 25} },
+    { "baseHP": 500, "cost": 150, "actionInterval": 1.5, "rechargeTime": 20, "abilities": [], "tags": ["directed"], "attributes": {"damage": 25} }
   ],
 
   "IMITATER": [
