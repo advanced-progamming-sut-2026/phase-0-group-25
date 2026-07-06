@@ -22,9 +22,28 @@ public class Projectile {
     protected boolean isActive;
     protected boolean icy;
     private boolean poisonous;
+    private boolean isHypnotizer;
 
     public Projectile() {
 
+    }
+    public Projectile(double velocityX, double velocityY, BattlePlant plant,
+                      int damage, int pierceAmount) {
+        this.velocityX = velocityX;
+        this.velocityY = velocityY;
+        this.position = plant.getPosition();
+        this.baseColumn = plant.getColumn();
+        this.baseRow = plant.getRow();
+        this.currentColumn = baseColumn;
+        this.currentRow = baseRow;
+
+        this.damage = damage;
+
+        this.pierceAmount = pierceAmount;
+        this.range = 11;
+        this.isActive = true;
+        this.icy = false;
+        this.poisonous = false;
     }
 
     public Projectile(double velocityX, double velocityY, BattlePlant plant,
@@ -69,6 +88,10 @@ public class Projectile {
 
     public void setCurrentColumn(int currentColumn) {
         this.currentColumn = currentColumn;
+    }
+
+    public void setHypnotizer(boolean isHypnotizer) {
+        this.isHypnotizer = isHypnotizer;
     }
 
     public void update() {

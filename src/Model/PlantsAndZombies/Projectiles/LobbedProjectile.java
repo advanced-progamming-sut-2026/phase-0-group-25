@@ -10,6 +10,7 @@ public class LobbedProjectile extends Projectile {
     private double startX;
     private double startY;
     private double targetX;
+    private double targetY;
 
     private double timeToReach;
     private double elapsedTime;
@@ -23,8 +24,26 @@ public class LobbedProjectile extends Projectile {
         this.startX = startX;
         this.startY = startY;
         this.targetX = targetX;
+        this.targetY = startY;
 
         this.timeToReach = (targetX - startX) / speed;
+        this.elapsedTime = 0;
+
+        this.AoEDamage = AoEDamage;
+        this.AoERange = AoERange;
+        this.damage = damage;
+        this.isActive = true;
+        this.icy = false;
+    }
+
+    public LobbedProjectile(double startX, double startY, double targetX, double targetY, double speed,
+                            int AoEDamage, int AoERange, int damage) {
+        this.startX = startX;
+        this.startY = startY;
+        this.targetX = targetX;
+        this.targetY = targetY;
+
+        this.timeToReach = Math.hypot((startX - targetX), (startY - targetY)) / speed;
         this.elapsedTime = 0;
 
         this.AoEDamage = AoEDamage;
@@ -37,7 +56,7 @@ public class LobbedProjectile extends Projectile {
     @Override
     public void update() {
         this.elapsedTime += 1;
-        if (elapsedTime == timeToReach) {
+        if (elapsedTime >= timeToReach) {
             affectTarget();
             this.isActive = false;
         }
