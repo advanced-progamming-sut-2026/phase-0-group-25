@@ -5,12 +5,20 @@ import src.Model.PlantsAndZombies.Armors.Armor;
 import java.util.*;
 
 public class ZombieStats {
+    private String name;
     private int baseHP;
     private double eatdps;
     private double velocity;
     private ArrayList<Armor> armors;
     private int waveCost;
 
+    private Map<String, Object> attributes;
+
+
+
+    public String getName() {
+        return name;
+    }
 
     public int getBaseHP() {
         return baseHP;
@@ -30,5 +38,9 @@ public class ZombieStats {
 
     public ArrayList<Armor> getArmors() {
         return armors;
+    }
+
+    public Map<String, Object> getAttributes() {
+        return attributes;
     }
 }

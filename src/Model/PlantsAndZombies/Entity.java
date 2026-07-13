@@ -30,6 +30,10 @@ public abstract class Entity {
         return isAlive;
     }
 
+    public void setAlive(boolean alive) {
+        isAlive = alive;
+    }
+
     public Position getPosition() {
         return position;
     }
