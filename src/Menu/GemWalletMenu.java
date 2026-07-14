@@ -1,6 +1,8 @@
 package src.Menu;
 
 import src.Enums.MenuType;
+import src.Model.User.User;
+import src.Model.User.UsersManager;
 import src.View.ViewInterfaces.BaseView;
 import src.View.ViewInterfaces.GemWalletMenuView;
 
@@ -13,8 +15,14 @@ public class GemWalletMenu extends Menu{
         this.gemWalletMenuView = gemWalletMenuView;
     }
 
-    public void cheat(){
-
+    @Override
+    public void onEnter() {
+        User currentUser = UsersManager.getInstance().getLoggedInUser();
+        if (currentUser == null || currentUser.getUserProgress() == null) {
+            getView().showError("No logged in user found.");
+            return;
+        }
+        gemWalletMenuView.showGemsCount(currentUser.getUserProgress().getGemsCount());
     }
 
     @Override

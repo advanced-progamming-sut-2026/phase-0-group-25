@@ -31,4 +31,12 @@ public class Position {
 
         return new Position(row, column);
     }
+
+    public static Position getRowAndColumn(Position position) {
+        int row = ;//todo
+        int column = ;//todo
+
+        return new Position(row, column);
+    }
+
 }

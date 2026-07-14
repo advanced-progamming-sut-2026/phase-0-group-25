@@ -21,13 +21,12 @@ public class BattlePlant extends Plant {
 
     }
 
-    public Position getPosition() {
-        return position;
-    }
 
     public PlantStats getPlantStats() {
         return plantStats;
     }
+
+
 
     public double getTimeElapsedAsAlive() {
         return timeElapsedAsAlive;

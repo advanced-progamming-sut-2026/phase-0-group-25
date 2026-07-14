@@ -3,7 +3,7 @@ package src.Model.PlantsAndZombies.Abilities;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Entity;
 import src.Model.PlantsAndZombies.Position;
-import src.Model.PlantsAndZombies.Projectile;
+import src.Model.PlantsAndZombies.Projectiles.Projectile;
 
 import java.util.*;
 
@@ -36,6 +36,12 @@ public class Shooting implements Ability {
             Projectile projectile = new Projectile(velocityX, velocityY, plant, damage, pierce, rangeAmount);
             //game.addProjectile(projectile);//todo
 
+            if (plant.getPlantStats().getTags().contains("ice")) {
+                projectile.setIcy(true);
+            }
+            if (plant.getPlantStats().getTags().contains("poison")) {
+                projectile.setPoisonous(true);
+            }
 
         }
 
