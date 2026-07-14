@@ -1,8 +1,9 @@
 package src.Model.PlantsAndZombies;
 
 public abstract class Entity {
+    protected String name;
     protected double currentHP;
-    protected boolean isAlive;
+    protected boolean isAlive = true;
     protected Position position;
 
 

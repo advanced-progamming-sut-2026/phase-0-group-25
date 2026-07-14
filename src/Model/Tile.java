@@ -8,6 +8,7 @@ public class Tile {
     private Position position;
     private boolean isArable;
     private String kindOfTile;
+    //TODO : arraylist of plants and zombies projectile...
 
     public Tile(Position position) {
         this.position = position;

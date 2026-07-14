@@ -21,6 +21,18 @@ public class Sun {
     public int getNumberOfSun() {
         return numberOfSun;
     }
+
+    public Position getPosition() {
+        return this.position;
+    }
+
+    public double getTimeToReach() {
+        return this.timeToReach;
+    }
+
+    public void setTimeToReach(double timeToReach) {
+        this.timeToReach = timeToReach;
+    }
 }
 
 

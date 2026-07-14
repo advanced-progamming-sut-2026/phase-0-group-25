@@ -8,7 +8,6 @@ import src.Model.Sun.Sun;
 import java.util.*;
 
 public class Zombie extends Entity {
-    private int currentHP;
     private ZombieStats zombieStats;
     private double currentVelocity;
     private ArrayList<String> abilities;
