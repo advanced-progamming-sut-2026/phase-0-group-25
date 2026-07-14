@@ -46,5 +46,21 @@
       "unlockedPlants" : [ ],
       "unlockedZombies" : [ ]
     }
+  },
+  "xyz" : {
+    "email" : "abc@gmail.com",
+    "genderType" : "Male",
+    "nickName" : "xyz",
+    "password" : "1234#AbCd",
+    "securityAnswer" : "blue",
+    "securityQuestion" : "FAVORITE_COLOR",
+    "userName" : "xyz",
+    "userProgress" : {
+      "coinsCount" : 4,
+      "gemsCount" : 6,
+      "unlockedChapters" : [ "ANCIENT_EGYPT" ],
+      "unlockedPlants" : [ ],
+      "unlockedZombies" : [ ]
+    }
   }
 }

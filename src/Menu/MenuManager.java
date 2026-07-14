@@ -61,6 +61,7 @@ public class MenuManager {
 
     public void changeMenu(MenuType menuType){
         this.currentMenu = menusAndTheirNames.get(menuType);
+        this.currentMenu.onEnter();
     }
     public void startAppLoop() {
         while (!mustExit) {

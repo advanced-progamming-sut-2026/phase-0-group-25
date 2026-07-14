@@ -1,5 +1,6 @@
 package src.Model.User;
 
+import src.Enums.WalletType;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
@@ -195,6 +196,33 @@ public class UsersManager {
             return "Error: Security challenge answer is incorrect.";
         }
         return null;
+    }
+
+    public String cheat(int amount, WalletType walletType) {
+        if (loggedInUser == null || loggedInUser.getUserProgress() == null) {
+            return "No logged in user found.";
+        }
+        if (amount <= 0) {
+            return "Cheat amount must be positive.";
+        }
+
+        UserProgress userProgress = loggedInUser.getUserProgress();
+        if (walletType == WalletType.COIN) {
+            userProgress.addCoins(amount);
+        } else if (walletType == WalletType.DIAMOND) {
+            userProgress.addGems(amount);
+        } else {
+            return "Invalid wallet type.";
+        }
+
+        updateUser();
+        return null;
+    }
+
+
+    private void updateUser(){
+        userCache.put(loggedInUser.getUserName(), loggedInUser);
+        writeUsers();
     }
 
 }

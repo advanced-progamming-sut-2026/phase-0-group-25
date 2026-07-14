@@ -77,6 +77,7 @@ import src.Enums.SecurityQuestionType;
         return genderType;
     }
 
+
     public void setGenderType(GenderType genderType) {
         this.genderType = genderType;
     }

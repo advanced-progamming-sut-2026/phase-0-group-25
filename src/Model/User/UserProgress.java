@@ -21,6 +21,8 @@ public class UserProgress {
         this.unlockedZombies = new ArrayList<>();
         this.unlockedPlants = new ArrayList<>();
 
+        this.unlockedChapters.add(ChapterType.ANCIENT_EGYPT);
+
         this.gemsCount = 0;
         this.coinsCount = 0;
     }
@@ -63,6 +65,18 @@ public class UserProgress {
 
     public void setCoinsCount(int coinsCount) {
         this.coinsCount = coinsCount;
+    }
+
+    public void addCoins(int amount) {
+        if (amount > 0) {
+            this.coinsCount += amount;
+        }
+    }
+
+    public void addGems(int amount) {
+        if (amount > 0) {
+            this.gemsCount += amount;
+        }
     }
 
 }

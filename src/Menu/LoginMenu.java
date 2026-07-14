@@ -16,7 +16,6 @@ public class LoginMenu extends Menu{
     public LoginMenu(LoginMenuView loginMenuView) {
         super(MenuType.Signup);
         this.loginMenuView = loginMenuView;
-        addChangeableMenuType(MenuType.Main);
     }
 
 
