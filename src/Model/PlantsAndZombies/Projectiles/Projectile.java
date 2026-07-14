@@ -1,4 +1,8 @@
-package src.Model.PlantsAndZombies;
+package src.Model.PlantsAndZombies.Projectiles;
+
+import src.Model.PlantsAndZombies.BattlePlant;
+import src.Model.PlantsAndZombies.Position;
+import src.Model.PlantsAndZombies.Zombie;
 
 public class Projectile {
     private double velocityX;
@@ -16,9 +20,30 @@ public class Projectile {
     private int currentColumn;
 
     protected boolean isActive;
+    protected boolean icy;
+    private boolean poisonous;
+    private boolean isHypnotizer;
 
     public Projectile() {
 
+    }
+    public Projectile(double velocityX, double velocityY, BattlePlant plant,
+                      int damage, int pierceAmount) {
+        this.velocityX = velocityX;
+        this.velocityY = velocityY;
+        this.position = plant.getPosition();
+        this.baseColumn = plant.getColumn();
+        this.baseRow = plant.getRow();
+        this.currentColumn = baseColumn;
+        this.currentRow = baseRow;
+
+        this.damage = damage;
+
+        this.pierceAmount = pierceAmount;
+        this.range = 11;
+        this.isActive = true;
+        this.icy = false;
+        this.poisonous = false;
     }
 
     public Projectile(double velocityX, double velocityY, BattlePlant plant,
@@ -36,6 +61,8 @@ public class Projectile {
         this.pierceAmount = pierceAmount;
         this.range = range;
         this.isActive = true;
+        this.icy = false;
+        this.poisonous = false;
     }
 
 
@@ -63,6 +90,10 @@ public class Projectile {
         this.currentColumn = currentColumn;
     }
 
+    public void setHypnotizer(boolean isHypnotizer) {
+        this.isHypnotizer = isHypnotizer;
+    }
+
     public void update() {
         position.setX(position.getX() + (0.1 * velocityX));
         position.setY(position.getY() + (0.1 * velocityY));
@@ -85,8 +116,17 @@ public class Projectile {
 
         for (Zombie zombie : game.getAliveZombies()) {
             if (position.equals(zombie.getPosition())) {
-                //todo: reduce hp of zombie or its armor
+                //todo: reduce hp of zombie or its armor and the pierce amount of projectile
             }
         }
     }
+
+    public void setIcy(boolean icy) {
+        this.icy = icy;
+    }
+
+    public void setPoisonous(boolean poisonous) {
+        this.poisonous = poisonous;
+    }
+
 }

@@ -5,9 +5,38 @@ public abstract class Entity {
     protected boolean isAlive;
     protected Position position;
 
+
+
+
     public abstract void update();
 
-    public boolean isAlive() {
-        return this.isAlive;
+
+    public void setCurrentHP(double currentHP) {
+        this.currentHP = currentHP;
+        if (this.currentHP <= 0) {
+            this.isAlive = false;
+        }
     }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
+    public double getCurrentHP() {
+        return currentHP;
+    }
+
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    public void setAlive(boolean alive) {
+        isAlive = alive;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+
 }

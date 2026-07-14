@@ -1,6 +1,7 @@
 package src.Model.PlantsAndZombies.Abilities;
 
 import src.Model.PlantsAndZombies.*;
+import src.Model.PlantsAndZombies.Projectiles.LobbedProjectile;
 
 import java.util.List;
 import java.util.Map;
@@ -40,8 +41,13 @@ public class Lobbing implements Ability {
 
         LobbedProjectile lobbedProjectile = new LobbedProjectile(
                 plant.getPosition().getX(), plant.getPosition().getY(),
-                targetX, speed, AoEDamage, AoERange
+                targetX, speed, AoEDamage, AoERange, damage
         );
+
+        if (plant.getPlantStats().getTags().contains("ice")) {
+            lobbedProjectile.setIcy(true);
+        }
+
         //game.addProjectile(lobbedProjectile);
     }
 }
