@@ -1,0 +1,66 @@
+{
+  "test2" : {
+    "email" : "test@gmail.com",
+    "genderType" : "Male",
+    "nickName" : "sdfasfd",
+    "password" : "123AAERAERfaf#",
+    "securityAnswer" : "dog",
+    "securityQuestion" : "FIRST_PET",
+    "userName" : "test2",
+    "userProgress" : {
+      "coinsCount" : 0,
+      "gemsCount" : 0,
+      "unlockedChapters" : [ ],
+      "unlockedPlants" : [ ],
+      "unlockedZombies" : [ ]
+    }
+  },
+  "test" : {
+    "email" : "test@gmail.com",
+    "genderType" : "Male",
+    "nickName" : "sdfasfd",
+    "password" : "123AAERAERfaf#",
+    "securityAnswer" : "cat",
+    "securityQuestion" : "FIRST_PET",
+    "userName" : "test",
+    "userProgress" : {
+      "coinsCount" : 0,
+      "gemsCount" : 0,
+      "unlockedChapters" : [ ],
+      "unlockedPlants" : [ ],
+      "unlockedZombies" : [ ]
+    }
+  },
+  "amir" : {
+    "email" : "test@gmail.com",
+    "genderType" : "Male",
+    "nickName" : "amir",
+    "password" : "1234#aBcD",
+    "securityAnswer" : "blue",
+    "securityQuestion" : "FAVORITE_COLOR",
+    "userName" : "amir",
+    "userProgress" : {
+      "coinsCount" : 0,
+      "gemsCount" : 0,
+      "unlockedChapters" : [ ],
+      "unlockedPlants" : [ ],
+      "unlockedZombies" : [ ]
+    }
+  },
+  "xyz" : {
+    "email" : "abc@gmail.com",
+    "genderType" : "Male",
+    "nickName" : "xyz",
+    "password" : "1234#AbCd",
+    "securityAnswer" : "blue",
+    "securityQuestion" : "FAVORITE_COLOR",
+    "userName" : "xyz",
+    "userProgress" : {
+      "coinsCount" : 4,
+      "gemsCount" : 6,
+      "unlockedChapters" : [ "ANCIENT_EGYPT" ],
+      "unlockedPlants" : [ ],
+      "unlockedZombies" : [ ]
+    }
+  }
+}

@@ -2,6 +2,7 @@ package src.Model.User;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import src.Enums.GenderType;
+import src.Enums.SecurityQuestionType;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)public class User {
@@ -11,6 +12,8 @@ import src.Enums.GenderType;
     private String email;
     private GenderType genderType;
     private UserProgress userProgress;
+    private SecurityQuestionType securityQuestion;
+    private String securityAnswer;
 
     public User(String userName, String nickName, String password, String email, GenderType genderType) {
         this.userName = userName;
@@ -31,6 +34,12 @@ import src.Enums.GenderType;
 
     public User() {
     }
+
+    public SecurityQuestionType getSecurityQuestion() { return securityQuestion; }
+    public void setSecurityQuestion(SecurityQuestionType securityQuestion) { this.securityQuestion = securityQuestion; }
+
+    public String getSecurityAnswer() { return securityAnswer; }
+    public void setSecurityAnswer(String securityAnswer) { this.securityAnswer = securityAnswer; }
 
     public String getUserName() {
         return userName;
@@ -67,6 +76,7 @@ import src.Enums.GenderType;
     public GenderType getGenderType() {
         return genderType;
     }
+
 
     public void setGenderType(GenderType genderType) {
         this.genderType = genderType;

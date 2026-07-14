@@ -26,6 +26,9 @@ public abstract class Menu {
         MenuManager.getInstance().changeMenu(previousMenu);
     }
 
+    public void onEnter() {
+    }
+
     public Matcher getMatcher(String input, Command command) {
         Matcher matcher = Pattern.compile(command.getRegex()).matcher(input);
         if (matcher.matches()) {
