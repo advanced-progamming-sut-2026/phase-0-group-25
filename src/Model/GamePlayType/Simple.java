@@ -4,8 +4,7 @@ import src.Model.PlantsAndZombies.*;
 import java.util.ArrayList;
 
 public class Simple extends GamePlay {
-    private ArrayList<src.Model.PlantsAndZombies.Plant> myPlants;
-    protected int totalTicksPassed = 0;
+    private ArrayList<Plant> myPlants;
 
     @Override
     public void update() {
@@ -21,4 +20,5 @@ public class Simple extends GamePlay {
             if(zombie.isAlive()) zombie.update();
         }
     }
+
 }
