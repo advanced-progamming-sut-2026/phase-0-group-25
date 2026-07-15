@@ -1,5 +1,6 @@
 package src.Model.PlantsAndZombies.Abilities;
 
+import src.Enums.Status;
 import src.Model.PlantsAndZombies.*;
 import src.Model.Sun.Sun;
 import src.Model.Tile;
@@ -13,7 +14,7 @@ public class StealingSun implements Ability {
     public void executeAbility(Entity entity) {
         Zombie zombie = (Zombie) entity;
 
-        if (zombie.getZombieStats().getName().equals("Turquoise")) {
+        if (zombie.getZombieStats().getName().equals("TURQUOISE")) {
             Position zombieRowAndColumn = Position.getRowAndColumn(zombie.getPosition());
             int zombieColumn = (int) zombieRowAndColumn.getX();
             int zombieRow = (int) zombieRowAndColumn.getY();
@@ -31,6 +32,7 @@ public class StealingSun implements Ability {
                         //todo: define a function for getting current time
                         zombie.setLastActionTime(game.getCurrentTime());
                         this.setActivate(true);
+                        zombie.setStatus(Status.EXECUTING_ABILITY);
                     }
                 }
             } else {
@@ -52,10 +54,11 @@ public class StealingSun implements Ability {
                         }
                     }
                     this.setActivate(false);
+                    zombie.setStatus(Status.MOVING);
                 }
             }
 
-        } else if (zombie.getZombieStats().getName().equals("Ra")) {
+        } else if (zombie.getZombieStats().getName().equals("RA")) {
             //todo: a function which attracts all untouchable suns on game board;
             for (Sun sun : game.getOnBoardSuns()) {
                 this.stolenSun += sun.getNumberOfSun();

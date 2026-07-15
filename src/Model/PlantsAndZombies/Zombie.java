@@ -1,28 +1,42 @@
 package src.Model.PlantsAndZombies;
 
+import src.Enums.Status;
 import src.Model.PlantsAndZombies.Abilities.Ability;
+import src.Model.PlantsAndZombies.Abilities.Eating;
+import src.Model.PlantsAndZombies.Abilities.Moving;
 import src.Model.PlantsAndZombies.Abilities.StealingSun;
 import src.Model.PlantsAndZombies.Armors.Armor;
+import src.Model.PlantsAndZombies.Projectiles.Projectile;
 import src.Model.Sun.Sun;
 
+import javax.imageio.plugins.tiff.BaselineTIFFTagSet;
 import java.util.*;
 
 public class Zombie extends Entity {
     private ZombieStats zombieStats;
+    private Status status;
+    private Entity rival;
+
     private double currentVelocity;
     private ArrayList<String> abilities;
     private ArrayList<Ability> originalAbilities;
+
     private boolean isHalated;
+    private boolean isHypnotized;
+
     private ArrayList<Armor> activeArmors;
     private int lastActionTime;
     //private HashMap<String, Double> effectsInfo;
 
     public Zombie(ZombieStats zombieStats, Position position) {
         this.zombieStats = zombieStats;
+        this.status = Status.MOVING;
+
         this.position = position;
         this.currentHP = zombieStats.getBaseHP();
         this.currentVelocity = zombieStats.getVelocity();
         this.isHalated = false;
+        this.isHypnotized = false;
 
         this.activeArmors = new ArrayList<>();
         if (zombieStats.getArmors() != null) {
@@ -35,21 +49,52 @@ public class Zombie extends Entity {
 
 
     public void update() {
-
+        if (this.status.equals(Status.MOVING)) {
+            for (Ability ability : this.originalAbilities) {
+                if (ability instanceof Moving) {
+                    ability.executeAbility(this);
+                }
+            }
+        } else if (this.status.equals(Status.EATING)) {
+            for (Ability ability : this.originalAbilities) {
+                if (ability instanceof Eating) {
+                    ability.executeAbility(this);
+                }
+            }
+        } else if (this.status.equals(Status.EXECUTING_ABILITY)) {
+            for (Ability ability : this.originalAbilities) {
+                if ((ability instanceof Moving) || (ability instanceof Eating)) {
+                    continue;
+                } else {
+                    ability.executeAbility(this);
+                }
+            }
+        }
     }
 
-    public void takeDamage(int damage) {
+    public void disarmament() {
+        for (Armor armor : this.activeArmors) {
+            armor.stripArmor();
+        }
+    }
+
+    public void takeDamage(Projectile projectile, int damage) {
         int leftoverDamage = damage;
 
-        for (Armor armor : activeArmors) {
-            leftoverDamage = armor.takeDamage(leftoverDamage);
+        if (!projectile.isPoisonous()) {
+            for (int i = 0; i < activeArmors.size(); i++) {
+                Armor armor = activeArmors.get(i);
 
-            if (armor.isDisarmed()) {
-                activeArmors.remove(armor);
-            }
+                leftoverDamage = armor.takeDamage(leftoverDamage);
 
-            if (leftoverDamage <= 0) {
-                break;
+                if (armor.isDisarmed()) {
+                    activeArmors.remove(armor);
+                    i -= 1;
+                }
+
+                if (leftoverDamage <= 0) {
+                    break;
+                }
             }
         }
 
@@ -89,8 +134,32 @@ public class Zombie extends Entity {
         return zombieStats;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public Entity getRival() {
+        return rival;
+    }
+
+    public void setRival(Entity rival) {
+        this.rival = rival;
+    }
+
     public Position getPosition() {
         return position;
+    }
+
+    public boolean isHypnotized() {
+        return isHypnotized;
+    }
+
+    public void setHypnotized(boolean hypnotized) {
+        isHypnotized = hypnotized;
     }
 
     public double getCurrentVelocity() {
@@ -108,4 +177,6 @@ public class Zombie extends Entity {
     public void setLastActionTime(int lastActionTime) {
         this.lastActionTime = lastActionTime;
     }
+
+
 }
