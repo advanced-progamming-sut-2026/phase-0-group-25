@@ -4,7 +4,8 @@ import src.Model.PlantsAndZombies.*;
 import java.util.ArrayList;
 
 public class Simple extends GamePlay {
-    private ArrayList<Plant> myPlants;
+    // plants that can appear in the game...
+    private ArrayList<BattlePlant> myPlants;
 
     @Override
     public void update() {
@@ -12,7 +13,7 @@ public class Simple extends GamePlay {
         totalTicksPassed++;
         sunMaker();
 
-        for (Plant plant : gamePlants) {
+        for (BattlePlant plant : gamePlants) {
             if(plant.isAlive()) plant.update();
         }
 
