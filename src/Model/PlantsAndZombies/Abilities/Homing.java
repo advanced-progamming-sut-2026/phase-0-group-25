@@ -1,5 +1,6 @@
 package src.Model.PlantsAndZombies.Abilities;
 
+import src.Model.PlantsAndZombies.Armors.Armor;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Entity;
 import src.Model.PlantsAndZombies.Position;
@@ -74,7 +75,7 @@ public class Homing implements Ability {
                 ArrayList<Zombie> zombies = tile.getZombies();//todo: getter of alive zombies in tile
 
                 for (Zombie zombie : zombies) {
-                    //todo: disarmament of zombies without any damages
+                    zombie.disarmament();
                 }
             }
 
