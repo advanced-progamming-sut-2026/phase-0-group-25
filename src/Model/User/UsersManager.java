@@ -219,6 +219,26 @@ public class UsersManager {
         return null;
     }
 
+    public String changeDifficulty(String difficultyLevel) {
+        if (loggedInUser == null || loggedInUser.getUserProgress() == null) {
+            return "No logged in user found.";
+        }
+
+        int difficulty;
+        try {
+            difficulty = Integer.parseInt(difficultyLevel);
+        } catch (NumberFormatException e) {
+            return "Invalid difficulty level: Must be a number between 1 and 5.";
+        }
+
+        if (difficulty < 1 || difficulty > 5) {
+            return "Invalid difficulty level: Must be between 1 and 5.";
+        }
+
+        loggedInUser.getUserProgress().setGameDifficulty(difficulty);
+        updateUser();
+        return null;
+    }
 
     private void updateUser(){
         userCache.put(loggedInUser.getUserName(), loggedInUser);

@@ -11,6 +11,7 @@ public enum Command {
     EnterCoinWallet("menu coin-wallet"),
     EnterGemWallet("menu gem-wallet"),
     Cheat("menu cheat add (\\d+) (coin|diamond)"),
+    ChangeDifficulty("menu settings change-difficulty -l (\\S+)"),
     RegisterAccount("register -u (.+?) -p (.+?) (.+?) -n (.+?) -e (.+?) -g (.+?)"),
     PickQuestion("pick question -q (.+?) -a (.+?) -c (.+?)"),
     LoginAccount("login -u (\\S+) -p (\\S+)( -stay-logged-in)?"),

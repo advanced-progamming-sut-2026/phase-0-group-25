@@ -8,31 +8,34 @@ import src.Model.PlantsAndZombies.Plant;
 import src.Model.PlantsAndZombies.Zombie;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class UserProgress {
-    private ArrayList<ChapterType> unlockedChapters;
+    private HashMap<ChapterType, Integer> unlockedChaptersAndLevels;
     private ArrayList<ZombieType> unlockedZombies;
     private ArrayList<PlantType> unlockedPlants;
     private int gemsCount;
     private int coinsCount;
+    private int gameDifficulty;
 
     public UserProgress() {
-        this.unlockedChapters = new ArrayList<>();
+        this.unlockedChaptersAndLevels = new HashMap<>();
         this.unlockedZombies = new ArrayList<>();
         this.unlockedPlants = new ArrayList<>();
 
-        this.unlockedChapters.add(ChapterType.ANCIENT_EGYPT);
+        this.unlockedChaptersAndLevels.put(ChapterType.ANCIENT_EGYPT, 1);
 
         this.gemsCount = 0;
         this.coinsCount = 0;
+        this.gameDifficulty = 3;
     }
 
-    public ArrayList<ChapterType> getUnlockedChapters() {
-        return unlockedChapters;
+    public HashMap<ChapterType, Integer> getUnlockedChaptersAndLevels() {
+        return unlockedChaptersAndLevels;
     }
 
-    public void setUnlockedChapters(ArrayList<ChapterType> unlockedChapters) {
-        this.unlockedChapters = unlockedChapters;
+    public void setUnlockedChaptersAndLevels(HashMap<ChapterType, Integer> unlockedChaptersAndLevels) {
+        this.unlockedChaptersAndLevels = unlockedChaptersAndLevels;
     }
 
     public ArrayList<ZombieType> getUnlockedZombies() {
@@ -71,6 +74,14 @@ public class UserProgress {
         if (amount > 0) {
             this.coinsCount += amount;
         }
+    }
+
+    public void setGameDifficulty(int gameDifficulty) {
+        this.gameDifficulty = gameDifficulty;
+    }
+
+    public int getGameDifficulty() {
+        return gameDifficulty;
     }
 
     public void addGems(int amount) {

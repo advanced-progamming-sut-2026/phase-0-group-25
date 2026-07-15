@@ -45,7 +45,7 @@ public class GameMenu extends Menu{
 
         User currentUser = UsersManager.getInstance().getLoggedInUser();
         if (currentUser == null || currentUser.getUserProgress() == null ||
-                !currentUser.getUserProgress().getUnlockedChapters().contains(chapterType)) {
+                !currentUser.getUserProgress().getUnlockedChaptersAndLevels().keySet().contains(chapterType)) {
             getView().showError("This chapter is locked.");
             return;
         }
