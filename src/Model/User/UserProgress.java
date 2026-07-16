@@ -17,14 +17,15 @@ public class UserProgress {
     private int gemsCount;
     private int coinsCount;
     private int gameDifficulty;
+    private int gamesPlayed;
 
     public UserProgress() {
         this.unlockedChaptersAndLevels = new HashMap<>();
         this.unlockedZombies = new ArrayList<>();
         this.unlockedPlants = new ArrayList<>();
 
-        this.unlockedChaptersAndLevels.put(ChapterType.ANCIENT_EGYPT, 1);
 
+        this.gamesPlayed = 0;
         this.gemsCount = 0;
         this.coinsCount = 0;
         this.gameDifficulty = 3;
@@ -36,6 +37,14 @@ public class UserProgress {
 
     public void setUnlockedChaptersAndLevels(HashMap<ChapterType, Integer> unlockedChaptersAndLevels) {
         this.unlockedChaptersAndLevels = unlockedChaptersAndLevels;
+    }
+
+    public int getGamesPlayed() {
+        return gamesPlayed;
+    }
+
+    public void setGamesPlayed(int gamesPlayed) {
+        this.gamesPlayed = gamesPlayed;
     }
 
     public ArrayList<ZombieType> getUnlockedZombies() {
@@ -54,6 +63,13 @@ public class UserProgress {
         this.unlockedPlants = unlockedPlants;
     }
 
+    public int extractTotalLevelsPassed() {
+        int totalLevels = 0;
+        for (Integer level : unlockedChaptersAndLevels.values()) {
+            totalLevels += (level - 1);
+        }
+        return totalLevels;
+    }
     public int getGemsCount() {
         return gemsCount;
     }
@@ -84,6 +100,26 @@ public class UserProgress {
         return gameDifficulty;
     }
 
+
+    public void unlockPlant(PlantType plantType){
+        unlockedPlants.add(plantType);
+    }
+
+
+
+    public void unlockZombie(ZombieType zombieType){
+        unlockedZombies.add(zombieType);
+    }
+
+
+
+    public void unlockChapter(ChapterType chapterType){
+        unlockedChaptersAndLevels.put(chapterType, 1);
+    }
+
+    public void unlockLevel(int level, ChapterType chapterType){
+        unlockedChaptersAndLevels.put(chapterType, level);
+    }
     public void addGems(int amount) {
         if (amount > 0) {
             this.gemsCount += amount;

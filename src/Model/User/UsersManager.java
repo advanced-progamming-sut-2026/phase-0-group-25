@@ -5,6 +5,7 @@ import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
@@ -57,6 +58,128 @@ public class UsersManager {
     public void addUser(User user){
         userCache.put(user.getUserName(), user);
         writeUsers();
+    }
+
+    public String validateAndChangeNickname(String newNickname) {
+        if(loggedInUser.getNickName().equals(newNickname)){
+            return "you are already using this nickname.";
+        }
+
+        if (loggedInUser == null) {
+            return "No logged in user found.";
+        }
+
+        if (newNickname.length() < 3 || newNickname.length() > 30) {
+            return "Invalid nickname length: Must be between 3 and 30 characters.";
+        }
+
+        loggedInUser.setNickName(newNickname);
+        updateUser();
+
+        return null;
+    }
+
+    public String validateAndChangePassword(String newPassword, String oldPassword) {
+        if (loggedInUser == null) {
+            return "No logged in user found.";
+        }
+
+
+        if (!loggedInUser.getPassword().equals(oldPassword)) {
+            return "Invalid password: Old password does not match.";
+        }
+
+        if(loggedInUser.getPassword().equals(newPassword)){
+            return "you are already using this password.";
+        }
+
+        if (newPassword.contains(" ")) {
+            return "Weak password: Spaces are not allowed within password strings.";
+        }
+
+        if (!PASSWORD_COMPLEXITY_REGEX.matcher(newPassword).matches()) {
+            return "Weak password: Must be at least 8 characters long and include numbers, " +
+                    "uppercase/lowercase letters, and special characters.";
+        }
+
+        loggedInUser.setPassword(newPassword);
+        updateUser();
+
+        return null;
+    }
+
+    public String validateAndChangeEmail(String newEmail) {
+        if (loggedInUser == null) {
+            return "No logged in user found.";
+        }
+
+        if(loggedInUser.getEmail().equals(newEmail)){
+            return "you are already using this email.";
+        }
+
+        if (newEmail.length() > 200) {
+            return "Invalid email: Length cannot exceed 200 characters.";
+        }
+
+        String[] emailParts = newEmail.split("@");
+        if (emailParts.length != 2 || emailParts[0].isEmpty() || emailParts[1].isEmpty()) {
+            return "Invalid email structure: Must contain exactly one '@' symbol.";
+        }
+
+        if (!EMAIL_USERNAME_REGEX.matcher(emailParts[0]).matches()) {
+            return "Invalid email username: Must start/end with alphanumeric characters and contain no consecutive dots.";
+        }
+
+        if (!EMAIL_DOMAIN_REGEX.matcher(emailParts[1]).matches()) {
+            return "Invalid email domain: Must include a valid extension layout (minimum 2 characters).";
+        }
+
+        loggedInUser.setEmail(newEmail);
+        updateUser();
+
+        return null;
+    }
+
+
+    public String validateAndChangeUsername(String newUsername) {
+        if (loggedInUser == null) {
+            return "No logged in user found.";
+        }
+
+        if(loggedInUser.getUserName().equals(newUsername)){
+            return "you are already using this username.";
+        }
+
+        if (userCache.containsKey(newUsername)) {
+            return "Duplicate username: User already exists in the system.";
+        }
+
+        if (newUsername.length() < 3 || newUsername.length() > 20) {
+            return "Invalid username length: Must be between 3 and 20 characters.";
+        }
+
+        if (!USERNAME_CHAR_REGEX.matcher(newUsername).matches()) {
+            return "Invalid username characters: Only letters, numbers, and underscores are allowed.";
+        }
+
+        String oldUsername = loggedInUser.getUserName();
+        userCache.remove(oldUsername);
+
+        loggedInUser.setUserName(newUsername);
+
+        userCache.put(newUsername, loggedInUser);
+        writeUsers();
+
+        File stateFile = new File(STATE_FILE);
+        if (stateFile.exists()) {
+            try {
+                mapper.writeValue(stateFile, newUsername);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to update login state data.", e);
+            }
+        }
+
+        return null;
     }
 
 
@@ -243,6 +366,19 @@ public class UsersManager {
     private void updateUser(){
         userCache.put(loggedInUser.getUserName(), loggedInUser);
         writeUsers();
+    }
+
+    public ArrayList<String > getUnreadNews(){
+        ArrayList<String > news = loggedInUser.getNewsManager().extractUnreadNews();
+        updateUser();
+        return news;
+    }
+
+
+    public ArrayList<String > getAllNews(){
+        ArrayList<String > news = loggedInUser.getNewsManager().extractAllNews();
+        updateUser();
+        return news;
     }
 
 }

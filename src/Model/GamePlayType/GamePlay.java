@@ -3,7 +3,7 @@ package src.Model.GamePlayType;
 import src.Model.Mower;
 import src.Model.PlantsAndZombies.Plant;
 import src.Model.PlantsAndZombies.Position;
-import src.Model.PlantsAndZombies.Projectile;
+//import src.Model.PlantsAndZombies.Projectile;
 import src.Model.Sun.RadioActiveSun;
 import src.Model.Tile;
 import src.Model.PlantsAndZombies.Zombie;
@@ -21,7 +21,7 @@ public abstract class GamePlay {
     protected ArrayList<Plant> gamePlants;
 
     protected ArrayList<Tile> tiles;
-    protected ArrayList<Projectile> projectiles;
+//    protected ArrayList<Projectile> projectiles;
     protected ArrayList<Mower> mowers;
     protected ArrayList<Sun> activeSuns = new ArrayList<>();
     protected int ticksSinceLastDrop = 0;
