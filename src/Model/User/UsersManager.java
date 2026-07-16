@@ -5,6 +5,7 @@ import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
@@ -243,6 +244,19 @@ public class UsersManager {
     private void updateUser(){
         userCache.put(loggedInUser.getUserName(), loggedInUser);
         writeUsers();
+    }
+
+    public ArrayList<String > getUnreadNews(){
+        ArrayList<String > news = loggedInUser.getNewsManager().extractUnreadNews();
+        updateUser();
+        return news;
+    }
+
+
+    public ArrayList<String > getAllNews(){
+        ArrayList<String > news = loggedInUser.getNewsManager().extractAllNews();
+        updateUser();
+        return news;
     }
 
 }

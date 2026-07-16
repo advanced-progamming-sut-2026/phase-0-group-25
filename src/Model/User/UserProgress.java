@@ -23,7 +23,6 @@ public class UserProgress {
         this.unlockedZombies = new ArrayList<>();
         this.unlockedPlants = new ArrayList<>();
 
-        this.unlockedChaptersAndLevels.put(ChapterType.ANCIENT_EGYPT, 1);
 
         this.gemsCount = 0;
         this.coinsCount = 0;
@@ -84,6 +83,26 @@ public class UserProgress {
         return gameDifficulty;
     }
 
+
+    public void unlockPlant(PlantType plantType){
+        unlockedPlants.add(plantType);
+    }
+
+
+
+    public void unlockZombie(ZombieType zombieType){
+        unlockedZombies.add(zombieType);
+    }
+
+
+
+    public void unlockChapter(ChapterType chapterType){
+        unlockedChaptersAndLevels.put(chapterType, 1);
+    }
+
+    public void unlockLevel(int level, ChapterType chapterType){
+        unlockedChaptersAndLevels.put(chapterType, level);
+    }
     public void addGems(int amount) {
         if (amount > 0) {
             this.gemsCount += amount;

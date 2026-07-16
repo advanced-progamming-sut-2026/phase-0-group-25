@@ -17,7 +17,9 @@ public enum Command {
     LoginAccount("login -u (\\S+) -p (\\S+)( -stay-logged-in)?"),
     ForgetPassword("forget password -u (\\S+) -e (\\S+) answer -a (.+?)"),
     SetNewPassword("set password -p (\\S+)"),
-    MenuLogout("menu logout");
+    MenuLogout("menu logout"),
+    ShowUnreadNews("menu news show-unread"),
+    ShowAllNews("menu news show-all");
 
     private final String regex;
     Command(String regex) {

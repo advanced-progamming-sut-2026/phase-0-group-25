@@ -3,7 +3,7 @@ package src.Model.GamePlayType;
 import src.Model.Mower;
 import src.Model.PlantsAndZombies.Plant;
 import src.Model.PlantsAndZombies.Position;
-import src.Model.PlantsAndZombies.Projectile;
+//import src.Model.PlantsAndZombies.Projectile;
 import src.Model.Sun.RadioActiveSun;
 import src.Model.Tile;
 import src.Model.PlantsAndZombies.Zombie;
@@ -21,7 +21,7 @@ public abstract class GamePlay {
     protected ArrayList<Plant> gamePlants;
 
     protected ArrayList<Tile> tiles;
-    protected ArrayList<Projectile> projectiles;
+//    protected ArrayList<Projectile> projectiles;
     protected ArrayList<Mower> mowers;
     protected ArrayList<Sun> activeSuns = new ArrayList<>();
     protected int ticksSinceLastDrop = 0;
@@ -168,7 +168,7 @@ public abstract class GamePlay {
                 zombie.setCurrentHP(zombie.getCurrentHP() - 150);
                 if (zombie.getCurrentHP() <= 0) {
                     zombie.setAlive(false);
-                    System.out.printf("Zombie of type %s is dead at (%d, %d)\n", zombie.getName(), zX, zY);
+//                    System.out.printf("Zombie of type %s is dead at (%d, %d)\n", zombie.getName(), zX, zY);
                 }
             }
         }
