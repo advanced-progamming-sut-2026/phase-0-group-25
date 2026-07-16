@@ -6,6 +6,7 @@ import src.Model.PlantsAndZombies.Abilities.Eating;
 import src.Model.PlantsAndZombies.Abilities.Moving;
 import src.Model.PlantsAndZombies.Abilities.StealingSun;
 import src.Model.PlantsAndZombies.Armors.Armor;
+import src.Model.PlantsAndZombies.Projectiles.Dynamite;
 import src.Model.PlantsAndZombies.Projectiles.Projectile;
 import src.Model.Sun.Sun;
 
@@ -26,6 +27,7 @@ public class Zombie extends Entity {
 
     private ArrayList<Armor> activeArmors;
     private int lastActionTime;
+    private int spawnTime;
     //private HashMap<String, Double> effectsInfo;
 
     public Zombie(ZombieStats zombieStats, Position position) {
@@ -45,10 +47,23 @@ public class Zombie extends Entity {
                         armor.getCurrentHP(), armor.isMetallic()));
             }
         }
+        //todo: function for current time
+        this.spawnTime = game.getCurrentTime();
     }
 
 
     public void update() {
+        if ((this.zombieStats.getName().equals("PROSPECTOR")) &&
+                (this.zombieStats.getAttributes().get("dynamite").equals("on"))) {
+            if ((game.getCurrentTime() - this.spawnTime) >= 10) {
+                Dynamite dynamite = new Dynamite(new Position());//todo: initialize with proper coordinates
+
+                //todo: add this recently-generated dynamite to active dynamites arraylist of game
+            }
+
+        }
+
+
         if (this.status.equals(Status.MOVING)) {
             for (Ability ability : this.originalAbilities) {
                 if (ability instanceof Moving) {
@@ -74,7 +89,9 @@ public class Zombie extends Entity {
 
     public void disarmament() {
         for (Armor armor : this.activeArmors) {
-            armor.stripArmor();
+            if (armor.isMetallic()) {
+                armor.stripArmor();
+            }
         }
     }
 
@@ -90,6 +107,10 @@ public class Zombie extends Entity {
                 if (armor.isDisarmed()) {
                     activeArmors.remove(armor);
                     i -= 1;
+                    if (this.name.equals("NEWSPAPER")) { //increasing velocity & damage per second of NEWSPAPER_ZOMBIE
+                        this.zombieStats.setVelocity(this.zombieStats.getVelocity() * 2.5);
+                        this.zombieStats.setEatdps(this.zombieStats.getEatdps() * 2.5);
+                    }
                 }
 
                 if (leftoverDamage <= 0) {
@@ -99,17 +120,35 @@ public class Zombie extends Entity {
         }
 
         if (leftoverDamage > 0) {
+            if (this.zombieStats.getName().equals("EXPLORER")) {
+                if (projectile.isFiring()) {
+                    this.zombieStats.getAttributes().replace("torch", "on");
+                } else if (projectile.isIcy()) {
+                    this.zombieStats.getAttributes().replace("torch", "off");
+                }
+            } else if (this.zombieStats.getName().equals("PROSPECTOR")) {
+                if (projectile.isIcy()) {
+                    this.zombieStats.getAttributes().replace("dynamite", "off");
+                }
+            }
             this.currentHP -= leftoverDamage;
             checkLife();
         }
     }
 
     public void checkLife() {
+        if (this.name.equals("GARGANTUAR")) {
+            if (this.currentHP <= (this.zombieStats.getBaseHP() / 2)) {
+                //todo: throw a imp zombie to third column of its own row
+            }
+        }
+
         if (this.currentHP <= 0) {
             this.currentHP = 0;
             this.isAlive = false;
             checkSteal();
         }
+
     }
 
     public void checkSteal() {
@@ -176,6 +215,10 @@ public class Zombie extends Entity {
 
     public void setLastActionTime(int lastActionTime) {
         this.lastActionTime = lastActionTime;
+    }
+
+    public int getSpawnTime() {
+        return spawnTime;
     }
 
 

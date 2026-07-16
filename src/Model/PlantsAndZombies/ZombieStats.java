@@ -28,8 +28,16 @@ public class ZombieStats {
         return eatdps;
     }
 
+    public void setEatdps(double eatdps) {
+        this.eatdps = eatdps;
+    }
+
     public double getVelocity() {
         return velocity;
+    }
+
+    public void setVelocity(double velocity) {
+        this.velocity = velocity;
     }
 
     public int getWaveCost() {

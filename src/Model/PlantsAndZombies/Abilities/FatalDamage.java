@@ -5,7 +5,7 @@ import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Entity;
 import src.Model.PlantsAndZombies.Zombie;
 
-public class FatalDamage extends Eating {
+public class FatalDamage implements Ability {
     @Override
     public void executeAbility(Entity entity) {
         Zombie zombie = (Zombie) entity;
@@ -15,7 +15,7 @@ public class FatalDamage extends Eating {
             rival.setCurrentHP(0);
 
             zombie.setCurrentVelocity(zombie.getZombieStats().getVelocity() / 2);
-        } else { //zombies like ALL_STAR & PIANO
+        } else { //zombies like GARGANTUAR & PIANO & EXPLORER with enlightened torch
             BattlePlant plant = (BattlePlant) rival;
             plant.setCurrentHP(0);
 

@@ -19,8 +19,9 @@ public class Projectile {
     private int currentRow;
     private int currentColumn;
 
-    private boolean isActive;
-    private boolean icy;
+    protected boolean isActive;
+    protected boolean icy;
+    protected boolean firing;
     private boolean poisonous;
     private boolean isHypnotizer;
 
@@ -44,6 +45,7 @@ public class Projectile {
         this.range = 11;
         this.isActive = true;
         this.icy = false;
+        this.firing = false;
         this.poisonous = false;
     }
 
@@ -63,6 +65,7 @@ public class Projectile {
         this.range = range;
         this.isActive = true;
         this.icy = false;
+        this.firing = false;
         this.poisonous = false;
     }
 
@@ -124,8 +127,29 @@ public class Projectile {
         }
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public boolean isIcy() {
+        return icy;
+    }
+
     public void setIcy(boolean icy) {
         this.icy = icy;
+    }
+
+
+    public boolean isFiring() {
+        return firing;
+    }
+
+    public void setFiring(boolean firing) {
+        this.firing = firing;
     }
 
     public void setPoisonous(boolean poisonous) {
