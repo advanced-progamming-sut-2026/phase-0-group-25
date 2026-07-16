@@ -10,4 +10,9 @@ public class CoinWalletMenuTerminalView extends AbstractTerminalView implements 
     public void showCurrentMenu() {
         System.out.println("coin wallet menu");
     }
+
+    @Override
+    public void showCoinsCount(int coinsCount) {
+        System.out.println("Coins: " + coinsCount);
+    }
 }

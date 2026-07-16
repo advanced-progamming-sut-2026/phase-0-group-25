@@ -10,4 +10,9 @@ public class GemWalletMenuTerminalView extends AbstractTerminalView implements G
     public void showCurrentMenu() {
         System.out.println("gem wallet menu");
     }
+
+    @Override
+    public void showGemsCount(int gemsCount) {
+        System.out.println("Gems: " + gemsCount);
+    }
 }

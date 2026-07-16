@@ -1,6 +1,7 @@
 package src.Menu;
 
 import src.Enums.MenuType;
+import src.Model.User.UsersManager;
 import src.View.ConcreteViews.*;
 
 import java.util.ArrayList;
@@ -42,7 +43,13 @@ public class MenuManager {
         menusAndTheirNames.put(MenuType.Signup, new SignUpMenu(new SignUpMenuTerminalView()));
         menusAndTheirNames.put(MenuType.TravelLog, new TravelLogMenu(new TravelLogMenuTerminalView()));
         menusAndTheirNames.put(MenuType.Network, new NetworkMenu(new NetworkMenuTerminalView()));
-        currentMenu = menusAndTheirNames.get(MenuType.Signup);
+
+        UsersManager usersManager = UsersManager.getInstance();
+        if (usersManager.checkAndLoadStayLoggedIn()) {
+            this.currentMenu = menusAndTheirNames.get(MenuType.Main);
+        } else {
+            this.currentMenu = menusAndTheirNames.get(MenuType.Signup);
+        }
     }
 
     public void setMustExit() {
@@ -54,6 +61,7 @@ public class MenuManager {
 
     public void changeMenu(MenuType menuType){
         this.currentMenu = menusAndTheirNames.get(menuType);
+        this.currentMenu.onEnter();
     }
     public void startAppLoop() {
         while (!mustExit) {

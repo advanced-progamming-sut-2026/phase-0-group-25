@@ -1,20 +1,24 @@
 package src.Model.GamePlayType;
 
 import src.Model.Mower;
-import src.Model.PlantsAndZombies.*;
+import src.Model.PlantsAndZombies.Plant;
+import src.Model.PlantsAndZombies.Position;
+import src.Model.PlantsAndZombies.Projectile;
 import src.Model.Sun.RadioActiveSun;
 import src.Model.Tile;
+import src.Model.PlantsAndZombies.Zombie;
 import src.Model.PlayGroundType.PlayGround;
 import src.Model.Sun.Sun;
 import java.util.ArrayList;
 
 public abstract class GamePlay {
-    // zombies that can appear in the game...
+    // plants and zombies that can appear in the game...
     protected ArrayList<Zombie> zombies;
+    protected ArrayList<Plant> plants;
 
     // plants and zombies that are in the game at the moment...
     protected ArrayList<Zombie> gameZombies;
-    protected ArrayList<BattlePlant> gamePlants;
+    protected ArrayList<Plant> gamePlants;
 
     protected ArrayList<Tile> tiles;
     protected ArrayList<Projectile> projectiles;
@@ -169,7 +173,7 @@ public abstract class GamePlay {
             }
         }
 
-        for (BattlePlant plant : gamePlants) {
+        for (Plant plant : gamePlants) {
             int pX = (int) plant.getPosition().getX();
             int pY = (int) plant.getPosition().getY();
 
@@ -184,7 +188,7 @@ public abstract class GamePlay {
         }
     }
 
-    public void planting(BattlePlant thisPlant, Position thisPosition) {
+    public void planting(Plant thisPlant, Position thisPosition) {
         if (thisPlant.checkingPlantable(mySuns)) {
             Tile thisTile = tiles.stream().filter(p -> p.getPosition().equals(thisPosition)).findFirst().get();
             thisTile.setPlant(thisPlant);
@@ -195,7 +199,7 @@ public abstract class GamePlay {
         }
     }
 
-    public void plucking(BattlePlant thisPlant, Position thisPosition) {
+    public void plucking(Plant thisPlant, Position thisPosition) {
         Tile thisTile = tiles.stream().filter(p -> p.getPosition().equals(thisPosition)).findFirst().get();
         thisTile.setPlant(null);
     }
@@ -226,7 +230,7 @@ public abstract class GamePlay {
         return gameZombies;
     }
 
-    public ArrayList<BattlePlant> getGamePlants() {
+    public ArrayList<Plant> getGamePlants() {
         return gamePlants;
     }
 

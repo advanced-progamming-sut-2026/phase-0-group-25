@@ -6,29 +6,38 @@ public abstract class Entity {
     protected boolean isAlive = true;
     protected Position position;
 
+
+
+
     public abstract void update();
 
-    public String getName() {
-        return name;
+
+    public void setCurrentHP(double currentHP) {
+        this.currentHP = currentHP;
+        if (this.currentHP <= 0) {
+            this.isAlive = false;
+        }
     }
 
-    public Position getPosition() {
-        return position;
-    }
-
-    public void setAlive(boolean alive) {
-        isAlive = alive;
-    }
-
-    public boolean isAlive() {
-        return this.isAlive;
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
     public double getCurrentHP() {
         return currentHP;
     }
 
-    public void setCurrentHP(double currentHP) {
-        this.currentHP = currentHP;
+    public boolean isAlive() {
+        return isAlive;
     }
+
+    public void setAlive(boolean alive) {
+        isAlive = alive;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+
 }

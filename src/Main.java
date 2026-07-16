@@ -15,17 +15,8 @@ import java.util.List;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-//        MenuManager menuManager = MenuManager.getInstance();
-//        menuManager.startAppLoop();
-        User user = new User("amir", "asdf", "asdfsa", "asdfasf", GenderType.Male);
-        UsersManager usersManager = new UsersManager();
-//        List<User> users = usersManager.readUsers();
-//        users.add(user);
-        usersManager.writeUsers();
-//        User user = users.get(0);
-
-//        users.add(user);
-//        usersManager.writeUsers(users);
+        MenuManager menuManager = MenuManager.getInstance();
+        menuManager.startAppLoop();
 
 
     }
