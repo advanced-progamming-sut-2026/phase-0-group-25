@@ -19,7 +19,12 @@ public enum Command {
     SetNewPassword("set password -p (\\S+)"),
     MenuLogout("menu logout"),
     ShowUnreadNews("menu news show-unread"),
-    ShowAllNews("menu news show-all");
+    ShowAllNews("menu news show-all"),
+    ChangeUsername("menu profile change-username -u (.+?)"),
+    ChangeNickname("menu profile change-nickname -u (.+?)"),
+    ChangeEmail("menu profile change-email -e (.+?)"),
+    ChangePassword("menu profile change-password -p (\\S+) -o (\\S+)"),
+    ShowProfileInfo("menu profile show-info");
 
     private final String regex;
     Command(String regex) {

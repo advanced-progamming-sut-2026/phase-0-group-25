@@ -168,7 +168,7 @@ public abstract class GamePlay {
                 zombie.setCurrentHP(zombie.getCurrentHP() - 150);
                 if (zombie.getCurrentHP() <= 0) {
                     zombie.setAlive(false);
-                    System.out.printf("Zombie of type %s is dead at (%d, %d)\n", zombie.getName(), zX, zY);
+//                    System.out.printf("Zombie of type %s is dead at (%d, %d)\n", zombie.getName(), zX, zY);
                 }
             }
         }

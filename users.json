@@ -1,6 +1,6 @@
 {
   "amir" : {
-    "email" : "test@gmail.com",
+    "email" : "TEST@gmail.com",
     "genderType" : "Male",
     "newsManager" : {
       "news" : [ {
@@ -11,14 +11,15 @@
         "read" : true
       } ]
     },
-    "nickName" : "amir",
+    "nickName" : "AMIR2007",
     "password" : "1234$AbCd",
     "securityAnswer" : "blue",
     "securityQuestion" : "FAVORITE_COLOR",
     "userName" : "amir",
     "userProgress" : {
-      "coinsCount" : 4,
+      "coinsCount" : 0,
       "gameDifficulty" : 3,
+      "gamesPlayed" : 0,
       "gemsCount" : 0,
       "unlockedChaptersAndLevels" : {
         "ANCIENT_EGYPT" : 1
