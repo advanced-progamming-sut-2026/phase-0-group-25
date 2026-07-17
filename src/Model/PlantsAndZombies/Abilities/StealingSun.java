@@ -1,6 +1,5 @@
 package src.Model.PlantsAndZombies.Abilities;
 
-import src.Enums.Status;
 import src.Model.PlantsAndZombies.*;
 import src.Model.Sun.Sun;
 import src.Model.Tile;
@@ -8,18 +7,18 @@ import src.Model.Tile;
 
 public class StealingSun implements Ability {
     private double stolenSun = 0;
-    private boolean isActivated = false;
+    private boolean isActivate = false;
 
     @Override
     public void executeAbility(Entity entity) {
         Zombie zombie = (Zombie) entity;
 
-        if (zombie.getZombieStats().getName().equals("TURQUOISE")) {
+        if (zombie.getZombieStats().getName().equals("Turquoise")) {
             Position zombieRowAndColumn = Position.getRowAndColumn(zombie.getPosition());
             int zombieColumn = (int) zombieRowAndColumn.getX();
             int zombieRow = (int) zombieRowAndColumn.getY();
 
-            if (!this.isActivated) {
+            if (!this.isActivate) {
 
                 for (int i = 0; i <= 4; i++) {
                     //todo: proper getter tile function with defined row and column
@@ -31,9 +30,7 @@ public class StealingSun implements Ability {
                         zombie.setCurrentVelocity(0);
                         //todo: define a function for getting current time
                         zombie.setLastActionTime(game.getCurrentTime());
-                        this.setActivated(true);
-                        zombie.setStatus(Status.EXECUTING_ABILITY);
-                        break;
+                        this.setActivate(true);
                     }
                 }
             } else {
@@ -54,12 +51,11 @@ public class StealingSun implements Ability {
                             plant.setAlive(false);
                         }
                     }
-                    this.setActivated(false);
-                    zombie.setStatus(Status.MOVING);
+                    this.setActivate(false);
                 }
             }
 
-        } else if (zombie.getZombieStats().getName().equals("RA")) {
+        } else if (zombie.getZombieStats().getName().equals("Ra")) {
             //todo: a function which attracts all untouchable suns on game board;
             for (Sun sun : game.getOnBoardSuns()) {
                 this.stolenSun += sun.getNumberOfSun();
@@ -71,7 +67,7 @@ public class StealingSun implements Ability {
         return this.stolenSun;
     }
 
-    public void setActivated(boolean activated) {
-        isActivated = activated;
+    public void setActivate(boolean activate) {
+        isActivate = activate;
     }
 }
