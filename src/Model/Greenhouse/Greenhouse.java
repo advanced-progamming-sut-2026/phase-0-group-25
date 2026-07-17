@@ -1,0 +1,10 @@
+package src.Model.Greenhouse;
+
+import src.Model.Tile;
+
+import java.util.*;
+
+public class Greenhouse {
+    private ArrayList<GreenhousePlant> plants;
+    private ArrayList<Tile> tiles;
+}
