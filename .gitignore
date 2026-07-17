@@ -28,3 +28,11 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+# Ignore IntelliJ IDEA project-specific library configurations
+.idea/libraries/
+
+# Ignore any compiled external libraries (JARs) if you ever put them in a lib folder
+*.jar
+*.war
+*.ear
