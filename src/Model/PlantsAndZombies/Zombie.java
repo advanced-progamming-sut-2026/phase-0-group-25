@@ -10,7 +10,6 @@ import src.Model.PlantsAndZombies.Projectiles.Dynamite;
 import src.Model.PlantsAndZombies.Projectiles.Projectile;
 import src.Model.Sun.Sun;
 
-import javax.imageio.plugins.tiff.BaselineTIFFTagSet;
 import java.util.*;
 
 
@@ -143,7 +142,10 @@ public class Zombie extends Entity {
 
             this.currentHP -= leftoverDamage;
             if (projectile.isIcy()) {
-                makeFreeze();
+                freeze();
+            }
+            if(projectile.isFiring()){
+                unfreeze();
             }
             checkLife();
         }
@@ -159,11 +161,18 @@ public class Zombie extends Entity {
         }
     }
 
-    public void makeFreeze() {
+    public void freeze() {
         //todo: getter for current game time
         this.frozenTime = game.getCurrentTime();
         this.isFrozen = true;
         this.currentVelocity = (this.zombieStats.getVelocity() * 0.7) //decreasing the zombie velocity after collision with icy projectiles
+    }
+
+    public void unfreeze() {
+        //todo: getter for current game time
+        this.frozenTime = game.getCurrentTime();
+        this.isFrozen = false;
+        this.currentVelocity = (this.zombieStats.getVelocity()); //setting the velocity to its base
     }
 
     public void checkLife() {
