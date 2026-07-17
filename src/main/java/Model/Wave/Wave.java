@@ -1,0 +1,76 @@
+package Model.Wave;
+
+import Model.PlantsAndZombies.Zombie;
+
+import java.util.*;
+
+public class Wave {
+    protected Queue<Zombie> pendingZombies;
+    private double difficulty;
+    private double waveCost;
+    private double initialTotalHealth;
+    protected int totalZombies;
+    private Random random = new Random();
+
+    public Wave(double difficulty, double baseWaveCost) {
+        this.difficulty = difficulty;
+        this.waveCost = baseWaveCost * difficulty;
+        this.pendingZombies = new LinkedList<>();
+        this.initialTotalHealth = 0;
+    }
+
+    public void zombieMaker(ArrayList<Zombie> usableZombies) {
+        double currentBudget = waveCost;
+        List<Zombie> tempZombies = new ArrayList<>();
+
+        while (currentBudget > 0) {
+            ArrayList<Zombie> affordable = new ArrayList<>();
+            for (Zombie z : usableZombies) {
+                double zombieCost = z.getCost();
+                if (zombieCost <= currentBudget) {
+                    affordable.add(z);
+                }
+            }
+
+            if (affordable.isEmpty()) break;
+
+            Zombie templateZombie = affordable.get(random.nextInt(affordable.size()));
+            Zombie newZombie = templateZombie;
+
+            tempZombies.add(newZombie);
+
+            initialTotalHealth += newZombie.getBaseHp();
+            currentBudget -= newZombie.getCost();
+        }
+
+        tempZombies.sort((z1, z2) -> {
+            double cost1 = z1.getCost();
+            double cost2 = z2.getCost();
+            return Double.compare(cost1, cost2);
+        });
+
+        this.pendingZombies.addAll(tempZombies);
+        this.totalZombies = this.pendingZombies.size();
+    }
+
+    public boolean isReadyForNextWave() {
+        if (pendingZombies.isEmpty()) return true;
+
+        double currentTotalHealth = 0;
+        for (Zombie z : pendingZombies) {
+            if (z.isAlive()) {
+                currentTotalHealth += z.getCurrentHP();
+            }
+        }
+
+        return currentTotalHealth <= (initialTotalHealth * 0.25);
+    }
+
+    public boolean hasZombiesLeftToSpawn() {
+        return !pendingZombies.isEmpty();
+    }
+
+    public Zombie spawnNextZombie() {
+        return pendingZombies.poll();
+    }
+}
