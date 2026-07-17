@@ -21,12 +21,14 @@ public class Projectile {
 
     protected boolean isActive;
     protected boolean icy;
+    protected boolean firing;
     private boolean poisonous;
     private boolean isHypnotizer;
 
     public Projectile() {
 
     }
+
     public Projectile(double velocityX, double velocityY, BattlePlant plant,
                       int damage, int pierceAmount) {
         this.velocityX = velocityX;
@@ -43,6 +45,7 @@ public class Projectile {
         this.range = 11;
         this.isActive = true;
         this.icy = false;
+        this.firing = false;
         this.poisonous = false;
     }
 
@@ -62,6 +65,7 @@ public class Projectile {
         this.range = range;
         this.isActive = true;
         this.icy = false;
+        this.firing = false;
         this.poisonous = false;
     }
 
@@ -113,20 +117,56 @@ public class Projectile {
     }
 
     public void checkCollision() {
-
         for (Zombie zombie : game.getAliveZombies()) {
-            if (position.equals(zombie.getPosition())) {
-                //todo: reduce hp of zombie or its armor and the pierce amount of projectile
+            if (this.position.equals(zombie.getPosition())) {
+                zombie.takeDamage(this, this.damage);
+
+                this.setPierceAmount(this.getPierceAmount() - 1);
             }
         }
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public boolean isIcy() {
+        return icy;
     }
 
     public void setIcy(boolean icy) {
         this.icy = icy;
     }
 
+
+    public boolean isFiring() {
+        return firing;
+    }
+
+    public void setFiring(boolean firing) {
+        this.firing = firing;
+    }
+
     public void setPoisonous(boolean poisonous) {
         this.poisonous = poisonous;
     }
 
+    public boolean isPoisonous() {
+        return poisonous;
+    }
+
+    public int getPierceAmount() {
+        return pierceAmount;
+    }
+
+    public void setPierceAmount(int pierceAmount) {
+        this.pierceAmount = pierceAmount;
+        if (this.pierceAmount <= 0) {
+            this.isActive = false;
+        }
+    }
 }
