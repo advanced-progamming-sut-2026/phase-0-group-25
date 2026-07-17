@@ -1,5 +1,6 @@
 package src.Model.GamePlayType;
 
+import src.Enums.ChapterType;
 import src.Model.Mower;
 import src.Model.PlantsAndZombies.Plant;
 import src.Model.PlantsAndZombies.Position;
@@ -242,5 +243,39 @@ public abstract class GamePlay {
     }
 
     public void cheatAddPlantFood() {
+    }
+
+
+    public static int calculateCost(ChapterType chapterType, int level, int waveNumber) {
+        int chapterNumber = chapterType.ordinal() + 1;
+        int stagesPerChapter = 4;
+
+        int globalLevel = ((chapterNumber - 1) * stagesPerChapter) + level;
+
+        int baseDifficultyForStage = 800 + (globalLevel * 250);
+
+        if (baseDifficultyForStage < 1000) {
+            baseDifficultyForStage = 1000;
+        }
+
+        int waveMultiplier = (waveNumber - 1) * 550;
+
+        int finalCost = baseDifficultyForStage + waveMultiplier;
+
+        return finalCost;
+    }
+
+    public int calculateWaves(ChapterType chapterType, int level) {
+        int chapterNumber = chapterType.ordinal() + 1;
+
+        int stagesPerChapter = 4;
+
+        int globalLevel = ((chapterNumber - 1) * stagesPerChapter) + level;
+
+        double calculatedWaves = 1.1 + (globalLevel * 0.26);
+
+        int waves = (int) Math.floor(calculatedWaves);
+
+        return Math.max(1, waves);
     }
 }

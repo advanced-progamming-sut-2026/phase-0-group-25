@@ -24,7 +24,20 @@ public enum Command {
     ChangeNickname("menu profile change-nickname -u (.+?)"),
     ChangeEmail("menu profile change-email -e (.+?)"),
     ChangePassword("menu profile change-password -p (\\S+) -o (\\S+)"),
-    ShowProfileInfo("menu profile show-info");
+    ShowProfileInfo("menu profile show-info"),
+    AdvanceTime("^advance time -t\\s+(?<count>\\d+)\\s+ticks$"),
+    CollectSun("^collect sun -l \\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$"),
+    ShowSunAmount("show sun amount"),
+    CheatAddSuns("cheat add -n <count> suns"),
+    CheatCooldown("cheat remove-cooldown"),
+    CheatPlantFood("cheat add-plant-food"),
+    ReleaseTheNuke("release the nuke"),
+    PlantPlant("^plant plant -t\\s+(?<type>[\\w-]+)\\s+-l\\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$"),
+    PluckPlant("^pluck plant -l \\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$"),
+    FeedPlant("^feed plant -l \\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$"),
+    ShowMap("show map"),
+    ShowPlantsStatus("show plants status"),
+    ShowTileStatus("^show tile status -l \\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$");
 
     private final String regex;
     Command(String regex) {
