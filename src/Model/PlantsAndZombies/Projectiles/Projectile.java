@@ -117,9 +117,8 @@ public class Projectile {
     }
 
     public void checkCollision() {
-
         for (Zombie zombie : game.getAliveZombies()) {
-            if (position.equals(zombie.getPosition())) {
+            if (this.position.equals(zombie.getPosition())) {
                 zombie.takeDamage(this, this.damage);
 
                 this.setPierceAmount(this.getPierceAmount() - 1);

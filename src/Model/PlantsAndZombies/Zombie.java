@@ -13,7 +13,11 @@ import src.Model.Sun.Sun;
 import javax.imageio.plugins.tiff.BaselineTIFFTagSet;
 import java.util.*;
 
+
 public class Zombie extends Entity {
+    private static int FROZEN_TIME = 3;
+
+
     private ZombieStats zombieStats;
     private Status status;
     private Entity rival;
@@ -24,6 +28,9 @@ public class Zombie extends Entity {
 
     private boolean isHalated;
     private boolean isHypnotized;
+    private boolean isFrozen;
+    private int frozenTime;
+
 
     private ArrayList<Armor> activeArmors;
     private int lastActionTime;
@@ -53,6 +60,8 @@ public class Zombie extends Entity {
 
 
     public void update() {
+        checkFreeze();
+
         if ((this.zombieStats.getName().equals("PROSPECTOR")) &&
                 (this.zombieStats.getAttributes().get("dynamite").equals("on"))) {
             if ((game.getCurrentTime() - this.spawnTime) >= 10) {
@@ -131,9 +140,30 @@ public class Zombie extends Entity {
                     this.zombieStats.getAttributes().replace("dynamite", "off");
                 }
             }
+
             this.currentHP -= leftoverDamage;
+            if (projectile.isIcy()) {
+                makeFreeze();
+            }
             checkLife();
         }
+    }
+
+    public void checkFreeze() {
+        if (this.isFrozen) {
+            //todo: getter for current game time
+            if ((game.getCurrentTime() - this.frozenTime) >= FROZEN_TIME) {
+                this.isFrozen = false;
+                this.currentVelocity = this.zombieStats.getVelocity();
+            }
+        }
+    }
+
+    public void makeFreeze() {
+        //todo: getter for current game time
+        this.frozenTime = game.getCurrentTime();
+        this.isFrozen = true;
+        this.currentVelocity = (this.zombieStats.getVelocity() * 0.7) //decreasing the zombie velocity after collision with icy projectiles
     }
 
     public void checkLife() {
