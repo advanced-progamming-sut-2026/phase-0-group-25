@@ -140,14 +140,19 @@ public class Zombie extends Entity {
                 }
             }
 
-            this.currentHP -= leftoverDamage;
+
             if (projectile.isIcy()) {
-                freeze();
-            }
-            if(projectile.isFiring()){
+                if (!this.zombieStats.getName().equals("IMP_DRAGON")) {
+                    freeze();
+                }
+            } else if (projectile.isFiring()) {
                 unfreeze();
             }
-            checkLife();
+
+            if ((!this.zombieStats.getName().equals("IMP_DRAGON")) || (!projectile.isFiring())) {
+                this.currentHP -= leftoverDamage;
+                checkLife();
+            }
         }
     }
 
@@ -169,8 +174,6 @@ public class Zombie extends Entity {
     }
 
     public void unfreeze() {
-        //todo: getter for current game time
-        this.frozenTime = game.getCurrentTime();
         this.isFrozen = false;
         this.currentVelocity = (this.zombieStats.getVelocity()); //setting the velocity to its base
     }
