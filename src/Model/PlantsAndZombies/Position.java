@@ -1,5 +1,6 @@
 package src.Model.PlantsAndZombies;
 
+import java.awt.*;
 import java.util.Objects;
 
 public class Position {
@@ -50,5 +51,10 @@ public class Position {
         return Double.compare(position.x, x) == 0 && Double.compare(position.y, y) == 0;
     }
 
+    public double distance(Position position) {
+        double distanceX = this.x - position.getX();
+        double distanceY = this.y - position.getY();
 
+        return (Math.hypot(distanceX, distanceY));
+    }
 }
