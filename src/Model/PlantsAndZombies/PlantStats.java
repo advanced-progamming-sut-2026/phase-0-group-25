@@ -37,6 +37,14 @@ public class PlantStats {
         return tags;
     }
 
+    public ArrayList<String> getAbilities() {
+        return abilities;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
     public void upgradePlant() {
 
     }

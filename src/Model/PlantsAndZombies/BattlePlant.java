@@ -15,21 +15,25 @@ public class BattlePlant extends Plant {
         this.currentHP = plantStats.getBaseHP();
     }
 
-
     @Override
     public void update() {
 
     }
 
-
     public PlantStats getPlantStats() {
         return plantStats;
     }
 
-
-
     public double getTimeElapsedAsAlive() {
         return timeElapsedAsAlive;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
     }
 
     public int getColumn() {

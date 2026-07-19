@@ -89,9 +89,7 @@ public class Zombie extends Entity {
         return zombieStats;
     }
 
-    public Position getPosition() {
-        return position;
-    }
+    public int getCost() {}
 
     public double getCurrentVelocity() {
         return currentVelocity;
@@ -103,6 +101,10 @@ public class Zombie extends Entity {
 
     public int getLastActionTime() {
         return lastActionTime;
+    }
+
+    public ArrayList<String> getAbilities() {
+        return abilities;
     }
 
     public void setLastActionTime(int lastActionTime) {

@@ -15,7 +15,6 @@ public class ZombieStats {
     private Map<String, Object> attributes;
 
 
-
     public String getName() {
         return name;
     }
