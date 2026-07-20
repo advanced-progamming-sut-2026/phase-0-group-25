@@ -3,9 +3,6 @@ package src.Model.User;
 import src.Enums.ChapterType;
 import src.Enums.PlantType;
 import src.Enums.ZombieType;
-import src.Model.ChaptersAndLevels.Chapter;
-import src.Model.PlantsAndZombies.Plant;
-import src.Model.PlantsAndZombies.Zombie;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,23 +10,33 @@ import java.util.HashMap;
 public class UserProgress {
     private HashMap<ChapterType, Integer> unlockedChaptersAndLevels;
     private ArrayList<ZombieType> unlockedZombies;
-    private ArrayList<PlantType> unlockedPlants;
+    private HashMap<PlantType, Integer> unlockedPlantsAndTheirLevels;
     private int gemsCount;
     private int coinsCount;
     private int potsCount;
     private int gameDifficulty;
     private int gamesPlayed;
+    private int seedPacketCount;
 
     public UserProgress() {
         this.unlockedChaptersAndLevels = new HashMap<>();
         this.unlockedZombies = new ArrayList<>();
-        this.unlockedPlants = new ArrayList<>();
+        this.unlockedPlantsAndTheirLevels = new HashMap<>();
 
 
         this.gamesPlayed = 0;
         this.gemsCount = 0;
         this.coinsCount = 0;
         this.gameDifficulty = 3;
+        this.seedPacketCount = 0;
+    }
+
+    public int getSeedPacketCount() {
+        return seedPacketCount;
+    }
+
+    public void setSeedPacketCount(int seedPacketCount) {
+        this.seedPacketCount = seedPacketCount;
     }
 
     public HashMap<ChapterType, Integer> getUnlockedChaptersAndLevels() {
@@ -44,7 +51,7 @@ public class UserProgress {
         return gamesPlayed;
     }
 
-    public void setGamesPlayed(int gamesPlayed) {
+     void setGamesPlayed(int gamesPlayed) {
         this.gamesPlayed = gamesPlayed;
     }
 
@@ -52,16 +59,16 @@ public class UserProgress {
         return unlockedZombies;
     }
 
-    public void setUnlockedZombies(ArrayList<ZombieType> unlockedZombies) {
+     void setUnlockedZombies(ArrayList<ZombieType> unlockedZombies) {
         this.unlockedZombies = unlockedZombies;
     }
 
-    public ArrayList<PlantType> getUnlockedPlants() {
-        return unlockedPlants;
+    public HashMap<PlantType, Integer> getUnlockedPlantsAndTheirLevels() {
+        return unlockedPlantsAndTheirLevels;
     }
 
-    public void setUnlockedPlants(ArrayList<PlantType> unlockedPlants) {
-        this.unlockedPlants = unlockedPlants;
+    public void setUnlockedPlantsAndTheirLevels(HashMap<PlantType, Integer> unlockedPlantsAndTheirLevels) {
+        this.unlockedPlantsAndTheirLevels = unlockedPlantsAndTheirLevels;
     }
 
     public int extractTotalLevelsPassed() {
@@ -87,13 +94,13 @@ public class UserProgress {
         this.coinsCount = coinsCount;
     }
 
-    public void addCoins(int amount) {
+     void addCoins(int amount) {
         if (amount > 0) {
             this.coinsCount += amount;
         }
     }
 
-    public void setGameDifficulty(int gameDifficulty) {
+     void setGameDifficulty(int gameDifficulty) {
         this.gameDifficulty = gameDifficulty;
     }
 
@@ -102,26 +109,26 @@ public class UserProgress {
     }
 
 
-    public void unlockPlant(PlantType plantType){
-        unlockedPlants.add(plantType);
+     void unlockPlant(PlantType plantType){
+        unlockedPlantsAndTheirLevels.put(plantType, 1);
     }
 
 
 
-    public void unlockZombie(ZombieType zombieType){
+     void unlockZombie(ZombieType zombieType){
         unlockedZombies.add(zombieType);
     }
 
 
 
-    public void unlockChapter(ChapterType chapterType){
+     void unlockChapter(ChapterType chapterType){
         unlockedChaptersAndLevels.put(chapterType, 1);
     }
 
-    public void unlockLevel(int level, ChapterType chapterType){
+     void unlockLevel(int level, ChapterType chapterType){
         unlockedChaptersAndLevels.put(chapterType, level);
     }
-    public void addGems(int amount) {
+    void addGems(int amount) {
         if (amount > 0) {
             this.gemsCount += amount;
         }

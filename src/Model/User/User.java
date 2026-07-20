@@ -28,20 +28,20 @@ import src.Model.News.NewsManager;
         unlockChapter(ChapterType.ANCIENT_EGYPT);
     }
 
-    public void unlockPlant(PlantType plantType){
+    void unlockPlant(PlantType plantType){
         userProgress.unlockPlant(plantType);
         newsManager.addNews(new News("plant " + plantType.name() + " unlocked!"));
     }
-    public void unlockZombie(ZombieType zombieType){
+    void unlockZombie(ZombieType zombieType){
         userProgress.unlockZombie(zombieType);
         newsManager.addNews(new News("zombie " + zombieType.name() + " unlocked!"));
     }
-    public void unlockChapter(ChapterType chapterType){
+     void unlockChapter(ChapterType chapterType){
         userProgress.unlockChapter(chapterType);
         newsManager.addNews(new News("chapter " + chapterType.getName() + " unlocked!"));
         newsManager.addNews(new News("level 1 of " + chapterType.getName() + " unlocked!"));
     }
-    public void unlockLevel(int level, ChapterType chapterType){
+     void unlockLevel(int level, ChapterType chapterType){
         userProgress.unlockLevel(level, chapterType);
         newsManager.addNews(new News("level " + level + " of " + chapterType.getName() + " unlocked!"));
     }
@@ -71,7 +71,7 @@ import src.Model.News.NewsManager;
         return userName;
     }
 
-    public void setUserName(String userName) {
+     void setUserName(String userName) {
         this.userName = userName;
     }
 
@@ -79,7 +79,7 @@ import src.Model.News.NewsManager;
         return nickName;
     }
 
-    public void setNickName(String nickName) {
+     void setNickName(String nickName) {
         this.nickName = nickName;
     }
 
@@ -87,7 +87,7 @@ import src.Model.News.NewsManager;
         return password;
     }
 
-    public void setPassword(String password) {
+     void setPassword(String password) {
         this.password = password;
     }
 
@@ -95,7 +95,7 @@ import src.Model.News.NewsManager;
         return email;
     }
 
-    public void setEmail(String email) {
+     void setEmail(String email) {
         this.email = email;
     }
 
