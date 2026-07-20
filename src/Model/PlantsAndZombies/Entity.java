@@ -7,8 +7,6 @@ public abstract class Entity {
     protected Position position;
 
 
-
-
     public abstract void update();
 
 
@@ -29,6 +27,10 @@ public abstract class Entity {
 
     public boolean isAlive() {
         return isAlive;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setAlive(boolean alive) {

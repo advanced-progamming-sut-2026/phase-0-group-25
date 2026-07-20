@@ -65,6 +65,9 @@ public class Projectile {
         this.poisonous = false;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
 
     public int getBaseRow() {
         return baseRow;

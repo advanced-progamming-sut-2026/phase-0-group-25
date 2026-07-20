@@ -16,6 +16,7 @@ public class UserProgress {
     private ArrayList<PlantType> unlockedPlants;
     private int gemsCount;
     private int coinsCount;
+    private int potsCount;
     private int gameDifficulty;
     private int gamesPlayed;
 
@@ -126,4 +127,13 @@ public class UserProgress {
         }
     }
 
+    public void addPots(int amount) {
+        if (amount > 0) {
+            this.potsCount += amount;
+        }
+    }
+
+    public int getPotsCount() {
+        return potsCount;
+    }
 }

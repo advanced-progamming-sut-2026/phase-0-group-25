@@ -1,7 +1,11 @@
 package src.Model.Wave;
 
-public class FinalWave extends Wave {
-    public void finishGame(){
+import src.Model.GamePlayType.GamePlay;
+import src.Model.Wave.Wave;
 
+public class FinalWave extends Wave {
+
+    public FinalWave(int waveCost, int waveNum) {
+        super(waveCost, waveNum);
     }
 }

@@ -2,44 +2,62 @@ package src.Model.GamePlayType;
 
 import src.Enums.ChapterType;
 import src.Model.Mower;
-import src.Model.PlantsAndZombies.Plant;
-import src.Model.PlantsAndZombies.Position;
-import src.Model.PlantsAndZombies.Projectile;
+import src.Model.PlantsAndZombies.*;
+import src.Model.PlantsAndZombies.Projectiles.Projectile;
 import src.Model.Sun.RadioActiveSun;
 import src.Model.Tile;
-import src.Model.PlantsAndZombies.Zombie;
 import src.Model.PlayGroundType.PlayGround;
 import src.Model.Sun.Sun;
+import src.Model.User.User;
+import src.Model.Wave.FinalWave;
+import src.Model.Wave.Wave;
+
 import java.util.ArrayList;
 
 public abstract class GamePlay {
-    // plants and zombies that can appear in the game...
-    protected ArrayList<Zombie> zombies;
-    protected ArrayList<Plant> plants;
+    // plants that can appear in the game...
+    protected ArrayList<BattlePlant> plants = new ArrayList<>();
 
     // plants and zombies that are in the game at the moment...
-    protected ArrayList<Zombie> gameZombies;
-    protected ArrayList<Plant> gamePlants;
+    protected ArrayList<Zombie> gameZombies = new ArrayList<>();
+    protected ArrayList<BattlePlant> gamePlants = new ArrayList<>();
 
-    protected ArrayList<Tile> tiles;
-    protected ArrayList<Projectile> projectiles;
-    protected ArrayList<Mower> mowers;
+    protected ArrayList<Wave> allWaves = new ArrayList<>();
+
+    protected int level;
+    protected ChapterType chapterType;
+
+    protected ArrayList<Tile> tiles = new ArrayList<>();
+    protected ArrayList<Projectile> projectiles = new ArrayList<>();
+    protected ArrayList<Mower> mowers = new ArrayList<>();
     protected ArrayList<Sun> activeSuns = new ArrayList<>();
     protected int ticksSinceLastDrop = 0;
     protected java.util.Random random = new java.util.Random();
 
-    // TODO : checking isAlive and delete zombies in update...
-
+    protected  User thisUser;
     protected int numOfPlantFood;
     protected int mySuns;
     protected PlayGround playGround;
     protected boolean isPaused;
-    protected int waveCount;
+    protected int numOfWaves;
     protected int totalTicksPassed = 0;
 
-    public GamePlay() {
+    public GamePlay(ChapterType chapterType, int level, int difficulty, User thisUser) {
         this.numOfPlantFood = 0;
         this.mySuns = 0;
+        this.isPaused = false;
+        this.level = level;
+        this.chapterType = chapterType;
+        this.thisUser = thisUser;
+
+        this.numOfWaves = calculateWaves(chapterType, level);
+        for (int i = 1 ; i < numOfWaves ; i++) {
+            int waveCost = (int)(calculateCost(chapterType, level, i) * (1 + difficulty/10.0));
+            this.allWaves.add(new Wave(waveCost, i));
+        }
+        int waveCost = (int)((calculateCost(chapterType, level, numOfWaves) + 500) * (1 + difficulty/10.0));
+        this.allWaves.add(new FinalWave(waveCost, numOfWaves));
+
         this.playGround = new PlayGround() {
             @Override
             public void makeGround() {
@@ -47,25 +65,26 @@ public abstract class GamePlay {
                     mowers.add (new Mower(y));
                     for (int x = 1 ; x < 10; x++) {
                         Position newPosition = new Position(x, y);
-                        Tile newTile = new Tile(newPosition);
+                        Boolean isArable = Math.random() >= 0.06;
+                        Tile newTile = new Tile(newPosition, isArable);
                         tiles.add(newTile);
                     }
                 }
             }
         };
-        this.isPaused = false;
-        this.waveCount = 1;
+
         //TODO: adding the zombies...
         //TODO: adding the plants...
     }
 
-    public void addWave(){
-    }
-
     public abstract void update() ;
 
-    public void finishGame() {
-
+    public Boolean checkingTheEndOfTheGame() {
+        if (this.gameZombies.isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void Pause(){
@@ -166,15 +185,14 @@ public abstract class GamePlay {
             int zY = (int) zombie.getPosition().getY();
 
             if (Math.abs(sunX - zX) <= 2 && Math.abs(sunY - zY) <= 2) {
-                zombie.setCurrentHP(zombie.getCurrentHP() - 150);
-                if (zombie.getCurrentHP() <= 0) {
-                    zombie.setAlive(false);
+                zombie.takeDamage(150);
+                if (!zombie.isAlive()) {
                     System.out.printf("Zombie of type %s is dead at (%d, %d)\n", zombie.getName(), zX, zY);
                 }
             }
         }
 
-        for (Plant plant : gamePlants) {
+        for (BattlePlant plant : gamePlants) {
             int pX = (int) plant.getPosition().getX();
             int pY = (int) plant.getPosition().getY();
 
@@ -189,62 +207,206 @@ public abstract class GamePlay {
         }
     }
 
-    public void planting(Plant thisPlant, Position thisPosition) {
-        if (thisPlant.checkingPlantable(mySuns)) {
-            Tile thisTile = tiles.stream().filter(p -> p.getPosition().equals(thisPosition)).findFirst().get();
-            thisTile.setPlant(thisPlant);
+    public void planting(BattlePlant thisPlant, Position thisPosition) {
+        Tile thisTile = tiles.stream().filter(p -> p.getPosition().equals(thisPosition)).findFirst().get();
+
+        if (thisPlant.checkingPlantable(mySuns, thisTile) && thisTile.isArable()) {
+            this.gamePlants.add(thisPlant);
+
+            thisTile.addPlant(thisPlant);
+
+            thisPlant.setCooldown(40);
+
+            this.mySuns -= thisPlant.getPlantStats().getCost();
+
+            thisPlant.setRow((int) thisPosition.getY());
+            thisPlant.setColumn((int) thisPosition.getX());
+
             System.out.printf("%s was planted in (%d, %d)", thisPlant.getName(),
                                     (int) thisPosition.getX(), (int) thisPosition.getY());
         } else {
-            System.out.println("You can't plant this plant!");
+            if(!thisTile.isArable()) {
+                System.out.println("This tile is not arable! Try another one...!");
+            } else {
+                System.out.println("You can't plant this plant!");
+            }
         }
     }
 
-    public void plucking(Plant thisPlant, Position thisPosition) {
+    public void plucking(BattlePlant thisPlant, Position thisPosition) {
         Tile thisTile = tiles.stream().filter(p -> p.getPosition().equals(thisPosition)).findFirst().get();
-        thisTile.setPlant(null);
-    }
-
-    public void spawnZombies(){
-
+        if (thisTile.getPlants().isEmpty()) {
+            System.out.println("There is no plants in this tile!!");
+        } else {
+            this.gamePlants.removeIf(p -> p.getRow() == (int) thisPosition.getY()
+                                                        && p.getColumn() == (int) thisPosition.getX());
+            thisTile.removePlant();
+            System.out.println("Plunked successfully!");
+        }
     }
 
     public void addPlantFood() {
-        this.numOfPlantFood += 1;
+        this.numOfPlantFood = Math.min(this.numOfPlantFood + 1, 3);
     }
 
     public void addSun(Sun sun) {
         this.mySuns += sun.getNumberOfSun();
     }
 
+    public void showSunAmount() {
+        System.out.printf("You have %d suns\n", this.mySuns);
+    }
+
+    public void showTileStatus(Position thisPosition) {
+        Tile thisTile = tiles.stream().filter(p -> p.getPosition().equals(thisPosition)).findFirst().get();
+        System.out.println("The Plants :");
+        for (BattlePlant p : thisTile.getPlants()) {
+            System.out.println("->  " + p.getName() + " | HP : " + p.getCurrentHP());
+            PlantStats ps = p.getPlantStats();
+            System.out.printf("level: %d | cost: %d | baseHP: %d\n", ps.getLevel(),
+                                                                ps.getCost(), ps.getBaseHP());
+            System.out.println("Abilities");
+            for (String ability : ps.getAbilities()) {
+                System.out.printf(" # %s", ability);
+            }
+        }
+        System.out.println("The Zombies :");
+        for (Zombie z : thisTile.getZombies()) {
+            System.out.println("->  " + z.getName() + " | HP : " + z.getCurrentHP());
+            System.out.println("Abilities");
+            for (String ability : z.getAbilities()) {
+                System.out.printf(" # %s", ability);
+            }
+        }
+    }
+
     public void showMap() {
+        System.out.println("=== GAME STATUS ===");
+        System.out.println("Current Wave: " + getCurrentWave() + " / " + this.numOfWaves);
+        System.out.println("Sun Amount: " + this.mySuns);
+        System.out.println("Plant Foods: " + this.numOfPlantFood);
+        System.out.println("===================");
+
+        System.out.println("Board Legend:");
+        System.out.println("[ ] : Arable Tile     ~ ~ : Non-Arable Tile");
+        System.out.println(" P  : Plant is present       Z  : Zombie is present");
+        System.out.println(" M  : Mower (Ready)          X  : Mower (Used)");
+        System.out.println("---------------------------------------------------------");
+        for (int y = 1; y <= 5; y++) {
+            final int currentY = y;
+
+            Mower currentMower = mowers.stream()
+                    .filter(m -> m.getY() == currentY)
+                    .findFirst()
+                    .orElse(null);
+
+            if (currentMower != null && !currentMower.isUsed()) {
+                System.out.print("(M) ");
+            } else {
+                System.out.print("(X) ");
+            }
+
+            for (int x = 1; x <= 9; x++) {
+                final int currentX = x;
+
+                Tile currentTile = tiles.stream()
+                        .filter(t -> (int) t.getPosition().getX() == currentX && (int) t.getPosition().getY() == currentY)
+                        .findFirst()
+                        .orElse(null);
+
+                if (currentTile != null) {
+                    boolean hasPlant = !currentTile.getPlants().isEmpty();
+                    boolean hasZombie = !currentTile.getZombies().isEmpty();
+
+                    char plantChar = hasPlant ? 'P' : ' ';
+                    char zombieChar = hasZombie ? 'Z' : ' ';
+
+                    if (currentTile.isArable()) {
+                        System.out.printf("[%c %c] ", plantChar, zombieChar);
+                    } else {
+                        System.out.printf("~%c %c~ ", plantChar, zombieChar);
+                    }
+                }
+            }
+            System.out.println();
+        }
+        System.out.println("---------------------------------------------------------");
     }
 
-    public void feedPlant() {
+    public void showPlantsStatus() {
+        System.out.println("=== Plants Status ===");
+
+        for (BattlePlant plant : this.plants) {
+            String name = plant.getName();
+            int cost = plant.getPlantStats().getCost();
+            boolean isPlantable = plant.checkingSunCooldown(this.mySuns);
+            int cooldown = plant.getCooldown();
+
+            System.out.printf("- %s:\n", name);
+            System.out.printf("  Sun required: %d\n", cost);
+
+            if (isPlantable) {
+                System.out.println("  Status: Ready to plant!");
+            } else {
+                System.out.print("  Status: Not ready.");
+
+                if (this.mySuns < cost) {
+                    System.out.printf(" (Not enough sun! You need %d more)", cost - this.mySuns);
+                }
+
+                if (cooldown > 0) {
+                    System.out.printf(" (Cooldown: %d seconds left to be plantable)", cooldown);
+                }
+
+                System.out.println();
+            }
+        }
+        System.out.println("=====================");
     }
 
-    public void calculateSumOfZombiesHealth () {
+    public int getNumOfPlantFood() {
+        return numOfPlantFood;
+    }
 
+    public int getCurrentWave() {
+        int currentWave = 1;
+        for (Wave wave : this.allWaves) {
+            if (wave.getStarted()) {
+                currentWave = wave.getWaveNum();
+            }
+        }
+        return currentWave;
     }
 
     public ArrayList<Zombie> getGameZombies() {
         return gameZombies;
     }
 
-    public ArrayList<Plant> getGamePlants() {
+    public ArrayList<BattlePlant> getGamePlants() {
         return gamePlants;
     }
 
-    //cheat functions...
-    public void cheatAddSun() {
+    public int getMySuns() {
+        return mySuns;
+    }
+
+    public void cheatAddSun(int sun) {
+        this.mySuns += sun;
+        System.out.println("You added" + sun + "suns!!");
+    }
+
+    public void releaseTheNuke() {
+        for (Zombie z : this.gameZombies) {
+            z.setAlive(false);
+        }
+        System.out.println("You killed all zombies in the map!!");
     }
 
     public void removeCooldown() {
+        for (BattlePlant p : this.plants) {
+            p.inactivateCooldown();
+        }
     }
-
-    public void cheatAddPlantFood() {
-    }
-
 
     public static int calculateCost(ChapterType chapterType, int level, int waveNumber) {
         int chapterNumber = chapterType.ordinal() + 1;
@@ -277,5 +439,39 @@ public abstract class GamePlay {
         int waves = (int) Math.floor(calculatedWaves);
 
         return Math.max(1, waves);
+    }
+
+    public void killAward (User thisUser) {
+        Boolean hasAward = Math.random() >= 0.9;
+        int kindOfAward = (int)(Math.random() * 3) + 1;
+
+        if (hasAward) {
+            switch (kindOfAward) {
+                case 1:
+                    thisUser.getUserProgress().addCoins(50);
+                    int numOfCoins = thisUser.getUserProgress().getCoinsCount();
+                    System.out.printf("A zombie dropped a coin; you have %d coins now.\n", numOfCoins);
+                    break;
+                case 2:
+                    thisUser.getUserProgress().addGems(1);
+                    int numOfGems = thisUser.getUserProgress().getGemsCount();
+                    System.out.printf("A zombie dropped a diamond; you have %d diamonds now.\n", numOfGems);
+                    break;
+                case 3:
+                    thisUser.getUserProgress().addPots(1);
+                    int numOfPots = thisUser.getUserProgress().getPotsCount();
+                    System.out.printf("A zombie dropped a diamond; you have %d pots now.\n", numOfPots);
+                    break;
+            }
+        }
+    }
+
+    public void glowingAward (GamePlay thisGame) {
+        Boolean isGlowing = Math.random() <= 0.05;
+        if (isGlowing) {
+            thisGame.addPlantFood();
+            System.out.printf("The glowing zombie dropped a plant food; you have %d plant foods now.\n",
+                                    thisGame.getNumOfPlantFood());
+        }
     }
 }

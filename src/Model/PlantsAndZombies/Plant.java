@@ -1,6 +1,7 @@
 package src.Model.PlantsAndZombies;
 
 import src.Enums.PlantCategory;
+import src.Model.Tile;
 
 import java.sql.Struct;
 
@@ -9,15 +10,29 @@ public abstract class Plant extends Entity {
     private boolean hasBoost;
     private int price;
     private int cooldown = 40;
-    private boolean isPlantable = false;
+    private Boolean activeCooldown = true;
 
     public abstract void update();
 
-    public String getName() {
-        return name;
+    public boolean checkingPlantable (int sun, Tile thisTile) {
+        BattlePlant upperPlant = thisTile.getPlants().get(thisTile.getPlants().size());
+        boolean isStack = upperPlant.getPlantStats().getTags().contains("Stack") || thisTile.getPlants().isEmpty();
+        return (sun >= this.price) && (this.cooldown==0 || !this.activeCooldown) && isStack;
     }
 
-    public boolean checkingPlantable (int sun) {
-        return sun >= this.price && this.cooldown == 0;
+    public boolean checkingSunCooldown (int sun) {
+        return (sun >= this.price) && (this.cooldown==0 || !this.activeCooldown);
+    }
+
+    public void inactivateCooldown() {
+        activeCooldown = false;
+    }
+
+    public int getCooldown() {
+        return cooldown;
+    }
+
+    public void setCooldown(int cooldown) {
+        this.cooldown = cooldown;
     }
 }

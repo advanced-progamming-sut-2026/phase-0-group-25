@@ -29,12 +29,24 @@ public class PlantStats {
         return baseHP;
     }
 
+    public double getRechargeTime() {
+        return rechargeTime;
+    }
+
     public Map<String, Integer> getAttributes() {
         return attributes;
     }
 
     public ArrayList<String> getTags() {
         return tags;
+    }
+
+    public ArrayList<String> getAbilities() {
+        return abilities;
+    }
+
+    public int getLevel() {
+        return level;
     }
 
     public void upgradePlant() {

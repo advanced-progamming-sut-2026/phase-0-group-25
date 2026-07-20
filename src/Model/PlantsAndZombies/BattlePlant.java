@@ -10,26 +10,31 @@ public class BattlePlant extends Plant {
     public BattlePlant(PlantStats plantStats, String name) {
         this.lastActionTime = 0;
         this.timeElapsedAsAlive = 0;
+        this.setCooldown((int)(this.getPlantStats().getRechargeTime()*10));
         this.plantStats = plantStats;
         this.name = name;
         this.currentHP = plantStats.getBaseHP();
     }
-
 
     @Override
     public void update() {
 
     }
 
-
     public PlantStats getPlantStats() {
         return plantStats;
     }
 
-
-
     public double getTimeElapsedAsAlive() {
         return timeElapsedAsAlive;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
     }
 
     public int getColumn() {
