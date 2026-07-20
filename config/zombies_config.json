@@ -5,7 +5,7 @@
 
   "BUCKET_HEAD": {"eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 400, "armor": ["Bucket"], "abilities": []},
 
-  "BRICK_HEAD": {"eatdps": 100, "baseHP":  190, "velocity": 0.185,  "waveCost": 700, "armor": ["Brick"], "abilities": [],
+  "BRICK_HEAD": {"eatdps": 100, "baseHP":  190, "velocity": 0.185,  "waveCost": 700, "armor": ["Brick"], "abilities": []},
 
   "KNIGHT": {"eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 550, "armor": ["Crown", "Shoulder Armor"], "abilities": []},
 
@@ -15,7 +15,7 @@
 
   "RA": {"eatdps": 100, "baseHP":  190, "velocity": 0.2, "waveCost": 100, "armor": [], "abilities": []},
 
-  "EXPLORER": {"eatdps": 100, "baseHP":  250, "velocity": 0.25, "waveCost": 250, "armor": [], "abilities": []},
+  "EXPLORER": {"eatdps": 100, "baseHP":  250, "velocity": 0.25, "waveCost": 250, "armor": [], "abilities": [], "attributes": {"torch":  "on"}},
 
   "TOMB_RAISER": {"eatdps": 100, "baseHP":  380, "velocity": 0.185, "waveCost": 300, "armor": [], "abilities": []},
 
@@ -47,7 +47,7 @@
 
   "TURQUOISE": {"eatdps": 100, "baseHP":  250, "velocity": 0.185, "waveCost": 500, "armor": [], "abilities": []},
 
-  "PROSPECTOR": {"eatdps": 100, "baseHP":  190, "velocity": 0.16, "waveCost": 200, "armor": [], "abilities": []},
+  "PROSPECTOR": {"eatdps": 100, "baseHP":  190, "velocity": 0.16, "waveCost": 200, "armor": [], "abilities": [], "attributes": {"dynamite":  "on"}},
 
   "PIANO": {"eatdps": 4000, "baseHP":  840, "velocity": 0.12, "waveCost": 400, "armor": [], "abilities": []},
 

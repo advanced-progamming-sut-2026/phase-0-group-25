@@ -74,8 +74,7 @@ public class Homing implements Ability {
                 ArrayList<Zombie> zombies = tile.getZombies();//todo: getter of alive zombies in tile
 
                 for (Zombie zombie : zombies) {
-                    //todo: disarmament of zombies without any damages
-                }
+                    zombie.disarmament();                }
             }
 
         }
