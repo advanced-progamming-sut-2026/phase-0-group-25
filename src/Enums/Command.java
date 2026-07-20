@@ -44,7 +44,11 @@ public enum Command {
     ShowAllZombies("menu collection show-all-zombies"),
     ShowPlantDetails("menu collection show-plant -p (.+?)"),
     ShowZombieDetails("menu collection show-zombie -z (.+?)"),
-    PurchasePlant("menu collection purchase-plant -p (.+?)");
+    PurchasePlant("menu collection purchase-plant -p (.+?)"),
+    ChooseShowAllPlants("^show all plants$"),
+    ChooseShowAvailablePlants("^show available plants$"),
+    ChooseAddPlant("^add plant -t\\s+(.+)$"),
+    ChooseRemovePlant("^remove plant -t\\s+(.+)$");
 
     private final String regex;
     Command(String regex) {
