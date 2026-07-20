@@ -1,5 +1,7 @@
 package src.Model.User;
 
+import src.Enums.ChapterType;
+import src.Enums.PlantType;
 import src.Enums.WalletType;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
@@ -16,6 +18,8 @@ public class UsersManager {
     private final ObjectMapper mapper = new ObjectMapper();
     private HashMap<String, User> userCache = new HashMap<>();
     private User loggedInUser = null;
+
+    private static final int PLANT_PURCHASE_COST = 2000;
 
     private static final Pattern USERNAME_CHAR_REGEX = Pattern.compile("^[a-zA-Z0-9_]+$");
 
@@ -368,10 +372,47 @@ public class UsersManager {
         writeUsers();
     }
 
+    public void unlockChapter(ChapterType chapterType){
+        loggedInUser.unlockChapter(chapterType);
+        updateUser();
+    }
+
     public ArrayList<String > getUnreadNews(){
         ArrayList<String > news = loggedInUser.getNewsManager().extractUnreadNews();
         updateUser();
         return news;
+    }
+
+    public String purchasePlant(String plantName) {
+        User loggedInUser = getLoggedInUser();
+        if (loggedInUser == null) {
+            return "No logged in user found.";
+        }
+
+        PlantType plantType = PlantType.fromName(plantName);
+        if (plantType == null) {
+            return "Plant not found!";
+        }
+
+        if (loggedInUser.getUserProgress() == null) {
+            return "User progress data is missing.";
+        }
+
+        HashMap<PlantType, Integer> unlockedPlants = loggedInUser.getUserProgress().getUnlockedPlantsAndTheirLevels();
+        if (unlockedPlants.containsKey(plantType)) {
+            return "You already own this plant!";
+        }
+
+        if (loggedInUser.getUserProgress().getCoinsCount() < PLANT_PURCHASE_COST) {
+            return "Not enough coins! Purchasing a plant costs 2000 coins.";
+        }
+
+        loggedInUser.getUserProgress().addCoins(-PLANT_PURCHASE_COST);
+        unlockedPlants.put(plantType, 1);
+
+        updateUser();
+
+        return null;
     }
 
 

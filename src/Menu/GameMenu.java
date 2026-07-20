@@ -6,21 +6,30 @@ import src.Enums.MenuType;
 import src.Enums.WalletType;
 import src.Model.ChaptersAndLevels.Chapter;
 import src.Model.ChaptersAndLevels.ChapterFactory;
+import src.Model.PlantsAndZombies.Plant;
 import src.Model.User.User;
 import src.Model.User.UsersManager;
 import src.View.ViewInterfaces.BaseView;
 import src.View.ViewInterfaces.GameMenuView;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 
 public class GameMenu extends Menu{
     private final GameMenuView gameMenuView;
     private Chapter chapter;
+    private ArrayList<Plant> plants;
 
     public GameMenu(GameMenuView gameMenuView) {
         super(MenuType.Main);
         this.gameMenuView = gameMenuView;
+        this.plants = new ArrayList<>();
         addChangeableMenuType(MenuType.Collection);
+        addChangeableMenuType(MenuType.ChoosePlant);
+    }
+
+    public ArrayList<Plant> getPlants() {
+        return plants;
     }
 
     private void cheat(int amount, String walletTypeName){
