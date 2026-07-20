@@ -27,6 +27,7 @@ public class Projectile {
     public Projectile() {
 
     }
+
     public Projectile(double velocityX, double velocityY, BattlePlant plant,
                       int damage, int pierceAmount) {
         this.velocityX = velocityX;
@@ -116,7 +117,9 @@ public class Projectile {
 
         for (Zombie zombie : game.getAliveZombies()) {
             if (position.equals(zombie.getPosition())) {
-                //todo: reduce hp of zombie or its armor and the pierce amount of projectile
+                zombie.takeDamage(this, this.damage);
+
+                this.setPierceAmount(this.getPierceAmount() - 1);
             }
         }
     }
@@ -128,5 +131,21 @@ public class Projectile {
     public void setPoisonous(boolean poisonous) {
         this.poisonous = poisonous;
     }
+
+    public boolean isPoisonous() {
+        return poisonous;
+    }
+
+    public int getPierceAmount() {
+        return pierceAmount;
+    }
+
+    public void setPierceAmount(int pierceAmount) {
+        this.pierceAmount = pierceAmount;
+        if (this.pierceAmount <= 0) {
+            this.isActive = false;
+        }
+    }
+
 
 }
