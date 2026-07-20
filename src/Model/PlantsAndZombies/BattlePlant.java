@@ -10,6 +10,7 @@ public class BattlePlant extends Plant {
     public BattlePlant(PlantStats plantStats, String name) {
         this.lastActionTime = 0;
         this.timeElapsedAsAlive = 0;
+        this.setCooldown((int)(this.getPlantStats().getRechargeTime()*10));
         this.plantStats = plantStats;
         this.name = name;
         this.currentHP = plantStats.getBaseHP();

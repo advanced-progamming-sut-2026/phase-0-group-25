@@ -29,6 +29,10 @@ public class PlantStats {
         return baseHP;
     }
 
+    public double getRechargeTime() {
+        return rechargeTime;
+    }
+
     public Map<String, Integer> getAttributes() {
         return attributes;
     }

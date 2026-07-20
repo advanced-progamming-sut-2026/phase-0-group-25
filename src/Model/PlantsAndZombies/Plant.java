@@ -1,6 +1,7 @@
 package src.Model.PlantsAndZombies;
 
 import src.Enums.PlantCategory;
+import src.Model.Tile;
 
 import java.sql.Struct;
 
@@ -13,7 +14,13 @@ public abstract class Plant extends Entity {
 
     public abstract void update();
 
-    public boolean checkingPlantable (int sun) {
+    public boolean checkingPlantable (int sun, Tile thisTile) {
+        BattlePlant upperPlant = thisTile.getPlants().get(thisTile.getPlants().size());
+        boolean isStack = upperPlant.getPlantStats().getTags().contains("Stack") || thisTile.getPlants().isEmpty();
+        return (sun >= this.price) && (this.cooldown==0 || !this.activeCooldown) && isStack;
+    }
+
+    public boolean checkingSunCooldown (int sun) {
         return (sun >= this.price) && (this.cooldown==0 || !this.activeCooldown);
     }
 

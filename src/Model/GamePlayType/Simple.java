@@ -4,16 +4,18 @@ import src.Enums.ChapterType;
 import src.Model.Mower;
 import src.Model.PlantsAndZombies.*;
 import src.Model.PlantsAndZombies.Projectiles.Projectile;
+import src.Model.User.User;
 import src.Model.Wave.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Simple extends GamePlay {
     // plants that can appear in the game...
     private ArrayList<BattlePlant> myPlants;
 
-    public Simple(ChapterType chapterType, int level, ArrayList<BattlePlant> myPlants) {
-        super(chapterType, level);
+    public Simple(ChapterType chapterType, int level, int difficulty, User thisUser, ArrayList<BattlePlant> myPlants) {
+        super(chapterType, level, difficulty, thisUser);
         this.myPlants = myPlants;
     }
 
@@ -22,19 +24,44 @@ public class Simple extends GamePlay {
         if (isPaused) return;
         totalTicksPassed++;
 
-        sunMaker();
+        if (this.level != 4) {
+            sunMaker();
+        }
 
-        // Updating Zombies, Plant and Projectile :
-        for (BattlePlant plant : gamePlants) {
-            if(plant.isAlive()) plant.update();
-            // passing cooldown
-            plant.setCooldown(Math.max(plant.getCooldown() - 1, 0));
+        // Updating Zombies, Plant and Projectile (Deleting them if they're dead) :
+        Iterator<BattlePlant> bp = gamePlants.iterator();
+        while (bp.hasNext()) {
+            BattlePlant plant = bp.next();
+
+            if(plant.isAlive() && plant.getCurrentHP() > 0) {
+                plant.update();
+                // passing cooldown
+                plant.setCooldown(Math.max(plant.getCooldown() - 1, 0));
+            } else {
+                bp.remove();
+            }
         }
-        for (Zombie zombie : gameZombies) {
-            if(zombie.isAlive()) zombie.update();
+        Iterator<Zombie> z = gameZombies.iterator();
+        while (z.hasNext()) {
+            Zombie zombie = z.next();
+
+            if (!zombie.isAlive() || zombie.getCurrentHP() <= 0) {
+                killAward(this.thisUser);
+                glowingAward(this);
+                z.remove();
+            } else {
+                zombie.update();
+            }
         }
-        for(Projectile projectile : projectiles) {
-            projectile.update();
+        Iterator<Projectile> pj = projectiles.iterator();
+        while (pj.hasNext()) {
+            Projectile thisProjectile = pj.next();
+
+            if (thisProjectile.isActive()) {
+                thisProjectile.update();
+            } else {
+                pj.remove();
+            }
         }
 
         // Spawning zombies :
@@ -57,9 +84,9 @@ public class Simple extends GamePlay {
 
         // Checking if the end of the game (Losing) + Activate Mowers :
         int x = mowers.get(0).getX();
-        for(Zombie z : gameZombies) {
-            int yOfz = (int) z.getPosition().getY();
-            int xOfz = (int) z.getPosition().getX();
+        for(Zombie zombie : gameZombies) {
+            int yOfz = (int) zombie.getPosition().getY();
+            int xOfz = (int) zombie.getPosition().getX();
             Mower thisMower = mowers.stream().filter(p -> p.getY() == yOfz).findFirst().get();
 
             if (xOfz <= x) {

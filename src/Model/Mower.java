@@ -6,7 +6,7 @@ import src.Model.PlantsAndZombies.Zombie;
 
 public class Mower {
     private int y;
-    private int x = 30;
+    private int x = 20;
     private boolean isUsed = false;
 
     public Mower(int y) {
