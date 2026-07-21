@@ -49,7 +49,8 @@ public enum Command {
     ChooseShowAvailablePlants("^show available plants$"),
     ChooseAddPlant("^add plant -t\\s+(.+)$"),
     ChooseRemovePlant("^remove plant -t\\s+(.+)$"),
-    StartGame("^start game$");
+    StartGame("^start game$"),
+    EnterShop("menu shop");
 
 
     private final String regex;

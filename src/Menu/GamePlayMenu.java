@@ -51,26 +51,26 @@ public class GamePlayMenu extends Menu {
         Matcher matcher;
         if ((matcher = getMatcher(input, Command.AdvanceTime)) != null) {
             String count = matcher.group("count");
-            thisGamePlay.advanceTime(Integer.parseInt(count));
+            gamePlay.advanceTime(Integer.parseInt(count));
         } else if ((matcher = getMatcher(input, Command.CollectSun)) != null) {
             int x = Integer.parseInt(matcher.group("x"));
             int y = Integer.parseInt(matcher.group("y"));
             if (x > 9 || x < 1 || y > 5 || y < 1) {
                 System.out.println("Pls type valid x and y!");
             } else {
-                thisGamePlay.collectSun(x, y);
+                gamePlay.collectSun(x, y);
             }
         } else if ((matcher = getMatcher(input, Command.ShowSunAmount)) != null) {
-            System.out.println("You have" + thisGamePlay.getMySuns() + "suns");
+            System.out.println("You have" + gamePlay.getMySuns() + "suns");
         } else if ((matcher = getMatcher(input, Command.CheatAddSuns)) != null) {
             String count = matcher.group("count");
-            thisGamePlay.cheatAddSun(Integer.parseInt(count));
+            gamePlay.cheatAddSun(Integer.parseInt(count));
         } else if ((matcher = getMatcher(input, Command.CheatCooldown)) != null) {
-            thisGamePlay.removeCooldown();
+            gamePlay.removeCooldown();
         } else if ((matcher = getMatcher(input, Command.CheatPlantFood)) != null) {
-            thisGamePlay.addPlantFood();
+            gamePlay.addPlantFood();
         } else if ((matcher = getMatcher(input, Command.ReleaseTheNuke)) != null) {
-            thisGamePlay.releaseTheNuke();
+            gamePlay.releaseTheNuke();
         } else if ((matcher = getMatcher(input, Command.PlantPlant)) != null) {
             String type = matcher.group("type");
             int x = Integer.parseInt(matcher.group("x"));
@@ -79,8 +79,8 @@ public class GamePlayMenu extends Menu {
                 System.out.println("Pls type valid x and y!");
             } else {
                 Position thisPosition = new Position(x , y);
-                BattlePlant thisPlant = thisGamePlay
-                thisGamePlay.planting();
+                BattlePlant thisPlant = gamePlay
+                gamePlay.planting();
             }
         } else if ((matcher = getMatcher(input, Command.PluckPlant)) != null) {
             int x = Integer.parseInt(matcher.group("x"));
@@ -89,8 +89,8 @@ public class GamePlayMenu extends Menu {
                 System.out.println("Pls type valid x and y!");
             } else {
                 Position thisPosition = new Position(x , y);
-                BattlePlant thisPlant = thisGamePlay
-                thisGamePlay.plucking();
+                BattlePlant thisPlant = gamePlay
+                gamePlay.plucking();
             }
         } else if ((matcher = getMatcher(input, Command.FeedPlant)) != null) {
             int x = Integer.parseInt(matcher.group("x"));
@@ -101,9 +101,9 @@ public class GamePlayMenu extends Menu {
                 // TODO : how to use plant food...?
             }
         } else if ((matcher = getMatcher(input, Command.ShowMap)) != null) {
-            thisGamePlay.showMap();
+            gamePlay.showMap();
         } else if ((matcher = getMatcher(input, Command.ShowPlantsStatus)) != null) {
-            thisGamePlay.showPlantsStatus();
+            gamePlay.showPlantsStatus();
         } else if ((matcher = getMatcher(input, Command.ShowTileStatus)) != null) {
             int x = Integer.parseInt(matcher.group("x"));
             int y = Integer.parseInt(matcher.group("y"));
@@ -111,7 +111,7 @@ public class GamePlayMenu extends Menu {
                 System.out.println("Pls type valid x and y!");
             } else {
                 Position thisPosition = new Position(x , y);
-                thisGamePlay.showTileStatus(thisPosition);
+                gamePlay.showTileStatus(thisPosition);
             }
         } else {
             System.out.println("Unknown command: " + input);

@@ -1,6 +1,7 @@
 package src.Model.GamePlayType;
 
 import src.Enums.ChapterType;
+import src.Model.ChaptersAndLevels.Level;
 import src.Model.Grave;
 import src.Model.Mower;
 import src.Model.PlantsAndZombies.*;
