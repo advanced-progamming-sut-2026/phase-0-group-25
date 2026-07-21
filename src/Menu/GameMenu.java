@@ -114,8 +114,7 @@ public class GameMenu extends Menu {
             return;
         }
 
-        GamePlayMenu gamePlayMenu = (GamePlayMenu) MenuManager.getInstance().getMenu(MenuType.GamePlay);
-        gamePlayMenu.setGamePlay(gamePlay);
+        GamePlayMenu.setGamePlay(gamePlay);
         MenuManager.getInstance().changeMenu(MenuType.GamePlay);
     }
 

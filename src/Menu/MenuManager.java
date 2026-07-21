@@ -53,9 +53,7 @@ public class MenuManager {
         }
     }
 
-    public Menu getMenu(MenuType menuType) {
-        return menusAndTheirNames.get(menuType);
-    }
+
 
     public void setMustExit() {
         this.mustExit = true;

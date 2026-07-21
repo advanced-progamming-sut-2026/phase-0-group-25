@@ -11,20 +11,23 @@ import java.util.regex.Matcher;
 
 public class GamePlayMenu extends Menu {
     private final GamePlayMenuView gamePlayMenuView;
-    private GamePlay gamePlay;
+    private static GamePlay gamePlay;
+
 
     public GamePlayMenu(GamePlayMenuView gamePlayMenuView) {
         super(MenuType.Game);
         this.gamePlayMenuView = gamePlayMenuView;
     }
 
-    public void setGamePlay(GamePlay gamePlay) {
-        this.gamePlay = gamePlay;
-    }
 
-    public GamePlay getGamePlay() {
+    public static GamePlay getGamePlay(){
         return gamePlay;
     }
+    public static void setGamePlay(GamePlay gamePlay) {
+        GamePlayMenu.gamePlay = gamePlay;
+    }
+
+
 
     private void checkWinCondition() {
         if (gamePlay != null && gamePlay.checkingTheEndOfTheGame()) {
