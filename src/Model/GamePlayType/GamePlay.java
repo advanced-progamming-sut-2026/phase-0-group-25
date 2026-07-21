@@ -10,6 +10,7 @@ import src.Model.Tile;
 import src.Model.PlayGroundType.PlayGround;
 import src.Model.Sun.Sun;
 import src.Model.User.User;
+import src.Model.User.UsersManager;
 import src.Model.Wave.FinalWave;
 import src.Model.Wave.Wave;
 
@@ -28,6 +29,7 @@ public abstract class GamePlay {
 
     protected int level;
     protected ChapterType chapterType;
+    protected Level levelObject;
 
     protected ArrayList<Tile> tiles = new ArrayList<>();
     protected ArrayList<Projectile> projectiles = new ArrayList<>();
@@ -87,9 +89,22 @@ public abstract class GamePlay {
                 }
             }
         };
+    }
 
-        //TODO: adding the zombies...
-        //TODO: adding the plants...
+    public Level getLevelObject() {
+        return levelObject;
+    }
+
+    public void setLevelObject(Level levelObject) {
+        this.levelObject = levelObject;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public ChapterType getChapterType() {
+        return chapterType;
     }
 
     public abstract void update() ;
@@ -463,12 +478,12 @@ public abstract class GamePlay {
         if (hasAward) {
             switch (kindOfAward) {
                 case 1:
-                    thisUser.getUserProgress().addCoins(50);
+                    UsersManager.getInstance().addCoins(50);
                     int numOfCoins = thisUser.getUserProgress().getCoinsCount();
                     System.out.printf("A zombie dropped a coin; you have %d coins now.\n", numOfCoins);
                     break;
                 case 2:
-                    thisUser.getUserProgress().addGems(1);
+                    UsersManager.getInstance().addGems(1);
                     int numOfGems = thisUser.getUserProgress().getGemsCount();
                     System.out.printf("A zombie dropped a diamond; you have %d diamonds now.\n", numOfGems);
                     break;

@@ -6,21 +6,48 @@ import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Position;
 import src.View.ViewInterfaces.BaseView;
-import src.View.ViewInterfaces.GameMenuView;
 import src.View.ViewInterfaces.GamePlayMenuView;
+
 import java.util.regex.Matcher;
 
-public class GamePlayMenu extends Menu{
+public class GamePlayMenu extends Menu {
     private final GamePlayMenuView gamePlayMenuView;
-    private GamePlay thisGamePlay;
+    private static GamePlay gamePlay;
+
 
     public GamePlayMenu(GamePlayMenuView gamePlayMenuView) {
         super(MenuType.Game);
         this.gamePlayMenuView = gamePlayMenuView;
     }
 
+
+    public static GamePlay getGamePlay(){
+        return gamePlay;
+    }
+    public static void setGamePlay(GamePlay gamePlay) {
+        GamePlayMenu.gamePlay = gamePlay;
+    }
+
+
+
+    private void checkWinCondition() {
+        if (gamePlay != null && gamePlay.checkingTheEndOfTheGame()) {
+            System.out.println("Level completed successfully! Victory!");
+            if (gamePlay.getLevelObject() != null) {
+                gamePlay.getLevelObject().completeLevel();
+            }
+            MenuManager.getInstance().changeMenu(MenuType.Game);
+        }
+    }
+
     @Override
     public void handleSpecificCommands(String input) {
+        if (gamePlay == null) {
+            getView().showError("No active game play found. Returning to game menu.");
+            MenuManager.getInstance().changeMenu(MenuType.Game);
+            return;
+        }
+
         Matcher matcher;
         if ((matcher = getMatcher(input, Command.AdvanceTime)) != null) {
             String count = matcher.group("count");

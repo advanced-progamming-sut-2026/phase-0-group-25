@@ -15,8 +15,8 @@ public class MenuManager {
     private final HashMap<MenuType, Menu> menusAndTheirNames;
     private boolean mustExit;
 
-    public static MenuManager getInstance(){
-        if(instance == null)
+    public static MenuManager getInstance() {
+        if (instance == null)
             instance = new MenuManager();
         return instance;
     }
@@ -53,17 +53,21 @@ public class MenuManager {
         }
     }
 
+
+
     public void setMustExit() {
         this.mustExit = true;
     }
-    public void exitCurrentMenu(){
+
+    public void exitCurrentMenu() {
         currentMenu.exit();
     }
 
-    public void changeMenu(MenuType menuType){
+    public void changeMenu(MenuType menuType) {
         this.currentMenu = menusAndTheirNames.get(menuType);
         this.currentMenu.onEnter();
     }
+
     public void startAppLoop() {
         while (!mustExit) {
             String input = scanner.nextLine().trim();

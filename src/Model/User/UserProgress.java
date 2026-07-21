@@ -108,6 +108,12 @@ public class UserProgress {
         return gameDifficulty;
     }
 
+    public int getPlantLevel(PlantType plantType){
+        if(unlockedPlantsAndTheirLevels.keySet().contains(plantType))
+            return unlockedPlantsAndTheirLevels.get(plantType);
+        return 0;
+    }
+
 
      void unlockPlant(PlantType plantType){
         unlockedPlantsAndTheirLevels.put(plantType, 1);
