@@ -4,6 +4,7 @@ import src.Enums.ChapterType;
 import src.Model.Mower;
 import src.Model.PlantsAndZombies.*;
 import src.Model.PlantsAndZombies.Projectiles.Projectile;
+import src.Model.Tile;
 import src.Model.User.User;
 import src.Model.Wave.*;
 
@@ -12,12 +13,8 @@ import java.util.Iterator;
 
 public class Simple extends GamePlay {
     // plants that can appear in the game...
-    private ArrayList<BattlePlant> myPlants;
 
-    public Simple(ChapterType chapterType, int level, int difficulty, User thisUser, ArrayList<BattlePlant> myPlants) {
-        super(chapterType, level, difficulty, thisUser);
-        this.myPlants = myPlants;
-    }
+
 
     @Override
     public void update() {
@@ -38,6 +35,15 @@ public class Simple extends GamePlay {
                 // passing cooldown
                 plant.setCooldown(Math.max(plant.getCooldown() - 1, 0));
             } else {
+                Tile currentTile = tiles.stream()
+                        .filter(t -> (int) t.getPosition().getX() == plant.getColumn() &&
+                                (int) t.getPosition().getY() == plant.getRow())
+                                .findFirst()
+                                .orElse(null);
+
+                if (currentTile != null) {
+                    currentTile.getPlants().remove(plant);
+                }
                 bp.remove();
             }
         }
@@ -53,6 +59,7 @@ public class Simple extends GamePlay {
                 zombie.update();
             }
         }
+        updateZombieTiles();
         Iterator<Projectile> pj = projectiles.iterator();
         while (pj.hasNext()) {
             Projectile thisProjectile = pj.next();
@@ -105,5 +112,4 @@ public class Simple extends GamePlay {
             System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
         }
     }
-
 }
