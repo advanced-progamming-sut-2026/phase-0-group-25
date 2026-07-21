@@ -64,13 +64,25 @@ public abstract class GamePlay {
         this.playGround = new PlayGround() {
             @Override
             public void makeGround() {
-                for (int y = 1; y < 6; y++) {
-                    mowers.add (new Mower(y));
-                    for (int x = 1 ; x < 10; x++) {
-                        Position newPosition = new Position(x, y);
-                        Boolean isArable = Math.random() >= 0.06;
-                        Tile newTile = new Tile(newPosition, isArable);
-                        tiles.add(newTile);
+                if (chapterType == ChapterType.BIG_WAVE_BEACH) {
+                    for (int y = 1; y < 6; y++) {
+                        mowers.add (new Mower(y));
+                        for (int x = 1 ; x < 10; x++) {
+                            Position newPosition = new Position(x, y);
+                            Boolean isArable = (x != 9 && x != 8);
+                            Tile newTile = new Tile(newPosition, isArable);
+                            tiles.add(newTile);
+                        }
+                    }
+                } else {
+                    for (int y = 1; y < 6; y++) {
+                        mowers.add(new Mower(y));
+                        for (int x = 1; x < 10; x++) {
+                            Position newPosition = new Position(x, y);
+                            Boolean isArable = Math.random() >= 0.06 || (x == 5 && (y == 2 || y== 4));
+                            Tile newTile = new Tile(newPosition, isArable);
+                            tiles.add(newTile);
+                        }
                     }
                 }
             }

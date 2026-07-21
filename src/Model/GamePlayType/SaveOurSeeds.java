@@ -1,21 +1,148 @@
 package src.Model.GamePlayType;
 
 import src.Enums.ChapterType;
+import src.Model.Mower;
+import src.Model.PlantsAndZombies.BattlePlant;
+import src.Model.PlantsAndZombies.Position;
+import src.Model.PlantsAndZombies.Projectiles.Projectile;
+import src.Model.PlantsAndZombies.Zombie;
+import src.Model.Tile;
 import src.Model.User.User;
+import src.Model.Wave.FinalWave;
+import src.Model.Wave.Wave;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class SaveOurSeeds extends GamePlay {
 
     public SaveOurSeeds(ChapterType chapterType, int level, int difficulty, User thisUser,
                         ArrayList<String> plants, ArrayList<String> zombies) {
         super(chapterType, level, difficulty, thisUser, plants, zombies);
+
+        this.planting(this.plants.get(0), new Position(5,2));
+        this.planting(this.plants.get(0), new Position(5,4));
     }
 
     @Override
     public void update() {
-        // TODO simple update
+        if (isPaused) return;
+        totalTicksPassed++;
 
+        if (this.level != 4) {
+            sunMaker();
+        }
 
+        // Updating Zombies, Plant and Projectile (Deleting them if they're dead) :
+        Iterator<BattlePlant> bp = gamePlants.iterator();
+        while (bp.hasNext()) {
+            BattlePlant plant = bp.next();
+
+            if(plant.isAlive() && plant.getCurrentHP() > 0) {
+                plant.update();
+                // passing cooldown
+                plant.setCooldown(Math.max(plant.getCooldown() - 1, 0));
+            } else {
+                Tile currentTile = tiles.stream()
+                        .filter(t -> (int) t.getPosition().getX() == plant.getColumn() &&
+                                (int) t.getPosition().getY() == plant.getRow())
+                        .findFirst()
+                        .orElse(null);
+
+                if (currentTile != null) {
+                    currentTile.getPlants().remove(plant);
+                }
+                bp.remove();
+            }
+        }
+        Iterator<Zombie> z = gameZombies.iterator();
+        while (z.hasNext()) {
+            Zombie zombie = z.next();
+
+            if (!zombie.isAlive() || zombie.getCurrentHP() <= 0) {
+                killAward(this.thisUser);
+                glowingAward(this);
+                z.remove();
+            } else {
+                zombie.update();
+            }
+        }
+        updateZombieTiles();
+        Iterator<Projectile> pj = projectiles.iterator();
+        while (pj.hasNext()) {
+            Projectile thisProjectile = pj.next();
+
+            if (thisProjectile.isActive()) {
+                thisProjectile.update();
+            } else {
+                pj.remove();
+            }
+        }
+
+        // Spawning zombies :
+        for (Wave thisWave : allWaves) {
+            if (thisWave.hasZombiesLeftToSpawn()) {
+                if (!thisWave.getStarted()) {
+                    if (thisWave instanceof FinalWave) {
+                        System.out.println("The final wave has come.");
+                    } else {
+                        System.out.printf("Wave %d started.\n", thisWave.getWaveNum());
+                    }
+                    thisWave.setStarted(true);
+                }
+                thisWave.spawnNextZombie(); // TODO : how to spaw...?
+            }
+            if (!thisWave.isReadyForNextWave()) {
+                break;
+            }
+        }
+
+        // Checking if the end of the game (Losing) + Activate Mowers :
+        int x = mowers.get(0).getX();
+        for(Zombie zombie : gameZombies) {
+            int yOfz = (int) zombie.getPosition().getY();
+            int xOfz = (int) zombie.getPosition().getX();
+            Mower thisMower = mowers.stream().filter(p -> p.getY() == yOfz).findFirst().get();
+
+            if (xOfz <= x) {
+                if (!thisMower.isUsed()) {
+                    System.out.println("The lawn mower in the row" + yOfz + "is triggered and killed these zombies:");
+                    thisMower.killZombies(this);
+                }
+                else {
+                    System.out.println("The zombie ate your brain; LOSER!!!");
+                }
+            }
+        }
+
+        // Another condition for losing (in this game) :
+        if (!canSaved()) {
+            System.out.println("You couldn't save your important plant!!");
+            System.out.println("The zombie ate your brain; LOSER!!!");
+        }
+
+        // Checking if the end of the game (Winning) :
+        if (checkingTheEndOfTheGame()) {
+            System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
+        }
+    }
+
+    private boolean canSaved () {
+        Tile tile1 = tiles.stream()
+                .filter(t -> (int) t.getPosition().getX() == 5 &&
+                        (int) t.getPosition().getY() == 2)
+                .findFirst()
+                .orElse(null);
+        Tile tile2 = tiles.stream()
+                .filter(t -> (int) t.getPosition().getX() == 5 &&
+                        (int) t.getPosition().getY() == 4)
+                .findFirst()
+                .orElse(null);
+
+        if (tile1.getPlants().isEmpty() || tile2.getPlants().isEmpty()) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
