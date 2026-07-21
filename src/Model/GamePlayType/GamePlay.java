@@ -1,6 +1,7 @@
 package src.Model.GamePlayType;
 
 import src.Enums.ChapterType;
+import src.Model.Grave;
 import src.Model.Mower;
 import src.Model.PlantsAndZombies.*;
 import src.Model.PlantsAndZombies.Projectiles.Projectile;
@@ -22,6 +23,7 @@ public abstract class GamePlay {
     protected ArrayList<Zombie> gameZombies = new ArrayList<>();
     protected ArrayList<BattlePlant> gamePlants = new ArrayList<>();
 
+    protected ArrayList<Grave> allGraves = new ArrayList<>();
     protected ArrayList<Wave> allWaves = new ArrayList<>();
 
     protected int level;
@@ -42,7 +44,8 @@ public abstract class GamePlay {
     protected int numOfWaves;
     protected int totalTicksPassed = 0;
 
-    public GamePlay(ChapterType chapterType, int level, int difficulty, User thisUser) {
+    public GamePlay(ChapterType chapterType, int level, int difficulty, User thisUser,
+                            ArrayList<String> plants, ArrayList<String> zombies) {
         this.numOfPlantFood = 0;
         this.mySuns = 0;
         this.isPaused = false;
@@ -61,13 +64,25 @@ public abstract class GamePlay {
         this.playGround = new PlayGround() {
             @Override
             public void makeGround() {
-                for (int y = 1; y < 6; y++) {
-                    mowers.add (new Mower(y));
-                    for (int x = 1 ; x < 10; x++) {
-                        Position newPosition = new Position(x, y);
-                        Boolean isArable = Math.random() >= 0.06;
-                        Tile newTile = new Tile(newPosition, isArable);
-                        tiles.add(newTile);
+                if (chapterType == ChapterType.BIG_WAVE_BEACH) {
+                    for (int y = 1; y < 6; y++) {
+                        mowers.add (new Mower(y));
+                        for (int x = 1 ; x < 10; x++) {
+                            Position newPosition = new Position(x, y);
+                            Boolean isArable = (x != 9 && x != 8);
+                            Tile newTile = new Tile(newPosition, isArable);
+                            tiles.add(newTile);
+                        }
+                    }
+                } else {
+                    for (int y = 1; y < 6; y++) {
+                        mowers.add(new Mower(y));
+                        for (int x = 1; x < 10; x++) {
+                            Position newPosition = new Position(x, y);
+                            Boolean isArable = Math.random() >= 0.06 || (x == 5 && (y == 2 || y== 4));
+                            Tile newTile = new Tile(newPosition, isArable);
+                            tiles.add(newTile);
+                        }
                     }
                 }
             }
@@ -288,7 +303,7 @@ public abstract class GamePlay {
         System.out.println("===================");
 
         System.out.println("Board Legend:");
-        System.out.println("[ ] : Arable Tile     ~ ~ : Non-Arable Tile");
+        System.out.printf("[ ] : Arable Tile     ~ ~ : %s Tile\n", getKindOfTile(chapterType));
         System.out.println(" P  : Plant is present       Z  : Zombie is present");
         System.out.println(" M  : Mower (Ready)          X  : Mower (Used)");
         System.out.println("---------------------------------------------------------");
@@ -466,12 +481,56 @@ public abstract class GamePlay {
         }
     }
 
+    public ArrayList<Grave> getAllGraves() {
+        return allGraves;
+    }
+
+    public void setAllGraves(ArrayList<Grave> allGraves) {
+        this.allGraves = allGraves;
+    }
+
+    public void addGrave(Grave thisGrave) {
+        this.allGraves.add(thisGrave);
+    }
+
     public void glowingAward (GamePlay thisGame) {
         Boolean isGlowing = Math.random() <= 0.05;
         if (isGlowing) {
             thisGame.addPlantFood();
             System.out.printf("The glowing zombie dropped a plant food; you have %d plant foods now.\n",
                                     thisGame.getNumOfPlantFood());
+        }
+    }
+
+    public void updateZombieTiles() {
+        for (Tile tile : tiles) {
+            tile.getZombies().clear();
+        }
+
+        for (Zombie zombie : gameZombies) {
+            Position zombiePosition = Position.getRowAndColumn(zombie.getPosition());
+            int currentX = (int) zombiePosition.getX();
+            int currentY = (int) zombiePosition.getY();
+
+            Tile currentTile = tiles.stream()
+                    .filter(t -> (int) t.getPosition().getX() == currentX && (int) t.getPosition().getY() == currentY)
+                    .findFirst()
+                    .orElse(null);
+
+            if (currentTile != null) {
+                currentTile.getZombies().add(zombie);
+            }
+        }
+    }
+
+    public String getKindOfTile (ChapterType thisChapter) {
+        if (thisChapter == ChapterType.ANCIENT_EGYPT ||
+            thisChapter == ChapterType.DARK_AGE) {
+            return "Grave";
+        } else if (thisChapter == ChapterType.FROSTBITE_CAVES) {
+            return "Landslide";
+        } else {
+            return "Water";
         }
     }
 }

@@ -1,5 +1,6 @@
 package src.Model;
 
+import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Plant;
 import src.Model.PlantsAndZombies.Position;
@@ -24,6 +25,14 @@ public class Tile {
         plants = new ArrayList<>();
         zombies = new ArrayList<>();
         projectiles = new ArrayList<>();
+    }
+
+    public Grave getGrave() {
+        return grave;
+    }
+
+    public void setGrave(Grave grave) {
+        this.grave = grave;
     }
 
     public Position getPosition() {
