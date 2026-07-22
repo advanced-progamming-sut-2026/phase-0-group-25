@@ -35,6 +35,8 @@ public class GamePlayMenu extends Menu{
             }
         } else if ((matcher = getMatcher(input, Command.ShowSunAmount)) != null) {
             System.out.println("You have" + thisGamePlay.getMySuns() + "suns");
+        } else if ((matcher = getMatcher(input, Command.ShowPlantFoodAmount)) != null) {
+            System.out.println("You have" + thisGamePlay.getNumOfPlantFood() + "plant foods");
         } else if ((matcher = getMatcher(input, Command.CheatAddSuns)) != null) {
             String count = matcher.group("count");
             thisGamePlay.cheatAddSun(Integer.parseInt(count));
@@ -71,7 +73,7 @@ public class GamePlayMenu extends Menu{
             if (x > 9 || x < 1 || y > 5 || y < 1) {
                 System.out.println("Pls type valid x and y!");
             } else {
-                // TODO : how to use plant food...?
+                thisGamePlay.applyPlantFood(x, y);
             }
         } else if ((matcher = getMatcher(input, Command.ShowMap)) != null) {
             thisGamePlay.showMap();

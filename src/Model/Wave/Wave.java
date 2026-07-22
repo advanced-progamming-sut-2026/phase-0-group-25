@@ -40,7 +40,7 @@ public class Wave {
 
             tempZombies.add(newZombie);
 
-            initialTotalHealth += newZombie.getBaseHp();
+            initialTotalHealth += newZombie.getZombieStats().getBaseHP();
             currentBudget -= newZombie.getCost();
         }
 

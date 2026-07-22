@@ -14,6 +14,9 @@ import src.Model.Wave.FinalWave;
 import src.Model.Wave.Wave;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 public abstract class GamePlay {
     // plants that can appear in the game...
@@ -34,9 +37,13 @@ public abstract class GamePlay {
     protected ArrayList<Mower> mowers = new ArrayList<>();
     protected ArrayList<Sun> activeSuns = new ArrayList<>();
     protected int ticksSinceLastDrop = 0;
-    protected java.util.Random random = new java.util.Random();
+    protected Random random = new Random();
+    private List<Integer> rowBag = new ArrayList<>();
 
     protected  User thisUser;
+    protected int timeToSpwan = 0;
+    static int effectedTime = 3;
+    static int spawnX = 1800;
     protected int numOfPlantFood;
     protected int mySuns;
     protected PlayGround playGround;
@@ -53,13 +60,22 @@ public abstract class GamePlay {
         this.chapterType = chapterType;
         this.thisUser = thisUser;
 
+        ArrayList <Zombie> tempZ = new ArrayList<>();
+        for (String zName : zombies) {
+            tempZ.add(ZombieFactory.createZombie(zName, new Position(1 , 1)));
+        }
+
         this.numOfWaves = calculateWaves(chapterType, level);
         for (int i = 1 ; i < numOfWaves ; i++) {
             int waveCost = (int)(calculateCost(chapterType, level, i) * (1 + difficulty/10.0));
-            this.allWaves.add(new Wave(waveCost, i));
+            Wave thisWave = new Wave(waveCost, i);
+            this.allWaves.add(thisWave);
+            thisWave.zombieMaker(tempZ);
         }
         int waveCost = (int)((calculateCost(chapterType, level, numOfWaves) + 500) * (1 + difficulty/10.0));
-        this.allWaves.add(new FinalWave(waveCost, numOfWaves));
+        FinalWave thisFinal = new FinalWave(waveCost, numOfWaves);
+        this.allWaves.add(thisFinal);
+        thisFinal.zombieMaker(tempZ);
 
         this.playGround = new PlayGround() {
             @Override
@@ -87,8 +103,6 @@ public abstract class GamePlay {
                 }
             }
         };
-
-        //TODO: adding the zombies...
         //TODO: adding the plants...
     }
 
@@ -268,10 +282,6 @@ public abstract class GamePlay {
         this.mySuns += sun.getNumberOfSun();
     }
 
-    public void showSunAmount() {
-        System.out.printf("You have %d suns\n", this.mySuns);
-    }
-
     public void showTileStatus(Position thisPosition) {
         Tile thisTile = tiles.stream().filter(p -> p.getPosition().equals(thisPosition)).findFirst().get();
         System.out.println("The Plants :");
@@ -324,10 +334,7 @@ public abstract class GamePlay {
             for (int x = 1; x <= 9; x++) {
                 final int currentX = x;
 
-                Tile currentTile = tiles.stream()
-                        .filter(t -> (int) t.getPosition().getX() == currentX && (int) t.getPosition().getY() == currentY)
-                        .findFirst()
-                        .orElse(null);
+                Tile currentTile = getTileByPosition(currentX, currentY);
 
                 if (currentTile != null) {
                     boolean hasPlant = !currentTile.getPlants().isEmpty();
@@ -397,8 +404,11 @@ public abstract class GamePlay {
         return gameZombies;
     }
 
-    public ArrayList<BattlePlant> getGamePlants() {
-        return gamePlants;
+    public void applyPlantFood(int x, int y) {
+        Tile thisTile = getTileByPosition(x, y);
+        for (BattlePlant p : thisTile.getPlants()) {
+            p.setEffected(true, effectedTime);
+        }
     }
 
     public int getMySuns() {
@@ -512,10 +522,7 @@ public abstract class GamePlay {
             int currentX = (int) zombiePosition.getX();
             int currentY = (int) zombiePosition.getY();
 
-            Tile currentTile = tiles.stream()
-                    .filter(t -> (int) t.getPosition().getX() == currentX && (int) t.getPosition().getY() == currentY)
-                    .findFirst()
-                    .orElse(null);
+            Tile currentTile = getTileByPosition(currentX, currentY);
 
             if (currentTile != null) {
                 currentTile.getZombies().add(zombie);
@@ -532,5 +539,43 @@ public abstract class GamePlay {
         } else {
             return "Water";
         }
+    }
+
+    public Tile getTileByPosition(int x, int y) {
+        Tile thisTIle = tiles.stream()
+                .filter(t -> (int) t.getPosition().getX() == x &&
+                        (int) t.getPosition().getY() == y)
+                        .findFirst()
+                        .orElse(null);
+        return thisTIle;
+    }
+
+    public int getRandomTime() {
+        int[] numbers = {10, 50, 30, 70};
+        int randomIndex = (int) (Math.random() * numbers.length);
+        return numbers[randomIndex];
+    }
+
+    public int getNextRandomY() {
+        if (rowBag.isEmpty()) {
+            for (int i = 1; i <= 5; i++) {
+                rowBag.add(i);
+            }
+            Collections.shuffle(rowBag, this.random);
+        }
+
+        return rowBag.remove(0);
+    }
+
+    public int getLevelOfPlant (String plantName) {
+        thisUser.getUserProgress().
+    }
+
+    public int getRealX(int gridX) {
+        return 120 + ((gridX - 1) * 200);
+    }
+
+    public int getRealY(int gridY) {
+        return 140 + ((gridY - 1) * 200);
     }
 }

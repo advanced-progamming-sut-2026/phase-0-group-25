@@ -128,16 +128,8 @@ public class SaveOurSeeds extends GamePlay {
     }
 
     private boolean canSaved () {
-        Tile tile1 = tiles.stream()
-                .filter(t -> (int) t.getPosition().getX() == 5 &&
-                        (int) t.getPosition().getY() == 2)
-                .findFirst()
-                .orElse(null);
-        Tile tile2 = tiles.stream()
-                .filter(t -> (int) t.getPosition().getX() == 5 &&
-                        (int) t.getPosition().getY() == 4)
-                .findFirst()
-                .orElse(null);
+        Tile tile1 = getTileByPosition(5, 2);
+        Tile tile2 = getTileByPosition(5, 4);
 
         if (tile1.getPlants().isEmpty() || tile2.getPlants().isEmpty()) {
             return false;
