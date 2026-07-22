@@ -1,6 +1,7 @@
 package src.Model.GamePlayType;
 
 import src.Enums.ChapterType;
+import src.Enums.PlantType;
 import src.Model.ChaptersAndLevels.Level;
 import src.Model.Grave;
 import src.Model.Mower;
@@ -27,6 +28,10 @@ public abstract class GamePlay {
     protected ArrayList<Zombie> gameZombies = new ArrayList<>();
     protected ArrayList<BattlePlant> gamePlants = new ArrayList<>();
 
+    protected ArrayList<Tile> tiles = new ArrayList<>();
+    protected ArrayList<Projectile> projectiles = new ArrayList<>();
+    protected ArrayList<Mower> mowers = new ArrayList<>();
+    protected ArrayList<Sun> activeSuns = new ArrayList<>();
     protected ArrayList<Grave> allGraves = new ArrayList<>();
     protected ArrayList<Wave> allWaves = new ArrayList<>();
 
@@ -34,14 +39,9 @@ public abstract class GamePlay {
     protected ChapterType chapterType;
     protected Level levelObject;
 
-    protected ArrayList<Tile> tiles = new ArrayList<>();
-    protected ArrayList<Projectile> projectiles = new ArrayList<>();
-    protected ArrayList<Mower> mowers = new ArrayList<>();
-    protected ArrayList<Sun> activeSuns = new ArrayList<>();
     protected int ticksSinceLastDrop = 0;
     protected Random random = new Random();
     private List<Integer> rowBag = new ArrayList<>();
-
     protected  User thisUser;
     protected int timeToSpwan = 0;
     static int effectedTime = 3;
@@ -61,6 +61,11 @@ public abstract class GamePlay {
         this.level = level;
         this.chapterType = chapterType;
         this.thisUser = thisUser;
+
+        for (String pName : plants) {
+            Position PPos = new Position(1, 1);
+            this.plants.add(PlantFactory.createBattlePlant(pName, getLevelOfPlant(pName), PPos));
+        }
 
         ArrayList <Zombie> tempZ = new ArrayList<>();
         for (String zName : zombies) {
@@ -105,7 +110,6 @@ public abstract class GamePlay {
                 }
             }
         };
-        //TODO: adding the plants...
     }
 
     public abstract void update() ;
@@ -242,19 +246,19 @@ public abstract class GamePlay {
         Tile thisTile = tiles.stream().filter(p -> p.getPosition().equals(thisPosition)).findFirst().get();
 
         if (thisPlant.checkingPlantable(mySuns, thisTile) && thisTile.isArable()) {
-            this.gamePlants.add(thisPlant);
+            int thisPX = (int) thisPosition.getY();
+            int thisPY = (int) thisPosition.getY();
+            String thisPName = thisPlant.getName();
+            Position thisPPosition = new Position(getRealX(thisPX), getRealY(thisPY));
+            BattlePlant thisP = PlantFactory.createBattlePlant(thisPName, getLevelOfPlant(thisPName), thisPPosition);
+            thisP.setRow((int) thisPosition.getY());
+            thisP.setColumn((int) thisPosition.getX());
 
-            thisTile.addPlant(thisPlant);
-
-            thisPlant.setCooldown(40);
-
+            this.gamePlants.add(thisP);
+            thisTile.addPlant(thisP);
             this.mySuns -= thisPlant.getPlantStats().getCost();
 
-            thisPlant.setRow((int) thisPosition.getY());
-            thisPlant.setColumn((int) thisPosition.getX());
-
-            System.out.printf("%s was planted in (%d, %d)", thisPlant.getName(),
-                                    (int) thisPosition.getX(), (int) thisPosition.getY());
+            System.out.printf("%s was planted in (%d, %d)", thisPName, thisPX, thisPY);
         } else {
             if(!thisTile.isArable()) {
                 System.out.println("This tile is not arable! Try another one...!");
@@ -264,7 +268,7 @@ public abstract class GamePlay {
         }
     }
 
-    public void plucking(BattlePlant thisPlant, Position thisPosition) {
+    public void plucking(Position thisPosition) {
         Tile thisTile = tiles.stream().filter(p -> p.getPosition().equals(thisPosition)).findFirst().get();
         if (thisTile.getPlants().isEmpty()) {
             System.out.println("There is no plants in this tile!!");
@@ -475,19 +479,19 @@ public abstract class GamePlay {
         if (hasAward) {
             switch (kindOfAward) {
                 case 1:
-                    thisUser.getUserProgress().addCoins(50);
+                    UsersManager.getInstance().addCoins(50);
                     int numOfCoins = thisUser.getUserProgress().getCoinsCount();
                     System.out.printf("A zombie dropped a coin; you have %d coins now.\n", numOfCoins);
                     break;
                 case 2:
-                    thisUser.getUserProgress().addGems(1);
+                    UsersManager.getInstance().addGems(1);
                     int numOfGems = thisUser.getUserProgress().getGemsCount();
                     System.out.printf("A zombie dropped a diamond; you have %d diamonds now.\n", numOfGems);
                     break;
                 case 3:
-                    thisUser.getUserProgress().addPots(1);
+                    UsersManager.getInstance().addPots(1);
                     int numOfPots = thisUser.getUserProgress().getPotsCount();
-                    System.out.printf("A zombie dropped a diamond; you have %d pots now.\n", numOfPots);
+                    System.out.printf("A zombie dropped a pot; you have %d pots now.\n", numOfPots);
                     break;
             }
         }
@@ -570,7 +574,8 @@ public abstract class GamePlay {
     }
 
     public int getLevelOfPlant (String plantName) {
-        thisUser.getUserProgress().
+        PlantType thisPlantType = PlantType.valueOf(plantName);
+        return thisUser.getUserProgress().getUnlockedPlantsAndTheirLevels().get(thisPlantType);
     }
 
     public int getRealX(int gridX) {
