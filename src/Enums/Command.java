@@ -50,7 +50,10 @@ public enum Command {
     ChooseAddPlant("^add plant -t\\s+(.+)$"),
     ChooseRemovePlant("^remove plant -t\\s+(.+)$"),
     StartGame("^start game$"),
-    EnterShop("menu shop");
+    EnterShop("enter shop"),
+    ShopList("shop list"),
+    ShopDaily("shop daily"),
+    ShopBuy("shop buy -i (?<itemId>\\d+) -n (?<count>\\d+)( -t (?<plantType>.+))?");
 
 
     private final String regex;

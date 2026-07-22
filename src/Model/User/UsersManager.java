@@ -146,14 +146,92 @@ public class UsersManager {
         return null;
     }
 
-    public void addCoins(int amount){
+// file: src/Model/User/UsersManager.java
+// Add these methods inside UsersManager
+
+    /**
+     * Subtracts coins from the logged-in user's balance.
+     * @param amount positive amount to subtract
+     * @return null on success, error message on failure (e.g., insufficient balance)
+     */
+    public String subtractCoins(int amount) {
+        if (loggedInUser == null) {
+            return "No logged in user.";
+        }
+        UserProgress progress = loggedInUser.getUserProgress();
+        try {
+            progress.subtractCoins(amount);
+        } catch (IllegalArgumentException e) {
+            return e.getMessage();
+        }
+        updateUser();
+        return null;
+    }
+
+    /**
+     * Subtracts gems from the logged-in user's balance.
+     * @param amount positive amount to subtract
+     * @return null on success, error message on failure
+     */
+    public String subtractGems(int amount) {
+        if (loggedInUser == null) {
+            return "No logged in user.";
+        }
+        UserProgress progress = loggedInUser.getUserProgress();
+        try {
+            progress.subtractGems(amount);
+        } catch (IllegalArgumentException e) {
+            return e.getMessage();
+        }
+        updateUser();
+        return null;
+    }
+
+    // Modify existing addCoins and addGems to only accept positive amounts (optional but safe)
+    public void addCoins(int amount) {
+        if (loggedInUser == null) return;
+        if (amount <= 0) return; // only add positive
         loggedInUser.getUserProgress().addCoins(amount);
         updateUser();
     }
 
-    public void addGems(int amount){
+    public void addGems(int amount) {
+        if (loggedInUser == null) return;
+        if (amount <= 0) return;
         loggedInUser.getUserProgress().addGems(amount);
         updateUser();
+    }
+
+    // Refactor purchasePlant to use subtractCoins
+    public String purchasePlant(String plantName) {
+        User loggedInUser = getLoggedInUser();
+        if (loggedInUser == null) {
+            return "No logged in user found.";
+        }
+
+        PlantType plantType = PlantType.fromName(plantName);
+        if (plantType == null) {
+            return "Plant not found!";
+        }
+
+        if (loggedInUser.getUserProgress() == null) {
+            return "User progress data is missing.";
+        }
+
+        HashMap<PlantType, Integer> unlockedPlants = loggedInUser.getUserProgress().getUnlockedPlantsAndTheirLevels();
+        if (unlockedPlants.containsKey(plantType)) {
+            return "You already own this plant!";
+        }
+
+        // Use subtractCoins
+        String error = subtractCoins(PLANT_PURCHASE_COST);
+        if (error != null) {
+            return error; // e.g., "Insufficient coins..."
+        }
+
+        loggedInUser.unlockPlant(plantType);
+        updateUser();
+        return null;
     }
 
 
@@ -446,6 +524,46 @@ public class UsersManager {
         updateUser();
     }
 
+    public void addPots(int amount) {
+        if (loggedInUser == null) return;
+        UserProgress progress = loggedInUser.getUserProgress();
+        int newCount = Math.max(0, progress.getPotsCount() + amount);
+        progress.setPotsCount(newCount);
+        updateUser();
+    }
+
+    public void addPlantFood(int amount) {
+        if (loggedInUser == null) return;
+        UserProgress progress = loggedInUser.getUserProgress();
+        int newCount = Math.max(0, progress.getPlantFoodCount() + amount);
+        progress.setPlantFoodCount(newCount);
+        updateUser();
+    }
+
+
+    public void addSeedPackets(PlantType plant, int amount) {
+        if (loggedInUser == null || amount <= 0) return;
+        UserProgress progress = loggedInUser.getUserProgress();
+        progress.addSeedPackets(plant, amount);
+        updateUser();
+    }
+    public void markDailyOfferPurchased() {
+        if (loggedInUser == null) return;
+        UserProgress progress = loggedInUser.getUserProgress();
+        progress.setDailyOfferPurchaseDate(java.time.LocalDate.now());
+        updateUser();
+    }
+
+    /**
+     * Checks if the daily offer was already bought today.
+     */
+    public boolean isDailyOfferBoughtToday() {
+        if (loggedInUser == null) return false;
+        return loggedInUser.getUserProgress().isDailyOfferBoughtToday();
+    }
+
+
+
     /**
      * Helper method to determine the next chapter after the current one.
      * Chapter progression: ANCIENT_EGYPT → DARK_AGE → FROSTBITE_CAVES → BIG_WAVE_BEACH
@@ -479,37 +597,7 @@ public class UsersManager {
         return news;
     }
 
-    public String purchasePlant(String plantName) {
-        User loggedInUser = getLoggedInUser();
-        if (loggedInUser == null) {
-            return "No logged in user found.";
-        }
 
-        PlantType plantType = PlantType.fromName(plantName);
-        if (plantType == null) {
-            return "Plant not found!";
-        }
-
-        if (loggedInUser.getUserProgress() == null) {
-            return "User progress data is missing.";
-        }
-
-        HashMap<PlantType, Integer> unlockedPlants = loggedInUser.getUserProgress().getUnlockedPlantsAndTheirLevels();
-        if (unlockedPlants.containsKey(plantType)) {
-            return "You already own this plant!";
-        }
-
-        if (loggedInUser.getUserProgress().getCoinsCount() < PLANT_PURCHASE_COST) {
-            return "Not enough coins! Purchasing a plant costs 2000 coins.";
-        }
-
-        loggedInUser.getUserProgress().addCoins(-PLANT_PURCHASE_COST);
-        loggedInUser.unlockPlant(plantType);
-
-        updateUser();
-
-        return null;
-    }
 
     public void unlockZombie(ZombieType zombieType) {
         if (loggedInUser != null) {
@@ -538,4 +626,6 @@ public class UsersManager {
         updateUser();
         return news;
     }
+
+
 }

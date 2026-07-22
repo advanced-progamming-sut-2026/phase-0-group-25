@@ -4,8 +4,10 @@ import src.Enums.ChapterType;
 import src.Enums.PlantType;
 import src.Enums.ZombieType;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class UserProgress {
     private HashMap<ChapterType, Integer> unlockedChaptersAndLevels;
@@ -16,7 +18,10 @@ public class UserProgress {
     private int potsCount;
     private int gameDifficulty;
     private int gamesPlayed;
-    private int seedPacketCount;
+
+    private int plantFoodCount;
+    private Map<PlantType, Integer> seedPackets;
+    private LocalDate dailyOfferPurchaseDate;
 
     public UserProgress() {
         this.unlockedChaptersAndLevels = new HashMap<>();
@@ -28,19 +33,62 @@ public class UserProgress {
         this.gemsCount = 0;
         this.coinsCount = 0;
         this.gameDifficulty = 3;
-        this.seedPacketCount = 0;
+
+
+        this.plantFoodCount = 0;
+        this.seedPackets = new HashMap<>();
+        this.dailyOfferPurchaseDate = null;
     }
 
-    public int getSeedPacketCount() {
-        return seedPacketCount;
+
+    public int getPlantFoodCount() { return plantFoodCount; }
+    public void setPlantFoodCount(int count) { this.plantFoodCount = Math.min(count, 3); } // enforce max 3
+
+    public Map<PlantType, Integer> getSeedPackets() { return seedPackets; }
+    public void setSeedPackets(Map<PlantType, Integer> seedPackets) { this.seedPackets = seedPackets; }
+
+    public void addSeedPackets(PlantType plant, int amount) {
+        seedPackets.put(plant, seedPackets.getOrDefault(plant, 0) + amount);
     }
 
-    public void setSeedPacketCount(int seedPacketCount) {
-        this.seedPacketCount = seedPacketCount;
+
+    public LocalDate getDailyOfferPurchaseDate() { return dailyOfferPurchaseDate; }
+    public void setDailyOfferPurchaseDate(LocalDate date) { this.dailyOfferPurchaseDate = date; }
+
+
+
+    public boolean isDailyOfferBoughtToday() {
+        return dailyOfferPurchaseDate != null && dailyOfferPurchaseDate.equals(LocalDate.now());
+    }
+
+    public void setPotsCount(int potsCount) {
+        this.potsCount = potsCount;
     }
 
     public HashMap<ChapterType, Integer> getUnlockedChaptersAndLevels() {
         return unlockedChaptersAndLevels;
+    }
+// file: src/Model/User/UserProgress.java
+// Add these methods inside the class
+
+    public void subtractCoins(int amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("Cannot subtract a negative amount.");
+        }
+        if (this.coinsCount < amount) {
+            throw new IllegalArgumentException("Insufficient coins. You have " + this.coinsCount + ", need " + amount);
+        }
+        this.coinsCount -= amount;
+    }
+
+    public void subtractGems(int amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("Cannot subtract a negative amount.");
+        }
+        if (this.gemsCount < amount) {
+            throw new IllegalArgumentException("Insufficient gems. You have " + this.gemsCount + ", need " + amount);
+        }
+        this.gemsCount -= amount;
     }
 
     public void setUnlockedChaptersAndLevels(HashMap<ChapterType, Integer> unlockedChaptersAndLevels) {
