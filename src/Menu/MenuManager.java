@@ -15,8 +15,8 @@ public class MenuManager {
     private final HashMap<MenuType, Menu> menusAndTheirNames;
     private boolean mustExit;
 
-    public static MenuManager getInstance(){
-        if(instance == null)
+    public static MenuManager getInstance() {
+        if (instance == null)
             instance = new MenuManager();
         return instance;
     }
@@ -25,7 +25,6 @@ public class MenuManager {
         mustExit = false;
         scanner = new Scanner(System.in);
         menusAndTheirNames = new HashMap<>();
-        menusAndTheirNames.put(MenuType.ChoosePlant, new ChoosePlantMenu(new ChoosePlantMenuTerminalView()));
         menusAndTheirNames.put(MenuType.CoinWallet, new CoinWalletMenu(new CoinWalletMenuTerminalView()));
         menusAndTheirNames.put(MenuType.Collection, new CollectionMenu(new CollectionMenuTerminalView()));
         menusAndTheirNames.put(MenuType.Game, new GameMenu(new GameMenuTerminalView()));
@@ -43,6 +42,8 @@ public class MenuManager {
         menusAndTheirNames.put(MenuType.Signup, new SignUpMenu(new SignUpMenuTerminalView()));
         menusAndTheirNames.put(MenuType.TravelLog, new TravelLogMenu(new TravelLogMenuTerminalView()));
         menusAndTheirNames.put(MenuType.Network, new NetworkMenu(new NetworkMenuTerminalView()));
+        menusAndTheirNames.put(MenuType.ChoosePlant, new ChoosePlantMenu(new ChoosePlantMenuTerminalView()
+                , ((GameMenu) menusAndTheirNames.get(MenuType.Game)).getPlants()));
 
         UsersManager usersManager = UsersManager.getInstance();
         if (usersManager.checkAndLoadStayLoggedIn()) {
@@ -52,17 +53,21 @@ public class MenuManager {
         }
     }
 
+
+
     public void setMustExit() {
         this.mustExit = true;
     }
-    public void exitCurrentMenu(){
+
+    public void exitCurrentMenu() {
         currentMenu.exit();
     }
 
-    public void changeMenu(MenuType menuType){
+    public void changeMenu(MenuType menuType) {
         this.currentMenu = menusAndTheirNames.get(menuType);
         this.currentMenu.onEnter();
     }
+
     public void startAppLoop() {
         while (!mustExit) {
             String input = scanner.nextLine().trim();

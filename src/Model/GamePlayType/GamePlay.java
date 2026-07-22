@@ -1,6 +1,7 @@
 package src.Model.GamePlayType;
 
 import src.Enums.ChapterType;
+import src.Model.ChaptersAndLevels.Level;
 import src.Model.Grave;
 import src.Model.Mower;
 import src.Model.PlantsAndZombies.*;
@@ -10,9 +11,9 @@ import src.Model.Tile;
 import src.Model.PlayGroundType.PlayGround;
 import src.Model.Sun.Sun;
 import src.Model.User.User;
+import src.Model.User.UsersManager;
 import src.Model.Wave.FinalWave;
 import src.Model.Wave.Wave;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +32,7 @@ public abstract class GamePlay {
 
     protected int level;
     protected ChapterType chapterType;
+    protected Level levelObject;
 
     protected ArrayList<Tile> tiles = new ArrayList<>();
     protected ArrayList<Projectile> projectiles = new ArrayList<>();
@@ -577,5 +579,21 @@ public abstract class GamePlay {
 
     public int getRealY(int gridY) {
         return 140 + ((gridY - 1) * 200);
+    }
+
+    public Level getLevelObject() {
+        return levelObject;
+    }
+
+    public void setLevelObject(Level levelObject) {
+        this.levelObject = levelObject;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public ChapterType getChapterType() {
+        return chapterType;
     }
 }

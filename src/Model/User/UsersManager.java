@@ -1,6 +1,9 @@
 package src.Model.User;
 
+import src.Enums.ChapterType;
+import src.Enums.PlantType;
 import src.Enums.WalletType;
+import src.Enums.ZombieType;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
@@ -16,6 +19,8 @@ public class UsersManager {
     private final ObjectMapper mapper = new ObjectMapper();
     private HashMap<String, User> userCache = new HashMap<>();
     private User loggedInUser = null;
+
+    private static final int PLANT_PURCHASE_COST = 2000;
 
     private static final Pattern USERNAME_CHAR_REGEX = Pattern.compile("^[a-zA-Z0-9_]+$");
 
@@ -55,6 +60,7 @@ public class UsersManager {
             throw new RuntimeException("Failed to read or parse users.json", e);
         }
     }
+
     public void addUser(User user){
         userCache.put(user.getUserName(), user);
         writeUsers();
@@ -113,7 +119,7 @@ public class UsersManager {
             return "No logged in user found.";
         }
 
-        if(loggedInUser.getEmail().equals(newEmail)){
+        if (loggedInUser.getEmail().equals(newEmail)) {
             return "you are already using this email.";
         }
 
@@ -140,13 +146,23 @@ public class UsersManager {
         return null;
     }
 
+    public void addCoins(int amount){
+        loggedInUser.getUserProgress().addCoins(amount);
+        updateUser();
+    }
+
+    public void addGems(int amount){
+        loggedInUser.getUserProgress().addGems(amount);
+        updateUser();
+    }
+
 
     public String validateAndChangeUsername(String newUsername) {
         if (loggedInUser == null) {
             return "No logged in user found.";
         }
 
-        if(loggedInUser.getUserName().equals(newUsername)){
+        if (loggedInUser.getUserName().equals(newUsername)) {
             return "you are already using this username.";
         }
 
@@ -290,6 +306,7 @@ public class UsersManager {
             file.delete();
         }
     }
+
     public String updateUserPassword(String username, String newPassword) {
         if (newPassword.contains(" ")) {
             return "Weak password: Spaces are not allowed within password strings.";
@@ -363,22 +380,162 @@ public class UsersManager {
         return null;
     }
 
-    private void updateUser(){
-        userCache.put(loggedInUser.getUserName(), loggedInUser);
-        writeUsers();
+    private void updateUser() {
+        if (loggedInUser != null) {
+            userCache.put(loggedInUser.getUserName(), loggedInUser);
+            writeUsers();
+        }
     }
 
-    public ArrayList<String > getUnreadNews(){
-        ArrayList<String > news = loggedInUser.getNewsManager().extractUnreadNews();
+    /**
+     * Called when a level is completed successfully.
+     * This method:
+     * 1. Unlocks the next level in the current chapter (if not level 4)
+     * 2. Unlocks the next chapter (if level 4 is completed)
+     * 3. Unlocks all reward plants and zombies from the level
+     * 4. Saves all changes to the user JSON file
+     *
+     * @param chapterType The chapter that was completed
+     * @param currentLevel The level number that was completed (1-4)
+     * @param plantRewards ArrayList of PlantType rewards for this level
+     * @param zombieRewards ArrayList of ZombieType rewards for this level
+     */
+    public void handleLevelWin(ChapterType chapterType, int currentLevel,
+                               ArrayList<PlantType> plantRewards,
+                               ArrayList<ZombieType> zombieRewards) {
+
+
+        UserProgress userProgress = loggedInUser.getUserProgress();
+
+        // Get the currently unlocked level for this chapter
+        int currentUnlockedLevel = userProgress.getUnlockedChaptersAndLevels()
+                .getOrDefault(chapterType, 1);
+
+        // Only unlock next level if the completed level is the currently highest unlocked
+        if (currentLevel >= currentUnlockedLevel) {
+            if (currentLevel < 4) {
+                // Unlock the next level in this chapter
+                unlockLevel(chapterType, currentLevel + 1);
+            } else if (currentLevel == 4) {
+                // Level 4 completed: unlock the next chapter
+                ChapterType nextChapter = getNextChapter(chapterType);
+                if (nextChapter != null) {
+                    unlockChapter(nextChapter);
+                }
+            }
+        }
+
+        // Unlock all reward plants for this level
+        if (plantRewards != null && !plantRewards.isEmpty()) {
+            for (PlantType plantType : plantRewards) {
+                unlockPlant(plantType);
+            }
+        }
+
+        // Unlock all reward zombies for this level
+        if (zombieRewards != null && !zombieRewards.isEmpty()) {
+            for (ZombieType zombieType : zombieRewards) {
+                unlockZombie(zombieType);
+            }
+        }
+
+        // Increment games played counter
+        userProgress.setGamesPlayed(userProgress.getGamesPlayed() + 1);
+
+        // Save all changes to JSON file
+        updateUser();
+    }
+
+    /**
+     * Helper method to determine the next chapter after the current one.
+     * Chapter progression: ANCIENT_EGYPT → DARK_AGE → FROSTBITE_CAVES → BIG_WAVE_BEACH
+     */
+    private ChapterType getNextChapter(ChapterType currentChapter) {
+        switch (currentChapter) {
+            case ANCIENT_EGYPT:
+                return ChapterType.DARK_AGE;
+            case DARK_AGE:
+                return ChapterType.FROSTBITE_CAVES;
+            case FROSTBITE_CAVES:
+                return ChapterType.BIG_WAVE_BEACH;
+            case BIG_WAVE_BEACH:
+                return null; // No chapter after the last one
+            default:
+                return null;
+        }
+    }
+
+    public void unlockChapter(ChapterType chapterType) {
+        if (loggedInUser != null) {
+            loggedInUser.unlockChapter(chapterType);
+            updateUser();
+        }
+    }
+
+    public ArrayList<String> getUnreadNews() {
+        if (loggedInUser == null) return new ArrayList<>();
+        ArrayList<String> news = loggedInUser.getNewsManager().extractUnreadNews();
         updateUser();
         return news;
     }
 
+    public String purchasePlant(String plantName) {
+        User loggedInUser = getLoggedInUser();
+        if (loggedInUser == null) {
+            return "No logged in user found.";
+        }
 
-    public ArrayList<String > getAllNews(){
-        ArrayList<String > news = loggedInUser.getNewsManager().extractAllNews();
+        PlantType plantType = PlantType.fromName(plantName);
+        if (plantType == null) {
+            return "Plant not found!";
+        }
+
+        if (loggedInUser.getUserProgress() == null) {
+            return "User progress data is missing.";
+        }
+
+        HashMap<PlantType, Integer> unlockedPlants = loggedInUser.getUserProgress().getUnlockedPlantsAndTheirLevels();
+        if (unlockedPlants.containsKey(plantType)) {
+            return "You already own this plant!";
+        }
+
+        if (loggedInUser.getUserProgress().getCoinsCount() < PLANT_PURCHASE_COST) {
+            return "Not enough coins! Purchasing a plant costs 2000 coins.";
+        }
+
+        loggedInUser.getUserProgress().addCoins(-PLANT_PURCHASE_COST);
+        loggedInUser.unlockPlant(plantType);
+
+        updateUser();
+
+        return null;
+    }
+
+    public void unlockZombie(ZombieType zombieType) {
+        if (loggedInUser != null) {
+            loggedInUser.unlockZombie(zombieType);
+            updateUser();
+        }
+    }
+
+    public void unlockLevel(ChapterType chapterType, int level) {
+        if (loggedInUser != null) {
+            loggedInUser.unlockLevel(level, chapterType);
+            updateUser();
+        }
+    }
+
+    public void unlockPlant(PlantType plantType) {
+        if (loggedInUser != null) {
+            loggedInUser.unlockPlant(plantType);
+            updateUser();
+        }
+    }
+
+    public ArrayList<String> getAllNews() {
+        if (loggedInUser == null) return new ArrayList<>();
+        ArrayList<String> news = loggedInUser.getNewsManager().extractAllNews();
         updateUser();
         return news;
     }
-
 }

@@ -38,7 +38,21 @@ public enum Command {
     FeedPlant("^feed plant -l \\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$"),
     ShowMap("show map"),
     ShowPlantsStatus("show plants status"),
-    ShowTileStatus("^show tile status -l \\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$");
+    ShowTileStatus("^show tile status -l \\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$"),
+    ShowPlants("menu collection show-plants"),
+    ShowAllPlants("menu collection show-all-plants"),
+    ShowZombies("menu collection show-zombies"),
+    ShowAllZombies("menu collection show-all-zombies"),
+    ShowPlantDetails("menu collection show-plant -p (.+?)"),
+    ShowZombieDetails("menu collection show-zombie -z (.+?)"),
+    PurchasePlant("menu collection purchase-plant -p (.+?)"),
+    ChooseShowAllPlants("^show all plants$"),
+    ChooseShowAvailablePlants("^show available plants$"),
+    ChooseAddPlant("^add plant -t\\s+(.+)$"),
+    ChooseRemovePlant("^remove plant -t\\s+(.+)$"),
+    StartGame("^start game$"),
+    EnterShop("menu shop");
+
 
     private final String regex;
     Command(String regex) {

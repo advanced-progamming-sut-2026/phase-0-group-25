@@ -1,16 +1,20 @@
 package src.View.ViewInterfaces;
 
+import java.util.List;
+
 public interface CollectionMenuView extends BaseView {
 
-    void showPlants();
+    void showPlants(List<String> plantNames);
 
-    void showAllPlants();
+    void showAllPlants(List<String> plantNames);
 
-    void showAllZombies();
+    void showZombies(List<String> zombieNames);
 
-    void showZombies();
+    void showAllZombies(List<String> zombieNames);
 
-    void showOnePlant();
+    void showPlantDetails(String plantName, int cost, int baseHP);
 
-    void showOneZombie();
+    void showZombieDetails(String zombieName, double velocity, int baseHP);
+
+    void showPlantPurchased(String plantName);
 }
