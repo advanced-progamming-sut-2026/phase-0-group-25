@@ -13,7 +13,10 @@ import java.util.Iterator;
 
 public class Simple extends GamePlay {
 
-
+    public Simple(ChapterType chapterType, int level, int difficulty, User thisUser,
+                        ArrayList<String> plants, ArrayList<String> zombies) {
+        super(chapterType, level, difficulty, thisUser, plants, zombies);
+    }
 
     @Override
     public void update() {
@@ -85,7 +88,12 @@ public class Simple extends GamePlay {
                         thisWave.setStarted(true);
                     }
                     String nameOfZ = thisWave.spawnNextZombie().getName();
-                    Position positionOfZ = new Position(spawnX, getRealY(getNextRandomY()));
+                    Position positionOfZ;
+                    if (chapterType != ChapterType.FROSTBITE_CAVES && Math.random() >= 0.9){
+                        positionOfZ = new Position(spawnX+200, getRealY(getNextRandomY()));
+                    } else {
+                        positionOfZ = new Position(spawnX, getRealY(getNextRandomY()));
+                    }
                     this.gameZombies.add(ZombieFactory.createZombie(nameOfZ, positionOfZ));
                 }
                 if (!thisWave.isReadyForNextWave()) {

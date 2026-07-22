@@ -243,7 +243,7 @@ public abstract class GamePlay {
     }
 
     public void planting(BattlePlant thisPlant, Position thisPosition) {
-        Tile thisTile = tiles.stream().filter(p -> p.getPosition().equals(thisPosition)).findFirst().get();
+        Tile thisTile = getTileByPosition((int) thisPosition.getX(), (int) thisPosition.getY());
 
         if (thisPlant.checkingPlantable(mySuns, thisTile) && thisTile.isArable()) {
             int thisPX = (int) thisPosition.getY();
@@ -269,7 +269,8 @@ public abstract class GamePlay {
     }
 
     public void plucking(Position thisPosition) {
-        Tile thisTile = tiles.stream().filter(p -> p.getPosition().equals(thisPosition)).findFirst().get();
+        Tile thisTile = getTileByPosition((int) thisPosition.getX(), (int) thisPosition.getY());
+
         if (thisTile.getPlants().isEmpty()) {
             System.out.println("There is no plants in this tile!!");
         } else {
