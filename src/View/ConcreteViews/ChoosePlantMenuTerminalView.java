@@ -13,6 +13,10 @@ public class ChoosePlantMenuTerminalView extends AbstractTerminalView implements
             System.out.println("- " + plant);
         }
     }
+    @Override
+    public void showPlantBoosted(String plantName) {
+        System.out.println("Plant " + plantName + " is boosted for this stage!");
+    }
 
     @Override
     public void showAvailablePlants(List<String> plantNames) {

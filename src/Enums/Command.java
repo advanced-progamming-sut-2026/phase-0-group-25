@@ -54,6 +54,12 @@ public enum Command {
     EnterShop("enter shop"),
     ShopList("shop list"),
     ShopDaily("shop daily"),
+    UpgradePlant("menu collection upgrade-plant -p (.+?)"),
+    BoostPlant("boost plant -t (.+?)"),
+    ShowGreenhouse("show greenhouse"),
+    PlantPot("plant pot at \\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)"),
+    CollectPot("collect \\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)"),
+    GrowPot("grow \\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)"),
     ShopBuy("shop buy -i (?<itemId>\\d+) -n (?<count>\\d+)( -t (?<plantType>.+))?");
 
 

@@ -14,19 +14,21 @@ import src.View.ViewInterfaces.ChoosePlantMenuView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 
 public class ChoosePlantMenu extends Menu {
     private static final int DEFAULT_MAX_PLANTS = 8;
     private final ChoosePlantMenuView choosePlantMenuView;
     private final ArrayList<String> plantsStr;
-    private final PlantFactory plantFactory;
 
-    public ChoosePlantMenu(ChoosePlantMenuView choosePlantMenuView, ArrayList<String > plantsStr) {
+    private final Set<String> boostedPlants;
+
+    public ChoosePlantMenu(ChoosePlantMenuView view, ArrayList<String> plants, Set<String> boostedPlants) {
         super(MenuType.Game);
-        this.plantsStr = plantsStr;
-        this.choosePlantMenuView = choosePlantMenuView;
-        this.plantFactory = new PlantFactory();
+        this.plantsStr = plants;
+        this.choosePlantMenuView = view;
+        this.boostedPlants = boostedPlants;
     }
 
     @Override
@@ -53,7 +55,34 @@ public class ChoosePlantMenu extends Menu {
             return;
         }
 
+        if ((matcher = getMatcher(input, Command.BoostPlant)) != null) {
+            String plantName = matcher.group(1);
+            boostPlant(plantName);
+            return;
+        }
+
+
         getView().showError("Invalid command format for this menu state.");
+    }
+
+    private void boostPlant(String  plantName) {
+        PlantType plant = PlantType.fromName(plantName);
+        if (plant == null) {
+            getView().showError("Invalid plant type.");
+            return;
+        }
+        User currentUser = UsersManager.getInstance().getLoggedInUser();
+        if (currentUser == null || !currentUser.getUserProgress().getUnlockedPlantsAndTheirLevels().containsKey(plant)) {
+            getView().showError("Plant " + plantName + " is not unlocked.");
+            return;
+        }
+        String gemError = UsersManager.getInstance().subtractGems(2);
+        if (gemError != null) {
+            getView().showError(gemError);
+            return;
+        }
+        boostedPlants.add(plantName.toUpperCase());
+        choosePlantMenuView.showPlantBoosted(plantName);
     }
 
     public void showAllPlants() {

@@ -14,19 +14,27 @@ import src.View.ViewInterfaces.BaseView;
 import src.View.ViewInterfaces.GameMenuView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 
 public class GameMenu extends Menu {
     private final GameMenuView gameMenuView;
     private Chapter chapter;
     private ArrayList<String > plantsStr;
+    private final Set<String> boostedPlants;
 
     public GameMenu(GameMenuView gameMenuView) {
         super(MenuType.Main);
         this.gameMenuView = gameMenuView;
         this.plantsStr = new ArrayList<>();
+        this.boostedPlants = new HashSet<>();
         addChangeableMenuType(MenuType.Collection);
         addChangeableMenuType(MenuType.ChoosePlant);
+    }
+
+    public Set<String> getBoostedPlants() {
+        return boostedPlants;
     }
 
     public ArrayList<String> getPlantsStr() {
