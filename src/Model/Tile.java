@@ -20,9 +20,10 @@ public class Tile {
     private boolean isArable;
     private String kindOfTile;
 
-    public Tile(Position position, Boolean isArable) {
+    public Tile(Position position, Boolean isArable, int HP) {
         this.position = position;
         this.isArable = isArable;
+        this.HP = HP;
         plants = new ArrayList<>();
         zombies = new ArrayList<>();
         projectiles = new ArrayList<>();
@@ -50,5 +51,17 @@ public class Tile {
 
     public ArrayList<Zombie> getZombies() {
         return zombies;
+    }
+
+    public void setArable(boolean arable) {
+        isArable = arable;
+    }
+
+    public int getHP() {
+        return HP;
+    }
+
+    public void setHP(int HP) {
+        this.HP = HP;
     }
 }

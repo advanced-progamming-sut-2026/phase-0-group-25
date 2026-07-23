@@ -37,5 +37,7 @@ public abstract class Entity {
         return position;
     }
 
-
+    public String getName() {
+        return name;
+    }
 }

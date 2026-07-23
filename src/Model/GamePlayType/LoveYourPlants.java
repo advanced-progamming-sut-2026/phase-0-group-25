@@ -34,6 +34,7 @@ public class LoveYourPlants extends GamePlay {
         if (this.level != 4) {
             sunMaker();
         }
+        applyIcyWind();
 
         // Updating Zombies, Plant and Projectile and Dynamite (Deleting them if they're dead) :
         Iterator<BattlePlant> bp = gamePlants.iterator();

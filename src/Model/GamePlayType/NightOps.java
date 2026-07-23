@@ -30,6 +30,7 @@ public class NightOps extends GamePlay {
         totalTicksPassed++;
         timeToSpwan--;
 
+        applyIcyWind();
 
         // Updating Zombies, Plant and Projectile and Dynamite (Deleting them if they're dead) :
         Iterator<BattlePlant> bp = gamePlants.iterator();

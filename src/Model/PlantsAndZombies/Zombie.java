@@ -1,5 +1,6 @@
 package src.Model.PlantsAndZombies;
 
+import src.Enums.Status;
 import src.Model.PlantsAndZombies.Abilities.Ability;
 import src.Model.PlantsAndZombies.Abilities.Eating;
 import src.Model.PlantsAndZombies.Abilities.Moving;

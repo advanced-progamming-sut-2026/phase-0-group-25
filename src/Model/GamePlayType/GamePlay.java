@@ -94,7 +94,7 @@ public abstract class GamePlay {
                         for (int x = 1 ; x < 10; x++) {
                             Position newPosition = new Position(x, y);
                             Boolean isArable = (x != 9 && x != 8);
-                            Tile newTile = new Tile(newPosition, isArable);
+                            Tile newTile = new Tile(newPosition, isArable, 0);
                             tiles.add(newTile);
                         }
                     }
@@ -104,7 +104,7 @@ public abstract class GamePlay {
                         for (int x = 1; x < 10; x++) {
                             Position newPosition = new Position(x, y);
                             Boolean isArable = Math.random() >= 0.06 || (x == 5 && (y == 2 || y== 4));
-                            Tile newTile = new Tile(newPosition, isArable);
+                            Tile newTile = new Tile(newPosition, isArable, (isArable)? 0 : 700);
                             tiles.add(newTile);
                         }
                     }
@@ -250,6 +250,10 @@ public abstract class GamePlay {
             thisP.setRow((int) thisPosition.getY());
             thisP.setColumn((int) thisPosition.getX());
 
+            PlantType thisPlantType = PlantType.valueOf(thisPName);
+            if (thisUser.getUserProgress().getGreenhouseBoosts().contains(thisPlantType)) {
+                thisP.setEffected(true, effectedTime);
+            }
             this.gamePlants.add(thisP);
             thisTile.addPlant(thisP);
             this.mySuns -= thisPlant.getPlantStats().getCost();
@@ -506,14 +510,28 @@ public abstract class GamePlay {
     public void updateZombieTiles() {
         for (Tile tile : tiles) {
             tile.getZombies().clear();
+            // Removing broken graves for the game
+            if (chapterType == ChapterType.ANCIENT_EGYPT || chapterType == ChapterType.DARK_AGE) {
+                if (tile.getHP() == 0 && !tile.isArable()) {
+                    tile.setArable(true);
+                }
+            }
         }
 
         for (Zombie zombie : gameZombies) {
             Position zombiePosition = Position.getRowAndColumn(zombie.getPosition());
             int currentX = (int) zombiePosition.getX();
             int currentY = (int) zombiePosition.getY();
-
             Tile currentTile = getTileByPosition(currentX, currentY);
+
+            if (!currentTile.isArable() && chapterType == ChapterType.FROSTBITE_CAVES) {
+                zombie.changeRow();
+
+                zombiePosition = Position.getRowAndColumn(zombie.getPosition());
+                currentX = (int) zombiePosition.getX();
+                currentY = (int) zombiePosition.getY();
+                currentTile = getTileByPosition(currentX, currentY);
+            }
 
             if (currentTile != null) {
                 currentTile.getZombies().add(zombie);
@@ -589,5 +607,18 @@ public abstract class GamePlay {
 
     public ArrayList<BattlePlant> getPlants() {
         return plants;
+    }
+
+    public void applyIcyWind () {
+        if (chapterType == ChapterType.FROSTBITE_CAVES && Math.random() < 0.02) {
+            int randomNumber = new Random().nextInt(5) + 1;
+
+            for (BattlePlant bp : this.gamePlants) {
+                Position thisPos = Position.getRowAndColumn(bp.getPosition());
+                if (thisPos.getY() == randomNumber) {
+                    bp.setIceTime(bp.getIceTime() + 1);
+                }
+            }
+        }
     }
 }
