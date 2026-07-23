@@ -37,10 +37,10 @@ public class Chapter {
         return null;
     }
 
-    public GamePlay makeGame(int levelNumber, int difficulty, User user, ArrayList<BattlePlant> plants) {
+    public GamePlay makeGame(int levelNumber, int difficulty, User user, ArrayList<String> plants, ArrayList<String > zombies) {
         Level level = getLevel(levelNumber);
         if (level != null) {
-            GamePlay gamePlay = level.createGame(chapterType, difficulty, user, plants);
+            GamePlay gamePlay = level.createGame(chapterType, difficulty, user, plants, zombies);
             if (gamePlay != null) {
                 gamePlay.setLevelObject(level);
             }

@@ -9,25 +9,25 @@ import java.util.ArrayList;
 
 public class GamePlayFactory {
 
-    public static GamePlay createGamePlay(GamePlayType type, ChapterType chapterType, int level, int difficulty, User user, ArrayList<BattlePlant> plants) {
+    public static GamePlay createGamePlay(GamePlayType type, ChapterType chapterType, int level, int difficulty, User user, ArrayList<String > plants, ArrayList<String> zombies) {
         if (type == null) {
             type = GamePlayType.SIMPLE;
         }
 
         switch (type) {
             case SAVE_OUR_SEEDS:
-                return new SaveOurSeeds(chapterType, level, difficulty, user, plants);
+                return new SaveOurSeeds(chapterType, level, difficulty, user, plants, zombies);
             case NIGHT_OPS:
-                return new NightOps(chapterType, level, difficulty, user, plants);
+                return new NightOps(chapterType, level, difficulty, user, plants, zombies);
             case TIMED_WAR:
-                return new TimedWar(chapterType, level, difficulty, user, plants);
+                return new TimedWar(chapterType, level, difficulty, user, plants, zombies);
             case DEADLINE:
-                return new DeadLine(chapterType, level, difficulty, user, plants);
+                return new DeadLine(chapterType, level, difficulty, user, plants, zombies);
             case LOVE_YOUR_PLANTS:
-                return new LoveYourPlants(chapterType, level, difficulty, user, plants);
+                return new LoveYourPlants(chapterType, level, difficulty, user, plants, zombies);
             case SIMPLE:
             default:
-                return new Simple(chapterType, level, difficulty, user, plants);
+                return new Simple(chapterType, level, difficulty, user, plants, zombies);
         }
     }
 }

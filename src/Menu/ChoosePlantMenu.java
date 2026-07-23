@@ -19,12 +19,12 @@ import java.util.regex.Matcher;
 public class ChoosePlantMenu extends Menu {
     private static final int DEFAULT_MAX_PLANTS = 8;
     private final ChoosePlantMenuView choosePlantMenuView;
-    private final ArrayList<Plant> plants;
+    private final ArrayList<String> plantsStr;
     private final PlantFactory plantFactory;
 
-    public ChoosePlantMenu(ChoosePlantMenuView choosePlantMenuView, ArrayList<Plant> plants) {
+    public ChoosePlantMenu(ChoosePlantMenuView choosePlantMenuView, ArrayList<String > plantsStr) {
         super(MenuType.Game);
-        this.plants = plants;
+        this.plantsStr = plantsStr;
         this.choosePlantMenuView = choosePlantMenuView;
         this.plantFactory = new PlantFactory();
     }
@@ -98,21 +98,19 @@ public class ChoosePlantMenu extends Menu {
             return;
         }
 
-        for (Plant plant : plants) {
-            if (plant.getName().equalsIgnoreCase(plantType.getName())) {
+        for (String plantStr : plantsStr) {
+            if (plantStr.equalsIgnoreCase(plantType.getName())) {
                 getView().showError("Plant is already selected: " + plantType.getName());
                 return;
             }
         }
 
-        if (plants.size() >= DEFAULT_MAX_PLANTS) {
+        if (plantsStr.size() >= DEFAULT_MAX_PLANTS) {
             getView().showError("Cannot add more plants. Maximum limit of " + DEFAULT_MAX_PLANTS + " plants reached.");
             return;
         }
 
-        int level = unlockedMap.get(plantType);
-        BattlePlant newPlant = plantFactory.createBattlePlant(plantType.getName(), level);
-        plants.add(newPlant);
+        plantsStr.add(plantType.getName());
         choosePlantMenuView.showPlantAddedSuccess(plantType.getName());
     }
 
@@ -123,10 +121,10 @@ public class ChoosePlantMenu extends Menu {
             return;
         }
 
-        Plant plantToRemove = null;
-        for (Plant plant : plants) {
-            if (plant.getName().equalsIgnoreCase(plantType.getName())) {
-                plantToRemove = plant;
+        String plantToRemove = null;
+        for (String plantStr : plantsStr) {
+            if (plantStr.equalsIgnoreCase(plantType.getName())) {
+                plantToRemove = plantStr;
                 break;
             }
         }
@@ -136,7 +134,7 @@ public class ChoosePlantMenu extends Menu {
             return;
         }
 
-        plants.remove(plantToRemove);
+        plantsStr.remove(plantToRemove);
         choosePlantMenuView.showPlantRemovedSuccess(plantType.getName());
     }
 

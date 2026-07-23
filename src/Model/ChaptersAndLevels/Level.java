@@ -68,9 +68,9 @@ public class Level {
         }
     }
 
-    public GamePlay createGame(ChapterType chapterType, int difficulty, User user, ArrayList<BattlePlant> plants) {
+    public GamePlay createGame(ChapterType chapterType, int difficulty, User user, ArrayList<String> plants, ArrayList<String > zombies) {
         this.chapterType = chapterType;
-        GamePlay gamePlay = GamePlayFactory.createGamePlay(gamePlayType, chapterType, levelNumber, difficulty, user, plants);
+        GamePlay gamePlay = GamePlayFactory.createGamePlay(gamePlayType, chapterType, levelNumber, difficulty, user, plants, zombies);
         if (gamePlay != null) {
             gamePlay.setLevelObject(this);
         }

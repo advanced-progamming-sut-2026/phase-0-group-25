@@ -43,7 +43,7 @@ public class MenuManager {
         menusAndTheirNames.put(MenuType.TravelLog, new TravelLogMenu(new TravelLogMenuTerminalView()));
         menusAndTheirNames.put(MenuType.Network, new NetworkMenu(new NetworkMenuTerminalView()));
         menusAndTheirNames.put(MenuType.ChoosePlant, new ChoosePlantMenu(new ChoosePlantMenuTerminalView()
-                , ((GameMenu) menusAndTheirNames.get(MenuType.Game)).getPlants()));
+                , ((GameMenu) menusAndTheirNames.get(MenuType.Game)).getPlantsStr()));
 
         UsersManager usersManager = UsersManager.getInstance();
         if (usersManager.checkAndLoadStayLoggedIn()) {
