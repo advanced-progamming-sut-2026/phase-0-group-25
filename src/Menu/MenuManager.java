@@ -27,7 +27,8 @@ public class MenuManager {
         menusAndTheirNames = new HashMap<>();
         menusAndTheirNames.put(MenuType.CoinWallet, new CoinWalletMenu(new CoinWalletMenuTerminalView()));
         menusAndTheirNames.put(MenuType.Collection, new CollectionMenu(new CollectionMenuTerminalView()));
-        menusAndTheirNames.put(MenuType.Game, new GameMenu(new GameMenuTerminalView()));
+        GameMenu gameMenu = new GameMenu(new GameMenuTerminalView());
+        menusAndTheirNames.put(MenuType.Game, gameMenu);
         menusAndTheirNames.put(MenuType.GamePlay, new GamePlayMenu(new GamePlayMenuTerminalView()));
         menusAndTheirNames.put(MenuType.GemWallet, new GemWalletMenu(new GemWalletMenuTerminalView()));
         menusAndTheirNames.put(MenuType.GreenHouse, new GreenHouseMenu(new GreenHouseMenuTerminalView()));
@@ -42,8 +43,11 @@ public class MenuManager {
         menusAndTheirNames.put(MenuType.Signup, new SignUpMenu(new SignUpMenuTerminalView()));
         menusAndTheirNames.put(MenuType.TravelLog, new TravelLogMenu(new TravelLogMenuTerminalView()));
         menusAndTheirNames.put(MenuType.Network, new NetworkMenu(new NetworkMenuTerminalView()));
-        menusAndTheirNames.put(MenuType.ChoosePlant, new ChoosePlantMenu(new ChoosePlantMenuTerminalView()
-                , ((GameMenu) menusAndTheirNames.get(MenuType.Game)).getPlantsStr()));
+        menusAndTheirNames.put(MenuType.ChoosePlant, new ChoosePlantMenu(
+                new ChoosePlantMenuTerminalView(),
+                gameMenu.getPlantsStr(),
+                gameMenu.getBoostedPlants()
+        ));
 
         UsersManager usersManager = UsersManager.getInstance();
         if (usersManager.checkAndLoadStayLoggedIn()) {

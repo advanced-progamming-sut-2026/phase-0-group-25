@@ -1,6 +1,7 @@
 // src/Model/User/UserProgress.java
 package src.Model.User;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import src.Enums.ChapterType;
 import src.Enums.PlantType;
 import src.Enums.ZombieType;
@@ -8,7 +9,7 @@ import src.Model.Greenhouse.GreenhousePlant;
 
 import java.time.LocalDate;
 import java.util.*;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserProgress {
     private HashMap<ChapterType, Integer> unlockedChaptersAndLevels;
     private ArrayList<ZombieType> unlockedZombies;
@@ -17,6 +18,11 @@ public class UserProgress {
     private int coinsCount;
     private int gameDifficulty;
     private int gamesPlayed;
+
+    private Map<String, Integer> questProgress;        // questId -> current progress
+    private List<String> completedQuestIds;            // quests that are completed but not yet claimed
+    private List<String> claimedQuestIds;              // quests already claimed
+    private LocalDate lastDailyReset;
 
     private int plantFoodCount;
     private Map<PlantType, Integer> seedPackets;
@@ -50,7 +56,24 @@ public class UserProgress {
         for (int x = 0; x < 5; x++) {
             unlockedPots[0][x] = true;
         }
+
+        this.questProgress = new HashMap<>();
+        this.completedQuestIds = new ArrayList<>();
+        this.claimedQuestIds = new ArrayList<>();
+        this.lastDailyReset = null;
     }
+
+    public Map<String, Integer> getQuestProgress() { return questProgress; }
+    public void setQuestProgress(Map<String, Integer> questProgress) { this.questProgress = questProgress; }
+
+    public List<String> getCompletedQuestIds() { return completedQuestIds; }
+    public void setCompletedQuestIds(List<String> completedQuestIds) { this.completedQuestIds = completedQuestIds; }
+
+    public List<String> getClaimedQuestIds() { return claimedQuestIds; }
+    public void setClaimedQuestIds(List<String> claimedQuestIds) { this.claimedQuestIds = claimedQuestIds; }
+
+    public LocalDate getLastDailyReset() { return lastDailyReset; }
+    public void setLastDailyReset(LocalDate lastDailyReset) { this.lastDailyReset = lastDailyReset; }
 
     // ----- Getters / Setters for JSON serialisation -----
     public boolean[][] getUnlockedPots() { return unlockedPots; }

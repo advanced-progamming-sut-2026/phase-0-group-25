@@ -5,6 +5,7 @@ import src.Enums.PlantType;
 import src.Enums.WalletType;
 import src.Enums.ZombieType;
 import src.Model.Greenhouse.GreenhousePlant;
+import src.Model.Quests.QuestManager;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
@@ -311,6 +312,7 @@ public class UsersManager {
         }
 
         this.loggedInUser = user;
+        QuestManager.getInstance().loadProgress();
 
         if (stayLoggedIn) {
             try {
