@@ -143,7 +143,7 @@ public abstract class GamePlay {
         if (ticksSinceLastDrop >= requiredTicksForNextDrop) {
             int spawnX = random.nextInt(9) + 1;
             int spawnY = random.nextInt(5) + 1;
-            Position spawnPosition = new Position(spawnX, spawnY);
+            Position spawnPosition = new Position(getRealX(spawnX), getRealY(spawnY));
 
             int chance = random.nextInt(100);
             Sun newSun;
@@ -174,8 +174,9 @@ public abstract class GamePlay {
 
                 if (remainingTime <= 0.001) {
                     remainingTime = 0;
+                    Position posOfSun = Position.getRowAndColumn(sun.getPosition());
                     System.out.printf("Sun reached the ground at position (%d, %d)\n",
-                            (int)sun.getPosition().getX(), (int)sun.getPosition().getY());
+                            (int)posOfSun.getX(), (int)posOfSun.getY());
 
                     if (sun instanceof RadioActiveSun) {
                         Sun regularSun = new Sun(25, sun.getPosition(), 0);
@@ -191,7 +192,7 @@ public abstract class GamePlay {
         Sun targetSun = null;
 
         for (Sun sun : activeSuns) {
-            if ((int)sun.getPosition().getX() == x && (int)sun.getPosition().getY() == y) {
+            if ((int)sun.getPosition().getX() == getRealX(x) && (int)sun.getPosition().getY() == getRealY(y)) {
                 targetSun = sun;
                 break;
             }
@@ -215,29 +216,23 @@ public abstract class GamePlay {
         int sunX = (int) radSun.getPosition().getX();
         int sunY = (int) radSun.getPosition().getY();
 
+        // Damage for zombies :
         for (Zombie zombie : gameZombies) {
             int zX = (int) zombie.getPosition().getX();
             int zY = (int) zombie.getPosition().getY();
 
-            if (Math.abs(sunX - zX) <= 2 && Math.abs(sunY - zY) <= 2) {
+            if (Math.abs(sunX - zX) <= 500 && Math.abs(sunY - zY) <= 500) {
                 zombie.takeDamage(150);
-                if (!zombie.isAlive()) {
-                    System.out.printf("Zombie of type %s is dead at (%d, %d)\n", zombie.getName(), zX, zY);
-                }
             }
         }
 
+        // Damage for plants :
         for (BattlePlant plant : gamePlants) {
             int pX = (int) plant.getPosition().getX();
             int pY = (int) plant.getPosition().getY();
 
-            if (Math.abs(sunX - pX) <= 1 && Math.abs(sunY - pY) <= 1) {
+            if (Math.abs(sunX - pX) <= 200 && Math.abs(sunY - pY) <= 200) {
                 plant.setCurrentHP(plant.getCurrentHP() - 80);
-                if (plant.getCurrentHP() <= 0) {
-                    plant.setAlive(false);
-                    plucking(plant, plant.getPosition());
-                    System.out.printf("Plant %s at (%d, %d) is destroyed.\n", plant.getName(), pX, pY);
-                }
             }
         }
     }
@@ -558,7 +553,7 @@ public abstract class GamePlay {
     }
 
     public int getRandomTime() {
-        int[] numbers = {10, 50, 30, 70};
+        int[] numbers = {10, 40, 30, 50};
         int randomIndex = (int) (Math.random() * numbers.length);
         return numbers[randomIndex];
     }
@@ -601,5 +596,9 @@ public abstract class GamePlay {
 
     public ChapterType getChapterType() {
         return chapterType;
+    }
+
+    public ArrayList<BattlePlant> getPlants() {
+        return plants;
     }
 }

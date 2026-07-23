@@ -42,14 +42,11 @@ public class LoveYourPlants extends GamePlay {
                 // passing cooldown
                 plant.setCooldown(Math.max(plant.getCooldown() - 1, 0));
             } else {
-                Tile currentTile = tiles.stream()
-                        .filter(t -> (int) t.getPosition().getX() == plant.getColumn() &&
-                                (int) t.getPosition().getY() == plant.getRow())
-                        .findFirst()
-                        .orElse(null);
+                Tile currentTile = getTileByPosition(plant.getColumn(), plant.getRow());
 
                 if (currentTile != null) {
-                    currentTile.getPlants().remove(plant);
+                    System.out.printf("Plant %s at (%d, %d) is destroyed.\n", plant.getName(), plant.getColumn(), plant.getRow());
+                    currentTile.getPlants().removeIf(p -> p.getName().equals(plant.getName()));
                 }
                 addNumOfLost();
                 bp.remove();
@@ -62,6 +59,9 @@ public class LoveYourPlants extends GamePlay {
             if (!zombie.isAlive() || zombie.getCurrentHP() <= 0) {
                 killAward(this.thisUser);
                 glowingAward(this);
+                Position zPos = Position.getRowAndColumn(zombie.getPosition());
+                System.out.printf("Zombie of type %s is dead at (%d, %d)\n",
+                        zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
                 z.remove();
             } else {
                 zombie.update();
@@ -93,8 +93,17 @@ public class LoveYourPlants extends GamePlay {
                         thisWave.setStarted(true);
                     }
                     String nameOfZ = thisWave.spawnNextZombie().getName();
-                    Position positionOfZ = new Position(spawnX, getRealY(getNextRandomY()));
-                    this.gameZombies.add(ZombieFactory.createZombie(nameOfZ, positionOfZ));
+                    Position positionOfZ;
+                    int spawnY = getNextRandomY();
+                    if (chapterType != ChapterType.FROSTBITE_CAVES && Math.random() >= 0.9){
+                        positionOfZ = new Position(spawnX+200, getRealY(spawnY));
+                    } else {
+                        positionOfZ = new Position(spawnX, getRealY(spawnY));
+                    }
+                    Zombie newZombie = ZombieFactory.createZombie(nameOfZ, positionOfZ);
+                    System.out.printf("Zombie %s spawned at wave %d in lane %d which costed %d.\n",
+                            nameOfZ, thisWave.getWaveNum(), spawnY, newZombie.getCost());
+                    this.gameZombies.add(newZombie);
                 }
                 if (!thisWave.isReadyForNextWave()) {
                     break;
@@ -113,7 +122,8 @@ public class LoveYourPlants extends GamePlay {
                 if (!thisMower.isUsed()) {
                     System.out.println("The lawn mower in the row" + yOfz + "is triggered and killed these zombies:");
                     thisMower.killZombies(this);
-                } else {
+                }
+                else {
                     System.out.println("The zombie ate your brain; LOSER!!!");
                 }
             }

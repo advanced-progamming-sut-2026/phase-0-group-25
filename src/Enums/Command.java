@@ -51,7 +51,15 @@ public enum Command {
     ChooseAddPlant("^add plant -t\\s+(.+)$"),
     ChooseRemovePlant("^remove plant -t\\s+(.+)$"),
     StartGame("^start game$"),
-    EnterShop("menu shop");
+    EnterShop("menu shop"),
+    // Vasebreaker
+    BreakJar("^break jar -l \\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$"),
+    CollectSeedPacket("^collect seed packet -l \\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$"),
+    PlantFromInventory("^plant from inventory -i\\s+(?<index>\\d+)\\s+-l\\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$"),
+    // Wallnut Bowling
+    PlantWalnut("^plant walnut -i\\s+(?<index>\\d+)\\s+-l\\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$"),
+    // I Zombie
+    PlaceZombie("^place zombie -t\\s+(?<type>[\\w-]+)\\s+-l\\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$");
 
 
     private final String regex;

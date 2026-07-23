@@ -89,7 +89,9 @@ public class Zombie extends Entity {
         return zombieStats;
     }
 
-    public int getCost() {}
+    public int getCost() {
+        return this.zombieStats.getWaveCost();
+    }
 
     public double getCurrentVelocity() {
         return currentVelocity;
