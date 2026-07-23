@@ -14,15 +14,22 @@ import java.util.*;
 
 public class GameDataLoader {
     private static Map<String, List<PlantStats>> plantRegistry = new HashMap<>();
+    private static Map<String, ZombieStats> zombieRegistry = new HashMap<>();
+
+    private static final ObjectMapper mapper = JsonMapper.builder()
+            .enable(JsonReadFeature.ALLOW_MISSING_VALUES)
+            .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
+            .configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false)
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .build();
+
 
     public static void loadGameData() {
-        ObjectMapper mapper = JsonMapper.builder()
-                .enable(JsonReadFeature.ALLOW_MISSING_VALUES)
-                .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
-                .configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false)
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                .build();
+        loadPlantData();
+        loadZombieData();
+    }
 
+    private static void loadPlantData() {
         Map<String, List<PlantStats>> rawData = mapper.readValue(
                 new File("config/plants_config.json"),
                 new TypeReference<Map<String, List<PlantStats>>>() {
@@ -45,11 +52,26 @@ public class GameDataLoader {
         }
     }
 
+    private static void loadZombieData() {
+        Map<String, ZombieStats> rawData = mapper.readValue(
+                new File("config/zombies_config.json"),
+                new TypeReference<Map<String, ZombieStats>>() {
+                }
+        );
+
+        zombieRegistry.putAll(rawData);
+    }
+
+
     public static PlantStats getStatsForPlantLevel(String plantName, int level) {
         List<PlantStats> levels = plantRegistry.get(plantName);
         if (levels != null && level >= 1 && level <= levels.size()) {
             return levels.get(level - 1);
         }
         return null;
+    }
+
+    public static ZombieStats getStatsForZombie(String zombieName) {
+        return zombieRegistry.get(zombieName);
     }
 }

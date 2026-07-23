@@ -1,24 +1,52 @@
 package src.Menu;
 
+import src.Enums.Command;
 import src.Enums.MenuType;
+import src.Model.Shop.ShopItem;
+import src.Model.Shop.ShopManager;
 import src.View.ViewInterfaces.BaseView;
 import src.View.ViewInterfaces.ShopMenuView;
 
-public class ShopMenu extends Menu{
+import java.util.regex.Matcher;
+
+public class ShopMenu extends Menu {
     private final ShopMenuView shopMenuView;
+    private final ShopManager shopManager;
 
     public ShopMenu(ShopMenuView shopMenuView) {
         super(MenuType.GreenHouse);
         this.shopMenuView = shopMenuView;
-    }
-
-    public void buyItem(){
-
+        this.shopManager = ShopManager.getInstance();
     }
 
     @Override
     public void handleSpecificCommands(String input) {
+        Matcher matcher;
 
+        if ((matcher = getMatcher(input, Command.ShopList)) != null) {
+            shopMenuView.showShopList(shopManager.getPermanentItems());
+            return;
+        }
+
+        if ((matcher = getMatcher(input, Command.ShopDaily)) != null) {
+            shopMenuView.showDailyOffer(shopManager.getDailyOffer());
+            return;
+        }
+
+        if ((matcher = getMatcher(input, Command.ShopBuy)) != null) {
+            int itemId = Integer.parseInt(matcher.group("itemId"));
+            int count = Integer.parseInt(matcher.group("count"));
+            String plantType = matcher.group("plantType"); // may be null
+            String error = shopManager.purchaseItem(itemId, count, plantType);
+            if (error == null) {
+                shopMenuView.showPurchaseSuccess();
+            } else {
+                getView().showError(error);
+            }
+            return;
+        }
+
+        getView().showError("Invalid command format for this menu state.");
     }
 
     @Override

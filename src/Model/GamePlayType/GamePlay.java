@@ -54,7 +54,7 @@ public abstract class GamePlay {
     protected int totalTicksPassed = 0;
 
     public GamePlay(ChapterType chapterType, int level, int difficulty, User thisUser,
-                            ArrayList<String> plants, ArrayList<String> zombies) {
+                    ArrayList<String> plants, ArrayList<String> zombies, Set<String > boosted) {
         this.numOfPlantFood = 0;
         this.mySuns = 0;
         this.isPaused = false;

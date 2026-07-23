@@ -59,7 +59,20 @@ public enum Command {
     // Wallnut Bowling
     PlantWalnut("^plant walnut -i\\s+(?<index>\\d+)\\s+-l\\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$"),
     // I Zombie
-    PlaceZombie("^place zombie -t\\s+(?<type>[\\w-]+)\\s+-l\\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$");
+    PlaceZombie("^place zombie -t\\s+(?<type>[\\w-]+)\\s+-l\\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$"),
+    EnterShop("enter shop"),
+    ShopList("shop list"),
+    ShopDaily("shop daily"),
+    TravelLogPage("travel log page (.+?)"),
+    ShowQuests("show quests"),
+    ClaimQuestReward("claim quest -q (.+?)"),
+    UpgradePlant("menu collection upgrade-plant -p (.+?)"),
+    BoostPlant("boost plant -t (.+?)"),
+    ShowGreenhouse("show greenhouse"),
+    PlantPot("plant pot at \\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)"),
+    CollectPot("collect \\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)"),
+    GrowPot("grow \\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)"),
+    ShopBuy("shop buy -i (?<itemId>\\d+) -n (?<count>\\d+)( -t (?<plantType>.+))?");
 
 
     private final String regex;

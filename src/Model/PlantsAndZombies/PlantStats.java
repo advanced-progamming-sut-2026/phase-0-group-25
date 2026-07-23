@@ -6,6 +6,8 @@ import src.Model.PlantsAndZombies.Abilities.Ability;
 import java.util.*;
 
 public class PlantStats {
+    private String name;
+    private String category;
     private int level;
     private int cost;
     private int baseHP;
@@ -14,11 +16,24 @@ public class PlantStats {
     private ArrayList<String> abilities;
     private ArrayList<String> tags;
 
-    private Map<String, Integer> attributes;
+    private Map<String, Object> attributes;
+    private Map<String, Object> plantFoodEffect;
 
+
+    public String getCategory() {
+        return category;
+    }
+
+    public String getName() {
+        return name;
+    }
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public double getActionInterval() {
+        return actionInterval;
     }
 
     public int getCost() {
@@ -29,12 +44,12 @@ public class PlantStats {
         return baseHP;
     }
 
-    public double getRechargeTime() {
-        return rechargeTime;
+    public Map<String, Object> getAttributes() {
+        return attributes;
     }
 
-    public Map<String, Integer> getAttributes() {
-        return attributes;
+    public Map<String, Object> getPlantFoodEffect() {
+        return plantFoodEffect;
     }
 
     public ArrayList<String> getTags() {
@@ -43,10 +58,6 @@ public class PlantStats {
 
     public ArrayList<String> getAbilities() {
         return abilities;
-    }
-
-    public int getLevel() {
-        return level;
     }
 
     public void upgradePlant() {

@@ -13,14 +13,16 @@ import src.Model.Wave.FinalWave;
 import src.Model.Wave.Wave;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 public class TimedWar extends GamePlay {
     private int numOfDeadZombies = 0;
 
     public TimedWar(ChapterType chapterType, int level, int difficulty, User thisUser,
-                    ArrayList<String> plants, ArrayList<String> zombies) {
-        super(chapterType, level, difficulty, thisUser, plants, zombies);
+                    ArrayList<String> plants, ArrayList<String> zombies, Set<String > boosted) {
+        super(chapterType, level, difficulty, thisUser, plants, zombies, boosted);
     }
 
     @Override
@@ -138,6 +140,7 @@ public class TimedWar extends GamePlay {
 
         // Checking if the end of the game (Winning) :
         if (checkingTheEndOfTheGame()) {
+            getLevelObject().completeLevel();
             System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
         }
     }

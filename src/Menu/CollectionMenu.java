@@ -45,6 +45,16 @@ public class CollectionMenu extends Menu {
             showAllPlants();
             return;
         }
+        if ((matcher = getMatcher(input, Command.UpgradePlant)) != null) {
+            String plantName = matcher.group(1);
+            String error = UsersManager.getInstance().upgradePlant(plantName);
+            if (error == null) {
+                collectionMenuView.showPlantUpgradeSuccess(plantName);
+            } else {
+                getView().showError(error);
+            }
+            return;
+        }
 
         if ((matcher = getMatcher(input, Command.ShowZombies)) != null) {
             showAcquiredZombies();
@@ -140,7 +150,7 @@ public class CollectionMenu extends Menu {
             }
         }
 
-        BattlePlant plant = plantFactory.createBattlePlant(plantType.getName(), level);
+        BattlePlant plant = PlantFactory.createBattlePlant(plantType.getName(), level);
         if (plant == null || plant.getPlantStats() == null) {
             getView().showError("Plant stats not found for: " + plantName);
             return;
@@ -160,8 +170,8 @@ public class CollectionMenu extends Menu {
         }
 
         if (zombieFactory != null) {
-            Zombie zombie = zombieFactory.createZombie();
-            if (zombie != null && zombie.getZombieStats() != null) {
+            Zombie zombie = ZombieFactory.createZombie(zombieType.getName(), new Position(0, 0));
+            if (zombie.getZombieStats() != null) {
                 ZombieStats stats = zombie.getZombieStats();
                 collectionMenuView.showZombieDetails(stats.getName(), zombie.getCurrentVelocity(), stats.getBaseHP());
                 return;

@@ -4,6 +4,8 @@ import src.Enums.ChapterType;
 import src.Enums.PlantType;
 import src.Enums.WalletType;
 import src.Enums.ZombieType;
+import src.Model.Greenhouse.GreenhousePlant;
+import src.Model.Quests.QuestManager;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
@@ -146,14 +148,40 @@ public class UsersManager {
         return null;
     }
 
-    public void addCoins(int amount){
-        loggedInUser.getUserProgress().addCoins(amount);
-        updateUser();
-    }
+// file: src/Model/User/UsersManager.java
+// Add these methods inside UsersManager
 
-    public void addGems(int amount){
-        loggedInUser.getUserProgress().addGems(amount);
+
+    // Refactor purchasePlant to use subtractCoins
+    public String purchasePlant(String plantName) {
+        User loggedInUser = getLoggedInUser();
+        if (loggedInUser == null) {
+            return "No logged in user found.";
+        }
+
+        PlantType plantType = PlantType.fromName(plantName);
+        if (plantType == null) {
+            return "Plant not found!";
+        }
+
+        if (loggedInUser.getUserProgress() == null) {
+            return "User progress data is missing.";
+        }
+
+        HashMap<PlantType, Integer> unlockedPlants = loggedInUser.getUserProgress().getUnlockedPlantsAndTheirLevels();
+        if (unlockedPlants.containsKey(plantType)) {
+            return "You already own this plant!";
+        }
+
+        // Use subtractCoins
+        String error = subtractCoins(PLANT_PURCHASE_COST);
+        if (error != null) {
+            return error; // e.g., "Insufficient coins..."
+        }
+
+        loggedInUser.unlockPlant(plantType);
         updateUser();
+        return null;
     }
 
 
@@ -284,6 +312,7 @@ public class UsersManager {
         }
 
         this.loggedInUser = user;
+        QuestManager.getInstance().loadProgress();
 
         if (stayLoggedIn) {
             try {
@@ -446,6 +475,40 @@ public class UsersManager {
         updateUser();
     }
 
+
+
+    public void addPlantFood(int amount) {
+        if (loggedInUser == null) return;
+        UserProgress progress = loggedInUser.getUserProgress();
+        int newCount = Math.max(0, progress.getPlantFoodCount() + amount);
+        progress.setPlantFoodCount(newCount);
+        updateUser();
+    }
+
+
+    public void addSeedPackets(PlantType plant, int amount) {
+        if (loggedInUser == null || amount <= 0) return;
+        UserProgress progress = loggedInUser.getUserProgress();
+        progress.addSeedPackets(plant, amount);
+        updateUser();
+    }
+    public void markDailyOfferPurchased() {
+        if (loggedInUser == null) return;
+        UserProgress progress = loggedInUser.getUserProgress();
+        progress.setDailyOfferPurchaseDate(java.time.LocalDate.now());
+        updateUser();
+    }
+
+    /**
+     * Checks if the daily offer was already bought today.
+     */
+    public boolean isDailyOfferBoughtToday() {
+        if (loggedInUser == null) return false;
+        return loggedInUser.getUserProgress().isDailyOfferBoughtToday();
+    }
+
+
+
     /**
      * Helper method to determine the next chapter after the current one.
      * Chapter progression: ANCIENT_EGYPT → DARK_AGE → FROSTBITE_CAVES → BIG_WAVE_BEACH
@@ -479,37 +542,7 @@ public class UsersManager {
         return news;
     }
 
-    public String purchasePlant(String plantName) {
-        User loggedInUser = getLoggedInUser();
-        if (loggedInUser == null) {
-            return "No logged in user found.";
-        }
 
-        PlantType plantType = PlantType.fromName(plantName);
-        if (plantType == null) {
-            return "Plant not found!";
-        }
-
-        if (loggedInUser.getUserProgress() == null) {
-            return "User progress data is missing.";
-        }
-
-        HashMap<PlantType, Integer> unlockedPlants = loggedInUser.getUserProgress().getUnlockedPlantsAndTheirLevels();
-        if (unlockedPlants.containsKey(plantType)) {
-            return "You already own this plant!";
-        }
-
-        if (loggedInUser.getUserProgress().getCoinsCount() < PLANT_PURCHASE_COST) {
-            return "Not enough coins! Purchasing a plant costs 2000 coins.";
-        }
-
-        loggedInUser.getUserProgress().addCoins(-PLANT_PURCHASE_COST);
-        loggedInUser.unlockPlant(plantType);
-
-        updateUser();
-
-        return null;
-    }
 
     public void unlockZombie(ZombieType zombieType) {
         if (loggedInUser != null) {
@@ -538,4 +571,140 @@ public class UsersManager {
         updateUser();
         return news;
     }
+
+
+
+
+
+
+
+
+
+
+
+    public void unlockPot(int x, int y) {
+        if (loggedInUser == null) return;
+        loggedInUser.getUserProgress().unlockPot(x, y);
+        updateUser();
+    }
+
+    public void plantInPot(int x, int y, GreenhousePlant plant) {
+        if (loggedInUser == null) return;
+        loggedInUser.getUserProgress().plantInPot(x, y, plant);
+        updateUser();
+    }
+
+    public void removePlantFromPot(int x, int y) {
+        if (loggedInUser == null) return;
+        loggedInUser.getUserProgress().removePlantFromPot(x, y);
+        updateUser();
+    }
+
+    public void addGreenhouseBoost(PlantType plant) {
+        if (loggedInUser == null) return;
+        loggedInUser.getUserProgress().addGreenhouseBoost(plant);
+        updateUser();
+    }
+
+    public boolean hasGreenhouseBoost(PlantType plant) {
+        if (loggedInUser == null) return false;
+        return loggedInUser.getUserProgress().hasGreenhouseBoost(plant);
+    }
+
+    public void consumeGreenhouseBoost(PlantType plant) {
+        if (loggedInUser == null) return;
+        loggedInUser.getUserProgress().consumeGreenhouseBoost(plant);
+        updateUser();
+    }
+
+    public void acceleratePlant(int x, int y) {
+        if (loggedInUser == null) return;
+        GreenhousePlant plant = loggedInUser.getUserProgress().getPotPlants()[y-1][x-1];
+        if (plant != null) {
+            plant.forceReady();
+            updateUser();
+        }
+    }
+
+    /**
+     * Adds pots – unlocks the next locked pots in row‑major order.
+     */
+    public void addPots(int amount) {
+        if (loggedInUser == null || amount <= 0) return;
+        UserProgress progress = loggedInUser.getUserProgress();
+        for (int i = 0; i < amount; i++) {
+            progress.unlockNextPot();
+        }
+        updateUser();
+    }
+
+    // ----- Currency subtraction (no try-catch) -----
+    public String subtractCoins(int amount) {
+        if (loggedInUser == null) return "No logged in user.";
+        UserProgress progress = loggedInUser.getUserProgress();
+        if (amount < 0) return "Cannot subtract negative amount.";
+        if (progress.getCoinsCount() < amount)
+            return "Insufficient coins. You have " + progress.getCoinsCount() + ", need " + amount + ".";
+        progress.subtractCoins(amount);
+        updateUser();
+        return null;
+    }
+
+    public String subtractGems(int amount) {
+        if (loggedInUser == null) return "No logged in user.";
+        UserProgress progress = loggedInUser.getUserProgress();
+        if (amount < 0) return "Cannot subtract negative amount.";
+        if (progress.getGemsCount() < amount)
+            return "Insufficient gems. You have " + progress.getGemsCount() + ", need " + amount + ".";
+        progress.subtractGems(amount);
+        updateUser();
+        return null;
+    }
+
+    // ----- Plant upgrade (no try-catch) -----
+    public String upgradePlant(String plantName) {
+        if (loggedInUser == null) return "No logged in user.";
+        PlantType plant = PlantType.fromName(plantName);
+        if (plant == null) return "Invalid plant name.";
+        UserProgress progress = loggedInUser.getUserProgress();
+
+        if (!progress.getUnlockedPlantsAndTheirLevels().containsKey(plant))
+            return "Plant not unlocked.";
+
+        int currentLevel = progress.getUnlockedPlantsAndTheirLevels().get(plant);
+        int requiredCoins = currentLevel * 1000;
+        int requiredSeedPackets = currentLevel * 5;
+
+        // Check coins
+        if (progress.getCoinsCount() < requiredCoins)
+            return "Insufficient coins. Need " + requiredCoins + ".";
+        // Check seed packets
+        if (!progress.hasEnoughSeedPackets(plant, requiredSeedPackets)) {
+            int available = progress.getSeedPackets().getOrDefault(plant, 0);
+            return "Not enough seed packets. Need " + requiredSeedPackets + ", have " + available + ".";
+        }
+
+        // Perform deductions
+        progress.subtractCoins(requiredCoins);
+        progress.deductSeedPackets(plant, requiredSeedPackets);
+        progress.upgradePlant(plant);
+        updateUser();
+        return null;
+    }
+
+    // ----- Other methods (unchanged but we note addCoins/addGems only add positive) -----
+    public void addCoins(int amount) {
+        if (loggedInUser == null || amount <= 0) return;
+        loggedInUser.getUserProgress().addCoins(amount);
+        updateUser();
+    }
+
+    public void addGems(int amount) {
+        if (loggedInUser == null || amount <= 0) return;
+        loggedInUser.getUserProgress().addGems(amount);
+        updateUser();
+    }
+
+
+
 }

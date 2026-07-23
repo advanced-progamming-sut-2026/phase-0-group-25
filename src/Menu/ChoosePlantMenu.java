@@ -14,19 +14,21 @@ import src.View.ViewInterfaces.ChoosePlantMenuView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 
 public class ChoosePlantMenu extends Menu {
     private static final int DEFAULT_MAX_PLANTS = 8;
     private final ChoosePlantMenuView choosePlantMenuView;
-    private final ArrayList<Plant> plants;
-    private final PlantFactory plantFactory;
+    private final ArrayList<String> plantsStr;
 
-    public ChoosePlantMenu(ChoosePlantMenuView choosePlantMenuView, ArrayList<Plant> plants) {
+    private final Set<String> boostedPlants;
+
+    public ChoosePlantMenu(ChoosePlantMenuView view, ArrayList<String> plants, Set<String> boostedPlants) {
         super(MenuType.Game);
-        this.plants = plants;
-        this.choosePlantMenuView = choosePlantMenuView;
-        this.plantFactory = new PlantFactory();
+        this.plantsStr = plants;
+        this.choosePlantMenuView = view;
+        this.boostedPlants = boostedPlants;
     }
 
     @Override
@@ -53,7 +55,34 @@ public class ChoosePlantMenu extends Menu {
             return;
         }
 
+        if ((matcher = getMatcher(input, Command.BoostPlant)) != null) {
+            String plantName = matcher.group(1);
+            boostPlant(plantName);
+            return;
+        }
+
+
         getView().showError("Invalid command format for this menu state.");
+    }
+
+    private void boostPlant(String  plantName) {
+        PlantType plant = PlantType.fromName(plantName);
+        if (plant == null) {
+            getView().showError("Invalid plant type.");
+            return;
+        }
+        User currentUser = UsersManager.getInstance().getLoggedInUser();
+        if (currentUser == null || !currentUser.getUserProgress().getUnlockedPlantsAndTheirLevels().containsKey(plant)) {
+            getView().showError("Plant " + plantName + " is not unlocked.");
+            return;
+        }
+        String gemError = UsersManager.getInstance().subtractGems(2);
+        if (gemError != null) {
+            getView().showError(gemError);
+            return;
+        }
+        boostedPlants.add(plantName.toUpperCase());
+        choosePlantMenuView.showPlantBoosted(plantName);
     }
 
     public void showAllPlants() {
@@ -98,21 +127,19 @@ public class ChoosePlantMenu extends Menu {
             return;
         }
 
-        for (Plant plant : plants) {
-            if (plant.getName().equalsIgnoreCase(plantType.getName())) {
+        for (String plantStr : plantsStr) {
+            if (plantStr.equalsIgnoreCase(plantType.getName())) {
                 getView().showError("Plant is already selected: " + plantType.getName());
                 return;
             }
         }
 
-        if (plants.size() >= DEFAULT_MAX_PLANTS) {
+        if (plantsStr.size() >= DEFAULT_MAX_PLANTS) {
             getView().showError("Cannot add more plants. Maximum limit of " + DEFAULT_MAX_PLANTS + " plants reached.");
             return;
         }
 
-        int level = unlockedMap.get(plantType);
-        BattlePlant newPlant = plantFactory.createBattlePlant(plantType.getName(), level);
-        plants.add(newPlant);
+        plantsStr.add(plantType.getName());
         choosePlantMenuView.showPlantAddedSuccess(plantType.getName());
     }
 
@@ -123,10 +150,10 @@ public class ChoosePlantMenu extends Menu {
             return;
         }
 
-        Plant plantToRemove = null;
-        for (Plant plant : plants) {
-            if (plant.getName().equalsIgnoreCase(plantType.getName())) {
-                plantToRemove = plant;
+        String plantToRemove = null;
+        for (String plantStr : plantsStr) {
+            if (plantStr.equalsIgnoreCase(plantType.getName())) {
+                plantToRemove = plantStr;
                 break;
             }
         }
@@ -136,7 +163,7 @@ public class ChoosePlantMenu extends Menu {
             return;
         }
 
-        plants.remove(plantToRemove);
+        plantsStr.remove(plantToRemove);
         choosePlantMenuView.showPlantRemovedSuccess(plantType.getName());
     }
 

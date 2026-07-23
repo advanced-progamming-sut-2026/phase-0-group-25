@@ -1,0 +1,54 @@
+{
+  "amir" : {
+    "email" : "test1@gmail.com",
+    "genderType" : "Male",
+    "newsManager" : {
+      "news" : [ {
+        "message" : "chapter ancient egypt unlocked!",
+        "read" : true
+      }, {
+        "message" : "level 1 of ancient egypt unlocked!",
+        "read" : true
+      }, {
+        "message" : "plant SUNFLOWER unlocked!",
+        "read" : true
+      }, {
+        "message" : "plant PEASHOOTER unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie DEFAULT unlocked!",
+        "read" : true
+      }, {
+        "message" : "plant SUN_SHROOM unlocked!",
+        "read" : false
+      } ]
+    },
+    "nickName" : "amir",
+    "password" : "1234$AbCd",
+    "securityAnswer" : "blue",
+    "securityQuestion" : "FAVORITE_COLOR",
+    "userName" : "amir",
+    "userProgress" : {
+      "coinsCount" : 3400,
+      "dailyOfferBoughtToday" : true,
+      "dailyOfferPurchaseDate" : "2026-07-23",
+      "gameDifficulty" : 1,
+      "gamesPlayed" : 0,
+      "gemsCount" : 0,
+      "plantFoodCount" : 0,
+      "potsCount" : 2,
+      "seedPackets" : {
+        "SUN_SHROOM" : 10
+      },
+      "unlockedChaptersAndLevels" : {
+        "ANCIENT_EGYPT" : 1
+      },
+      "unlockedPlantsAndTheirLevels" : {
+        "SUNFLOWER" : 1,
+        "SUN_SHROOM" : 1,
+        "PEASHOOTER" : 1
+      },
+      "unlockedZombies" : [ "DEFAULT" ]
+    }
+  }
+}
