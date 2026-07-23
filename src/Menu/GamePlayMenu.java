@@ -3,6 +3,9 @@ package src.Menu;
 import src.Enums.Command;
 import src.Enums.MenuType;
 import src.Model.GamePlayType.GamePlay;
+import src.Model.MiniGames.IZombieGame.IZombie;
+import src.Model.MiniGames.VasebreakerGame.VaseBreaker;
+import src.Model.MiniGames.WallnutBowlingGame.WalnutBowling;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Position;
 import src.View.ViewInterfaces.BaseView;
@@ -79,11 +82,14 @@ public class GamePlayMenu extends Menu {
             int x = Integer.parseInt(matcher.group("x"));
             int y = Integer.parseInt(matcher.group("y"));
             if (x > 9 || x < 1 || y > 5 || y < 1) {
-                System.out.println("Pls type valid x and y!");
+                System.out.println("Pls type valid x and y! (for x : 1 to 9 & for y : 1 to 5");
+            } else if (!gamePlay.getPlants().stream().anyMatch(plant -> plant.getName().equals(type))) {
+                System.out.println("You can't plant this plant! You didn't select this plant before the game!");
             } else {
                 Position thisPosition = new Position(x , y);
-                BattlePlant thisPlant = gamePlay
-                gamePlay.planting();
+                BattlePlant thisPlant = gamePlay.getPlants().stream()
+                        .filter(plant -> plant.getName().equals(type)).findFirst().orElse(null);
+                gamePlay.planting(thisPlant, thisPosition);
             }
         } else if ((matcher = getMatcher(input, Command.PluckPlant)) != null) {
             int x = Integer.parseInt(matcher.group("x"));
@@ -92,14 +98,15 @@ public class GamePlayMenu extends Menu {
                 System.out.println("Pls type valid x and y!");
             } else {
                 Position thisPosition = new Position(x , y);
-                BattlePlant thisPlant = gamePlay
-                gamePlay.plucking();
+                gamePlay.plucking(thisPosition);
             }
         } else if ((matcher = getMatcher(input, Command.FeedPlant)) != null) {
             int x = Integer.parseInt(matcher.group("x"));
             int y = Integer.parseInt(matcher.group("y"));
             if (x > 9 || x < 1 || y > 5 || y < 1) {
                 System.out.println("Pls type valid x and y!");
+            } else if (gamePlay.getTileByPosition(x, y).getPlants().isEmpty()) {
+                System.out.println("There is no plant in this tile!!");
             } else {
                 gamePlay.applyPlantFood(x, y);
             }
@@ -115,6 +122,49 @@ public class GamePlayMenu extends Menu {
             } else {
                 Position thisPosition = new Position(x , y);
                 gamePlay.showTileStatus(thisPosition);
+            }
+        } else if ((matcher = getMatcher(input, Command.BreakJar)) != null) {
+            int x = Integer.parseInt(matcher.group("x"));
+            int y = Integer.parseInt(matcher.group("y"));
+            if (gamePlay instanceof VaseBreaker) {
+                ((VaseBreaker) gamePlay).breakJar(x, y);
+            } else {
+                System.out.println("This command is only available in the Vasebreaker mini-game!");
+            }
+        } else if ((matcher = getMatcher(input, Command.CollectSeedPacket)) != null) {
+            int x = Integer.parseInt(matcher.group("x"));
+            int y = Integer.parseInt(matcher.group("y"));
+            if (gamePlay instanceof VaseBreaker) {
+                ((VaseBreaker) gamePlay).collectSeedPacket(x, y);
+            } else {
+                System.out.println("This command is only available in the Vasebreaker mini-game!");
+            }
+        } else if ((matcher = getMatcher(input, Command.PlantFromInventory)) != null) {
+            int index = Integer.parseInt(matcher.group("index"));
+            int x = Integer.parseInt(matcher.group("x"));
+            int y = Integer.parseInt(matcher.group("y"));
+            if (gamePlay instanceof VaseBreaker) {
+                ((VaseBreaker) gamePlay).plantFromInventory(index, new Position(x, y));
+            } else {
+                System.out.println("This command is only available in the Vasebreaker mini-game!");
+            }
+        } else if ((matcher = getMatcher(input, Command.PlantWalnut)) != null) {
+            int index = Integer.parseInt(matcher.group("index"));
+            int x = Integer.parseInt(matcher.group("x"));
+            int y = Integer.parseInt(matcher.group("y"));
+            if (gamePlay instanceof WalnutBowling) {
+                ((WalnutBowling) gamePlay).plantWalnut(index, x, y);
+            } else {
+                System.out.println("This command is only available in the Wallnut Bowling mini-game!");
+            }
+        } else if ((matcher = getMatcher(input, Command.PlaceZombie)) != null) {
+            String type = matcher.group("type");
+            int x = Integer.parseInt(matcher.group("x"));
+            int y = Integer.parseInt(matcher.group("y"));
+            if (gamePlay instanceof IZombie) {
+                ((IZombie) gamePlay).placeZombie(type, x, y);
+            } else {
+                System.out.println("This command is only available in the I, Zombie mini-game!");
             }
         } else {
             System.out.println("Unknown command: " + input);

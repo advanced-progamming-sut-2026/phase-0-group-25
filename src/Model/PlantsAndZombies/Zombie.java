@@ -38,7 +38,7 @@ public class Zombie extends Entity {
     private int spawnTime;
     //private HashMap<String, Double> effectsInfo;
 
-    public Zombie(ZombieStats zombieStats, String name, Position position) {
+    public Zombie(ZombieStats zombieStats, Position position) {
         this.zombieStats = zombieStats;
         this.status = Status.MOVING;
         this.name = name;
@@ -276,6 +276,9 @@ public class Zombie extends Entity {
 
     public void setHypnotized(boolean hypnotized) {
         isHypnotized = hypnotized;
+    }
+    public int getCost() {
+        return this.zombieStats.getWaveCost();
     }
 
     public double getCurrentVelocity() {
