@@ -1,12 +1,13 @@
 package src.Model.PlantsAndZombies.Armors;
 
 public enum ArmorConfig {
-    CONE("cone", 370, false),
-    BUCKET("bucket", 1100, true),
-    BRICK("brick", 2200, false),
-    SHOULDER_ARMOR("shoulder armor", 1600, true),
-    CROWN("crown", 1600, true),
-    NEWSPAPER("newspaper", 800, false);
+    CONE("Cone", 370, false),
+    BUCKET("Bucket", 1100, true),
+    BRICK("Brick", 2200, false),
+    SHOULDER_ARMOR("Shoulder Armor", 1600, true),
+    CROWN("Crown", 1600, true),
+    NEWSPAPER("Cewspaper", 800, false),
+    ARCADE("Arcade", 1100, false);
 
     private final String type;
     private final int baseHP;
