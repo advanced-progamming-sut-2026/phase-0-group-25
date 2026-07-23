@@ -6,11 +6,11 @@ import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Position;
 import src.Model.PlantsAndZombies.Projectiles.Projectile;
 import src.Model.PlantsAndZombies.Zombie;
+import src.Model.PlantsAndZombies.ZombieFactory;
 import src.Model.Tile;
 import src.Model.User.User;
 import src.Model.Wave.FinalWave;
 import src.Model.Wave.Wave;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -28,6 +28,7 @@ public class SaveOurSeeds extends GamePlay {
     public void update() {
         if (isPaused) return;
         totalTicksPassed++;
+        timeToSpwan--;
 
         if (this.level != 4) {
             sunMaker();
@@ -80,20 +81,25 @@ public class SaveOurSeeds extends GamePlay {
         }
 
         // Spawning zombies :
-        for (Wave thisWave : allWaves) {
-            if (thisWave.hasZombiesLeftToSpawn()) {
-                if (!thisWave.getStarted()) {
-                    if (thisWave instanceof FinalWave) {
-                        System.out.println("The final wave has come.");
-                    } else {
-                        System.out.printf("Wave %d started.\n", thisWave.getWaveNum());
+        if (timeToSpwan == 0) {
+            timeToSpwan = getRandomTime();
+            for (Wave thisWave : allWaves) {
+                if (thisWave.hasZombiesLeftToSpawn()) {
+                    if (!thisWave.getStarted()) {
+                        if (thisWave instanceof FinalWave) {
+                            System.out.println("The final wave has come.");
+                        } else {
+                            System.out.printf("Wave %d started.\n", thisWave.getWaveNum());
+                        }
+                        thisWave.setStarted(true);
                     }
-                    thisWave.setStarted(true);
+                    String nameOfZ = thisWave.spawnNextZombie().getName();
+                    Position positionOfZ = new Position(spawnX, getRealY(getNextRandomY()));
+                    this.gameZombies.add(ZombieFactory.createZombie(nameOfZ, positionOfZ));
                 }
-                thisWave.spawnNextZombie(); // TODO : how to spaw...?
-            }
-            if (!thisWave.isReadyForNextWave()) {
-                break;
+                if (!thisWave.isReadyForNextWave()) {
+                    break;
+                }
             }
         }
 
@@ -128,16 +134,8 @@ public class SaveOurSeeds extends GamePlay {
     }
 
     private boolean canSaved () {
-        Tile tile1 = tiles.stream()
-                .filter(t -> (int) t.getPosition().getX() == 5 &&
-                        (int) t.getPosition().getY() == 2)
-                .findFirst()
-                .orElse(null);
-        Tile tile2 = tiles.stream()
-                .filter(t -> (int) t.getPosition().getX() == 5 &&
-                        (int) t.getPosition().getY() == 4)
-                .findFirst()
-                .orElse(null);
+        Tile tile1 = getTileByPosition(5, 2);
+        Tile tile2 = getTileByPosition(5, 4);
 
         if (tile1.getPlants().isEmpty() || tile2.getPlants().isEmpty()) {
             return false;

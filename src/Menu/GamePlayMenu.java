@@ -6,6 +6,7 @@ import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Position;
 import src.View.ViewInterfaces.BaseView;
+import src.View.ViewInterfaces.GameMenuView;
 import src.View.ViewInterfaces.GamePlayMenuView;
 
 import java.util.regex.Matcher;
@@ -62,6 +63,8 @@ public class GamePlayMenu extends Menu {
             }
         } else if ((matcher = getMatcher(input, Command.ShowSunAmount)) != null) {
             System.out.println("You have" + gamePlay.getMySuns() + "suns");
+        } else if ((matcher = getMatcher(input, Command.ShowPlantFoodAmount)) != null) {
+            System.out.println("You have" + gamePlay.getNumOfPlantFood() + "plant foods");
         } else if ((matcher = getMatcher(input, Command.CheatAddSuns)) != null) {
             String count = matcher.group("count");
             gamePlay.cheatAddSun(Integer.parseInt(count));
@@ -98,7 +101,7 @@ public class GamePlayMenu extends Menu {
             if (x > 9 || x < 1 || y > 5 || y < 1) {
                 System.out.println("Pls type valid x and y!");
             } else {
-                // TODO : how to use plant food...?
+                gamePlay.applyPlantFood(x, y);
             }
         } else if ((matcher = getMatcher(input, Command.ShowMap)) != null) {
             gamePlay.showMap();
