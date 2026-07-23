@@ -9,13 +9,15 @@ import src.Model.User.User;
 import src.Model.Wave.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 public class Simple extends GamePlay {
 
     public Simple(ChapterType chapterType, int level, int difficulty, User thisUser,
-                        ArrayList<String> plants, ArrayList<String> zombies) {
-        super(chapterType, level, difficulty, thisUser, plants, zombies);
+                        ArrayList<String> plants, ArrayList<String> zombies, Set<String > boosted) {
+        super(chapterType, level, difficulty, thisUser, plants, zombies, boosted);
     }
 
     @Override
@@ -122,6 +124,7 @@ public class Simple extends GamePlay {
 
         // Checking if the end of the game (Winning) :
         if (checkingTheEndOfTheGame()) {
+            getLevelObject().completeLevel();
             System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
         }
     }

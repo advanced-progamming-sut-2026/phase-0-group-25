@@ -69,7 +69,8 @@ public enum PlantType {
     REINFORCE_MINT("REINFORCE_MINT"),
     ENCHANT_MINT("ENCHANT_MINT"),
     PIERCE_MINT("PIERCE_MINT"),
-    CATTAIL_MINT("CATTAIL_MINT");
+    CATTAIL_MINT("CATTAIL_MINT"),
+    MARIGOLD("MARIGOLD");
 
     private final String name;
 

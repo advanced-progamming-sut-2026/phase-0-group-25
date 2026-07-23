@@ -1,38 +1,44 @@
 // file: src/Menu/GameMenu.java
 package src.Menu;
 
-import src.Enums.Command;
-import src.Enums.ChapterType;
-import src.Enums.MenuType;
-import src.Enums.WalletType;
+import src.Enums.*;
 import src.Model.ChaptersAndLevels.Chapter;
 import src.Model.ChaptersAndLevels.ChapterFactory;
 import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Plant;
+import src.Model.PlantsAndZombies.Zombie;
 import src.Model.User.User;
 import src.Model.User.UsersManager;
 import src.View.ViewInterfaces.BaseView;
 import src.View.ViewInterfaces.GameMenuView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 
 public class GameMenu extends Menu {
     private final GameMenuView gameMenuView;
     private Chapter chapter;
-    private ArrayList<Plant> plants;
+    private ArrayList<String > plantsStr;
+    private final Set<String> boostedPlants;
 
     public GameMenu(GameMenuView gameMenuView) {
         super(MenuType.Main);
         this.gameMenuView = gameMenuView;
-        this.plants = new ArrayList<>();
+        this.plantsStr = new ArrayList<>();
+        this.boostedPlants = new HashSet<>();
         addChangeableMenuType(MenuType.Collection);
         addChangeableMenuType(MenuType.ChoosePlant);
     }
 
-    public ArrayList<Plant> getPlants() {
-        return plants;
+    public Set<String> getBoostedPlants() {
+        return boostedPlants;
+    }
+
+    public ArrayList<String> getPlantsStr() {
+        return plantsStr;
     }
 
     public Chapter getChapter() {
@@ -82,7 +88,7 @@ public class GameMenu extends Menu {
             return;
         }
 
-        if (this.plants == null || this.plants.isEmpty()) {
+        if (this.plantsStr == null || this.plantsStr.isEmpty()) {
             getView().showError("No plants selected! Please select plants in choose plant menu first.");
             return;
         }
@@ -94,19 +100,20 @@ public class GameMenu extends Menu {
             getView().showError("All levels of this chapter have already been completed!");
             return;
         }
-
-        ArrayList<BattlePlant> battlePlants = new ArrayList<>();
-        for (Plant plant : this.plants) {
-            if (plant instanceof BattlePlant) {
-                battlePlants.add((BattlePlant) plant);
-            }
+        ArrayList<String > zombiesStrToPlay = new ArrayList<>();
+        for (ZombieType zombieType: currentUser.getUserProgress().getUnlockedZombies()){
+            zombiesStrToPlay.add(zombieType.getName());
         }
+
+
 
         GamePlay gamePlay = this.chapter.makeGame(
                 unlockedLevel,
                 currentUser.getUserProgress().getGameDifficulty(),
                 currentUser,
-                battlePlants
+                plantsStr,
+                zombiesStrToPlay,
+                boostedPlants
         );
 
         if (gamePlay == null) {
