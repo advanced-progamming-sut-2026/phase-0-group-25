@@ -11,87 +11,60 @@ public class Projectile {
     private int damage;
 
     private Position position;
+    private Position basePosition;
+
     private int pierceAmount;
     private int range;
+    private int knockback;
 
-    private int baseRow;
-    private int baseColumn;
-    private int currentRow;
-    private int currentColumn;
 
     protected boolean isActive;
     protected boolean icy;
+    protected boolean firing;
     private boolean poisonous;
     private boolean isHypnotizer;
 
     public Projectile() {
 
     }
-    public Projectile(double velocityX, double velocityY, BattlePlant plant,
+
+    public Projectile(double velocityX, double velocityY, Position position,
                       int damage, int pierceAmount) {
         this.velocityX = velocityX;
         this.velocityY = velocityY;
-        this.position = plant.getPosition();
-        this.baseColumn = plant.getColumn();
-        this.baseRow = plant.getRow();
-        this.currentColumn = baseColumn;
-        this.currentRow = baseRow;
+        this.position = position;
+        this.basePosition = position;
 
         this.damage = damage;
+        this.knockback = 0;
 
         this.pierceAmount = pierceAmount;
         this.range = 11;
         this.isActive = true;
         this.icy = false;
+        this.firing = false;
         this.poisonous = false;
     }
 
-    public Projectile(double velocityX, double velocityY, BattlePlant plant,
+    public Projectile(double velocityX, double velocityY, Position position,
                       int damage, int pierceAmount, int range) {
         this.velocityX = velocityX;
         this.velocityY = velocityY;
-        this.position = plant.getPosition();
-        this.baseColumn = plant.getColumn();
-        this.baseRow = plant.getRow();
-        this.currentColumn = baseColumn;
-        this.currentRow = baseRow;
+        this.position = position;
+        this.basePosition = position;
 
         this.damage = damage;
+        this.knockback = 0;
 
         this.pierceAmount = pierceAmount;
         this.range = range;
         this.isActive = true;
         this.icy = false;
+        this.firing = false;
         this.poisonous = false;
     }
 
-    public boolean isActive() {
-        return isActive;
-    }
 
-    public int getBaseRow() {
-        return baseRow;
-    }
-
-    public int getBaseColumn() {
-        return baseColumn;
-    }
-
-    public int getCurrentRow() {
-        return currentRow;
-    }
-
-    public int getCurrentColumn() {
-        return currentColumn;
-    }
-
-    public void setCurrentRow(int currentRow) {
-        this.currentRow = currentRow;
-    }
-
-    public void setCurrentColumn(int currentColumn) {
-        this.currentColumn = currentColumn;
-    }
 
     public void setHypnotizer(boolean isHypnotizer) {
         this.isHypnotizer = isHypnotizer;
@@ -109,27 +82,82 @@ public class Projectile {
     }
 
     public void updateActivation() {
-        if (((this.currentRow - this.baseRow) > this.range) ||
-                ((this.currentColumn - this.baseColumn) > this.range)) {
+        Position currentRowAndColumn = Position.getRowAndColumn(this.position);
+        int currentRow = (int) currentRowAndColumn.getY();
+        int currentColumn = (int) currentRowAndColumn.getX();
+
+        Position baseRowAndColumn = Position.getRowAndColumn(this.basePosition);
+        int baseRow = (int) baseRowAndColumn.getY();
+        int baseColumn = (int) baseRowAndColumn.getX();
+
+        if (((currentRow - baseRow) > this.range) ||
+                ((currentColumn - baseColumn) > this.range)) {
             this.isActive = false;
         }
     }
 
     public void checkCollision() {
-
         for (Zombie zombie : game.getAliveZombies()) {
-            if (position.equals(zombie.getPosition())) {
-                //todo: reduce hp of zombie or its armor and the pierce amount of projectile
+            if (this.position.equals(zombie.getPosition())) {
+                if ((zombie.getZombieStats().getName().equals("SNORKEL")) &&
+                        (zombie.getZombieStats().getAttributes().get("submarine").equals("on"))) {
+                    continue;
+                }
+                zombie.takeDamage(this, this.damage);
+                zombie.setPosition(new Position(
+                        zombie.getPosition().getX() + this.knockback,
+                        zombie.getPosition().getY()));
+
+                this.setPierceAmount(this.getPierceAmount() - 1);
             }
         }
+    }
+
+    public void setKnockback(int knockback) {
+        this.knockback = knockback;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public boolean isIcy() {
+        return icy;
     }
 
     public void setIcy(boolean icy) {
         this.icy = icy;
     }
 
+
+    public boolean isFiring() {
+        return firing;
+    }
+
+    public void setFiring(boolean firing) {
+        this.firing = firing;
+    }
+
     public void setPoisonous(boolean poisonous) {
         this.poisonous = poisonous;
     }
 
+    public boolean isPoisonous() {
+        return poisonous;
+    }
+
+    public int getPierceAmount() {
+        return pierceAmount;
+    }
+
+    public void setPierceAmount(int pierceAmount) {
+        this.pierceAmount = pierceAmount;
+        if (this.pierceAmount == 0) {
+            this.isActive = false;
+        }
+    }
 }

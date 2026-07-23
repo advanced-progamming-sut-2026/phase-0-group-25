@@ -18,6 +18,7 @@ public class LobbedProjectile extends Projectile {
     private int AoEDamage;
     private int AoERange;
     private int damage;
+    private boolean isFromLobberPlant;
 
     public LobbedProjectile(double startX, double startY, double targetX, double speed,
                             int AoEDamage, int AoERange, int damage) {
@@ -34,6 +35,7 @@ public class LobbedProjectile extends Projectile {
         this.damage = damage;
         this.isActive = true;
         this.icy = false;
+        this.isFromLobberPlant = true;
     }
 
     public LobbedProjectile(double startX, double startY, double targetX, double targetY, double speed,
@@ -51,6 +53,7 @@ public class LobbedProjectile extends Projectile {
         this.damage = damage;
         this.isActive = true;
         this.icy = false;
+        this.isFromLobberPlant = true;
     }
 
     @Override
@@ -64,8 +67,8 @@ public class LobbedProjectile extends Projectile {
 
     public void affectTarget() {
         Position targetRowAndColumn = Position.getRowAndColumn(this.targetX, this.startY);
-        int targetRow = (int) targetRowAndColumn.getX();
-        int targetColumn = (int) targetRowAndColumn.getY();
+        int targetColumn = (int) targetRowAndColumn.getX();
+        int targetRow = (int) targetRowAndColumn.getY();
         ArrayList<Zombie> zombies = findZombiesInRange(targetRow, targetColumn, this.AoERange);
 
         for (Zombie zombie : zombies) {
@@ -100,5 +103,8 @@ public class LobbedProjectile extends Projectile {
         return properZombies;
     }
 
+    public boolean isFromLobberPlant() {
+        return isFromLobberPlant;
+    }
 
 }

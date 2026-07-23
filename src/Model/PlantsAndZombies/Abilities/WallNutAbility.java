@@ -1,51 +1,59 @@
 package src.Model.PlantsAndZombies.Abilities;
 
 import src.Model.PlantsAndZombies.BattlePlant;
+import src.Model.PlantsAndZombies.Entity;
 import src.Model.PlantsAndZombies.Position;
 import src.Model.PlantsAndZombies.Tile;
 import src.Model.PlantsAndZombies.Zombie;
 import src.Model.Sun.Sun;
+import src.Model.Tile;
 
 import java.util.ArrayList;
 
 
-public class WallNutAbility {
-    private BattlePlant plant;
-    private Zombie attacker;
+public class WallNutAbility implements Ability {
 
-    public WallNutAbility(BattlePlant plant, Zombie attacker) {
-        this.plant = plant;
-        this.attacker = attacker;
-    }
+    @Override
+    public void executeAbility(Entity entity) {
+        Zombie attacker = (Zombie) entity;
+        BattlePlant plant = (BattlePlant) attacker.getRival();
+        if (plant.isEffected()) {
+            plantFoodEffect(plant);
+        }
 
-    public void execute() {
         ArrayList<String> tags = plant.getPlantStats().getTags();
-        //todo: get zombie`s damage
-        plant.setCurrentHP(plant.getCurrentHP() - attacker.getDamage());
-
 
         if (tags.contains("reflection")) {
-            //todo: get zombie`s damage
-            attacker.setCurrentHP(attacker.getCurrentHP() - attacker.getDamage());
-            plant.setCurrentHP(plant.getCurrentHP() + attacker.getDamage());
+            int damage = checkEffected(plant);
+
+            attacker.setCurrentHP(attacker.getCurrentHP() - damage);
+            plant.setCurrentHP(plant.getCurrentHP()
+                    + attacker.getZombieStats().getEatdps());
         }
         if (tags.contains("move-zombies")) {
-            if (plant.getPlantStats().getAttributes().get("move") == 1) {
+            if ((int) plant.getPlantStats().getAttributes().get("move") == 1) {
                 if (!plant.isAlive()) {
-                    Position plantRowAndColumn = Position.getRowAndColumn(plant.getPosition().getX(), plant.getPosition().getY());
-
-
-
+                    if (plant.isEffected()) {
+                        repelZombiesInEffected(plant);
+                        return;
+                    }
+                    attacker.changeRow();
                 }
-            } else if (plant.getPlantStats().getAttributes().get("move") == -1 ) {
-
+            } else if ((int) plant.getPlantStats().getAttributes().get("move") == -1) {
+                if (!plant.isAlive()) {
+                    attractZombies(plant);
+                    if (plant.isEffected()) {
+                        plant.setCurrentHP(plant.getPlantStats().getBaseHP());
+                    }
+                }
             }
         }
 
         if (tags.contains("explosion")) {
             if (!plant.isAlive()) {
                 Position plantRowAndColumn = Position.getRowAndColumn(plant.getPosition().getX(), plant.getPosition().getY());
-                int range = plant.getPlantStats().getAttributes().get("range");
+                int range = (int) plant.getPlantStats().getAttributes().get("range");
+                int damage = checkEffected(plant);
 
                 //todo: getter of tiles in game
                 for (Tile tile : game.getTiles()) {
@@ -54,7 +62,7 @@ public class WallNutAbility {
                     int distanceY = Math.abs(tile.getColumn() - plantRowAndColumn.getY());
                     if ((distanceX <= range) && (distanceY <= range)) {
                         for (Zombie zombie : tile.getAliveZombies()) {
-                            //todo: damage on zombies
+                            zombie.setCurrentHP(zombie.getCurrentHP() - damage);
                         }
                     }
                 }
@@ -62,10 +70,42 @@ public class WallNutAbility {
         }
 
         if (tags.contains("sun")) {
-            int numberOfSun = plant.getPlantStats().getAttributes().get("sun_quantity");
+            int numberOfSun = (int) plant.getPlantStats().getAttributes().get("sun_quantity");
             Sun sun = new Sun(numberOfSun, plant.getPosition());
 
             //todo: increase sun amount of user
         }
+    }
+
+    private void plantFoodEffect(BattlePlant plant) {
+        if (!plant.getPlantStats().getTags().contains("moveZombies")) {
+            int armor = (int) plant.getPlantStats().getPlantFoodEffect().get("armor");
+            plant.setCurrentHP(plant.getCurrentHP() + armor);
+        }
+    }
+
+    private int checkEffected(BattlePlant plant) {
+        int damage = (int) plant.getPlantStats().getAttributes().get("damage");
+        if (plant.isEffected()) {
+            damage *= (int) plant.getPlantStats().getPlantFoodEffect().get("damageMultiplier");
+        }
+        return damage;
+    }
+
+    private void repelZombiesInEffected(BattlePlant plant) {
+        Position plantRowAndColumn = Position.getRowAndColumn(plant.getPosition());
+        int plantRow = (int) plantRowAndColumn.getY();
+        int plantColumn = (int) plantRowAndColumn.getX();
+        for (int i = 0; i < 9; i++) {
+            Tile tile = Tile.getTile();//todo
+            //todo
+            for (Zombie zombie : tile.getZombies()) {
+                zombie.changeRow();
+            }
+        }
+    }
+
+    private void attractZombies(BattlePlant plant) {
+        int i = 0;
     }
 }

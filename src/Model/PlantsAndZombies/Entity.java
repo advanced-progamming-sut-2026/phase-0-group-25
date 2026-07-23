@@ -29,10 +29,6 @@ public abstract class Entity {
         return isAlive;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setAlive(boolean alive) {
         isAlive = alive;
     }
