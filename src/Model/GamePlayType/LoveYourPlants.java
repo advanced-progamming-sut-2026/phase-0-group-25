@@ -3,13 +3,14 @@ package src.Model.GamePlayType;
 import src.Enums.ChapterType;
 import src.Model.Mower;
 import src.Model.PlantsAndZombies.BattlePlant;
+import src.Model.PlantsAndZombies.Position;
 import src.Model.PlantsAndZombies.Projectiles.Projectile;
 import src.Model.PlantsAndZombies.Zombie;
+import src.Model.PlantsAndZombies.ZombieFactory;
 import src.Model.Tile;
 import src.Model.User.User;
 import src.Model.Wave.FinalWave;
 import src.Model.Wave.Wave;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -25,6 +26,7 @@ public class LoveYourPlants extends GamePlay {
     public void update() {
         if (isPaused) return;
         totalTicksPassed++;
+        timeToSpwan--;
 
         if (this.level != 4) {
             sunMaker();
@@ -35,7 +37,7 @@ public class LoveYourPlants extends GamePlay {
         while (bp.hasNext()) {
             BattlePlant plant = bp.next();
 
-            if (plant.isAlive() && plant.getCurrentHP() > 0) {
+            if(plant.isAlive() && plant.getCurrentHP() > 0) {
                 plant.update();
                 // passing cooldown
                 plant.setCooldown(Math.max(plant.getCooldown() - 1, 0));
@@ -78,26 +80,31 @@ public class LoveYourPlants extends GamePlay {
         }
 
         // Spawning zombies :
-        for (Wave thisWave : allWaves) {
-            if (thisWave.hasZombiesLeftToSpawn()) {
-                if (!thisWave.getStarted()) {
-                    if (thisWave instanceof FinalWave) {
-                        System.out.println("The final wave has come.");
-                    } else {
-                        System.out.printf("Wave %d started.\n", thisWave.getWaveNum());
+        if (timeToSpwan == 0) {
+            timeToSpwan = getRandomTime();
+            for (Wave thisWave : allWaves) {
+                if (thisWave.hasZombiesLeftToSpawn()) {
+                    if (!thisWave.getStarted()) {
+                        if (thisWave instanceof FinalWave) {
+                            System.out.println("The final wave has come.");
+                        } else {
+                            System.out.printf("Wave %d started.\n", thisWave.getWaveNum());
+                        }
+                        thisWave.setStarted(true);
                     }
-                    thisWave.setStarted(true);
+                    String nameOfZ = thisWave.spawnNextZombie().getName();
+                    Position positionOfZ = new Position(spawnX, getRealY(getNextRandomY()));
+                    this.gameZombies.add(ZombieFactory.createZombie(nameOfZ, positionOfZ));
                 }
-                thisWave.spawnNextZombie(); // TODO : how to spaw...?
-            }
-            if (!thisWave.isReadyForNextWave()) {
-                break;
+                if (!thisWave.isReadyForNextWave()) {
+                    break;
+                }
             }
         }
 
         // Checking if the end of the game (Losing) + Activate Mowers :
         int x = mowers.get(0).getX();
-        for (Zombie zombie : gameZombies) {
+        for(Zombie zombie : gameZombies) {
             int yOfz = (int) zombie.getPosition().getY();
             int xOfz = (int) zombie.getPosition().getX();
             Mower thisMower = mowers.stream().filter(p -> p.getY() == yOfz).findFirst().get();

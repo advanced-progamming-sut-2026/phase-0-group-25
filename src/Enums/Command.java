@@ -28,6 +28,7 @@ public enum Command {
     AdvanceTime("^advance time -t\\s+(?<count>\\d+)\\s+ticks$"),
     CollectSun("^collect sun -l \\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$"),
     ShowSunAmount("show sun amount"),
+    ShowPlantFoodAmount("show sun amount"),
     CheatAddSuns("cheat add -n <count> suns"),
     CheatCooldown("cheat remove-cooldown"),
     CheatPlantFood("cheat add-plant-food"),

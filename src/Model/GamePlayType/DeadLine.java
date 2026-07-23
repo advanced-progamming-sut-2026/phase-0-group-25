@@ -23,6 +23,7 @@ public class DeadLine extends GamePlay {
     public void update() {
         if (isPaused) return;
         totalTicksPassed++;
+        timeToSpwan--;
 
         if (this.level != 4) {
             sunMaker();
@@ -75,20 +76,25 @@ public class DeadLine extends GamePlay {
         }
 
         // Spawning zombies :
-        for (Wave thisWave : allWaves) {
-            if (thisWave.hasZombiesLeftToSpawn()) {
-                if (!thisWave.getStarted()) {
-                    if (thisWave instanceof FinalWave) {
-                        System.out.println("The final wave has come.");
-                    } else {
-                        System.out.printf("Wave %d started.\n", thisWave.getWaveNum());
+        if (timeToSpwan == 0) {
+            timeToSpwan = getRandomTime();
+            for (Wave thisWave : allWaves) {
+                if (thisWave.hasZombiesLeftToSpawn()) {
+                    if (!thisWave.getStarted()) {
+                        if (thisWave instanceof FinalWave) {
+                            System.out.println("The final wave has come.");
+                        } else {
+                            System.out.printf("Wave %d started.\n", thisWave.getWaveNum());
+                        }
+                        thisWave.setStarted(true);
                     }
-                    thisWave.setStarted(true);
+                    String nameOfZ = thisWave.spawnNextZombie().getName();
+                    Position positionOfZ = new Position(spawnX, getRealY(getNextRandomY()));
+                    this.gameZombies.add(ZombieFactory.createZombie(nameOfZ, positionOfZ));
                 }
-                thisWave.spawnNextZombie(); // TODO : how to spaw...?
-            }
-            if (!thisWave.isReadyForNextWave()) {
-                break;
+                if (!thisWave.isReadyForNextWave()) {
+                    break;
+                }
             }
         }
 

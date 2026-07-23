@@ -9,7 +9,7 @@ public abstract class Plant extends Entity {
     protected PlantCategory category;
     private boolean hasBoost;
     private int price;
-    private int cooldown = 40;
+    private int cooldown;
     private Boolean activeCooldown = true;
 
     public abstract void update();
