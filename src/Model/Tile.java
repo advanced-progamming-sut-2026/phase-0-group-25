@@ -13,8 +13,9 @@ public class Tile {
     private ArrayList<BattlePlant> plants;
     private ArrayList<Zombie> zombies;
     private ArrayList<Projectile> projectiles;
-    private Grave grave;
 
+
+    private int HP;
     private Position position;
     private boolean isArable;
     private String kindOfTile;
@@ -25,14 +26,6 @@ public class Tile {
         plants = new ArrayList<>();
         zombies = new ArrayList<>();
         projectiles = new ArrayList<>();
-    }
-
-    public Grave getGrave() {
-        return grave;
-    }
-
-    public void setGrave(Grave grave) {
-        this.grave = grave;
     }
 
     public Position getPosition() {

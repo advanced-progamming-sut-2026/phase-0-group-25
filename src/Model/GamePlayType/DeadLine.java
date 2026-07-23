@@ -4,6 +4,7 @@ import src.Enums.ChapterType;
 import src.Model.Mower;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Position;
+import src.Model.PlantsAndZombies.Projectiles.Dynamite;
 import src.Model.PlantsAndZombies.Projectiles.Projectile;
 import src.Model.PlantsAndZombies.Zombie;
 import src.Model.PlantsAndZombies.ZombieFactory;
@@ -32,7 +33,7 @@ public class DeadLine extends GamePlay {
             sunMaker();
         }
 
-        // Updating Zombies, Plant and Projectile (Deleting them if they're dead) :
+        // Updating Zombies, Plant and Projectile and Dynamite (Deleting them if they're dead) :
         Iterator<BattlePlant> bp = gamePlants.iterator();
         while (bp.hasNext()) {
             BattlePlant plant = bp.next();
@@ -76,6 +77,12 @@ public class DeadLine extends GamePlay {
             } else {
                 pj.remove();
             }
+        }
+        Iterator<Dynamite> dy = dynamites.iterator();
+        while (dy.hasNext()) {
+            Dynamite thisDynamite = dy.next();
+
+            thisDynamite.update();
         }
 
         // Spawning zombies :

@@ -3,9 +3,9 @@ package src.Model.GamePlayType;
 import src.Enums.ChapterType;
 import src.Enums.PlantType;
 import src.Model.ChaptersAndLevels.Level;
-import src.Model.Grave;
 import src.Model.Mower;
 import src.Model.PlantsAndZombies.*;
+import src.Model.PlantsAndZombies.Projectiles.Dynamite;
 import src.Model.PlantsAndZombies.Projectiles.Projectile;
 import src.Model.Sun.RadioActiveSun;
 import src.Model.Tile;
@@ -30,6 +30,7 @@ public abstract class GamePlay {
 
     protected ArrayList<Tile> tiles = new ArrayList<>();
     protected ArrayList<Projectile> projectiles = new ArrayList<>();
+    protected ArrayList<Dynamite> dynamites = new ArrayList<>();
     protected ArrayList<Mower> mowers = new ArrayList<>();
     protected ArrayList<Sun> activeSuns = new ArrayList<>();
     protected ArrayList<Grave> allGraves = new ArrayList<>();
@@ -491,18 +492,6 @@ public abstract class GamePlay {
                     break;
             }
         }
-    }
-
-    public ArrayList<Grave> getAllGraves() {
-        return allGraves;
-    }
-
-    public void setAllGraves(ArrayList<Grave> allGraves) {
-        this.allGraves = allGraves;
-    }
-
-    public void addGrave(Grave thisGrave) {
-        this.allGraves.add(thisGrave);
     }
 
     public void glowingAward (GamePlay thisGame) {
