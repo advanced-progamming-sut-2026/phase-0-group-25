@@ -12,6 +12,8 @@ import src.Model.User.User;
 import src.Model.User.UsersManager;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Level {
     private ChapterType chapterType;
@@ -68,9 +70,9 @@ public class Level {
         }
     }
 
-    public GamePlay createGame(ChapterType chapterType, int difficulty, User user, ArrayList<String> plants, ArrayList<String > zombies) {
+    public GamePlay createGame(ChapterType chapterType, int difficulty, User user, ArrayList<String> plants, ArrayList<String > zombies, Set<String > boosted) {
         this.chapterType = chapterType;
-        GamePlay gamePlay = GamePlayFactory.createGamePlay(gamePlayType, chapterType, levelNumber, difficulty, user, plants, zombies);
+        GamePlay gamePlay = GamePlayFactory.createGamePlay(gamePlayType, chapterType, levelNumber, difficulty, user, plants, zombies, boosted);
         if (gamePlay != null) {
             gamePlay.setLevelObject(this);
         }

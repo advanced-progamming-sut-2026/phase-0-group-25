@@ -112,7 +112,8 @@ public class GameMenu extends Menu {
                 currentUser.getUserProgress().getGameDifficulty(),
                 currentUser,
                 plantsStr,
-                zombiesStrToPlay
+                zombiesStrToPlay,
+                boostedPlants
         );
 
         if (gamePlay == null) {
