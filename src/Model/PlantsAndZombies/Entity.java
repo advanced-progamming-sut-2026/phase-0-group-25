@@ -5,6 +5,8 @@ public abstract class Entity {
     protected double currentHP;
     protected boolean isAlive = true;
     protected Position position;
+    protected int row;
+    protected int column;
 
 
     public abstract void update();
@@ -41,16 +43,18 @@ public abstract class Entity {
     }
 
     public int getRow() {
-        Position rowAndColumn = Position.getRowAndColumn(this.position);
+        return row;
+    }
 
-        return (int) rowAndColumn.getY();
+    public void setRow(int row) {
+        this.row = row;
     }
 
     public int getColumn() {
-        Position rowAndColumn = Position.getRowAndColumn(this.position);
-
-        return (int) rowAndColumn.getX();
+        return column;
     }
 
-
+    public void setColumn(int column) {
+        this.column = column;
+    }
 }
