@@ -2,8 +2,6 @@ package src.View.ConcreteViews;
 
 import src.View.ViewInterfaces.GamePlayMenuView;
 
-import java.util.Scanner;
-
 public class GamePlayMenuTerminalView extends AbstractTerminalView implements GamePlayMenuView {
 
     @Override

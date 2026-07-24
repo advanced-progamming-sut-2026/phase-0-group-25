@@ -55,7 +55,7 @@ public class SignUpMenu extends Menu{
         getView().showError("Invalid command format for this menu state.");
     }
 
-    // --- Core Operations: Completely Agnostic to Regex ---
+    
 
     private void registerUser(String username, String password, String passwordConfirm,
                               String nickname, String email, String genderStr) {

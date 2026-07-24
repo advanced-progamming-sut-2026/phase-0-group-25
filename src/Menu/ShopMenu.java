@@ -36,7 +36,7 @@ public class ShopMenu extends Menu {
         if ((matcher = getMatcher(input, Command.ShopBuy)) != null) {
             int itemId = Integer.parseInt(matcher.group("itemId"));
             int count = Integer.parseInt(matcher.group("count"));
-            String plantType = matcher.group("plantType"); // may be null
+            String plantType = matcher.group("plantType"); 
             String error = shopManager.purchaseItem(itemId, count, plantType);
             if (error == null) {
                 shopMenuView.showPurchaseSuccess();

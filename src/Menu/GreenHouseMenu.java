@@ -1,4 +1,4 @@
-// src/Menu/GreenHouseMenu.java
+
 package src.Menu;
 
 import src.Enums.Command;
@@ -59,7 +59,7 @@ public class GreenHouseMenu extends Menu {
         getView().showError("Invalid command format for this menu state.");
     }
 
-    // ----- Helper methods (using 2D arrays) -----
+    
     private void showGreenhouse() {
         UsersManager um = UsersManager.getInstance();
         UserProgress progress = um.getLoggedInUser().getUserProgress();

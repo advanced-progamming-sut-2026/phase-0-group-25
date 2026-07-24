@@ -1,14 +1,13 @@
 package src.Model.Greenhouse;
 
-import src.Model.PlantsAndZombies.Plant;
-
 import src.Enums.PlantType;
+
 import java.time.LocalDateTime;
 
 public class GreenhousePlant {
     private PlantType type;
     private LocalDateTime plantedAt;
-    private double growthHours; // total hours needed
+    private double growthHours;
 
     public GreenhousePlant(PlantType type, double growthHours) {
         this.type = type;
@@ -16,13 +15,19 @@ public class GreenhousePlant {
         this.plantedAt = LocalDateTime.now();
     }
 
-    public PlantType getType() { return type; }
-    public LocalDateTime getPlantedAt() { return plantedAt; }
-    public double getGrowthHours() { return growthHours; }
+    public PlantType getType() {
+        return type;
+    }
 
-    /**
-     * @return remaining hours (can be negative if ready)
-     */
+    public LocalDateTime getPlantedAt() {
+        return plantedAt;
+    }
+
+    public double getGrowthHours() {
+        return growthHours;
+    }
+
+
     public double getRemainingHours() {
         long secondsElapsed = java.time.Duration.between(plantedAt, LocalDateTime.now()).getSeconds();
         double hoursElapsed = secondsElapsed / 3600.0;

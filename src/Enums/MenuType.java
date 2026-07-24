@@ -21,6 +21,7 @@ public enum MenuType {
     TravelLog("travel log");
 
     private final String string;
+
     MenuType(String string) {
         this.string = string;
     }

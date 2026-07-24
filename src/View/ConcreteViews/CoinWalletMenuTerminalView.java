@@ -2,8 +2,6 @@ package src.View.ConcreteViews;
 
 import src.View.ViewInterfaces.CoinWalletMenuView;
 
-import java.util.Scanner;
-
 public class CoinWalletMenuTerminalView extends AbstractTerminalView implements CoinWalletMenuView {
 
     @Override

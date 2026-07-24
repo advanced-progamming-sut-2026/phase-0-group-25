@@ -1,6 +1,6 @@
-// src/Model/User/UserProgress.java
 package src.Model.User;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import src.Enums.ChapterType;
 import src.Enums.PlantType;
@@ -9,6 +9,10 @@ import src.Model.Greenhouse.GreenhousePlant;
 
 import java.time.LocalDate;
 import java.util.*;
+
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY,
+        getterVisibility = JsonAutoDetect.Visibility.NONE,
+        setterVisibility = JsonAutoDetect.Visibility.NONE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserProgress {
     private HashMap<ChapterType, Integer> unlockedChaptersAndLevels;
@@ -19,18 +23,22 @@ public class UserProgress {
     private int gameDifficulty;
     private int gamesPlayed;
 
-    private Map<String, Integer> questProgress;        // questId -> current progress
-    private List<String> completedQuestIds;            // quests that are completed but not yet claimed
-    private List<String> claimedQuestIds;              // quests already claimed
+    private Map<String, Integer> questProgress;
+    private List<String> completedQuestIds;
+    private List<String> claimedQuestIds;
     private LocalDate lastDailyReset;
 
     private int plantFoodCount;
     private Map<PlantType, Integer> seedPackets;
     private LocalDate dailyOfferPurchaseDate;
 
-    // Greenhouse – now using 2D arrays
-    private boolean[][] unlockedPots;          // [y][x] (y=0..3, x=0..4)
-    private GreenhousePlant[][] potPlants;     // [y][x]
+    private int miniGamesCompleted;
+    private int dailyQuestsCompleted;
+    private int nonDailyQuestsCompleted;
+
+
+    private boolean[][] unlockedPots;
+    private GreenhousePlant[][] potPlants;
     private Set<PlantType> greenhouseBoosts;
 
     public UserProgress() {
@@ -47,15 +55,19 @@ public class UserProgress {
         this.seedPackets = new HashMap<>();
         this.dailyOfferPurchaseDate = null;
 
-        // Initialize greenhouse arrays
+
         this.unlockedPots = new boolean[4][5];
         this.potPlants = new GreenhousePlant[4][5];
         this.greenhouseBoosts = new HashSet<>();
 
-        // Default: row 1 (index 0) all unlocked
+
         for (int x = 0; x < 5; x++) {
             unlockedPots[0][x] = true;
         }
+
+        this.miniGamesCompleted = 0;
+        this.dailyQuestsCompleted = 0;
+        this.nonDailyQuestsCompleted = 0;
 
         this.questProgress = new HashMap<>();
         this.completedQuestIds = new ArrayList<>();
@@ -63,29 +75,90 @@ public class UserProgress {
         this.lastDailyReset = null;
     }
 
-    public Map<String, Integer> getQuestProgress() { return questProgress; }
-    public void setQuestProgress(Map<String, Integer> questProgress) { this.questProgress = questProgress; }
+    public int getMiniGamesCompleted() {
+        return miniGamesCompleted;
+    }
 
-    public List<String> getCompletedQuestIds() { return completedQuestIds; }
-    public void setCompletedQuestIds(List<String> completedQuestIds) { this.completedQuestIds = completedQuestIds; }
+    public int getDailyQuestsCompleted() {
+        return dailyQuestsCompleted;
+    }
 
-    public List<String> getClaimedQuestIds() { return claimedQuestIds; }
-    public void setClaimedQuestIds(List<String> claimedQuestIds) { this.claimedQuestIds = claimedQuestIds; }
+    public int getNonDailyQuestsCompleted() {
+        return nonDailyQuestsCompleted;
+    }
 
-    public LocalDate getLastDailyReset() { return lastDailyReset; }
-    public void setLastDailyReset(LocalDate lastDailyReset) { this.lastDailyReset = lastDailyReset; }
 
-    // ----- Getters / Setters for JSON serialisation -----
-    public boolean[][] getUnlockedPots() { return unlockedPots; }
-    public void setUnlockedPots(boolean[][] unlockedPots) { this.unlockedPots = unlockedPots; }
+    void incrementMiniGamesCompleted() {
+        this.miniGamesCompleted++;
+    }
 
-    public GreenhousePlant[][] getPotPlants() { return potPlants; }
-    public void setPotPlants(GreenhousePlant[][] potPlants) { this.potPlants = potPlants; }
+    void incrementDailyQuestsCompleted() {
+        this.dailyQuestsCompleted++;
+    }
 
-    public Set<PlantType> getGreenhouseBoosts() { return greenhouseBoosts; }
-    public void setGreenhouseBoosts(Set<PlantType> greenhouseBoosts) { this.greenhouseBoosts = greenhouseBoosts; }
+    void incrementNonDailyQuestsCompleted() {
+        this.nonDailyQuestsCompleted++;
+    }
 
-    // ----- Pot count (computed) -----
+
+    public Map<String, Integer> getQuestProgress() {
+        return questProgress;
+    }
+
+    void setQuestProgress(Map<String, Integer> questProgress) {
+        this.questProgress = questProgress;
+    }
+
+    public List<String> getCompletedQuestIds() {
+        return completedQuestIds;
+    }
+
+    void setCompletedQuestIds(List<String> completedQuestIds) {
+        this.completedQuestIds = completedQuestIds;
+    }
+
+    public List<String> getClaimedQuestIds() {
+        return claimedQuestIds;
+    }
+
+    void setClaimedQuestIds(List<String> claimedQuestIds) {
+        this.claimedQuestIds = claimedQuestIds;
+    }
+
+    public LocalDate getLastDailyReset() {
+        return lastDailyReset;
+    }
+
+    void setLastDailyReset(LocalDate lastDailyReset) {
+        this.lastDailyReset = lastDailyReset;
+    }
+
+
+    public boolean[][] getUnlockedPots() {
+        return unlockedPots;
+    }
+
+    void setUnlockedPots(boolean[][] unlockedPots) {
+        this.unlockedPots = unlockedPots;
+    }
+
+    public GreenhousePlant[][] getPotPlants() {
+        return potPlants;
+    }
+
+    void setPotPlants(GreenhousePlant[][] potPlants) {
+        this.potPlants = potPlants;
+    }
+
+    public Set<PlantType> getGreenhouseBoosts() {
+        return greenhouseBoosts;
+    }
+
+    void setGreenhouseBoosts(Set<PlantType> greenhouseBoosts) {
+        this.greenhouseBoosts = greenhouseBoosts;
+    }
+
+
     public int getPotsCount() {
         int count = 0;
         for (int y = 0; y < 4; y++) {
@@ -96,10 +169,10 @@ public class UserProgress {
         return count;
     }
 
-    // ----- Package‑private mutators for Greenhouse (called by UsersManager) -----
+
     void unlockPot(int x, int y) {
         if (x < 1 || x > 5 || y < 1 || y > 4) return;
-        unlockedPots[y-1][x-1] = true;
+        unlockedPots[y - 1][x - 1] = true;
     }
 
     void unlockNextPot() {
@@ -115,47 +188,88 @@ public class UserProgress {
 
     void plantInPot(int x, int y, GreenhousePlant plant) {
         if (x < 1 || x > 5 || y < 1 || y > 4) return;
-        potPlants[y-1][x-1] = plant;
+        potPlants[y - 1][x - 1] = plant;
     }
 
     void removePlantFromPot(int x, int y) {
         if (x < 1 || x > 5 || y < 1 || y > 4) return;
-        potPlants[y-1][x-1] = null;
+        potPlants[y - 1][x - 1] = null;
     }
 
-    void addGreenhouseBoost(PlantType plant) { greenhouseBoosts.add(plant); }
-    boolean hasGreenhouseBoost(PlantType plant) { return greenhouseBoosts.contains(plant); }
-    void consumeGreenhouseBoost(PlantType plant) { greenhouseBoosts.remove(plant); }
+    void addGreenhouseBoost(PlantType plant) {
+        greenhouseBoosts.add(plant);
+    }
 
-    // ----- Other fields: getters/setters (unchanged) -----
-    public int getPlantFoodCount() { return plantFoodCount; }
-    public void setPlantFoodCount(int count) { this.plantFoodCount = Math.min(count, 3); }
+    boolean hasGreenhouseBoost(PlantType plant) {
+        return greenhouseBoosts.contains(plant);
+    }
 
-    public Map<PlantType, Integer> getSeedPackets() { return seedPackets; }
-    public void setSeedPackets(Map<PlantType, Integer> seedPackets) { this.seedPackets = seedPackets; }
+    void consumeGreenhouseBoost(PlantType plant) {
+        greenhouseBoosts.remove(plant);
+    }
+
+
+    public int getPlantFoodCount() {
+        return plantFoodCount;
+    }
+
+    void setPlantFoodCount(int count) {
+        this.plantFoodCount = Math.min(count, 3);
+    }
+
+    public Map<PlantType, Integer> getSeedPackets() {
+        return seedPackets;
+    }
+
+    void setSeedPackets(Map<PlantType, Integer> seedPackets) {
+        this.seedPackets = seedPackets;
+    }
+
     public void addSeedPackets(PlantType plant, int amount) {
         seedPackets.put(plant, seedPackets.getOrDefault(plant, 0) + amount);
     }
 
-    public LocalDate getDailyOfferPurchaseDate() { return dailyOfferPurchaseDate; }
-    public void setDailyOfferPurchaseDate(LocalDate date) { this.dailyOfferPurchaseDate = date; }
+    public LocalDate getDailyOfferPurchaseDate() {
+        return dailyOfferPurchaseDate;
+    }
+
+    void setDailyOfferPurchaseDate(LocalDate date) {
+        this.dailyOfferPurchaseDate = date;
+    }
+
     public boolean isDailyOfferBoughtToday() {
         return dailyOfferPurchaseDate != null && dailyOfferPurchaseDate.equals(LocalDate.now());
     }
 
-    public HashMap<ChapterType, Integer> getUnlockedChaptersAndLevels() { return unlockedChaptersAndLevels; }
-    public void setUnlockedChaptersAndLevels(HashMap<ChapterType, Integer> unlockedChaptersAndLevels) {
+    public HashMap<ChapterType, Integer> getUnlockedChaptersAndLevels() {
+        return unlockedChaptersAndLevels;
+    }
+
+    void setUnlockedChaptersAndLevels(HashMap<ChapterType, Integer> unlockedChaptersAndLevels) {
         this.unlockedChaptersAndLevels = unlockedChaptersAndLevels;
     }
 
-    public int getGamesPlayed() { return gamesPlayed; }
-    void setGamesPlayed(int gamesPlayed) { this.gamesPlayed = gamesPlayed; }
+    public int getGamesPlayed() {
+        return gamesPlayed;
+    }
 
-    public ArrayList<ZombieType> getUnlockedZombies() { return unlockedZombies; }
-    void setUnlockedZombies(ArrayList<ZombieType> unlockedZombies) { this.unlockedZombies = unlockedZombies; }
+    void setGamesPlayed(int gamesPlayed) {
+        this.gamesPlayed = gamesPlayed;
+    }
 
-    public HashMap<PlantType, Integer> getUnlockedPlantsAndTheirLevels() { return unlockedPlantsAndTheirLevels; }
-    public void setUnlockedPlantsAndTheirLevels(HashMap<PlantType, Integer> unlockedPlantsAndTheirLevels) {
+    public ArrayList<ZombieType> getUnlockedZombies() {
+        return unlockedZombies;
+    }
+
+    void setUnlockedZombies(ArrayList<ZombieType> unlockedZombies) {
+        this.unlockedZombies = unlockedZombies;
+    }
+
+    public HashMap<PlantType, Integer> getUnlockedPlantsAndTheirLevels() {
+        return unlockedPlantsAndTheirLevels;
+    }
+
+    void setUnlockedPlantsAndTheirLevels(HashMap<PlantType, Integer> unlockedPlantsAndTheirLevels) {
         this.unlockedPlantsAndTheirLevels = unlockedPlantsAndTheirLevels;
     }
 
@@ -167,32 +281,59 @@ public class UserProgress {
         return total;
     }
 
-    public int getGemsCount() { return gemsCount; }
-    public void setGemsCount(int gemsCount) { this.gemsCount = gemsCount; }
+    public int getGemsCount() {
+        return gemsCount;
+    }
 
-    public int getCoinsCount() { return coinsCount; }
-    public void setCoinsCount(int coinsCount) { this.coinsCount = coinsCount; }
+    void setGemsCount(int gemsCount) {
+        this.gemsCount = gemsCount;
+    }
+
+    public int getCoinsCount() {
+        return coinsCount;
+    }
+
+    void setCoinsCount(int coinsCount) {
+        this.coinsCount = coinsCount;
+    }
 
     void addCoins(int amount) {
         if (amount > 0) this.coinsCount += amount;
     }
+
     void addGems(int amount) {
         if (amount > 0) this.gemsCount += amount;
     }
 
-    void setGameDifficulty(int gameDifficulty) { this.gameDifficulty = gameDifficulty; }
-    public int getGameDifficulty() { return gameDifficulty; }
+    public int getGameDifficulty() {
+        return gameDifficulty;
+    }
+
+    void setGameDifficulty(int gameDifficulty) {
+        this.gameDifficulty = gameDifficulty;
+    }
 
     public int getPlantLevel(PlantType plantType) {
         return unlockedPlantsAndTheirLevels.getOrDefault(plantType, 0);
     }
 
-    void unlockPlant(PlantType plantType) { unlockedPlantsAndTheirLevels.put(plantType, 1); }
-    void unlockZombie(ZombieType zombieType) { unlockedZombies.add(zombieType); }
-    void unlockChapter(ChapterType chapterType) { unlockedChaptersAndLevels.put(chapterType, 1); }
-    void unlockLevel(int level, ChapterType chapterType) { unlockedChaptersAndLevels.put(chapterType, level); }
+    void unlockPlant(PlantType plantType) {
+        unlockedPlantsAndTheirLevels.put(plantType, 1);
+    }
 
-    // ----- Currency subtraction (no exceptions) -----
+    void unlockZombie(ZombieType zombieType) {
+        unlockedZombies.add(zombieType);
+    }
+
+    void unlockChapter(ChapterType chapterType) {
+        unlockedChaptersAndLevels.put(chapterType, 1);
+    }
+
+    void unlockLevel(int level, ChapterType chapterType) {
+        unlockedChaptersAndLevels.put(chapterType, level);
+    }
+
+
     public void subtractCoins(int amount) {
         if (amount < 0) throw new IllegalArgumentException("Cannot subtract negative amount.");
         if (this.coinsCount < amount) throw new IllegalArgumentException("Insufficient coins.");
@@ -205,7 +346,7 @@ public class UserProgress {
         this.gemsCount -= amount;
     }
 
-    // ----- Seed packet and upgrade (no exceptions) -----
+
     public boolean hasEnoughSeedPackets(PlantType plant, int required) {
         return seedPackets.getOrDefault(plant, 0) >= required;
     }

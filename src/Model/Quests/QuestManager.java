@@ -21,7 +21,6 @@ public class QuestManager {
         eventListeners = new HashMap<>();
         loadQuests();
         registerEventListeners();
-        // Load progress from current user (will be called after login)
         if (UsersManager.getInstance().getLoggedInUser() != null) {
             currentUser = UsersManager.getInstance().getLoggedInUser();
             loadProgress();
@@ -35,55 +34,74 @@ public class QuestManager {
         return instance;
     }
 
-    // ---------- Load quest definitions ----------
-    private void loadQuests() {
-        // (1) Daily Sun Collector
-        allQuests.add(createQuest(
-                "daily_sun_collector",
-                "Daily Sun Collector",
-                "Collect {sun_amount} sun in a single day.",
-                QuestCategory.DAILY,
-                QuestPriority.MEDIUM,
-                QuestEvent.SUN_COLLECTED,
-                3000, // base required, but we'll support multiple tiers via conditions
-                List.of(new Reward(RewardType.COINS, 30)), // sun_amount/100 = 30 for 3000
-                Map.of("tiers", List.of(3000, 4000, 5000)),
-                true
-        ));
 
-        // (2) Chapter Hunter (one per chapter)
+    private void loadQuests() {
+
+        int[] sunTiers = {3000, 4000, 5000};
+        for (int tier : sunTiers) {
+            String id = "daily_sun_collector_" + tier;
+            int rewardCoins = tier / 100;
+            Quest q = createQuest(
+                    id,
+                    "Daily Sun Collector (" + tier + " sun)",
+                    "Collect " + tier + " sun in a single day.",
+                    QuestCategory.DAILY,
+                    QuestPriority.MEDIUM,
+                    QuestEvent.SUN_COLLECTED,
+                    tier,
+                    List.of(new Reward(RewardType.COINS, rewardCoins)),
+                    Map.of(),
+                    true
+            );
+            q.setConditionChecker((data) -> {
+                if (data.length == 0 || !(data[0] instanceof Integer)) return false;
+                int collected = (int) data[0];
+                return collected >= tier;
+            });
+            allQuests.add(q);
+        }
+
+
         for (ChapterType chapter : ChapterType.values()) {
-            allQuests.add(createQuest(
-                    "hunter_" + chapter.name().toLowerCase(),
+            String id = "hunter_" + chapter.name().toLowerCase();
+            Quest q = createQuest(
+                    id,
                     "Hunter: " + chapter.getName(),
                     "Kill 50 zombies from " + chapter.getName() + ".",
                     QuestCategory.MAIN,
                     QuestPriority.HIGH,
                     QuestEvent.ZOMBIE_KILLED,
                     50,
-                    List.of(new Reward(RewardType.SEED_PACKETS, 10, PlantType.SUNFLOWER)), // placeholder seed
+                    List.of(new Reward(RewardType.SEED_PACKETS, 10, PlantType.SUNFLOWER)),
                     Map.of("chapter", chapter),
                     false
-            ));
+            );
+            q.setConditionChecker((data) -> {
+                if (data.length < 1) return false;
+                Object zombieChapter = data[0];
+                return chapter.equals(zombieChapter);
+            });
+            allQuests.add(q);
         }
 
-        // (3) Professional Plant Killer (one per plant that can kill)
-        // We'll create generic for now – will be specialized later.
-        allQuests.add(createQuest(
+
+        Quest professionalKiller = createQuest(
                 "professional_killer",
                 "Professional Plant Killer",
-                "Kill 10 zombies using only a specific plant.",
+                "Kill 10 zombies using any plant.",
                 QuestCategory.DAILY,
                 QuestPriority.HIGH,
                 QuestEvent.ZOMBIE_KILLED,
                 10,
-                List.of(new Reward(RewardType.UNLOCK_PLANT, 1, PlantType.PEASHOOTER)), // placeholder
+                List.of(new Reward(RewardType.UNLOCK_PLANT, 1, PlantType.PEASHOOTER)),
                 Map.of("plantType", "ANY"),
                 true
-        ));
+        );
+        professionalKiller.setConditionChecker((data) -> true);
+        allQuests.add(professionalKiller);
 
-        // (4) Only Cactus
-        allQuests.add(createQuest(
+
+        Quest onlyCactus = createQuest(
                 "only_cactus",
                 "Only Cactus",
                 "Kill 10 zombies using only Cactus.",
@@ -94,12 +112,20 @@ public class QuestManager {
                 List.of(new Reward(RewardType.GEMS, 20)),
                 Map.of("plantType", "CACTUS"),
                 true
-        ));
+        );
+        onlyCactus.setConditionChecker((data) -> {
+            if (data.length < 2) return false;
+            String plant = (String) data[1];
+            return "CACTUS".equalsIgnoreCase(plant);
+        });
+        allQuests.add(onlyCactus);
 
-        // (5) Thrifty Farmer (one per loss limit)
+
         for (int n = 0; n <= 5; n++) {
-            allQuests.add(createQuest(
-                    "thrifty_farmer_" + n,
+            int finalN = n;
+            String id = "thrifty_farmer_" + n;
+            Quest q = createQuest(
+                    id,
                     "Thrifty Farmer (" + n + " losses)",
                     "Win a level losing no more than " + n + " plants.",
                     QuestCategory.MAIN,
@@ -109,11 +135,18 @@ public class QuestManager {
                     List.of(new Reward(RewardType.SEED_PACKETS, 20 - n, PlantType.SUNFLOWER)),
                     Map.of("maxLoss", n),
                     false
-            ));
+            );
+            q.setConditionChecker((data) -> {
+                if (data.length < 3) return false;
+
+                int lost = (int) data[2];
+                return lost <= finalN;
+            });
+            allQuests.add(q);
         }
 
-        // (6) Master of Defense
-        allQuests.add(createQuest(
+
+        Quest masterDefense = createQuest(
                 "master_defense",
                 "Master of Defense",
                 "Complete a level with exactly 0 sun left.",
@@ -124,10 +157,16 @@ public class QuestManager {
                 List.of(new Reward(RewardType.GEMS, 200)),
                 Map.of("finalSun", 0),
                 false
-        ));
+        );
+        masterDefense.setConditionChecker((data) -> {
+            if (data.length < 4) return false;
+            int sun = (int) data[3];
+            return sun == 0;
+        });
+        allQuests.add(masterDefense);
 
-        // (7) Speed Demon
-        allQuests.add(createQuest(
+
+        Quest speedDemon = createQuest(
                 "speed_demon",
                 "Speed Demon",
                 "Kill 10 zombies in less than 30 seconds after first wave.",
@@ -138,10 +177,17 @@ public class QuestManager {
                 List.of(new Reward(RewardType.COINS, 500)),
                 Map.of("timeLimit", 30),
                 false
-        ));
+        );
+        speedDemon.setConditionChecker((data) -> {
 
-        // (8) Professional Demolisher
-        allQuests.add(createQuest(
+            if (data.length < 1) return false;
+            double time = (double) data[0];
+            return time < 30;
+        });
+        allQuests.add(speedDemon);
+
+
+        Quest demolisher = createQuest(
                 "professional_demolisher",
                 "Professional Demolisher",
                 "Use 3 explosive plants in one level.",
@@ -152,25 +198,32 @@ public class QuestManager {
                 List.of(new Reward(RewardType.COINS, 100)),
                 Map.of(),
                 true
-        ));
+        );
+        demolisher.setConditionChecker((data) -> true);
+        allQuests.add(demolisher);
 
-        // (9) Symmetry
-        allQuests.add(createQuest(
+
+        Quest symmetry = createQuest(
                 "symmetry",
                 "Symmetry",
                 "End the game with a symmetrical garden.",
                 QuestCategory.DAILY,
                 QuestPriority.HIGH,
-                QuestEvent.SYMMETRY_CHECK,
+                QuestEvent.LEVEL_WON,
                 1,
                 List.of(new Reward(RewardType.COINS, 500)),
                 Map.of(),
                 true
-        ));
+        );
+        symmetry.setConditionChecker((data) -> {
+            if (data.length < 5) return false;
+            boolean isSymmetric = (boolean) data[4];
+            return isSymmetric;
+        });
+        allQuests.add(symmetry);
 
-        // (10) Family Slaughter (one per family)
-        // We'll define generic family placeholder – will be expanded later.
-        allQuests.add(createQuest(
+
+        Quest familySlaughter = createQuest(
                 "family_slaughter",
                 "Family Slaughter",
                 "Kill zombies using only plants of a specific family.",
@@ -181,10 +234,12 @@ public class QuestManager {
                 List.of(new Reward(RewardType.COINS, 1000)),
                 Map.of("family", "ANY"),
                 true
-        ));
+        );
+        familySlaughter.setConditionChecker((data) -> true);
+        allQuests.add(familySlaughter);
 
-        // (11) Blossom in Constraints (one per family)
-        allQuests.add(createQuest(
+
+        Quest blossom = createQuest(
                 "blossom_constraints",
                 "Blossom in Constraints",
                 "Win without using any plant from a specific family.",
@@ -195,10 +250,19 @@ public class QuestManager {
                 List.of(new Reward(RewardType.GEMS, 100)),
                 Map.of("family", "ANY"),
                 true
-        ));
+        );
+        blossom.setConditionChecker((data) -> {
+            if (data.length < 6) return false;
 
-        // (12) Night or Morning
-        allQuests.add(createQuest(
+            Set<String> usedFamilies = (Set<String>) data[5];
+
+
+            return true;
+        });
+        allQuests.add(blossom);
+
+
+        Quest nightMorning = createQuest(
                 "night_or_morning",
                 "Night or Morning",
                 "Win a day level using only night plants (mushrooms).",
@@ -209,10 +273,17 @@ public class QuestManager {
                 List.of(new Reward(RewardType.GEMS, 20)),
                 Map.of("useMushrooms", true),
                 false
-        ));
+        );
+        nightMorning.setConditionChecker((data) -> {
+            if (data.length < 7) return false;
 
-        // (13) Win Streak
-        allQuests.add(createQuest(
+            boolean onlyMushrooms = (boolean) data[6];
+            return onlyMushrooms;
+        });
+        allQuests.add(nightMorning);
+
+
+        Quest winStreak = createQuest(
                 "win_streak",
                 "Win Streak",
                 "Win 5 levels in a row at highest difficulty.",
@@ -223,10 +294,16 @@ public class QuestManager {
                 List.of(new Reward(RewardType.COINS, 5000)),
                 Map.of("difficulty", 5),
                 true
-        ));
+        );
+        winStreak.setConditionChecker((data) -> {
+            if (data.length < 8) return false;
+            int difficulty = (int) data[7];
+            return difficulty == 5;
+        });
+        allQuests.add(winStreak);
 
-        // (14) Almost Victory
-        allQuests.add(createQuest(
+
+        Quest almostVictory = createQuest(
                 "almost_victory",
                 "Almost Victory",
                 "Kill 10 zombies in the first column of a row without a mower.",
@@ -237,10 +314,17 @@ public class QuestManager {
                 List.of(new Reward(RewardType.COINS, 300)),
                 Map.of("column", 1, "noMower", true),
                 true
-        ));
+        );
+        almostVictory.setConditionChecker((data) -> {
+            if (data.length < 3) return false;
+            int column = (int) data[2];
+            boolean noMower = (boolean) data[3];
+            return column == 1 && noMower;
+        });
+        allQuests.add(almostVictory);
 
-        // (15) No OCD
-        allQuests.add(createQuest(
+
+        Quest noOCD = createQuest(
                 "no_ocd",
                 "No OCD",
                 "Win with no symmetry (except middle row).",
@@ -251,10 +335,17 @@ public class QuestManager {
                 List.of(new Reward(RewardType.COINS, 800)),
                 Map.of(),
                 true
-        ));
+        );
+        noOCD.setConditionChecker((data) -> {
+            if (data.length < 5) return false;
+            boolean isSymmetric = (boolean) data[4];
 
-        // (16) Cloudy Day
-        allQuests.add(createQuest(
+            return !isSymmetric;
+        });
+        allQuests.add(noOCD);
+
+
+        Quest cloudy = createQuest(
                 "cloudy_day",
                 "Cloudy Day",
                 "Win using only 3 sun-producing plants.",
@@ -265,12 +356,20 @@ public class QuestManager {
                 List.of(new Reward(RewardType.GEMS, 10)),
                 Map.of("sunProducers", 3),
                 true
-        ));
+        );
+        cloudy.setConditionChecker((data) -> {
+            if (data.length < 8) return false;
+            int sunProducers = (int) data[8];
+            return sunProducers == 3;
+        });
+        allQuests.add(cloudy);
 
-        // (17) One Column Less (for each column)
+
         for (int col = 1; col <= 9; col++) {
-            allQuests.add(createQuest(
-                    "one_column_less_" + col,
+            int finalCol = col;
+            String id = "one_column_less_" + col;
+            Quest q = createQuest(
+                    id,
                     "One Column Less (" + col + ")",
                     "Win without planting in column " + col + ".",
                     QuestCategory.DAILY,
@@ -280,13 +379,21 @@ public class QuestManager {
                     List.of(new Reward(RewardType.GEMS, 10)),
                     Map.of("emptyColumn", col),
                     true
-            ));
+            );
+            q.setConditionChecker((data) -> {
+                if (data.length < 9) return false;
+                boolean[] emptyColumns = (boolean[]) data[9];
+                return emptyColumns[finalCol];
+            });
+            allQuests.add(q);
         }
 
-        // (18) Defenseless Row (for each row)
+
         for (int row = 1; row <= 5; row++) {
-            allQuests.add(createQuest(
-                    "defenseless_row_" + row,
+            int finalRow = row;
+            String id = "defenseless_row_" + row;
+            Quest q = createQuest(
+                    id,
                     "Defenseless Row (" + row + ")",
                     "Win without planting in row " + row + ".",
                     QuestCategory.DAILY,
@@ -296,13 +403,21 @@ public class QuestManager {
                     List.of(new Reward(RewardType.GEMS, 20)),
                     Map.of("emptyRow", row),
                     true
-            ));
+            );
+            q.setConditionChecker((data) -> {
+                if (data.length < 10) return false;
+                boolean[] emptyRows = (boolean[]) data[10];
+                return emptyRows[finalRow];
+            });
+            allQuests.add(q);
         }
 
-        // (19) Defenseless Cross (for each min(row,col))
+
         for (int n = 1; n <= 5; n++) {
-            allQuests.add(createQuest(
-                    "defenseless_cross_" + n,
+            int finalN = n;
+            String id = "defenseless_cross_" + n;
+            Quest q = createQuest(
+                    id,
                     "Defenseless Cross (" + n + ")",
                     "Win with column and row " + n + " empty.",
                     QuestCategory.DAILY,
@@ -312,13 +427,22 @@ public class QuestManager {
                     List.of(new Reward(RewardType.GEMS, 25)),
                     Map.of("emptyCross", n),
                     true
-            ));
+            );
+            q.setConditionChecker((data) -> {
+                if (data.length < 11) return false;
+                boolean[] emptyCols = (boolean[]) data[9];
+                boolean[] emptyRows = (boolean[]) data[10];
+                return emptyCols[finalN] && emptyRows[finalN];
+            });
+            allQuests.add(q);
         }
 
-        // (20) Mower Time (multiple tiers)
+
         for (int n : List.of(10, 20, 30, 40, 50)) {
-            allQuests.add(createQuest(
-                    "mower_time_" + n,
+            int finalN = n;
+            String id = "mower_time_" + n;
+            Quest q = createQuest(
+                    id,
                     "Mower Time (" + n + ")",
                     "Kill at least " + n + " zombies with mowers.",
                     QuestCategory.CHALLENGE,
@@ -328,30 +452,30 @@ public class QuestManager {
                     List.of(new Reward(RewardType.GEMS, n)),
                     Map.of(),
                     false
-            ));
+            );
+            q.setConditionChecker((data) -> {
+                if (data.length < 1) return false;
+                int killed = (int) data[0];
+                return killed >= finalN;
+            });
+            allQuests.add(q);
         }
     }
 
     private Quest createQuest(String id, String name, String description, QuestCategory category,
                               QuestPriority priority, QuestEvent event, int required,
                               List<Reward> rewards, Map<String, Object> conditions, boolean daily) {
-        Quest q = new Quest(id, name, description, category, priority, event, required, rewards, conditions, daily);
-        // Set condition checker for complex conditions (can be customized later)
-        q.setConditionChecker((data) -> {
-            // Default: always true – we'll implement specific checks in the event handlers
-            return true;
-        });
-        return q;
+        return new Quest(id, name, description, category, priority, event, required, rewards, conditions, daily);
     }
 
-    // ---------- Event listeners registration ----------
+
     private void registerEventListeners() {
         for (Quest q : allQuests) {
             eventListeners.computeIfAbsent(q.getTriggerEvent(), k -> new ArrayList<>()).add(q);
         }
     }
 
-    // ---------- Load/Save progress ----------
+
     public void loadProgress() {
         if (currentUser == null) return;
         UserProgress progress = currentUser.getUserProgress();
@@ -360,12 +484,10 @@ public class QuestManager {
         List<String> claimedIds = progress.getClaimedQuestIds();
         LocalDate lastDailyReset = progress.getLastDailyReset();
 
-        // Reset daily quests if needed
         LocalDate today = LocalDate.now();
         if (lastDailyReset == null || !lastDailyReset.equals(today)) {
             resetDailyQuests();
-            progress.setLastDailyReset(today);
-            UsersManager.getInstance().updateUser();
+            UsersManager.getInstance().setLastDailyResetForCurrentUser(today);
         }
 
         for (Quest q : allQuests) {
@@ -396,10 +518,10 @@ public class QuestManager {
             if (q.isCompleted()) completedIds.add(q.getId());
             if (q.isClaimed()) claimedIds.add(q.getId());
         }
-        progress.setQuestProgress(questProgress);
-        progress.setCompletedQuestIds(completedIds);
-        progress.setClaimedQuestIds(claimedIds);
-        UsersManager.getInstance().updateUser();
+        UsersManager um = UsersManager.getInstance();
+        um.setQuestProgressForCurrentUser(questProgress);
+        um.setCompletedQuestIdsForCurrentUser(completedIds);
+        um.setClaimedQuestIdsForCurrentUser(claimedIds);
     }
 
     private void resetDailyQuests() {
@@ -410,7 +532,7 @@ public class QuestManager {
         }
     }
 
-    // ---------- Event notification (to be called from GamePlay later) ----------
+
     public void notifyEvent(QuestEvent event, Object... data) {
         if (currentUser == null) {
             currentUser = UsersManager.getInstance().getLoggedInUser();
@@ -421,22 +543,18 @@ public class QuestManager {
         List<Quest> listeners = eventListeners.get(event);
         if (listeners == null) return;
 
-        // Check daily reset first
         LocalDate today = LocalDate.now();
         if (currentUser.getUserProgress().getLastDailyReset() == null ||
                 !currentUser.getUserProgress().getLastDailyReset().equals(today)) {
             resetDailyQuests();
-            currentUser.getUserProgress().setLastDailyReset(today);
-            UsersManager.getInstance().updateUser();
+            UsersManager.getInstance().setLastDailyResetForCurrentUser(today);
         }
 
         for (Quest quest : listeners) {
             if (quest.isCompleted() || quest.isClaimed()) continue;
 
-            // Check conditions (if any)
             if (!quest.meetsConditions(data)) continue;
 
-            // Update progress based on event
             updateQuestProgress(quest, event, data);
             if (quest.checkCompletion()) {
                 onQuestCompleted(quest);
@@ -446,56 +564,63 @@ public class QuestManager {
     }
 
     private void updateQuestProgress(Quest quest, QuestEvent event, Object... data) {
-        // Generic progress update – can be overridden per quest type
         switch (event) {
             case ZOMBIE_KILLED:
-                // data[0] = ZombieType, data[1] = plantType (if applicable)
+
                 quest.incrementProgress(1);
                 break;
             case SUN_COLLECTED:
-                // data[0] = amount
                 if (data.length > 0 && data[0] instanceof Integer) {
                     quest.incrementProgress((int) data[0]);
                 }
                 break;
             case PLANT_PLANTED:
-                // data[0] = plantName, data[1] = position
-                quest.incrementProgress(1);
-                break;
             case EXPLOSIVE_USED:
+            case PLANT_REMOVED:
+            case PLANT_DESTROYED:
+            case WAVE_COMPLETED:
+            case LEVEL_WON:
+            case LEVEL_LOST:
+            case PLANT_FOOD_USED:
+            case GAME_STARTED:
+            case GAME_ENDED:
+            case SYMMETRY_CHECK:
+            case FAMILY_USED:
+
                 quest.incrementProgress(1);
                 break;
             case MOWER_TRIGGERED:
-                // data[0] = count killed
                 if (data.length > 0 && data[0] instanceof Integer) {
                     quest.incrementProgress((int) data[0]);
                 }
                 break;
-            case LEVEL_WON:
-                quest.incrementProgress(1);
-                break;
-            case SYMMETRY_CHECK:
-                quest.incrementProgress(1);
-                break;
-            case FAMILY_USED:
-                quest.incrementProgress(1);
+            case COLUMN_EMPTY:
+            case ROW_EMPTY:
+            case CROSS_EMPTY:
+
                 break;
             default:
-                // For other events, increment by 1
                 quest.incrementProgress(1);
                 break;
         }
     }
 
+
     private void onQuestCompleted(Quest quest) {
-        // Apply rewards
         applyRewards(quest.getRewards());
 
-        // Send news notification
-        News news = new News("🎉 Quest completed: " + quest.getName() + "! Claim your rewards in Travel Log.");
+
+        UsersManager um = UsersManager.getInstance();
+        if (quest.getCategory() == QuestCategory.DAILY) {
+            um.incrementDailyQuestsCompleted();
+        } else {
+            um.incrementNonDailyQuestsCompleted();
+        }
+
+
+        News news = new News("Quest completed: " + quest.getName() + "! Claim your rewards in Travel Log.");
         currentUser.getNewsManager().addNews(news);
 
-        // Mark as completed (will be saved later)
         quest.setCompleted(true);
         saveProgress();
     }
@@ -535,21 +660,20 @@ public class QuestManager {
         }
     }
 
-    // ---------- Claim reward ----------
+
     public String claimReward(String questId) {
         Quest quest = allQuests.stream().filter(q -> q.getId().equals(questId)).findFirst().orElse(null);
         if (quest == null) return "Quest not found.";
         if (!quest.isCompleted()) return "Quest not completed yet.";
         if (quest.isClaimed()) return "Reward already claimed.";
 
-        // Apply rewards again (in case they weren't applied on completion)
-        applyRewards(quest.getRewards());
+
         quest.setClaimed(true);
         saveProgress();
         return null;
     }
 
-    // ---------- Display methods for TravelLogMenu ----------
+
     public List<Quest> getActiveQuests() {
         return allQuests.stream()
                 .filter(q -> !q.isCompleted() && !q.isClaimed())

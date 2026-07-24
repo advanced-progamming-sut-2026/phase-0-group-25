@@ -5,7 +5,6 @@ import src.Enums.QuestEvent;
 import src.Enums.QuestPriority;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -22,11 +21,9 @@ public class Quest {
     private boolean isCompleted;
     private boolean isClaimed;
     private List<Reward> rewards;
-    private Map<String, Object> conditions; // for complex conditions (e.g., chapter, family, column)
-    private LocalDate dateAssigned;          // for daily quests
+    private Map<String, Object> conditions;
+    private LocalDate dateAssigned;
     private boolean dailyReset;
-
-    // Temporary fields for condition evaluation (can be replaced with Predicate)
     private Predicate<Object[]> conditionChecker;
 
     public Quest(String id, String name, String description, QuestCategory category,
@@ -46,29 +43,81 @@ public class Quest {
         this.isCompleted = false;
         this.isClaimed = false;
         this.dateAssigned = dailyReset ? LocalDate.now() : null;
-        // Set default condition checker (can be overridden per quest)
         this.conditionChecker = (data) -> true;
     }
 
-    // Getters and setters
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public String getDescription() { return description; }
-    public QuestCategory getCategory() { return category; }
-    public QuestPriority getPriority() { return priority; }
-    public QuestEvent getTriggerEvent() { return triggerEvent; }
-    public int getRequiredCount() { return requiredCount; }
-    public int getCurrentProgress() { return currentProgress; }
-    public void setCurrentProgress(int progress) { this.currentProgress = Math.min(progress, requiredCount); }
-    public boolean isCompleted() { return isCompleted; }
-    public void setCompleted(boolean completed) { isCompleted = completed; }
-    public boolean isClaimed() { return isClaimed; }
-    public void setClaimed(boolean claimed) { isClaimed = claimed; }
-    public List<Reward> getRewards() { return rewards; }
-    public Map<String, Object> getConditions() { return conditions; }
-    public LocalDate getDateAssigned() { return dateAssigned; }
-    public void setDateAssigned(LocalDate date) { this.dateAssigned = date; }
-    public boolean isDailyReset() { return dailyReset; }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public QuestCategory getCategory() {
+        return category;
+    }
+
+    public QuestPriority getPriority() {
+        return priority;
+    }
+
+    public QuestEvent getTriggerEvent() {
+        return triggerEvent;
+    }
+
+    public int getRequiredCount() {
+        return requiredCount;
+    }
+
+    public int getCurrentProgress() {
+        return currentProgress;
+    }
+
+    public void setCurrentProgress(int progress) {
+        this.currentProgress = Math.min(progress, requiredCount);
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
+    }
+
+    public boolean isClaimed() {
+        return isClaimed;
+    }
+
+    public void setClaimed(boolean claimed) {
+        isClaimed = claimed;
+    }
+
+    public List<Reward> getRewards() {
+        return rewards;
+    }
+
+    public Map<String, Object> getConditions() {
+        return conditions;
+    }
+
+    public LocalDate getDateAssigned() {
+        return dateAssigned;
+    }
+
+    public void setDateAssigned(LocalDate date) {
+        this.dateAssigned = date;
+    }
+
+    public boolean isDailyReset() {
+        return dailyReset;
+    }
 
     public void incrementProgress(int amount) {
         if (!isCompleted && !isClaimed) {
@@ -94,7 +143,6 @@ public class Quest {
         this.dateAssigned = LocalDate.now();
     }
 
-    // Condition checker – can be set per quest
     public void setConditionChecker(Predicate<Object[]> checker) {
         this.conditionChecker = checker;
     }

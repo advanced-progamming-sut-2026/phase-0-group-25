@@ -6,7 +6,7 @@ public class Shop {
 
     private ArrayList<PurchaseItem> purchaseItems;
 
-    public void update(){
+    public void update() {
 
     }
 }

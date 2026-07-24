@@ -63,10 +63,12 @@ public enum Command {
     PlantPot("plant pot at \\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)"),
     CollectPot("collect \\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)"),
     GrowPot("grow \\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)"),
-    ShopBuy("shop buy -i (?<itemId>\\d+) -n (?<count>\\d+)( -t (?<plantType>.+))?");
+    ShopBuy("shop buy -i (?<itemId>\\d+) -n (?<count>\\d+)( -t (?<plantType>.+))?"),
+    SortUsers("^sort -c (username|chapter|minigames|daily|nondaily) -o (asc|desc)$");
 
 
     private final String regex;
+
     Command(String regex) {
         this.regex = regex;
     }

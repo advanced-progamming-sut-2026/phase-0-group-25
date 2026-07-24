@@ -78,10 +78,6 @@ public enum PlantType {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public static PlantType fromName(String name) {
         for (PlantType type : values()) {
             if (type.name.equalsIgnoreCase(name)) {
@@ -89,5 +85,9 @@ public enum PlantType {
             }
         }
         return null;
+    }
+
+    public String getName() {
+        return name;
     }
 }
