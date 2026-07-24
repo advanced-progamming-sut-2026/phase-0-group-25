@@ -87,7 +87,13 @@ public class ProducingSun implements Ability {
         return isProduced;
     }
 
+    public boolean isReadyToCollect() {
+        return ((this.isProduced) && !(this.isCollected));
+    }
+
     public Sun getSun() {
-        return sun;
+        if (this.isReadyToCollect()) {
+            return sun;
+        }
     }
 }
