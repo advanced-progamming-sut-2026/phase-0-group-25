@@ -37,6 +37,8 @@ public class TimedWar extends GamePlay {
         }
         applyIcyWind();
 
+        checkingSunMakers();
+
         // Updating Zombies, Plant and Projectile and Dynamite (Deleting them if they're dead) :
         Iterator<BattlePlant> bp = gamePlants.iterator();
         while (bp.hasNext()) {

@@ -2,10 +2,13 @@ package src.Model.GamePlayType;
 
 import java.util.*;
 import src.Enums.ChapterType;
+import src.Enums.PlantCategory;
 import src.Enums.PlantType;
 import src.Model.ChaptersAndLevels.Level;
 import src.Model.Mower;
 import src.Model.PlantsAndZombies.*;
+import src.Model.PlantsAndZombies.Abilities.Ability;
+import src.Model.PlantsAndZombies.Abilities.ProducingSun;
 import src.Model.PlantsAndZombies.Projectiles.Dynamite;
 import src.Model.PlantsAndZombies.Projectiles.Projectile;
 import src.Model.Sun.RadioActiveSun;
@@ -204,6 +207,20 @@ public abstract class GamePlay {
         }
     }
 
+    public void checkingSunMakers() {
+        for (BattlePlant p : this.gamePlants) {
+            if (p.getCategory() == PlantCategory.SUN_PRODUCER) {
+                for (Ability ability : p.getOriginalAbilities()) {
+                    if (ability instanceof ProducingSun) {
+                        if (!((ProducingSun) ability).isCollected() && ((ProducingSun) ability).isProduced()) {
+                            addSun(((ProducingSun) ability).getSun());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public void collectSun(int x, int y) {
         Sun targetSun = null;
 
@@ -257,9 +274,15 @@ public abstract class GamePlay {
         Tile thisTile = getTileByPosition((int) thisPosition.getX(), (int) thisPosition.getY());
 
         if (thisPlant.checkingPlantable(mySuns, thisTile) && thisTile.isArable()) {
+            Boolean isImitaterBoosted = false;
             int thisPX = (int) thisPosition.getY();
             int thisPY = (int) thisPosition.getY();
             String thisPName = thisPlant.getName();
+            if (thisPName.equals("IMITATER")) {
+                int number = new java.util.Random().nextInt(plants.size()) + 1;
+                thisPName = this.plants.get(number).getName();
+                isImitaterBoosted = chapterType == ChapterType.DARK_AGE;
+            }
             Position thisPPosition = new Position(getRealX(thisPX), getRealY(thisPY));
             BattlePlant thisP = PlantFactory.createBattlePlant(thisPName, getLevelOfPlant(thisPName), thisPPosition);
             thisP.setRow((int) thisPosition.getY());
@@ -267,7 +290,7 @@ public abstract class GamePlay {
 
             // Checking if this plant has a kind of boost...
             PlantType thisPlantType = PlantType.valueOf(thisPName);
-            if (thisUser.getUserProgress().getGreenhouseBoosts().contains(thisPlantType)) {
+            if (thisUser.getUserProgress().getGreenhouseBoosts().contains(thisPlantType) || isImitaterBoosted) {
                 thisP.setEffected(true, effectedTime);
             }
             if (UsersManager.getInstance().hasGreenhouseBoost(thisPlantType)) {

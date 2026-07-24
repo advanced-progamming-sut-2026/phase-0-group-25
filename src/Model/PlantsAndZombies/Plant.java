@@ -32,6 +32,10 @@ public abstract class Plant extends Entity {
         return cooldown;
     }
 
+    public PlantCategory getCategory() {
+        return category;
+    }
+
     public void setCooldown(int cooldown) {
         this.cooldown = cooldown;
     }
