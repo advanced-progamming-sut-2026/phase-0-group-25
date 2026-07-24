@@ -1,8 +1,8 @@
 package src.Model.PlantsAndZombies;
 
 public class PlantFactory {
-    public static BattlePlant createBattlePlant(String plantName, int level) {
-        PlantStats plantStats = GameDataLoader.getStatsForPlantLevel(plantName, level);
+    public static BattlePlant createBattlePlant(String plantName, int level, Position position) {
+        PlantStats plantStats = GameDataLoader.getStatsForPlantLevel(plantName, level, position);
 
         return new BattlePlant(plantStats, plantName, position);
     }

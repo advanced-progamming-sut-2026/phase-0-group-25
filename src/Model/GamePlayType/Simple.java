@@ -3,6 +3,7 @@ package src.Model.GamePlayType;
 import src.Enums.ChapterType;
 import src.Model.Mower;
 import src.Model.PlantsAndZombies.*;
+import src.Model.PlantsAndZombies.Projectiles.Dynamite;
 import src.Model.PlantsAndZombies.Projectiles.Projectile;
 import src.Model.Tile;
 import src.Model.User.User;
@@ -26,11 +27,12 @@ public class Simple extends GamePlay {
         totalTicksPassed++;
         timeToSpwan--;
 
-        if (this.level != 4) {
+        if (this.chapterType != ChapterType.DARK_AGE) {
             sunMaker();
         }
+        applyIcyWind();
 
-        // Updating Zombies, Plant and Projectile (Deleting them if they're dead) :
+        // Updating Zombies, Plant and Projectile and Dynamite (Deleting them if they're dead) :
         Iterator<BattlePlant> bp = gamePlants.iterator();
         while (bp.hasNext()) {
             BattlePlant plant = bp.next();
@@ -74,6 +76,12 @@ public class Simple extends GamePlay {
             } else {
                 pj.remove();
             }
+        }
+        Iterator<Dynamite> dy = dynamites.iterator();
+        while (dy.hasNext()) {
+            Dynamite thisDynamite = dy.next();
+
+            thisDynamite.update();
         }
 
         // Spawning zombies :
