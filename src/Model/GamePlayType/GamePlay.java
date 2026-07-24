@@ -1,5 +1,6 @@
 package src.Model.GamePlayType;
 
+import java.util.*;
 import src.Enums.ChapterType;
 import src.Enums.PlantType;
 import src.Model.ChaptersAndLevels.Level;
@@ -33,7 +34,6 @@ public abstract class GamePlay {
     protected ArrayList<Dynamite> dynamites = new ArrayList<>();
     protected ArrayList<Mower> mowers = new ArrayList<>();
     protected ArrayList<Sun> activeSuns = new ArrayList<>();
-    protected ArrayList<Grave> allGraves = new ArrayList<>();
     protected ArrayList<Wave> allWaves = new ArrayList<>();
 
     protected int level;
