@@ -1,12 +1,7 @@
 package src.Model.PlantsAndZombies.Abilities;
 
-import src.Model.PlantsAndZombies.BattlePlant;
-import src.Model.PlantsAndZombies.Entity;
-import src.Model.PlantsAndZombies.Position;
-import src.Model.PlantsAndZombies.Tile;
-import src.Model.PlantsAndZombies.Zombie;
+import src.Model.PlantsAndZombies.*;
 import src.Model.Sun.Sun;
-import src.Model.Tile;
 
 import java.util.ArrayList;
 
@@ -39,13 +34,6 @@ public class WallNutAbility implements Ability {
                     }
                     attacker.changeRow();
                 }
-            } else if ((int) plant.getPlantStats().getAttributes().get("move") == -1) {
-                if (!plant.isAlive()) {
-                    attractZombies(plant);
-                    if (plant.isEffected()) {
-                        plant.setCurrentHP(plant.getPlantStats().getBaseHP());
-                    }
-                }
             }
         }
 
@@ -75,9 +63,19 @@ public class WallNutAbility implements Ability {
 
             //todo: increase sun amount of user
         }
+
+        if (tags.contains("shroom")) {
+            if (!plant.isAlive()) {
+                hypnotizeZombie(attacker, plant);
+            }
+        }
     }
 
-    private void plantFoodEffect(BattlePlant plant) {
+    private void plantFoodEffect(Zombie attacker, BattlePlant plant) {
+        if (plant.getPlantStats().getTags().contains("shroom")) {
+            makeGargantuar(attacker, plant);
+        }
+
         if (!plant.getPlantStats().getTags().contains("moveZombies")) {
             int armor = (int) plant.getPlantStats().getPlantFoodEffect().get("armor");
             plant.setCurrentHP(plant.getCurrentHP() + armor);
@@ -105,7 +103,25 @@ public class WallNutAbility implements Ability {
         }
     }
 
-    private void attractZombies(BattlePlant plant) {
-        int i = 0;
+    private void makeGargantuar(Zombie attacker, BattlePlant plant) {
+        Position attackerPosition = attacker.getPosition();
+        attacker.setCurrentHP(0);
+
+        Zombie newGargantuar = ZombieFactory.createZombie("GARGANTUAR", attackerPosition);
+        newGargantuar.setHypnotized(true);
+        //todo
+        game.getZombies().add(newGargantuar);
     }
+
+    private void hypnotizeZombie(Zombie attacker, BattlePlant plant) {
+        attacker.setHypnotized(true);
+
+        double HPMultiplier = (double) plant.getPlantStats().getAttributes().get("HP_Buff");
+        attacker.setCurrentHP(attacker.getCurrentHP() * HPMultiplier);
+
+        double damageMultiplier = (double) plant.getPlantStats().getAttributes().get("Damage_Buff");
+        attacker.getZombieStats().setEatdps(attacker.getZombieStats().getEatdps() * damageMultiplier);
+
+    }
+
 }

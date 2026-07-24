@@ -10,6 +10,7 @@ public class BattlePlant extends Plant {
     private double effectedTime;
     private double effectedLifeSpan;
 
+
     private double lastActionTime;
     private double plantTime;
     private PlantStats plantStats;
@@ -18,6 +19,7 @@ public class BattlePlant extends Plant {
 
     private boolean frozen;
     private int iceTime;
+    private double iceHP;
     private boolean octopusated;
 
     public BattlePlant(PlantStats plantStats, String name, Position position) {
@@ -40,9 +42,19 @@ public class BattlePlant extends Plant {
             if ((game.getCurrentTime() - this.plantTime) >= lifespan) {
                 this.setCurrentHP(0);
             }
+            return;
         }
 
-        if (!this.plantStats.getCategory().equals("Wall-nut")) {
+        if (this.plantStats.getTags().contains("fire")) {
+            for (Ability ability : this.originalAbilities) {
+                if (ability instanceof Heating) {
+                    ability.executeAbility(this);
+                }
+            }
+        }
+
+        if (!this.plantStats.getCategory().equals("Wall-nut") &&
+                !this.plantStats.getCategory().equals("Explosive")) {
 
             if (this.isEffected) {
                 if ((game.getCurrentTime() - this.effectedTime) >= this.effectedLifeSpan) {
@@ -84,9 +96,18 @@ public class BattlePlant extends Plant {
 
     public void setFrozen(boolean frozen) {
         this.frozen = frozen;
-        if (!this.frozen) {
-            this.setIceTime(0);
+        if (this.frozen) {
+            if (this.iceHP <= 0) {
+                this.iceHP = 600;
+            }
+        } else {
+            this.iceTime = 0;
+            this.iceHP = 0;
         }
+    }
+
+    public void takeIceDamage(int damage) {
+        this.iceHP -= damage;
     }
 
     public int getIceTime() {
@@ -96,7 +117,9 @@ public class BattlePlant extends Plant {
     public void setIceTime(int iceTime) {
         this.iceTime = iceTime;
         if (this.iceTime >= 3) {
+            this.iceTime = 0;
             this.setFrozen(true);
+            this.iceTime = 0;
         }
     }
 
@@ -140,13 +163,23 @@ public class BattlePlant extends Plant {
                 abilities.add(new Lobbing());
             } else if (ability.equals("homing")) {
                 abilities.add(new Homing());
-            } else if (ability.equals("explosive")) {
+            } else if (ability.equals("explosion")) {
                 abilities.add(new Explosion());
             } else if (ability.equals("melee")) {
                 abilities.add(new MeleeAttacking());
+            } else if (ability.equals("explosionWithLifeSpan")) {
+                abilities.add(new ExplosionWithLifespan());
+            } else if (ability.equals("wall-nut")) {
+                abilities.add(new MeleeAttacking());
+            } else if (ability.equals("modifier")) {
+                abilities.add(new Modifier());
             } else if (ability.equals("mint")) {
                 abilities.add(new Mint());
             }
+        }
+
+        if (this.plantStats.getTags().contains("fire")) {
+            abilities.add(new Heating());
         }
         return abilities;
     }

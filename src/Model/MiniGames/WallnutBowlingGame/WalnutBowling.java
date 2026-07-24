@@ -11,9 +11,9 @@ import java.util.Iterator;
 
 public class WalnutBowling extends GamePlay {
 
+    private final int RED_LINE_LIMIT_X = 3;
     private ArrayList<String> conveyorBelt = new ArrayList<>();
     private ArrayList<Walnut> activeWalnuts = new ArrayList<>();
-    private final int RED_LINE_LIMIT_X = 3;
 
     public WalnutBowling(ChapterType chapterType, int level, int difficulty, User thisUser) {
         super(chapterType, level, difficulty, thisUser, new ArrayList<>(), new ArrayList<>());
@@ -96,7 +96,7 @@ public class WalnutBowling extends GamePlay {
 
         // Checking if the end of the game (Losing) + Activate Mowers :
         int x = mowers.get(0).getX();
-        for(Zombie zombie : gameZombies) {
+        for (Zombie zombie : gameZombies) {
             int yOfz = (int) zombie.getPosition().getY();
             int xOfz = (int) zombie.getPosition().getX();
             Mower thisMower = mowers.stream().filter(p -> p.getY() == yOfz).findFirst().get();
@@ -105,8 +105,7 @@ public class WalnutBowling extends GamePlay {
                 if (!thisMower.isUsed()) {
                     System.out.println("The lawn mower in the row" + yOfz + "is triggered and killed these zombies:");
                     thisMower.killZombies(this);
-                }
-                else {
+                } else {
                     System.out.println("The zombie ate your brain; LOSER!!!");
                 }
             }

@@ -7,7 +7,7 @@ import src.Model.PlantsAndZombies.Projectiles.Projectile;
 import src.Model.PlantsAndZombies.Zombie;
 import src.Model.Tile;
 
-import java.util.*;
+import java.util.List;
 
 public class Shooting implements Ability {
     private static int TILE_Y_LENGTH = 200;

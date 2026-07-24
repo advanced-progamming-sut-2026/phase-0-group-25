@@ -3,9 +3,6 @@ package src.Menu;
 import src.Enums.Command;
 import src.Enums.MenuType;
 import src.Enums.PlantType;
-import src.Model.PlantsAndZombies.BattlePlant;
-import src.Model.PlantsAndZombies.Plant;
-import src.Model.PlantsAndZombies.PlantFactory;
 import src.Model.User.User;
 import src.Model.User.UsersManager;
 import src.View.ViewInterfaces.BaseView;
@@ -65,7 +62,7 @@ public class ChoosePlantMenu extends Menu {
         getView().showError("Invalid command format for this menu state.");
     }
 
-    private void boostPlant(String  plantName) {
+    private void boostPlant(String plantName) {
         PlantType plant = PlantType.fromName(plantName);
         if (plant == null) {
             getView().showError("Invalid plant type.");

@@ -1,60 +1,57 @@
 package src.Model.GamePlayType;
 
 import src.Enums.ChapterType;
+import src.Enums.PlantCategory;
 import src.Enums.PlantType;
 import src.Model.ChaptersAndLevels.Level;
-import src.Model.Grave;
 import src.Model.Mower;
+import src.Model.PlantsAndZombies.Abilities.Ability;
+import src.Model.PlantsAndZombies.Abilities.ProducingSun;
 import src.Model.PlantsAndZombies.*;
+import src.Model.PlantsAndZombies.Projectiles.Dynamite;
 import src.Model.PlantsAndZombies.Projectiles.Projectile;
-import src.Model.Sun.RadioActiveSun;
-import src.Model.Tile;
 import src.Model.PlayGroundType.PlayGround;
+import src.Model.Sun.RadioActiveSun;
 import src.Model.Sun.Sun;
+import src.Model.Tile;
 import src.Model.User.User;
 import src.Model.User.UsersManager;
 import src.Model.Wave.FinalWave;
 import src.Model.Wave.Wave;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+
+import java.util.*;
 
 public abstract class GamePlay {
+    static int effectedTime = 3;
+    static int spawnX = 1800;
     // plants that can appear in the game...
     protected ArrayList<BattlePlant> plants = new ArrayList<>();
-
     // plants and zombies that are in the game at the moment...
     protected ArrayList<Zombie> gameZombies = new ArrayList<>();
     protected ArrayList<BattlePlant> gamePlants = new ArrayList<>();
-
     protected ArrayList<Tile> tiles = new ArrayList<>();
     protected ArrayList<Projectile> projectiles = new ArrayList<>();
+    protected ArrayList<Dynamite> dynamites = new ArrayList<>();
     protected ArrayList<Mower> mowers = new ArrayList<>();
     protected ArrayList<Sun> activeSuns = new ArrayList<>();
-    protected ArrayList<Grave> allGraves = new ArrayList<>();
     protected ArrayList<Wave> allWaves = new ArrayList<>();
-
     protected int level;
     protected ChapterType chapterType;
     protected Level levelObject;
-
     protected int ticksSinceLastDrop = 0;
     protected Random random = new Random();
-    private List<Integer> rowBag = new ArrayList<>();
-    protected  User thisUser;
+    protected User thisUser;
     protected int timeToSpwan = 0;
-    static int effectedTime = 3;
-    static int spawnX = 1800;
     protected int numOfPlantFood;
     protected int mySuns;
     protected PlayGround playGround;
     protected boolean isPaused;
     protected int numOfWaves;
     protected int totalTicksPassed = 0;
+    private List<Integer> rowBag = new ArrayList<>();
 
     public GamePlay(ChapterType chapterType, int level, int difficulty, User thisUser,
-                    ArrayList<String> plants, ArrayList<String> zombies, Set<String > boosted) {
+                    ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         this.numOfPlantFood = 0;
         this.mySuns = 0;
         this.isPaused = false;
@@ -67,19 +64,19 @@ public abstract class GamePlay {
             this.plants.add(PlantFactory.createBattlePlant(pName, getLevelOfPlant(pName), PPos));
         }
 
-        ArrayList <Zombie> tempZ = new ArrayList<>();
+        ArrayList<Zombie> tempZ = new ArrayList<>();
         for (String zName : zombies) {
-            tempZ.add(ZombieFactory.createZombie(zName, new Position(1 , 1)));
+            tempZ.add(ZombieFactory.createZombie(zName, new Position(1, 1)));
         }
 
         this.numOfWaves = calculateWaves(chapterType, level);
-        for (int i = 1 ; i < numOfWaves ; i++) {
-            int waveCost = (int)(calculateCost(chapterType, level, i) * (1 + difficulty/10.0));
+        for (int i = 1; i < numOfWaves; i++) {
+            int waveCost = (int) (calculateCost(chapterType, level, i) * (1 + difficulty / 10.0));
             Wave thisWave = new Wave(waveCost, i);
             this.allWaves.add(thisWave);
             thisWave.zombieMaker(tempZ);
         }
-        int waveCost = (int)((calculateCost(chapterType, level, numOfWaves) + 500) * (1 + difficulty/10.0));
+        int waveCost = (int) ((calculateCost(chapterType, level, numOfWaves) + 500) * (1 + difficulty / 10.0));
         FinalWave thisFinal = new FinalWave(waveCost, numOfWaves);
         this.allWaves.add(thisFinal);
         thisFinal.zombieMaker(tempZ);
@@ -89,11 +86,11 @@ public abstract class GamePlay {
             public void makeGround() {
                 if (chapterType == ChapterType.BIG_WAVE_BEACH) {
                     for (int y = 1; y < 6; y++) {
-                        mowers.add (new Mower(y));
-                        for (int x = 1 ; x < 10; x++) {
+                        mowers.add(new Mower(y));
+                        for (int x = 1; x < 10; x++) {
                             Position newPosition = new Position(x, y);
                             Boolean isArable = (x != 9 && x != 8);
-                            Tile newTile = new Tile(newPosition, isArable);
+                            Tile newTile = new Tile(newPosition, isArable, 0);
                             tiles.add(newTile);
                         }
                     }
@@ -102,17 +99,51 @@ public abstract class GamePlay {
                         mowers.add(new Mower(y));
                         for (int x = 1; x < 10; x++) {
                             Position newPosition = new Position(x, y);
-                            Boolean isArable = Math.random() >= 0.06 || (x == 5 && (y == 2 || y== 4));
-                            Tile newTile = new Tile(newPosition, isArable);
+                            Boolean isArable = Math.random() >= 0.06 || (x == 5 && (y == 2 || y == 4));
+                            Tile newTile = new Tile(newPosition, isArable, (isArable) ? 0 : 700);
                             tiles.add(newTile);
                         }
                     }
                 }
             }
         };
+
+        if (chapterType == ChapterType.FROSTBITE_CAVES) {
+            String thisPName1 = plants.get(0);
+            String thisPName2 = plants.get(1);
+            Position position1 = new Position(2, 2);
+            Position position2 = new Position(3, 5);
+            BattlePlant thisP1 = PlantFactory.createBattlePlant(thisPName1, getLevelOfPlant(thisPName1), position1);
+            BattlePlant thisP2 = PlantFactory.createBattlePlant(thisPName2, getLevelOfPlant(thisPName2), position2);
+            this.planting(thisP1, position1);
+            this.planting(thisP2, position2);
+
+            for (BattlePlant p : this.gamePlants) {
+                p.setFrozen(true);
+            }
+        }
     }
 
-    public abstract void update() ;
+    public static int calculateCost(ChapterType chapterType, int level, int waveNumber) {
+        int chapterNumber = chapterType.ordinal() + 1;
+        int stagesPerChapter = 4;
+
+        int globalLevel = ((chapterNumber - 1) * stagesPerChapter) + level;
+
+        int baseDifficultyForStage = 800 + (globalLevel * 250);
+
+        if (baseDifficultyForStage < 1000) {
+            baseDifficultyForStage = 1000;
+        }
+
+        int waveMultiplier = (waveNumber - 1) * 550;
+
+        int finalCost = baseDifficultyForStage + waveMultiplier;
+
+        return finalCost;
+    }
+
+    public abstract void update();
 
     public Boolean checkingTheEndOfTheGame() {
         if (this.gameZombies.isEmpty()) {
@@ -122,7 +153,7 @@ public abstract class GamePlay {
         }
     }
 
-    public void Pause(){
+    public void Pause() {
         this.isPaused = true;
     }
 
@@ -143,7 +174,7 @@ public abstract class GamePlay {
         if (ticksSinceLastDrop >= requiredTicksForNextDrop) {
             int spawnX = random.nextInt(9) + 1;
             int spawnY = random.nextInt(5) + 1;
-            Position spawnPosition = new Position(spawnX, spawnY);
+            Position spawnPosition = new Position(getRealX(spawnX), getRealY(spawnY));
 
             int chance = random.nextInt(100);
             Sun newSun;
@@ -174,8 +205,9 @@ public abstract class GamePlay {
 
                 if (remainingTime <= 0.001) {
                     remainingTime = 0;
+                    Position posOfSun = Position.getRowAndColumn(sun.getPosition());
                     System.out.printf("Sun reached the ground at position (%d, %d)\n",
-                            (int)sun.getPosition().getX(), (int)sun.getPosition().getY());
+                            (int) posOfSun.getX(), (int) posOfSun.getY());
 
                     if (sun instanceof RadioActiveSun) {
                         Sun regularSun = new Sun(25, sun.getPosition(), 0);
@@ -187,11 +219,25 @@ public abstract class GamePlay {
         }
     }
 
+    public void checkingSunMakers() {
+        for (BattlePlant p : this.gamePlants) {
+            if (p.getCategory() == PlantCategory.SUN_PRODUCER) {
+                for (Ability ability : p.getOriginalAbilities()) {
+                    if (ability instanceof ProducingSun) {
+                        if (!((ProducingSun) ability).isCollected() && ((ProducingSun) ability).isProduced()) {
+                            addSun(((ProducingSun) ability).getSun());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public void collectSun(int x, int y) {
         Sun targetSun = null;
 
         for (Sun sun : activeSuns) {
-            if ((int)sun.getPosition().getX() == x && (int)sun.getPosition().getY() == y) {
+            if ((int) sun.getPosition().getX() == getRealX(x) && (int) sun.getPosition().getY() == getRealY(y)) {
                 targetSun = sun;
                 break;
             }
@@ -215,29 +261,23 @@ public abstract class GamePlay {
         int sunX = (int) radSun.getPosition().getX();
         int sunY = (int) radSun.getPosition().getY();
 
+        // Damage for zombies :
         for (Zombie zombie : gameZombies) {
             int zX = (int) zombie.getPosition().getX();
             int zY = (int) zombie.getPosition().getY();
 
-            if (Math.abs(sunX - zX) <= 2 && Math.abs(sunY - zY) <= 2) {
+            if (Math.abs(sunX - zX) <= 500 && Math.abs(sunY - zY) <= 500) {
                 zombie.takeDamage(150);
-                if (!zombie.isAlive()) {
-                    System.out.printf("Zombie of type %s is dead at (%d, %d)\n", zombie.getName(), zX, zY);
-                }
             }
         }
 
+        // Damage for plants :
         for (BattlePlant plant : gamePlants) {
             int pX = (int) plant.getPosition().getX();
             int pY = (int) plant.getPosition().getY();
 
-            if (Math.abs(sunX - pX) <= 1 && Math.abs(sunY - pY) <= 1) {
+            if (Math.abs(sunX - pX) <= 200 && Math.abs(sunY - pY) <= 200) {
                 plant.setCurrentHP(plant.getCurrentHP() - 80);
-                if (plant.getCurrentHP() <= 0) {
-                    plant.setAlive(false);
-                    plucking(plant, plant.getPosition());
-                    System.out.printf("Plant %s at (%d, %d) is destroyed.\n", plant.getName(), pX, pY);
-                }
             }
         }
     }
@@ -246,13 +286,28 @@ public abstract class GamePlay {
         Tile thisTile = getTileByPosition((int) thisPosition.getX(), (int) thisPosition.getY());
 
         if (thisPlant.checkingPlantable(mySuns, thisTile) && thisTile.isArable()) {
+            Boolean isImitaterBoosted = false;
             int thisPX = (int) thisPosition.getY();
             int thisPY = (int) thisPosition.getY();
             String thisPName = thisPlant.getName();
+            if (thisPName.equals("IMITATER")) {
+                int number = new java.util.Random().nextInt(plants.size()) + 1;
+                thisPName = this.plants.get(number).getName();
+                isImitaterBoosted = getLevelOfPlant("IMITATER") == 4;
+            }
             Position thisPPosition = new Position(getRealX(thisPX), getRealY(thisPY));
             BattlePlant thisP = PlantFactory.createBattlePlant(thisPName, getLevelOfPlant(thisPName), thisPPosition);
             thisP.setRow((int) thisPosition.getY());
             thisP.setColumn((int) thisPosition.getX());
+
+            // Checking if this plant has a kind of boost...
+            PlantType thisPlantType = PlantType.valueOf(thisPName);
+            if (thisUser.getUserProgress().getGreenhouseBoosts().contains(thisPlantType) || isImitaterBoosted) {
+                thisP.setEffected(true, effectedTime);
+            }
+            if (UsersManager.getInstance().hasGreenhouseBoost(thisPlantType)) {
+                UsersManager.getInstance().consumeGreenhouseBoost(thisPlantType);
+            }
 
             this.gamePlants.add(thisP);
             thisTile.addPlant(thisP);
@@ -260,7 +315,7 @@ public abstract class GamePlay {
 
             System.out.printf("%s was planted in (%d, %d)", thisPName, thisPX, thisPY);
         } else {
-            if(!thisTile.isArable()) {
+            if (!thisTile.isArable()) {
                 System.out.println("This tile is not arable! Try another one...!");
             } else {
                 System.out.println("You can't plant this plant!");
@@ -275,7 +330,7 @@ public abstract class GamePlay {
             System.out.println("There is no plants in this tile!!");
         } else {
             this.gamePlants.removeIf(p -> p.getRow() == (int) thisPosition.getY()
-                                                        && p.getColumn() == (int) thisPosition.getX());
+                    && p.getColumn() == (int) thisPosition.getX());
             thisTile.removePlant();
             System.out.println("Plunked successfully!");
         }
@@ -296,7 +351,7 @@ public abstract class GamePlay {
             System.out.println("->  " + p.getName() + " | HP : " + p.getCurrentHP());
             PlantStats ps = p.getPlantStats();
             System.out.printf("level: %d | cost: %d | baseHP: %d\n", ps.getLevel(),
-                                                                ps.getCost(), ps.getBaseHP());
+                    ps.getCost(), ps.getBaseHP());
             System.out.println("Abilities");
             for (String ability : ps.getAbilities()) {
                 System.out.printf(" # %s", ability);
@@ -440,25 +495,6 @@ public abstract class GamePlay {
         }
     }
 
-    public static int calculateCost(ChapterType chapterType, int level, int waveNumber) {
-        int chapterNumber = chapterType.ordinal() + 1;
-        int stagesPerChapter = 4;
-
-        int globalLevel = ((chapterNumber - 1) * stagesPerChapter) + level;
-
-        int baseDifficultyForStage = 800 + (globalLevel * 250);
-
-        if (baseDifficultyForStage < 1000) {
-            baseDifficultyForStage = 1000;
-        }
-
-        int waveMultiplier = (waveNumber - 1) * 550;
-
-        int finalCost = baseDifficultyForStage + waveMultiplier;
-
-        return finalCost;
-    }
-
     public int calculateWaves(ChapterType chapterType, int level) {
         int chapterNumber = chapterType.ordinal() + 1;
 
@@ -473,9 +509,9 @@ public abstract class GamePlay {
         return Math.max(1, waves);
     }
 
-    public void killAward (User thisUser) {
+    public void killAward(User thisUser) {
         Boolean hasAward = Math.random() >= 0.9;
-        int kindOfAward = (int)(Math.random() * 3) + 1;
+        int kindOfAward = (int) (Math.random() * 3) + 1;
 
         if (hasAward) {
             switch (kindOfAward) {
@@ -498,38 +534,40 @@ public abstract class GamePlay {
         }
     }
 
-    public ArrayList<Grave> getAllGraves() {
-        return allGraves;
-    }
-
-    public void setAllGraves(ArrayList<Grave> allGraves) {
-        this.allGraves = allGraves;
-    }
-
-    public void addGrave(Grave thisGrave) {
-        this.allGraves.add(thisGrave);
-    }
-
-    public void glowingAward (GamePlay thisGame) {
+    public void glowingAward(GamePlay thisGame) {
         Boolean isGlowing = Math.random() <= 0.05;
         if (isGlowing) {
             thisGame.addPlantFood();
             System.out.printf("The glowing zombie dropped a plant food; you have %d plant foods now.\n",
-                                    thisGame.getNumOfPlantFood());
+                    thisGame.getNumOfPlantFood());
         }
     }
 
     public void updateZombieTiles() {
         for (Tile tile : tiles) {
             tile.getZombies().clear();
+            // Removing broken graves for the game
+            if (chapterType == ChapterType.ANCIENT_EGYPT || chapterType == ChapterType.DARK_AGE) {
+                if (tile.getHP() == 0 && !tile.isArable()) {
+                    tile.setArable(true);
+                }
+            }
         }
 
         for (Zombie zombie : gameZombies) {
             Position zombiePosition = Position.getRowAndColumn(zombie.getPosition());
             int currentX = (int) zombiePosition.getX();
             int currentY = (int) zombiePosition.getY();
-
             Tile currentTile = getTileByPosition(currentX, currentY);
+
+            if (!currentTile.isArable() && chapterType == ChapterType.FROSTBITE_CAVES) {
+                zombie.changeRow();
+
+                zombiePosition = Position.getRowAndColumn(zombie.getPosition());
+                currentX = (int) zombiePosition.getX();
+                currentY = (int) zombiePosition.getY();
+                currentTile = getTileByPosition(currentX, currentY);
+            }
 
             if (currentTile != null) {
                 currentTile.getZombies().add(zombie);
@@ -537,9 +575,9 @@ public abstract class GamePlay {
         }
     }
 
-    public String getKindOfTile (ChapterType thisChapter) {
+    public String getKindOfTile(ChapterType thisChapter) {
         if (thisChapter == ChapterType.ANCIENT_EGYPT ||
-            thisChapter == ChapterType.DARK_AGE) {
+                thisChapter == ChapterType.DARK_AGE) {
             return "Grave";
         } else if (thisChapter == ChapterType.FROSTBITE_CAVES) {
             return "Landslide";
@@ -552,13 +590,13 @@ public abstract class GamePlay {
         Tile thisTIle = tiles.stream()
                 .filter(t -> (int) t.getPosition().getX() == x &&
                         (int) t.getPosition().getY() == y)
-                        .findFirst()
-                        .orElse(null);
+                .findFirst()
+                .orElse(null);
         return thisTIle;
     }
 
     public int getRandomTime() {
-        int[] numbers = {10, 50, 30, 70};
+        int[] numbers = {10, 40, 30, 50};
         int randomIndex = (int) (Math.random() * numbers.length);
         return numbers[randomIndex];
     }
@@ -574,7 +612,7 @@ public abstract class GamePlay {
         return rowBag.remove(0);
     }
 
-    public int getLevelOfPlant (String plantName) {
+    public int getLevelOfPlant(String plantName) {
         PlantType thisPlantType = PlantType.valueOf(plantName);
         return thisUser.getUserProgress().getUnlockedPlantsAndTheirLevels().get(thisPlantType);
     }
@@ -601,5 +639,22 @@ public abstract class GamePlay {
 
     public ChapterType getChapterType() {
         return chapterType;
+    }
+
+    public ArrayList<BattlePlant> getPlants() {
+        return plants;
+    }
+
+    public void applyIcyWind() {
+        if (chapterType == ChapterType.FROSTBITE_CAVES && Math.random() < 0.02) {
+            int randomNumber = new Random().nextInt(5) + 1;
+
+            for (BattlePlant bp : this.gamePlants) {
+                Position thisPos = Position.getRowAndColumn(bp.getPosition());
+                if (thisPos.getY() == randomNumber) {
+                    bp.setIceTime(bp.getIceTime() + 1);
+                }
+            }
+        }
     }
 }

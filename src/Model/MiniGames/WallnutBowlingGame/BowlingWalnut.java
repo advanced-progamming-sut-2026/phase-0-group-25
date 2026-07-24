@@ -3,10 +3,10 @@ package src.Model.MiniGames.WallnutBowlingGame;
 import src.Model.PlantsAndZombies.Zombie;
 
 public class BowlingWalnut extends Walnut {
+    private final int NORMAL_DAMAGE = 200;
     private double velocityX = 1.0;
     private double velocityY = 0.0;
     private int hitCount = 0;
-    private final int NORMAL_DAMAGE = 200;
 
     public BowlingWalnut(double x, double y) {
         super(x, y);

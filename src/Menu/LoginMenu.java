@@ -8,7 +8,7 @@ import src.View.ViewInterfaces.LoginMenuView;
 
 import java.util.regex.Matcher;
 
-public class LoginMenu extends Menu{
+public class LoginMenu extends Menu {
     private final LoginMenuView loginMenuView;
     private boolean awaitingNewPassword = false;
     private String resettingUsername = null;
@@ -17,8 +17,6 @@ public class LoginMenu extends Menu{
         super(MenuType.Signup);
         this.loginMenuView = loginMenuView;
     }
-
-
 
 
     @Override

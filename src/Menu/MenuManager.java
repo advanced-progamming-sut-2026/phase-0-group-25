@@ -4,22 +4,15 @@ import src.Enums.MenuType;
 import src.Model.User.UsersManager;
 import src.View.ConcreteViews.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
 public class MenuManager {
-    private Scanner scanner;
-    private Menu currentMenu;
     private static MenuManager instance;
     private final HashMap<MenuType, Menu> menusAndTheirNames;
+    private Scanner scanner;
+    private Menu currentMenu;
     private boolean mustExit;
-
-    public static MenuManager getInstance() {
-        if (instance == null)
-            instance = new MenuManager();
-        return instance;
-    }
 
     private MenuManager() {
         mustExit = false;
@@ -57,7 +50,11 @@ public class MenuManager {
         }
     }
 
-
+    public static MenuManager getInstance() {
+        if (instance == null)
+            instance = new MenuManager();
+        return instance;
+    }
 
     public void setMustExit() {
         this.mustExit = true;

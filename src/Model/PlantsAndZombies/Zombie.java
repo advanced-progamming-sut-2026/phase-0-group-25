@@ -1,5 +1,6 @@
 package src.Model.PlantsAndZombies;
 
+import src.Enums.Status;
 import src.Model.PlantsAndZombies.Abilities.Ability;
 import src.Model.PlantsAndZombies.Abilities.Eating;
 import src.Model.PlantsAndZombies.Abilities.Moving;
@@ -10,7 +11,8 @@ import src.Model.PlantsAndZombies.Projectiles.Dynamite;
 import src.Model.PlantsAndZombies.Projectiles.Projectile;
 import src.Model.Sun.Sun;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 
 public class Zombie extends Entity {
@@ -30,6 +32,7 @@ public class Zombie extends Entity {
     private boolean isHalated;
     private boolean isHypnotized;
     private boolean isFrozen;
+    private int timeWhenFrozen;
     private int frozenTime;
 
 
@@ -38,7 +41,7 @@ public class Zombie extends Entity {
     private int spawnTime;
     //private HashMap<String, Double> effectsInfo;
 
-    public Zombie(ZombieStats zombieStats, String name, Position position) {
+    public Zombie(ZombieStats zombieStats, Position position) {
         this.zombieStats = zombieStats;
         this.status = Status.MOVING;
         this.name = name;
@@ -171,7 +174,6 @@ public class Zombie extends Entity {
                 }
             }
 
-
             if (projectile.isIcy()) {
                 if (!this.zombieStats.getName().equals("IMP_DRAGON")) {
                     freeze();
@@ -187,21 +189,57 @@ public class Zombie extends Entity {
         }
     }
 
+    public void takeDamage(double damage) {
+        int leftoverDamage = (int) Math.ceil(damage);
+
+        for (int i = 0; i < activeArmors.size(); i++) {
+            Armor armor = activeArmors.get(i);
+
+            leftoverDamage = armor.takeDamage(leftoverDamage);
+
+            if (armor.isDisarmed()) {
+                activeArmors.remove(armor);
+                i -= 1;
+                if (this.name.equals("NEWSPAPER")) { //increasing velocity & damage per second of NEWSPAPER_ZOMBIE
+                    this.zombieStats.setVelocity(this.zombieStats.getVelocity() * 2.5);
+                    this.zombieStats.setEatdps(this.zombieStats.getEatdps() * 2.5);
+                }
+            }
+
+            if (leftoverDamage <= 0) {
+                break;
+            }
+        }
+
+        if (leftoverDamage > 0) {
+            this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
+        }
+    }
+
     public void checkFreeze() {
         if (this.isFrozen) {
             //todo: getter for current game time
-            if ((game.getCurrentTime() - this.frozenTime) >= FROZEN_TIME) {
+            if ((game.getCurrentTime() - this.timeWhenFrozen) >= this.frozenTime) {
                 this.isFrozen = false;
                 this.currentVelocity = this.zombieStats.getVelocity();
             }
         }
     }
 
+    public void freeze(int frozenTime) {
+        //todo: getter for current game time
+        this.timeWhenFrozen = game.getCurrentTime();
+        this.isFrozen = true;
+        this.frozenTime = frozenTime;
+        this.currentVelocity = (this.zombieStats.getVelocity() * 0.7); //decreasing the zombie velocity after collision with icy projectiles
+    }
+
     public void freeze() {
         //todo: getter for current game time
-        this.frozenTime = game.getCurrentTime();
+        this.timeWhenFrozen = game.getCurrentTime();
         this.isFrozen = true;
-        this.currentVelocity = (this.zombieStats.getVelocity() * 0.7) //decreasing the zombie velocity after collision with icy projectiles
+        this.frozenTime = FROZEN_TIME;
+        this.currentVelocity = (this.zombieStats.getVelocity() * 0.7); //decreasing the zombie velocity after collision with icy projectiles
     }
 
     public void unfreeze() {
@@ -276,6 +314,10 @@ public class Zombie extends Entity {
 
     public void setHypnotized(boolean hypnotized) {
         isHypnotized = hypnotized;
+    }
+
+    public int getCost() {
+        return this.zombieStats.getWaveCost();
     }
 
     public double getCurrentVelocity() {

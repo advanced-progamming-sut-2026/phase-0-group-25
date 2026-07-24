@@ -9,7 +9,7 @@ import src.View.ViewInterfaces.ProfileMenuView;
 
 import java.util.regex.Matcher;
 
-public class ProfileMenu extends Menu{
+public class ProfileMenu extends Menu {
     private final ProfileMenuView profileMenuView;
 
     public ProfileMenu(ProfileMenuView profileMenuView) {

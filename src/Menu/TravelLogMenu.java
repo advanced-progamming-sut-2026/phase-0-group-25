@@ -2,7 +2,6 @@ package src.Menu;
 
 import src.Enums.Command;
 import src.Enums.MenuType;
-import src.Model.Quests.Quest;
 import src.Model.Quests.QuestManager;
 import src.View.ViewInterfaces.BaseView;
 import src.View.ViewInterfaces.TravelLogMenuView;

@@ -5,22 +5,17 @@ import src.Model.PlantsAndZombies.Position;
 import src.Model.PlantsAndZombies.Zombie;
 
 public class Projectile {
-    private double velocityX;
-    private double velocityY;
-
-    private int damage;
-
-    private Position position;
-    private Position basePosition;
-
-    private int pierceAmount;
-    private int range;
-    private int knockback;
-
-
     protected boolean isActive;
     protected boolean icy;
     protected boolean firing;
+    private double velocityX;
+    private double velocityY;
+    private int damage;
+    private Position position;
+    private Position basePosition;
+    private int pierceAmount;
+    private int range;
+    private int knockback;
     private boolean poisonous;
     private boolean isHypnotizer;
 
@@ -65,7 +60,6 @@ public class Projectile {
     }
 
 
-
     public void setHypnotizer(boolean isHypnotizer) {
         this.isHypnotizer = isHypnotizer;
     }
@@ -98,19 +92,33 @@ public class Projectile {
 
     public void checkCollision() {
         for (Zombie zombie : game.getAliveZombies()) {
-            if (this.position.equals(zombie.getPosition())) {
-                if ((zombie.getZombieStats().getName().equals("SNORKEL")) &&
-                        (zombie.getZombieStats().getAttributes().get("submarine").equals("on"))) {
-                    continue;
-                }
-                zombie.takeDamage(this, this.damage);
-                zombie.setPosition(new Position(
-                        zombie.getPosition().getX() + this.knockback,
-                        zombie.getPosition().getY()));
+            if (!zombie.isHypnotized()) {
+                if (this.position.equals(zombie.getPosition())) {
+                    if ((zombie.getZombieStats().getName().equals("SNORKEL")) &&
+                            (zombie.getZombieStats().getAttributes().get("submarine").equals("on"))) {
+                        continue;
+                    }
+                    zombie.takeDamage(this, this.damage);
+                    zombie.setPosition(new Position(
+                            zombie.getPosition().getX() + this.knockback,
+                            zombie.getPosition().getY()));
 
-                this.setPierceAmount(this.getPierceAmount() - 1);
+                    this.setPierceAmount(this.getPierceAmount() - 1);
+                }
             }
         }
+        //todo
+        for (BattlePlant plant : game.getPlants()) {
+            if (this.firing) {
+                plant.setFrozen(false);
+                plant.setIceTime(0);
+            } else {
+                if (plant.isFrozen()) {
+                    plant.takeIceDamage(this.damage);
+                }
+            }
+        }
+
     }
 
     public void setKnockback(int knockback) {
@@ -142,12 +150,12 @@ public class Projectile {
         this.firing = firing;
     }
 
-    public void setPoisonous(boolean poisonous) {
-        this.poisonous = poisonous;
-    }
-
     public boolean isPoisonous() {
         return poisonous;
+    }
+
+    public void setPoisonous(boolean poisonous) {
+        this.poisonous = poisonous;
     }
 
     public int getPierceAmount() {
@@ -159,5 +167,17 @@ public class Projectile {
         if (this.pierceAmount == 0) {
             this.isActive = false;
         }
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
 }

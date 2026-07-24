@@ -7,22 +7,20 @@ import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.io.File;
-import java.util.*;
-
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GameDataLoader {
-    private static Map<String, List<PlantStats>> plantRegistry = new HashMap<>();
-    private static Map<String, ZombieStats> zombieRegistry = new HashMap<>();
-
     private static final ObjectMapper mapper = JsonMapper.builder()
             .enable(JsonReadFeature.ALLOW_MISSING_VALUES)
             .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
             .configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false)
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             .build();
-
+    private static Map<String, List<PlantStats>> plantRegistry = new HashMap<>();
+    private static Map<String, ZombieStats> zombieRegistry = new HashMap<>();
 
     public static void loadGameData() {
         loadPlantData();

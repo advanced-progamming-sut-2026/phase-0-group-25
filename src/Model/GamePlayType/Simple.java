@@ -2,21 +2,25 @@ package src.Model.GamePlayType;
 
 import src.Enums.ChapterType;
 import src.Model.Mower;
-import src.Model.PlantsAndZombies.*;
+import src.Model.PlantsAndZombies.BattlePlant;
+import src.Model.PlantsAndZombies.Position;
+import src.Model.PlantsAndZombies.Projectiles.Dynamite;
 import src.Model.PlantsAndZombies.Projectiles.Projectile;
+import src.Model.PlantsAndZombies.Zombie;
+import src.Model.PlantsAndZombies.ZombieFactory;
 import src.Model.Tile;
 import src.Model.User.User;
-import src.Model.Wave.*;
+import src.Model.Wave.FinalWave;
+import src.Model.Wave.Wave;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
 public class Simple extends GamePlay {
 
     public Simple(ChapterType chapterType, int level, int difficulty, User thisUser,
-                        ArrayList<String> plants, ArrayList<String> zombies, Set<String > boosted) {
+                  ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         super(chapterType, level, difficulty, thisUser, plants, zombies, boosted);
     }
 
@@ -26,28 +30,28 @@ public class Simple extends GamePlay {
         totalTicksPassed++;
         timeToSpwan--;
 
-        if (this.level != 4) {
+        if (this.chapterType != ChapterType.DARK_AGE) {
             sunMaker();
         }
+        applyIcyWind();
 
-        // Updating Zombies, Plant and Projectile (Deleting them if they're dead) :
+        checkingSunMakers();
+
+        // Updating Zombies, Plant and Projectile and Dynamite (Deleting them if they're dead) :
         Iterator<BattlePlant> bp = gamePlants.iterator();
         while (bp.hasNext()) {
             BattlePlant plant = bp.next();
 
-            if(plant.isAlive() && plant.getCurrentHP() > 0) {
+            if (plant.isAlive() && plant.getCurrentHP() > 0) {
                 plant.update();
                 // passing cooldown
                 plant.setCooldown(Math.max(plant.getCooldown() - 1, 0));
             } else {
-                Tile currentTile = tiles.stream()
-                        .filter(t -> (int) t.getPosition().getX() == plant.getColumn() &&
-                                (int) t.getPosition().getY() == plant.getRow())
-                                .findFirst()
-                                .orElse(null);
+                Tile currentTile = getTileByPosition(plant.getColumn(), plant.getRow());
 
                 if (currentTile != null) {
-                    currentTile.getPlants().remove(plant);
+                    System.out.printf("Plant %s at (%d, %d) is destroyed.\n", plant.getName(), plant.getColumn(), plant.getRow());
+                    currentTile.getPlants().removeIf(p -> p.getName().equals(plant.getName()));
                 }
                 bp.remove();
             }
@@ -59,6 +63,9 @@ public class Simple extends GamePlay {
             if (!zombie.isAlive() || zombie.getCurrentHP() <= 0) {
                 killAward(this.thisUser);
                 glowingAward(this);
+                Position zPos = Position.getRowAndColumn(zombie.getPosition());
+                System.out.printf("Zombie of type %s is dead at (%d, %d)\n",
+                        zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
                 z.remove();
             } else {
                 zombie.update();
@@ -74,6 +81,12 @@ public class Simple extends GamePlay {
             } else {
                 pj.remove();
             }
+        }
+        Iterator<Dynamite> dy = dynamites.iterator();
+        while (dy.hasNext()) {
+            Dynamite thisDynamite = dy.next();
+
+            thisDynamite.update();
         }
 
         // Spawning zombies :
@@ -91,12 +104,16 @@ public class Simple extends GamePlay {
                     }
                     String nameOfZ = thisWave.spawnNextZombie().getName();
                     Position positionOfZ;
-                    if (chapterType != ChapterType.FROSTBITE_CAVES && Math.random() >= 0.9){
-                        positionOfZ = new Position(spawnX+200, getRealY(getNextRandomY()));
+                    int spawnY = getNextRandomY();
+                    if (chapterType != ChapterType.FROSTBITE_CAVES && Math.random() >= 0.9) {
+                        positionOfZ = new Position(spawnX + 200, getRealY(spawnY));
                     } else {
-                        positionOfZ = new Position(spawnX, getRealY(getNextRandomY()));
+                        positionOfZ = new Position(spawnX, getRealY(spawnY));
                     }
-                    this.gameZombies.add(ZombieFactory.createZombie(nameOfZ, positionOfZ));
+                    Zombie newZombie = ZombieFactory.createZombie(nameOfZ, positionOfZ);
+                    System.out.printf("Zombie %s spawned at wave %d in lane %d which costed %d.\n",
+                            nameOfZ, thisWave.getWaveNum(), spawnY, newZombie.getCost());
+                    this.gameZombies.add(newZombie);
                 }
                 if (!thisWave.isReadyForNextWave()) {
                     break;
@@ -106,7 +123,7 @@ public class Simple extends GamePlay {
 
         // Checking if the end of the game (Losing) + Activate Mowers :
         int x = mowers.get(0).getX();
-        for(Zombie zombie : gameZombies) {
+        for (Zombie zombie : gameZombies) {
             int yOfz = (int) zombie.getPosition().getY();
             int xOfz = (int) zombie.getPosition().getX();
             Mower thisMower = mowers.stream().filter(p -> p.getY() == yOfz).findFirst().get();
@@ -115,8 +132,7 @@ public class Simple extends GamePlay {
                 if (!thisMower.isUsed()) {
                     System.out.println("The lawn mower in the row" + yOfz + "is triggered and killed these zombies:");
                     thisMower.killZombies(this);
-                }
-                else {
+                } else {
                     System.out.println("The zombie ate your brain; LOSER!!!");
                 }
             }

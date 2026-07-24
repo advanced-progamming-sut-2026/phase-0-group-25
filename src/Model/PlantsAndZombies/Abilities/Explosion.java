@@ -1,10 +1,142 @@
 package src.Model.PlantsAndZombies.Abilities;
 
+import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Entity;
+import src.Model.PlantsAndZombies.Zombie;
+import src.Model.Tile;
 
-public class Explosion implements Ability{
+import java.util.ArrayList;
+import java.util.Random;
+
+public class Explosion implements Ability {
+    private static Random RANDOM = new Random();
+
     @Override
     public void executeAbility(Entity entity) {
+        Zombie attacker = (Zombie) entity;
+        BattlePlant plant = (BattlePlant) attacker.getRival();
+        ArrayList<String> tags = plant.getPlantStats().getTags();
+        if (plant.isEffected()) {
+            plantFoodEffect(attacker, plant, tags);
+        }
 
+        if (isNotArmored(plant)) {
+            return;
+        }
+
+        if (tags.contains("Ice")) {
+            int frozenTime = (int) plant.getPlantStats().getAttributes().get("freezeTime");
+            attacker.freeze(frozenTime);
+        }
+
+        if (tags.contains("Water")) {
+            int number = (int) plant.getPlantStats().getAttributes().get("number");
+            handleWaterPlant(attacker, plant, number);
+            return;
+        }
+
+        if (tags.contains("AoE")) {
+            AoEDamage(plant, plant.getRow(), plant.getColumn());
+            return;
+        }
+
+        int damage = (int) plant.getPlantStats().getAttributes().get("damage");
+        attacker.takeDamage(damage);
+
+
+    }
+
+    private boolean isNotArmored(BattlePlant plant) {
+        if (plant.getPlantStats().getTags().contains("Trap")) {
+            int armTime = (int) plant.getPlantStats().getAttributes().get("armTime");
+            //todo
+            if ((game.getCurrentTime() - plant.getPlantTime()) < armTime) {
+                return true;
+            }
+            return false;
+        }
+
+        return false;
+    }
+
+    private void plantFoodEffect(Zombie attacker, BattlePlant plant, ArrayList<String> tags) {
+        if (tags.contains("Ice")) {
+            //todo
+            for (Zombie zombie : game.getZombies()) {
+                int frozenTime = (int) plant.getPlantStats().getAttributes().get("freezeTime");
+                zombie.freeze(frozenTime);
+            }
+            return;
+        }
+        if (tags.contains("Water")) {
+            int number = (int) plant.getPlantStats().getPlantFoodEffect().get("number");
+            handleWaterPlant(attacker, plant, number);
+            return;
+        }
+
+        int number = (int) plant.getPlantStats().getPlantFoodEffect().get("number");
+
+        if (tags.contains("charge")) {
+            int armTime = (int) plant.getPlantStats().getAttributes().get("armTime");
+            plant.setPlantTime(plant.getPlantTime() - armTime);
+
+            for (int i = 0; i < number; i++) {
+                int randomRow = RANDOM.nextInt(5) + 1;
+                int randomColumn = RANDOM.nextInt(9) + 1;
+
+                if (tags.contains("AoE")) {
+                    //todo
+                    AoEDamage(plant, randomRow, randomColumn);
+                }
+
+                //todo
+                Tile tile = game.getTile();
+                int damage = (int) plant.getPlantStats().getAttributes().get("damage");
+
+                for (Zombie zombie : tile.getZombies()) {
+                    zombie.takeDamage(damage);
+                }
+            }
+            return;
+        }
+
+        int damage = (int) plant.getPlantStats().getAttributes().get("damage");
+        for (int i = 0; i < number; i++) {
+            //todo
+            int randomIndex = RANDOM.nextInt(game.getZombies().size());
+            game.getZombies().get(randomIndex).takeDamage(damage);
+        }
+    }
+
+    private void handleWaterPlant(Zombie attacker, BattlePlant plant, int number) {
+        attacker.setCurrentHP(0);
+        //todo
+        outer:
+        for (Tile tile : game.getTiles()) {
+            if (!tile.isArable()) {
+                for (Zombie zombie : tile.getZombies()) {
+                    zombie.setCurrentHP(0);
+                    number -= 1;
+                    if (number <= 0) {
+                        break outer;
+                    }
+                }
+            }
+        }
+    }
+
+    private void AoEDamage(BattlePlant plant, int row, int column) {
+        int range = (int) plant.getPlantStats().getAttributes().get("range");
+        int damage = (int) plant.getPlantStats().getAttributes().get("damage");
+
+        for (int i = -range; i <= range; i++) {
+            for (int j = -range; j <= range; j++) {
+                //todo
+                Tile tile = game.getTile();
+                for (Zombie zombie : tile.getZombies()) {
+                    zombie.takeDamage(damage);
+                }
+            }
+        }
     }
 }

@@ -4,7 +4,6 @@ import src.Model.PlantsAndZombies.Position;
 import src.Model.PlantsAndZombies.Zombie;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class LobbedProjectile extends Projectile {
     private double startX;
