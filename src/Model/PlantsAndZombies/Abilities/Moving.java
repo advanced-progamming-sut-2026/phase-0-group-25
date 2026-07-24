@@ -13,6 +13,21 @@ public class Moving implements Ability {
     @Override
     public void executeAbility(Entity entity) {
         Zombie zombie = (Zombie) entity;
+        if (zombie.isHypnotized()) {
+            double velocity = zombie.getCurrentVelocity();
+            double differenceX = velocity * 0.1;
+
+            double zombieFinalPositionX = zombie.getPosition().getX() + differenceX;
+            Position newPosition = new Position(zombieFinalPositionX, zombie.getPosition().getY());
+            zombie.setPosition(newPosition);
+
+            //todo:
+            for (Zombie zombie1 : game.getZombies()) {
+                if (zombie1.getPosition().equals(zombie.getPosition())) {
+                    zombie.setRival(zombie1);
+                }
+            }
+        }
 
         double velocity = zombie.getCurrentVelocity();
         double differenceX = velocity * 0.1;
