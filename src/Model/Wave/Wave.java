@@ -6,11 +6,11 @@ import java.util.*;
 
 public class Wave {
     protected Queue<Zombie> pendingZombies;
+    protected int totalZombies;
     private int waveNum;
     private Boolean isStarted = false;
     private double waveCost;
     private double initialTotalHealth;
-    protected int totalZombies;
     private Random random = new Random();
 
     public Wave(int waveCost, int waveNum) {
@@ -71,12 +71,12 @@ public class Wave {
         return isStarted;
     }
 
-    public int getWaveNum() {
-        return this.waveNum;
-    }
-
     public void setStarted(Boolean started) {
         isStarted = started;
+    }
+
+    public int getWaveNum() {
+        return this.waveNum;
     }
 
     public boolean hasZombiesLeftToSpawn() {

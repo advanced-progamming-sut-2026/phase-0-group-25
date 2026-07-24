@@ -15,19 +15,15 @@ public abstract class Entity {
         return name;
     }
 
+    public double getCurrentHP() {
+        return currentHP;
+    }
+
     public void setCurrentHP(double currentHP) {
         this.currentHP = currentHP;
         if (this.currentHP <= 0) {
             this.isAlive = false;
         }
-    }
-
-    public void setPosition(Position position) {
-        this.position = position;
-    }
-
-    public double getCurrentHP() {
-        return currentHP;
     }
 
     public boolean isAlive() {
@@ -40,6 +36,10 @@ public abstract class Entity {
 
     public Position getPosition() {
         return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
     public int getRow() {

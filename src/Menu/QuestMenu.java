@@ -4,7 +4,7 @@ import src.Enums.MenuType;
 import src.View.ViewInterfaces.BaseView;
 import src.View.ViewInterfaces.QuestMenuView;
 
-public class QuestMenu extends Menu{
+public class QuestMenu extends Menu {
     private final QuestMenuView questMenuView;
 
     public QuestMenu(QuestMenuView questMenuView) {

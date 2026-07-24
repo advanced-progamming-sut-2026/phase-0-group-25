@@ -1,4 +1,4 @@
 package src.View.ViewInterfaces;
 
-public interface LeaderBoardMenuView extends BaseView{
+public interface LeaderBoardMenuView extends BaseView {
 }

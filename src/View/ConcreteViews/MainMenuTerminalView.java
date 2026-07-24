@@ -2,8 +2,6 @@ package src.View.ConcreteViews;
 
 import src.View.ViewInterfaces.MainMenuView;
 
-import java.util.Scanner;
-
 public class MainMenuTerminalView extends AbstractTerminalView implements MainMenuView {
 
     @Override

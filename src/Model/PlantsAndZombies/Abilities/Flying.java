@@ -5,9 +5,8 @@ import src.Model.PlantsAndZombies.Position;
 import src.Model.PlantsAndZombies.Zombie;
 
 public class Flying implements Ability {
-    private boolean isActivated = false;
-
     private static int TILE_X_LENGTH = 200;
+    private boolean isActivated = false;
 
     @Override
     public void executeAbility(Entity entity) {

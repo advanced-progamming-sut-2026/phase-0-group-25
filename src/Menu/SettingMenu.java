@@ -8,7 +8,7 @@ import src.View.ViewInterfaces.SettingMenuView;
 
 import java.util.regex.Matcher;
 
-public class SettingMenu extends Menu{
+public class SettingMenu extends Menu {
     private final SettingMenuView settingMenuView;
 
     public SettingMenu(SettingMenuView settingMenuView) {
@@ -16,7 +16,7 @@ public class SettingMenu extends Menu{
         this.settingMenuView = settingMenuView;
     }
 
-    private void changeDifficulty(String difficultyLevel){
+    private void changeDifficulty(String difficultyLevel) {
         String error = UsersManager.getInstance().changeDifficulty(difficultyLevel);
         if (error != null) {
             getView().showError(error);

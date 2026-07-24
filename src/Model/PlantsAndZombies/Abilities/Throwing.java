@@ -1,14 +1,15 @@
 package src.Model.PlantsAndZombies.Abilities;
 
-import src.Model.PlantsAndZombies.*;
-import src.Model.PlantsAndZombies.Armors.Armor;
+import src.Model.PlantsAndZombies.BattlePlant;
+import src.Model.PlantsAndZombies.Entity;
+import src.Model.PlantsAndZombies.Position;
+import src.Model.PlantsAndZombies.Zombie;
 import src.Model.Tile;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Throwing implements Ability {
-    private boolean isActivated = false;
     private static int TILE_X_LENGTH = 200;
     private static int TOMB_RAISER_ACTION_INTERVAL = 4;
     private static int HUNTER_ACTION_INTERVAL = 2;
@@ -16,6 +17,7 @@ public class Throwing implements Ability {
     private static int FISHERMAN_ACTION_INTERVAL = 3;
     private static int KING_ACTION_INTERVAL = 5;
     private static Random RANDOM = new Random();
+    private boolean isActivated = false;
 
     @Override
     public void executeAbility(Entity entity) {

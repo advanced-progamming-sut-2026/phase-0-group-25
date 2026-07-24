@@ -9,14 +9,13 @@ import src.Model.MiniGames.WallnutBowlingGame.WalnutBowling;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Position;
 import src.View.ViewInterfaces.BaseView;
-import src.View.ViewInterfaces.GameMenuView;
 import src.View.ViewInterfaces.GamePlayMenuView;
 
 import java.util.regex.Matcher;
 
 public class GamePlayMenu extends Menu {
-    private final GamePlayMenuView gamePlayMenuView;
     private static GamePlay gamePlay;
+    private final GamePlayMenuView gamePlayMenuView;
 
 
     public GamePlayMenu(GamePlayMenuView gamePlayMenuView) {
@@ -25,13 +24,13 @@ public class GamePlayMenu extends Menu {
     }
 
 
-    public static GamePlay getGamePlay(){
+    public static GamePlay getGamePlay() {
         return gamePlay;
     }
+
     public static void setGamePlay(GamePlay gamePlay) {
         GamePlayMenu.gamePlay = gamePlay;
     }
-
 
 
     private void checkWinCondition() {
@@ -86,7 +85,7 @@ public class GamePlayMenu extends Menu {
             } else if (!gamePlay.getPlants().stream().anyMatch(plant -> plant.getName().equals(type))) {
                 System.out.println("You can't plant this plant! You didn't select this plant before the game!");
             } else {
-                Position thisPosition = new Position(x , y);
+                Position thisPosition = new Position(x, y);
                 BattlePlant thisPlant = gamePlay.getPlants().stream()
                         .filter(plant -> plant.getName().equals(type)).findFirst().orElse(null);
                 gamePlay.planting(thisPlant, thisPosition);
@@ -97,7 +96,7 @@ public class GamePlayMenu extends Menu {
             if (x > 9 || x < 1 || y > 5 || y < 1) {
                 System.out.println("Pls type valid x and y!");
             } else {
-                Position thisPosition = new Position(x , y);
+                Position thisPosition = new Position(x, y);
                 gamePlay.plucking(thisPosition);
             }
         } else if ((matcher = getMatcher(input, Command.FeedPlant)) != null) {
@@ -120,7 +119,7 @@ public class GamePlayMenu extends Menu {
             if (x > 9 || x < 1 || y > 5 || y < 1) {
                 System.out.println("Pls type valid x and y!");
             } else {
-                Position thisPosition = new Position(x , y);
+                Position thisPosition = new Position(x, y);
                 gamePlay.showTileStatus(thisPosition);
             }
         } else if ((matcher = getMatcher(input, Command.BreakJar)) != null) {

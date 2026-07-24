@@ -2,7 +2,8 @@ package src.Model.PlantsAndZombies;
 
 import src.Model.PlantsAndZombies.Armors.Armor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class ZombieStats {
     private String name;
@@ -13,7 +14,6 @@ public class ZombieStats {
     private int waveCost;
 
     private Map<String, Object> attributes;
-
 
 
     public String getName() {

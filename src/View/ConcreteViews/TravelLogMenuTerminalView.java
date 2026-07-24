@@ -1,7 +1,6 @@
 package src.View.ConcreteViews;
 
 import src.Model.Quests.Quest;
-import src.Model.Quests.QuestManager;
 import src.View.ViewInterfaces.TravelLogMenuView;
 
 import java.util.List;

@@ -6,7 +6,7 @@ import src.Model.User.UsersManager;
 import src.View.ViewInterfaces.BaseView;
 import src.View.ViewInterfaces.GemWalletMenuView;
 
-public class GemWalletMenu extends Menu{
+public class GemWalletMenu extends Menu {
 
     private final GemWalletMenuView gemWalletMenuView;
 

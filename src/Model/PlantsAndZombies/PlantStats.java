@@ -1,9 +1,7 @@
 package src.Model.PlantsAndZombies;
 
-import src.Enums.Tag;
-import src.Model.PlantsAndZombies.Abilities.Ability;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class PlantStats {
     private String name;

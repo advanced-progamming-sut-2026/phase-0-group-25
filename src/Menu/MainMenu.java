@@ -8,7 +8,7 @@ import src.View.ViewInterfaces.MainMenuView;
 
 import java.util.regex.Matcher;
 
-public class MainMenu extends Menu{
+public class MainMenu extends Menu {
     private final MainMenuView mainMenuView;
 
     public MainMenu(MainMenuView mainMenuView) {
@@ -43,7 +43,7 @@ public class MainMenu extends Menu{
         return mainMenuView;
     }
 
-    private void logout(){
+    private void logout() {
         UsersManager.getInstance().logoutCurrentUser();
         MenuManager.getInstance().changeMenu(MenuType.Signup);
     }

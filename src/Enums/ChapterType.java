@@ -12,10 +12,6 @@ public enum ChapterType {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public static ChapterType getByName(String name) {
         for (ChapterType chapterType : values()) {
             if (chapterType.name.equalsIgnoreCase(name)) {
@@ -23,5 +19,9 @@ public enum ChapterType {
             }
         }
         return null;
+    }
+
+    public String getName() {
+        return name;
     }
 }

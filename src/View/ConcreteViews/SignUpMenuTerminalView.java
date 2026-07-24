@@ -3,8 +3,6 @@ package src.View.ConcreteViews;
 import src.Enums.SecurityQuestionType;
 import src.View.ViewInterfaces.SignUpMenuView;
 
-import java.util.Scanner;
-
 public class SignUpMenuTerminalView extends AbstractTerminalView implements SignUpMenuView {
 
     @Override

@@ -1,8 +1,7 @@
 package src.Model.Greenhouse;
 
-import src.Model.PlantsAndZombies.Plant;
-
 import src.Enums.PlantType;
+
 import java.time.LocalDateTime;
 
 public class GreenhousePlant {
@@ -16,9 +15,17 @@ public class GreenhousePlant {
         this.plantedAt = LocalDateTime.now();
     }
 
-    public PlantType getType() { return type; }
-    public LocalDateTime getPlantedAt() { return plantedAt; }
-    public double getGrowthHours() { return growthHours; }
+    public PlantType getType() {
+        return type;
+    }
+
+    public LocalDateTime getPlantedAt() {
+        return plantedAt;
+    }
+
+    public double getGrowthHours() {
+        return growthHours;
+    }
 
     /**
      * @return remaining hours (can be negative if ready)

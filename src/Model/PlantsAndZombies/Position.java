@@ -1,30 +1,11 @@
 package src.Model.PlantsAndZombies;
 
-import java.awt.*;
-import java.util.Objects;
-
 public class Position {
     private double x;
     private double y;
 
     public Position(double x, double y) {
         this.x = x;
-        this.y = y;
-    }
-
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public void setY(double y) {
         this.y = y;
     }
 
@@ -42,6 +23,21 @@ public class Position {
         return new Position(row, column);
     }
 
+    public double getX() {
+        return x;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
 
     @Override
     public boolean equals(Object o) {

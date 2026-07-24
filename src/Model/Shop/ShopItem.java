@@ -26,12 +26,35 @@ public class ShopItem {
     }
 
     // Getters
-    public int getId() { return id; }
-    public String getName() { return name; }
-    public ShopItemType getType() { return type; }
-    public int getPrice() { return price; }
-    public WalletType getCurrency() { return currency; }
-    public int getUnitSize() { return unitSize; }
-    public int getMaxTotal() { return maxTotal; }
-    public String getDescription() { return description; }
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ShopItemType getType() {
+        return type;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public WalletType getCurrency() {
+        return currency;
+    }
+
+    public int getUnitSize() {
+        return unitSize;
+    }
+
+    public int getMaxTotal() {
+        return maxTotal;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 }

@@ -1,4 +1,4 @@
 package src.View.ViewInterfaces;
 
-public interface QuestMenuView extends BaseView{
+public interface QuestMenuView extends BaseView {
 }

@@ -3,9 +3,8 @@ package src.View.ConcreteViews;
 import src.View.ViewInterfaces.ChoosePlantMenuView;
 
 import java.util.List;
-import java.util.Scanner;
 
-public class ChoosePlantMenuTerminalView extends AbstractTerminalView implements ChoosePlantMenuView{
+public class ChoosePlantMenuTerminalView extends AbstractTerminalView implements ChoosePlantMenuView {
     @Override
     public void showAllPlants(List<String> plantNames) {
         System.out.println("--- All Defined Plants ---");
@@ -13,6 +12,7 @@ public class ChoosePlantMenuTerminalView extends AbstractTerminalView implements
             System.out.println("- " + plant);
         }
     }
+
     @Override
     public void showPlantBoosted(String plantName) {
         System.out.println("Plant " + plantName + " is boosted for this stage!");

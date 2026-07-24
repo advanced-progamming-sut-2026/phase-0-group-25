@@ -1,8 +1,8 @@
 package src.Model.Quests;
 
+import src.Enums.ChapterType;
 import src.Enums.PlantType;
 import src.Enums.RewardType;
-import src.Enums.ChapterType;
 
 public class Reward {
     private RewardType type;
@@ -30,8 +30,19 @@ public class Reward {
     }
 
     // Getters
-    public RewardType getType() { return type; }
-    public int getAmount() { return amount; }
-    public PlantType getPlantType() { return plantType; }
-    public ChapterType getChapterType() { return chapterType; }
+    public RewardType getType() {
+        return type;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public PlantType getPlantType() {
+        return plantType;
+    }
+
+    public ChapterType getChapterType() {
+        return chapterType;
+    }
 }

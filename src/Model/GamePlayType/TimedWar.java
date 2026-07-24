@@ -14,7 +14,6 @@ import src.Model.Wave.FinalWave;
 import src.Model.Wave.Wave;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -22,7 +21,7 @@ public class TimedWar extends GamePlay {
     private int numOfDeadZombies = 0;
 
     public TimedWar(ChapterType chapterType, int level, int difficulty, User thisUser,
-                    ArrayList<String> plants, ArrayList<String> zombies, Set<String > boosted) {
+                    ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         super(chapterType, level, difficulty, thisUser, plants, zombies, boosted);
     }
 
@@ -44,7 +43,7 @@ public class TimedWar extends GamePlay {
         while (bp.hasNext()) {
             BattlePlant plant = bp.next();
 
-            if(plant.isAlive() && plant.getCurrentHP() > 0) {
+            if (plant.isAlive() && plant.getCurrentHP() > 0) {
                 plant.update();
                 // passing cooldown
                 plant.setCooldown(Math.max(plant.getCooldown() - 1, 0));
@@ -108,8 +107,8 @@ public class TimedWar extends GamePlay {
                     String nameOfZ = thisWave.spawnNextZombie().getName();
                     Position positionOfZ;
                     int spawnY = getNextRandomY();
-                    if (chapterType != ChapterType.FROSTBITE_CAVES && Math.random() >= 0.9){
-                        positionOfZ = new Position(spawnX+200, getRealY(spawnY));
+                    if (chapterType != ChapterType.FROSTBITE_CAVES && Math.random() >= 0.9) {
+                        positionOfZ = new Position(spawnX + 200, getRealY(spawnY));
                     } else {
                         positionOfZ = new Position(spawnX, getRealY(spawnY));
                     }
@@ -126,7 +125,7 @@ public class TimedWar extends GamePlay {
 
         // Checking if the end of the game (Losing) + Activate Mowers :
         int x = mowers.get(0).getX();
-        for(Zombie zombie : gameZombies) {
+        for (Zombie zombie : gameZombies) {
             int yOfz = (int) zombie.getPosition().getY();
             int xOfz = (int) zombie.getPosition().getX();
             Mower thisMower = mowers.stream().filter(p -> p.getY() == yOfz).findFirst().get();
@@ -135,8 +134,7 @@ public class TimedWar extends GamePlay {
                 if (!thisMower.isUsed()) {
                     System.out.println("The lawn mower in the row" + yOfz + "is triggered and killed these zombies:");
                     thisMower.killZombies(this);
-                }
-                else {
+                } else {
                     System.out.println("The zombie ate your brain; LOSER!!!");
                 }
             }

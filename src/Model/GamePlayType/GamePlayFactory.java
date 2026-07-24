@@ -2,7 +2,6 @@ package src.Model.GamePlayType;
 
 import src.Enums.ChapterType;
 import src.Enums.GamePlayType;
-import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.User.User;
 
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ import java.util.Set;
 
 public class GamePlayFactory {
 
-    public static GamePlay createGamePlay(GamePlayType type, ChapterType chapterType, int level, int difficulty, User user, ArrayList<String > plants, ArrayList<String> zombies
+    public static GamePlay createGamePlay(GamePlayType type, ChapterType chapterType, int level, int difficulty, User user, ArrayList<String> plants, ArrayList<String> zombies
             , Set<String> boosted) {
         if (type == null) {
             type = GamePlayType.SIMPLE;

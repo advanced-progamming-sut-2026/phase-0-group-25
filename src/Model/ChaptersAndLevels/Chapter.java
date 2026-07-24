@@ -2,11 +2,9 @@ package src.Model.ChaptersAndLevels;
 
 import src.Enums.ChapterType;
 import src.Model.GamePlayType.GamePlay;
-import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.User.User;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Set;
 
 public class Chapter {
@@ -39,8 +37,8 @@ public class Chapter {
         return null;
     }
 
-    public GamePlay makeGame(int levelNumber, int difficulty, User user, ArrayList<String> plants, ArrayList<String > zombies
-            , Set<String > boosted) {
+    public GamePlay makeGame(int levelNumber, int difficulty, User user, ArrayList<String> plants, ArrayList<String> zombies
+            , Set<String> boosted) {
         Level level = getLevel(levelNumber);
         if (level != null) {
             GamePlay gamePlay = level.createGame(chapterType, difficulty, user, plants, zombies, boosted);

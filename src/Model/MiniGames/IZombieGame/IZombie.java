@@ -1,23 +1,23 @@
 package src.Model.MiniGames.IZombieGame;
 
+import src.Model.PlantsAndZombies.BattlePlant;
+import src.Model.PlantsAndZombies.Position;
+import src.Model.PlantsAndZombies.Zombie;
 import src.Model.PlayGroundType.PlayGround;
-import src.Model.PlantsAndZombies.*;
 import src.Model.Tile;
 
 import java.util.*;
 
 public class IZombie {
+    private final int RED_LINE_X = 5;
     private int mySuns;
     private PlayGround playGround;
     private ArrayList<Zombie> myZombies;
     private ArrayList<SunZombie> sunZombies;
     private ArrayList<BattlePlant> fieldPlants;
     private ArrayList<Tile> tiles;
-
     private boolean[] brainsEaten;
     private Map<String, Integer> availableZombies;
-    private final int RED_LINE_X = 5;
-
     private int totalTicksPassed = 0;
     private boolean isPaused = false;
     private Random random = new Random();

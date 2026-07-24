@@ -101,11 +101,11 @@ public class GreenHouseMenu extends Menu {
         boolean[][] unlocked = progress.getUnlockedPots();
         GreenhousePlant[][] plants = progress.getPotPlants();
 
-        if (!unlocked[y-1][x-1]) {
+        if (!unlocked[y - 1][x - 1]) {
             getView().showError("Pot is locked.");
             return;
         }
-        if (plants[y-1][x-1] != null) {
+        if (plants[y - 1][x - 1] != null) {
             getView().showError("Pot is occupied.");
             return;
         }
@@ -134,7 +134,7 @@ public class GreenHouseMenu extends Menu {
         UsersManager um = UsersManager.getInstance();
         UserProgress progress = um.getLoggedInUser().getUserProgress();
         GreenhousePlant[][] plants = progress.getPotPlants();
-        GreenhousePlant plant = plants[y-1][x-1];
+        GreenhousePlant plant = plants[y - 1][x - 1];
         if (plant == null) {
             getView().showError("No plant in this pot.");
             return;
@@ -163,7 +163,7 @@ public class GreenHouseMenu extends Menu {
         UsersManager um = UsersManager.getInstance();
         UserProgress progress = um.getLoggedInUser().getUserProgress();
         GreenhousePlant[][] plants = progress.getPotPlants();
-        GreenhousePlant plant = plants[y-1][x-1];
+        GreenhousePlant plant = plants[y - 1][x - 1];
         if (plant == null) {
             getView().showError("No plant in this pot.");
             return;

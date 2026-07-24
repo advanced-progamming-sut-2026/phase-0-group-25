@@ -13,14 +13,6 @@ public enum SecurityQuestionType {
         this.description = description;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
     public static SecurityQuestionType getById(int id) {
         for (SecurityQuestionType type : values()) {
             if (type.getId() == id) {
@@ -28,5 +20,13 @@ public enum SecurityQuestionType {
             }
         }
         return null;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

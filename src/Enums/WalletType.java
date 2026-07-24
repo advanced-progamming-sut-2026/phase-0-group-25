@@ -10,10 +10,6 @@ public enum WalletType {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public static WalletType getByName(String name) {
         for (WalletType walletType : values()) {
             if (walletType.name.equalsIgnoreCase(name)) {
@@ -21,5 +17,9 @@ public enum WalletType {
             }
         }
         return null;
+    }
+
+    public String getName() {
+        return name;
     }
 }

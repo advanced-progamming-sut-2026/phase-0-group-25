@@ -22,6 +22,7 @@ public class CollectionMenuTerminalView extends AbstractTerminalView implements 
             System.out.println("- " + plant);
         }
     }
+
     @Override
     public void showPlantUpgradeSuccess(String plantName) {
         System.out.println("Plant " + plantName + " upgraded successfully!");

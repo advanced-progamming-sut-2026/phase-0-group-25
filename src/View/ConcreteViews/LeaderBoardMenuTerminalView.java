@@ -2,8 +2,6 @@ package src.View.ConcreteViews;
 
 import src.View.ViewInterfaces.LeaderBoardMenuView;
 
-import java.util.Scanner;
-
 public class LeaderBoardMenuTerminalView extends AbstractTerminalView implements LeaderBoardMenuView {
 
     @Override
