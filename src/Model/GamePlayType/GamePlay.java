@@ -281,7 +281,7 @@ public abstract class GamePlay {
             if (thisPName.equals("IMITATER")) {
                 int number = new java.util.Random().nextInt(plants.size()) + 1;
                 thisPName = this.plants.get(number).getName();
-                isImitaterBoosted = chapterType == ChapterType.DARK_AGE;
+                isImitaterBoosted = getLevelOfPlant("IMITATER") == 4;
             }
             Position thisPPosition = new Position(getRealX(thisPX), getRealY(thisPY));
             BattlePlant thisP = PlantFactory.createBattlePlant(thisPName, getLevelOfPlant(thisPName), thisPPosition);
