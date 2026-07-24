@@ -10,8 +10,13 @@ public class Eating implements Ability {
     @Override
     public void executeAbility(Entity entity) {
         Zombie zombie = (Zombie) entity;
-
         double damageAmount = zombie.getZombieStats().getEatdps() * 0.1;
+        if (zombie.isHypnotized()) {
+            Zombie target = (Zombie) zombie.getRival();
+
+            target.takeDamage(damageAmount);
+        }
+
         BattlePlant plant = (BattlePlant) zombie.getRival();
 
         double plantFinalHP = plant.getCurrentHP() - damageAmount;
