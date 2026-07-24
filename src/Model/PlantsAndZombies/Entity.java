@@ -9,6 +9,9 @@ public abstract class Entity {
 
     public abstract void update();
 
+    public String getName() {
+        return name;
+    }
 
     public void setCurrentHP(double currentHP) {
         this.currentHP = currentHP;
