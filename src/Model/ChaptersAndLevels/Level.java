@@ -1,4 +1,3 @@
-// file: src/Model/ChaptersAndLevels/Level.java
 package src.Model.ChaptersAndLevels;
 
 import src.Enums.ChapterType;

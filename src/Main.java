@@ -10,7 +10,5 @@ public class Main {
         GameDataLoader.loadGameData();
         MenuManager menuManager = MenuManager.getInstance();
         menuManager.startAppLoop();
-
-
     }
 }

@@ -10,8 +10,8 @@ import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class UsersManager {
@@ -144,11 +144,7 @@ public class UsersManager {
         return null;
     }
 
-// file: src/Model/User/UsersManager.java
-// Add these methods inside UsersManager
 
-
-    // Refactor purchasePlant to use subtractCoins
     public String purchasePlant(String plantName) {
         User loggedInUser = getLoggedInUser();
         if (loggedInUser == null) {
@@ -169,10 +165,10 @@ public class UsersManager {
             return "You already own this plant!";
         }
 
-        // Use subtractCoins
+
         String error = subtractCoins(PLANT_PURCHASE_COST);
         if (error != null) {
-            return error; // e.g., "Insufficient coins..."
+            return error;
         }
 
         loggedInUser.unlockPlant(plantType);
@@ -412,19 +408,7 @@ public class UsersManager {
         }
     }
 
-    /**
-     * Called when a level is completed successfully.
-     * This method:
-     * 1. Unlocks the next level in the current chapter (if not level 4)
-     * 2. Unlocks the next chapter (if level 4 is completed)
-     * 3. Unlocks all reward plants and zombies from the level
-     * 4. Saves all changes to the user JSON file
-     *
-     * @param chapterType   The chapter that was completed
-     * @param currentLevel  The level number that was completed (1-4)
-     * @param plantRewards  ArrayList of PlantType rewards for this level
-     * @param zombieRewards ArrayList of ZombieType rewards for this level
-     */
+
     public void handleLevelWin(ChapterType chapterType, int currentLevel,
                                ArrayList<PlantType> plantRewards,
                                ArrayList<ZombieType> zombieRewards) {
@@ -432,17 +416,17 @@ public class UsersManager {
 
         UserProgress userProgress = loggedInUser.getUserProgress();
 
-        // Get the currently unlocked level for this chapter
+
         int currentUnlockedLevel = userProgress.getUnlockedChaptersAndLevels()
                 .getOrDefault(chapterType, 1);
 
-        // Only unlock next level if the completed level is the currently highest unlocked
+
         if (currentLevel >= currentUnlockedLevel) {
             if (currentLevel < 4) {
-                // Unlock the next level in this chapter
+
                 unlockLevel(chapterType, currentLevel + 1);
             } else if (currentLevel == 4) {
-                // Level 4 completed: unlock the next chapter
+
                 ChapterType nextChapter = getNextChapter(chapterType);
                 if (nextChapter != null) {
                     unlockChapter(nextChapter);
@@ -450,24 +434,24 @@ public class UsersManager {
             }
         }
 
-        // Unlock all reward plants for this level
+
         if (plantRewards != null && !plantRewards.isEmpty()) {
             for (PlantType plantType : plantRewards) {
                 unlockPlant(plantType);
             }
         }
 
-        // Unlock all reward zombies for this level
+
         if (zombieRewards != null && !zombieRewards.isEmpty()) {
             for (ZombieType zombieType : zombieRewards) {
                 unlockZombie(zombieType);
             }
         }
 
-        // Increment games played counter
+
         userProgress.setGamesPlayed(userProgress.getGamesPlayed() + 1);
 
-        // Save all changes to JSON file
+
         updateUser();
     }
 
@@ -495,19 +479,13 @@ public class UsersManager {
         updateUser();
     }
 
-    /**
-     * Checks if the daily offer was already bought today.
-     */
+
     public boolean isDailyOfferBoughtToday() {
         if (loggedInUser == null) return false;
         return loggedInUser.getUserProgress().isDailyOfferBoughtToday();
     }
 
 
-    /**
-     * Helper method to determine the next chapter after the current one.
-     * Chapter progression: ANCIENT_EGYPT → DARK_AGE → FROSTBITE_CAVES → BIG_WAVE_BEACH
-     */
     private ChapterType getNextChapter(ChapterType currentChapter) {
         switch (currentChapter) {
             case ANCIENT_EGYPT:
@@ -517,7 +495,7 @@ public class UsersManager {
             case FROSTBITE_CAVES:
                 return ChapterType.BIG_WAVE_BEACH;
             case BIG_WAVE_BEACH:
-                return null; // No chapter after the last one
+                return null;
             default:
                 return null;
         }
@@ -611,9 +589,7 @@ public class UsersManager {
         }
     }
 
-    /**
-     * Adds pots – unlocks the next locked pots in row‑major order.
-     */
+
     public void addPots(int amount) {
         if (loggedInUser == null || amount <= 0) return;
         UserProgress progress = loggedInUser.getUserProgress();
@@ -623,7 +599,7 @@ public class UsersManager {
         updateUser();
     }
 
-    // ----- Currency subtraction (no try-catch) -----
+
     public String subtractCoins(int amount) {
         if (loggedInUser == null) return "No logged in user.";
         UserProgress progress = loggedInUser.getUserProgress();
@@ -646,7 +622,55 @@ public class UsersManager {
         return null;
     }
 
-    // ----- Plant upgrade (no try-catch) -----
+
+    public Collection<User> getAllUsers() {
+        return userCache.values();
+    }
+
+    public void incrementMiniGamesCompleted() {
+        if (loggedInUser == null) return;
+        loggedInUser.getUserProgress().incrementMiniGamesCompleted();
+        updateUser();
+    }
+
+    public void incrementDailyQuestsCompleted() {
+        if (loggedInUser == null) return;
+        loggedInUser.getUserProgress().incrementDailyQuestsCompleted();
+        updateUser();
+    }
+
+    public void incrementNonDailyQuestsCompleted() {
+        if (loggedInUser == null) return;
+        loggedInUser.getUserProgress().incrementNonDailyQuestsCompleted();
+        updateUser();
+    }
+
+
+    public void setQuestProgressForCurrentUser(Map<String, Integer> progress) {
+        if (loggedInUser == null) return;
+        loggedInUser.getUserProgress().setQuestProgress(progress);
+        updateUser();
+    }
+
+    public void setCompletedQuestIdsForCurrentUser(List<String> completed) {
+        if (loggedInUser == null) return;
+        loggedInUser.getUserProgress().setCompletedQuestIds(completed);
+        updateUser();
+    }
+
+    public void setClaimedQuestIdsForCurrentUser(List<String> claimed) {
+        if (loggedInUser == null) return;
+        loggedInUser.getUserProgress().setClaimedQuestIds(claimed);
+        updateUser();
+    }
+
+    public void setLastDailyResetForCurrentUser(LocalDate date) {
+        if (loggedInUser == null) return;
+        loggedInUser.getUserProgress().setLastDailyReset(date);
+        updateUser();
+    }
+
+
     public String upgradePlant(String plantName) {
         if (loggedInUser == null) return "No logged in user.";
         PlantType plant = PlantType.fromName(plantName);
@@ -660,16 +684,16 @@ public class UsersManager {
         int requiredCoins = currentLevel * 1000;
         int requiredSeedPackets = currentLevel * 5;
 
-        // Check coins
+
         if (progress.getCoinsCount() < requiredCoins)
             return "Insufficient coins. Need " + requiredCoins + ".";
-        // Check seed packets
+
         if (!progress.hasEnoughSeedPackets(plant, requiredSeedPackets)) {
             int available = progress.getSeedPackets().getOrDefault(plant, 0);
             return "Not enough seed packets. Need " + requiredSeedPackets + ", have " + available + ".";
         }
 
-        // Perform deductions
+
         progress.subtractCoins(requiredCoins);
         progress.deductSeedPackets(plant, requiredSeedPackets);
         progress.upgradePlant(plant);
@@ -677,7 +701,7 @@ public class UsersManager {
         return null;
     }
 
-    // ----- Other methods (unchanged but we note addCoins/addGems only add positive) -----
+
     public void addCoins(int amount) {
         if (loggedInUser == null || amount <= 0) return;
         loggedInUser.getUserProgress().addCoins(amount);

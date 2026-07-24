@@ -7,10 +7,10 @@ public class ShopItem {
     private int id;
     private String name;
     private ShopItemType type;
-    private int price;              // in the currency specified below
-    private WalletType currency;    // COIN or DIAMOND
-    private int unitSize;           // number of items per purchase unit (e.g., 5 for random seed packet)
-    private int maxTotal;           // maximum total count the user can hold (0 = no limit)
+    private int price;
+    private WalletType currency;
+    private int unitSize;
+    private int maxTotal;
     private String description;
 
     public ShopItem(int id, String name, ShopItemType type, int price, WalletType currency,
@@ -25,7 +25,7 @@ public class ShopItem {
         this.description = description;
     }
 
-    // Getters
+
     public int getId() {
         return id;
     }

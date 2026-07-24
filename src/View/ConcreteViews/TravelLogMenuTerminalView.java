@@ -14,7 +14,7 @@ public class TravelLogMenuTerminalView extends AbstractTerminalView implements T
         if (activeQuests.isEmpty()) {
             System.out.println("  No active quests.");
         } else {
-            // Group by priority
+
             for (Quest q : activeQuests) {
                 String status = q.getCurrentProgress() + "/" + q.getRequiredCount();
                 System.out.printf("  [%s] %s (%s) - %s\n",

@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 
 public class TravelLogMenu extends Menu {
     private final TravelLogMenuView travelLogMenuView;
-    private String currentPage = "quests"; // or "minigames"
+    private String currentPage = "quests"; 
 
     public TravelLogMenu(TravelLogMenuView travelLogMenuView) {
         super(MenuType.Game);
@@ -49,7 +49,7 @@ public class TravelLogMenu extends Menu {
 
     private void showQuestsPage() {
         QuestManager qm = QuestManager.getInstance();
-        // Show active quests grouped by priority
+        
         travelLogMenuView.showQuests(qm.getActiveQuests(), qm.getCompletedQuests());
     }
 
@@ -57,7 +57,7 @@ public class TravelLogMenu extends Menu {
         String error = QuestManager.getInstance().claimReward(questId);
         if (error == null) {
             travelLogMenuView.showRewardClaimed(questId);
-            // Refresh quest display
+            
             showQuestsPage();
         } else {
             getView().showError(error);

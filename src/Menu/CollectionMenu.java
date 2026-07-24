@@ -150,7 +150,7 @@ public class CollectionMenu extends Menu {
             }
         }
 
-        BattlePlant plant = PlantFactory.createBattlePlant(plantType.getName(), level);
+        BattlePlant plant = PlantFactory.createBattlePlant(plantType.getName(), level, new Position(0, 0));
         if (plant == null || plant.getPlantStats() == null) {
             getView().showError("Plant stats not found for: " + plantName);
             return;

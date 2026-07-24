@@ -21,11 +21,9 @@ public class Quest {
     private boolean isCompleted;
     private boolean isClaimed;
     private List<Reward> rewards;
-    private Map<String, Object> conditions; // for complex conditions (e.g., chapter, family, column)
-    private LocalDate dateAssigned;          // for daily quests
+    private Map<String, Object> conditions;
+    private LocalDate dateAssigned;
     private boolean dailyReset;
-
-    // Temporary fields for condition evaluation (can be replaced with Predicate)
     private Predicate<Object[]> conditionChecker;
 
     public Quest(String id, String name, String description, QuestCategory category,
@@ -45,11 +43,10 @@ public class Quest {
         this.isCompleted = false;
         this.isClaimed = false;
         this.dateAssigned = dailyReset ? LocalDate.now() : null;
-        // Set default condition checker (can be overridden per quest)
         this.conditionChecker = (data) -> true;
     }
 
-    // Getters and setters
+
     public String getId() {
         return id;
     }
@@ -146,7 +143,6 @@ public class Quest {
         this.dateAssigned = LocalDate.now();
     }
 
-    // Condition checker – can be set per quest
     public void setConditionChecker(Predicate<Object[]> checker) {
         this.conditionChecker = checker;
     }

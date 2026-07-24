@@ -7,8 +7,8 @@ import src.Enums.RewardType;
 public class Reward {
     private RewardType type;
     private int amount;
-    private PlantType plantType;    // for SEED_PACKETS / UNLOCK_PLANT
-    private ChapterType chapterType; // for UNLOCK_CHAPTER
+    private PlantType plantType;
+    private ChapterType chapterType;
 
     public Reward(RewardType type, int amount) {
         this(type, amount, null, null);
@@ -29,7 +29,7 @@ public class Reward {
         this.chapterType = chapterType;
     }
 
-    // Getters
+
     public RewardType getType() {
         return type;
     }

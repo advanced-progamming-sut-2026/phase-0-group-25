@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public class GreenhousePlant {
     private PlantType type;
     private LocalDateTime plantedAt;
-    private double growthHours; // total hours needed
+    private double growthHours;
 
     public GreenhousePlant(PlantType type, double growthHours) {
         this.type = type;
@@ -27,9 +27,7 @@ public class GreenhousePlant {
         return growthHours;
     }
 
-    /**
-     * @return remaining hours (can be negative if ready)
-     */
+
     public double getRemainingHours() {
         long secondsElapsed = java.time.Duration.between(plantedAt, LocalDateTime.now()).getSeconds();
         double hoursElapsed = secondsElapsed / 3600.0;

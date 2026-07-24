@@ -6,9 +6,9 @@ import java.time.LocalDate;
 
 public class DailyOffer {
     private PlantType plantType;
-    private int price;          // discounted price in coins
-    private int seedPacketCount; // usually 10
-    private LocalDate date;     // the day this offer is valid
+    private int price;
+    private int seedPacketCount;
+    private LocalDate date;
 
     public DailyOffer(PlantType plantType, int price, int seedPacketCount, LocalDate date) {
         this.plantType = plantType;
@@ -17,7 +17,7 @@ public class DailyOffer {
         this.date = date;
     }
 
-    // Getters
+
     public PlantType getPlantType() {
         return plantType;
     }

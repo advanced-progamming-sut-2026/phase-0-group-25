@@ -1,6 +1,6 @@
-// src/Model/User/UserProgress.java
 package src.Model.User;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import src.Enums.ChapterType;
 import src.Enums.PlantType;
@@ -10,6 +10,9 @@ import src.Model.Greenhouse.GreenhousePlant;
 import java.time.LocalDate;
 import java.util.*;
 
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY,
+        getterVisibility = JsonAutoDetect.Visibility.NONE,
+        setterVisibility = JsonAutoDetect.Visibility.NONE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserProgress {
     private HashMap<ChapterType, Integer> unlockedChaptersAndLevels;
@@ -20,18 +23,22 @@ public class UserProgress {
     private int gameDifficulty;
     private int gamesPlayed;
 
-    private Map<String, Integer> questProgress;        // questId -> current progress
-    private List<String> completedQuestIds;            // quests that are completed but not yet claimed
-    private List<String> claimedQuestIds;              // quests already claimed
+    private Map<String, Integer> questProgress;
+    private List<String> completedQuestIds;
+    private List<String> claimedQuestIds;
     private LocalDate lastDailyReset;
 
     private int plantFoodCount;
     private Map<PlantType, Integer> seedPackets;
     private LocalDate dailyOfferPurchaseDate;
 
-    // Greenhouse – now using 2D arrays
-    private boolean[][] unlockedPots;          // [y][x] (y=0..3, x=0..4)
-    private GreenhousePlant[][] potPlants;     // [y][x]
+    private int miniGamesCompleted;
+    private int dailyQuestsCompleted;
+    private int nonDailyQuestsCompleted;
+
+
+    private boolean[][] unlockedPots;
+    private GreenhousePlant[][] potPlants;
     private Set<PlantType> greenhouseBoosts;
 
     public UserProgress() {
@@ -48,15 +55,19 @@ public class UserProgress {
         this.seedPackets = new HashMap<>();
         this.dailyOfferPurchaseDate = null;
 
-        // Initialize greenhouse arrays
+
         this.unlockedPots = new boolean[4][5];
         this.potPlants = new GreenhousePlant[4][5];
         this.greenhouseBoosts = new HashSet<>();
 
-        // Default: row 1 (index 0) all unlocked
+
         for (int x = 0; x < 5; x++) {
             unlockedPots[0][x] = true;
         }
+
+        this.miniGamesCompleted = 0;
+        this.dailyQuestsCompleted = 0;
+        this.nonDailyQuestsCompleted = 0;
 
         this.questProgress = new HashMap<>();
         this.completedQuestIds = new ArrayList<>();
@@ -64,11 +75,37 @@ public class UserProgress {
         this.lastDailyReset = null;
     }
 
+    public int getMiniGamesCompleted() {
+        return miniGamesCompleted;
+    }
+
+    public int getDailyQuestsCompleted() {
+        return dailyQuestsCompleted;
+    }
+
+    public int getNonDailyQuestsCompleted() {
+        return nonDailyQuestsCompleted;
+    }
+
+
+    void incrementMiniGamesCompleted() {
+        this.miniGamesCompleted++;
+    }
+
+    void incrementDailyQuestsCompleted() {
+        this.dailyQuestsCompleted++;
+    }
+
+    void incrementNonDailyQuestsCompleted() {
+        this.nonDailyQuestsCompleted++;
+    }
+
+
     public Map<String, Integer> getQuestProgress() {
         return questProgress;
     }
 
-    public void setQuestProgress(Map<String, Integer> questProgress) {
+    void setQuestProgress(Map<String, Integer> questProgress) {
         this.questProgress = questProgress;
     }
 
@@ -76,7 +113,7 @@ public class UserProgress {
         return completedQuestIds;
     }
 
-    public void setCompletedQuestIds(List<String> completedQuestIds) {
+    void setCompletedQuestIds(List<String> completedQuestIds) {
         this.completedQuestIds = completedQuestIds;
     }
 
@@ -84,7 +121,7 @@ public class UserProgress {
         return claimedQuestIds;
     }
 
-    public void setClaimedQuestIds(List<String> claimedQuestIds) {
+    void setClaimedQuestIds(List<String> claimedQuestIds) {
         this.claimedQuestIds = claimedQuestIds;
     }
 
@@ -92,16 +129,16 @@ public class UserProgress {
         return lastDailyReset;
     }
 
-    public void setLastDailyReset(LocalDate lastDailyReset) {
+    void setLastDailyReset(LocalDate lastDailyReset) {
         this.lastDailyReset = lastDailyReset;
     }
 
-    // ----- Getters / Setters for JSON serialisation -----
+
     public boolean[][] getUnlockedPots() {
         return unlockedPots;
     }
 
-    public void setUnlockedPots(boolean[][] unlockedPots) {
+    void setUnlockedPots(boolean[][] unlockedPots) {
         this.unlockedPots = unlockedPots;
     }
 
@@ -109,7 +146,7 @@ public class UserProgress {
         return potPlants;
     }
 
-    public void setPotPlants(GreenhousePlant[][] potPlants) {
+    void setPotPlants(GreenhousePlant[][] potPlants) {
         this.potPlants = potPlants;
     }
 
@@ -117,11 +154,11 @@ public class UserProgress {
         return greenhouseBoosts;
     }
 
-    public void setGreenhouseBoosts(Set<PlantType> greenhouseBoosts) {
+    void setGreenhouseBoosts(Set<PlantType> greenhouseBoosts) {
         this.greenhouseBoosts = greenhouseBoosts;
     }
 
-    // ----- Pot count (computed) -----
+
     public int getPotsCount() {
         int count = 0;
         for (int y = 0; y < 4; y++) {
@@ -132,7 +169,7 @@ public class UserProgress {
         return count;
     }
 
-    // ----- Package‑private mutators for Greenhouse (called by UsersManager) -----
+
     void unlockPot(int x, int y) {
         if (x < 1 || x > 5 || y < 1 || y > 4) return;
         unlockedPots[y - 1][x - 1] = true;
@@ -171,12 +208,12 @@ public class UserProgress {
         greenhouseBoosts.remove(plant);
     }
 
-    // ----- Other fields: getters/setters (unchanged) -----
+
     public int getPlantFoodCount() {
         return plantFoodCount;
     }
 
-    public void setPlantFoodCount(int count) {
+    void setPlantFoodCount(int count) {
         this.plantFoodCount = Math.min(count, 3);
     }
 
@@ -184,7 +221,7 @@ public class UserProgress {
         return seedPackets;
     }
 
-    public void setSeedPackets(Map<PlantType, Integer> seedPackets) {
+    void setSeedPackets(Map<PlantType, Integer> seedPackets) {
         this.seedPackets = seedPackets;
     }
 
@@ -196,7 +233,7 @@ public class UserProgress {
         return dailyOfferPurchaseDate;
     }
 
-    public void setDailyOfferPurchaseDate(LocalDate date) {
+    void setDailyOfferPurchaseDate(LocalDate date) {
         this.dailyOfferPurchaseDate = date;
     }
 
@@ -208,7 +245,7 @@ public class UserProgress {
         return unlockedChaptersAndLevels;
     }
 
-    public void setUnlockedChaptersAndLevels(HashMap<ChapterType, Integer> unlockedChaptersAndLevels) {
+    void setUnlockedChaptersAndLevels(HashMap<ChapterType, Integer> unlockedChaptersAndLevels) {
         this.unlockedChaptersAndLevels = unlockedChaptersAndLevels;
     }
 
@@ -232,7 +269,7 @@ public class UserProgress {
         return unlockedPlantsAndTheirLevels;
     }
 
-    public void setUnlockedPlantsAndTheirLevels(HashMap<PlantType, Integer> unlockedPlantsAndTheirLevels) {
+    void setUnlockedPlantsAndTheirLevels(HashMap<PlantType, Integer> unlockedPlantsAndTheirLevels) {
         this.unlockedPlantsAndTheirLevels = unlockedPlantsAndTheirLevels;
     }
 
@@ -248,7 +285,7 @@ public class UserProgress {
         return gemsCount;
     }
 
-    public void setGemsCount(int gemsCount) {
+    void setGemsCount(int gemsCount) {
         this.gemsCount = gemsCount;
     }
 
@@ -256,7 +293,7 @@ public class UserProgress {
         return coinsCount;
     }
 
-    public void setCoinsCount(int coinsCount) {
+    void setCoinsCount(int coinsCount) {
         this.coinsCount = coinsCount;
     }
 
@@ -296,7 +333,7 @@ public class UserProgress {
         unlockedChaptersAndLevels.put(chapterType, level);
     }
 
-    // ----- Currency subtraction (no exceptions) -----
+
     public void subtractCoins(int amount) {
         if (amount < 0) throw new IllegalArgumentException("Cannot subtract negative amount.");
         if (this.coinsCount < amount) throw new IllegalArgumentException("Insufficient coins.");
@@ -309,7 +346,7 @@ public class UserProgress {
         this.gemsCount -= amount;
     }
 
-    // ----- Seed packet and upgrade (no exceptions) -----
+
     public boolean hasEnoughSeedPackets(PlantType plant, int required) {
         return seedPackets.getOrDefault(plant, 0) >= required;
     }

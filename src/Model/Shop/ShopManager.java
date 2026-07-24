@@ -31,7 +31,7 @@ public class ShopManager {
     }
 
     private void initPermanentItems() {
-        // ID, Name, Type, Price, Currency, UnitSize, MaxTotal, Description
+
         permanentItems.add(new ShopItem(1, "Pot", ShopItemType.POT, 2000, WalletType.COIN, 1, 20,
                 "Unlocks a greenhouse slot (max 20)"));
         permanentItems.add(new ShopItem(2, "Plant Food", ShopItemType.PLANT_FOOD, 3, WalletType.DIAMOND, 1, 3,
@@ -45,17 +45,17 @@ public class ShopManager {
     }
 
     private void generateDailyOffer() {
-        // Get all unlocked plants for the user
+
         User user = UsersManager.getInstance().getLoggedInUser();
         if (user == null) return;
         List<PlantType> unlocked = new ArrayList<>(user.getUserProgress().getUnlockedPlantsAndTheirLevels().keySet());
         if (unlocked.isEmpty()) {
-            // fallback: use Sunflower if nothing else
+
             dailyOffer = new DailyOffer(PlantType.SUNFLOWER, 1600, 10, LocalDate.now());
             return;
         }
         PlantType randomPlant = unlocked.get(new Random().nextInt(unlocked.size()));
-        dailyOffer = new DailyOffer(randomPlant, 1600, 10, LocalDate.now()); // base 2000, 20% off -> 1600
+        dailyOffer = new DailyOffer(randomPlant, 1600, 10, LocalDate.now());
     }
 
     public List<ShopItem> getPermanentItems() {
@@ -63,14 +63,13 @@ public class ShopManager {
     }
 
     public DailyOffer getDailyOffer() {
-        // Check if the stored daily offer is still valid for today; if not, regenerate
+
         if (dailyOffer == null || !dailyOffer.isValidForToday()) {
             generateDailyOffer();
         }
         return dailyOffer;
     }
-// file: src/Model/Shop/ShopManager.java
-// Replace the purchase logic with the following clean version
+
 
     public String purchaseItem(int itemId, int count, String plantTypeName) {
         User user = UsersManager.getInstance().getLoggedInUser();
@@ -79,7 +78,7 @@ public class ShopManager {
         UserProgress progress = user.getUserProgress();
         UsersManager um = UsersManager.getInstance();
 
-        // Daily offer
+
         if (itemId == 6) {
             return purchaseDailyOffer(um);
         }
@@ -95,7 +94,7 @@ public class ShopManager {
         int units = count / item.getUnitSize();
         int totalPrice = item.getPrice() * units;
 
-        // Deduct currency using subtract methods
+
         if (item.getCurrency() == WalletType.COIN) {
             String error = um.subtractCoins(totalPrice);
             if (error != null) return error;
@@ -104,7 +103,7 @@ public class ShopManager {
             if (error != null) return error;
         }
 
-        // Apply item effects
+
         switch (item.getType()) {
             case POT:
                 if (progress.getPotsCount() + units > item.getMaxTotal()) {
@@ -144,7 +143,7 @@ public class ShopManager {
                 break;
 
             case CURRENCY_EXCHANGE:
-                // Exchange: subtract gems (5 per unit) and add coins (500 per unit)
+
                 String gemError = um.subtractGems(5 * units);
                 if (gemError != null) return gemError;
                 um.addCoins(500 * units);
@@ -154,7 +153,7 @@ public class ShopManager {
                 return "Unknown item type.";
         }
 
-        return null; // success
+        return null;
     }
 
     private String purchaseDailyOffer(UsersManager um) {
