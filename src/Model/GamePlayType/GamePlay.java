@@ -111,6 +111,21 @@ public abstract class GamePlay {
                 }
             }
         };
+
+        if (chapterType == ChapterType.FROSTBITE_CAVES) {
+            String thisPName1 = plants.get(0);
+            String thisPName2 = plants.get(1);
+            Position position1 = new Position(2, 2);
+            Position position2 = new Position(3 , 5);
+            BattlePlant thisP1 = PlantFactory.createBattlePlant(thisPName1, getLevelOfPlant(thisPName1), position1);
+            BattlePlant thisP2 = PlantFactory.createBattlePlant(thisPName2, getLevelOfPlant(thisPName2), position2);
+            this.planting(thisP1, position1);
+            this.planting(thisP2, position2);
+
+            for (BattlePlant p : this.gamePlants) {
+                p.setFrozen(true);
+            }
+        }
     }
 
     public abstract void update() ;
@@ -250,10 +265,15 @@ public abstract class GamePlay {
             thisP.setRow((int) thisPosition.getY());
             thisP.setColumn((int) thisPosition.getX());
 
+            // Checking if this plant has a kind of boost...
             PlantType thisPlantType = PlantType.valueOf(thisPName);
             if (thisUser.getUserProgress().getGreenhouseBoosts().contains(thisPlantType)) {
                 thisP.setEffected(true, effectedTime);
             }
+            if (UsersManager.getInstance().hasGreenhouseBoost(thisPlantType)) {
+                UsersManager.getInstance().consumeGreenhouseBoost(thisPlantType);
+            }
+
             this.gamePlants.add(thisP);
             thisTile.addPlant(thisP);
             this.mySuns -= thisPlant.getPlantStats().getCost();

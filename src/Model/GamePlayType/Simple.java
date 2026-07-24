@@ -27,7 +27,7 @@ public class Simple extends GamePlay {
         totalTicksPassed++;
         timeToSpwan--;
 
-        if (this.level != 4) {
+        if (this.chapterType != ChapterType.DARK_AGE) {
             sunMaker();
         }
         applyIcyWind();
