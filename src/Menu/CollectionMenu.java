@@ -19,13 +19,11 @@ public class CollectionMenu extends Menu {
     private static final int PLANT_PURCHASE_COST = 2000;
 
     private final CollectionMenuView collectionMenuView;
-    private final PlantFactory plantFactory;
     private ZombieFactory zombieFactory;
 
     public CollectionMenu(CollectionMenuView collectionMenuView) {
         super(MenuType.Game);
         this.collectionMenuView = collectionMenuView;
-        this.plantFactory = new PlantFactory();
     }
 
     public void setZombieFactory(ZombieFactory zombieFactory) {
