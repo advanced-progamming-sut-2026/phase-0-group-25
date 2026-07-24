@@ -188,8 +188,8 @@ public class Zombie extends Entity {
         }
     }
 
-    public void takeDamage(int damage) {
-        int leftoverDamage = damage;
+    public void takeDamage(double damage) {
+        int leftoverDamage = (int) Math.ceil(damage);
 
         for (int i = 0; i < activeArmors.size(); i++) {
             Armor armor = activeArmors.get(i);

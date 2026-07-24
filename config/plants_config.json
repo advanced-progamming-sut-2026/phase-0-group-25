@@ -406,17 +406,17 @@
   ],
 
   "HOT_POTATO": [
-    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 5, "abilities": ["explosion"], "tags": [], "attributes": {}, "plantFoodEffect": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 5, "abilities": ["explosion"], "tags": ["fire", "insta-kill"], "attributes": {"life-span": 0}, "plantFoodEffect": {} },
+    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 3, "abilities": ["explosion"], "tags": ["fire", "insta-kill"], "attributes": {"life-span": 0}, "plantFoodEffect": {} },
+    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 3, "abilities": ["explosion"], "tags": ["fire", "insta-kill"], "attributes": {"life-span": 0, "range": 1}, "plantFoodEffect": {} },
+    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 3, "abilities": ["explosion"], "tags": ["fire", "insta-kill"], "attributes": {"life-span": 0, "range": 1, "damage": 15}, "plantFoodEffect": {} }
   ],
 
   "GRAVE_BUSTER": [
-    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 10, "abilities": ["explosion"], "tags": [], "attributes": {}, "plantFoodEffect": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
+    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 10, "abilities": ["explosion"], "tags": ["insta-kill"], "attributes": {"life-span": 0}, "plantFoodEffect": {} },
+    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 10, "abilities": ["explosion"], "tags": ["insta-kill"], "attributes": {"life-span": 0}, "plantFoodEffect": {} },
+    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 8, "abilities": ["explosion"], "tags": ["insta-kill"], "attributes": {"life-span": 0}, "plantFoodEffect": {} },
+    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 8, "abilities": ["explosion"], "tags": ["insta-kill"], "attributes": {"life-span": 0, "damage": 15}, "plantFoodEffect": {} }
   ],
 
   "ENLIGHTEN_MINT": [

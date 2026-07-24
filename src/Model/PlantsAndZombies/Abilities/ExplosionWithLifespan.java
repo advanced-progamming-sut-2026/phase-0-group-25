@@ -1,5 +1,6 @@
 package src.Model.PlantsAndZombies.Abilities;
 
+import src.Enums.ChapterType;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Entity;
 import src.Model.PlantsAndZombies.Zombie;
@@ -10,9 +11,12 @@ import java.util.ArrayList;
 public class ExplosionWithLifespan implements Ability {
     @Override
     public void executeAbility(Entity entity) {
-        BattlePlant plant = (BattlePlant) attacker.getRival();
+        BattlePlant plant = (BattlePlant) entity;
         ArrayList<String> tags = plant.getPlantStats().getTags();
 
+        if (tags.contains("insta-kill")) {
+            handleMakingArablePlants(plant, tags);
+        }
         if (tags.contains("shroom")) {
             handleShroomPlants(plant, tags);
             return;
@@ -80,6 +84,58 @@ public class ExplosionWithLifespan implements Ability {
                 Tile tile = game.getTile();
                 for (Zombie zombie : tile.getZombies()) {
                     zombie.takeDamage(damage);
+                }
+            }
+        }
+    }
+
+    private void handleMakingArablePlants(BattlePlant plant, ArrayList<String> tags) {
+        if (tags.contains("fire")) {
+            int row = plant.getRow();
+            int column = plant.getColumn();
+            if (plant.getPlantStats().getAttributes().containsKey("range")) {
+                rangeMelt();
+            } else {
+                //todo:
+                Tile tile = game.getTile();
+                for (BattlePlant plant1 : tile.getPlants()) {
+                    plant1.setFrozen(false);
+                }
+            }
+
+        } else {
+            //todo
+            for (Tile tile : game.getTile()) {
+                if ((game.getChapter.equals(ChapterType.ANCIENT_EGYPT)) ||
+                        ((game.getChapter.equals(ChapterType.DARK_AGE))) {
+                    if (!tile.isArable()) {
+                        tile.setArable(true);
+                    }
+                }
+            }
+        }
+
+        if (plant.getPlantStats().getAttributes().containsKey("damage")) {
+            int damage = (int) plant.getPlantStats().getAttributes().get("damage");
+
+            Tile tile = game.getTile();//todo
+            for (Zombie zombie : tile.getZombies()) {
+                zombie.takeDamage(damage);
+            }
+        }
+    }
+
+    private void rangeMelt(BattlePlant plant) {
+        int range = (int) plant.getPlantStats().getAttributes().get("range");
+        int plantRow = plant.getRow();
+        int plantColumn = plant.getColumn();
+
+        for (int i = -range; i <= range; i++) {
+            for (int j = -range; j <= range; j++) {
+                //todo
+                Tile tile = game.getTile();
+                for (BattlePlant plant1 : tile.getPlants()) {
+                    plant1.setFrozen(false);
                 }
             }
         }
