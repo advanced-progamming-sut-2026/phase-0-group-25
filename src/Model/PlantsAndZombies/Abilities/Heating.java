@@ -12,7 +12,6 @@ public class Heating implements Ability {
 
         rangeHeat(plant, plant.getRow(), plant.getColumn());
 
-
     }
 
     private void rangeHeat(BattlePlant plant, int row, int column) {

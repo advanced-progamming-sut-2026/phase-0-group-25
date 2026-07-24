@@ -15,8 +15,15 @@ public class Eating implements Ability {
             Zombie target = (Zombie) zombie.getRival();
 
             target.takeDamage(damageAmount);
+            return;
         }
 
+        if(zombie.getRival() instanceof Zombie){
+            Zombie target = (Zombie) zombie.getRival();
+
+            target.takeDamage(damageAmount);
+            return;
+        }
         BattlePlant plant = (BattlePlant) zombie.getRival();
 
         double plantFinalHP = plant.getCurrentHP() - damageAmount;
