@@ -17,10 +17,10 @@ public class NewsManager {
         this.news = news;
     }
 
-    public ArrayList<String> extractUnreadNews(){
-        ArrayList<String > newsMessages = new ArrayList<>();
-        for (News news1:news){
-            if(!news1.isRead()){
+    public ArrayList<String> extractUnreadNews() {
+        ArrayList<String> newsMessages = new ArrayList<>();
+        for (News news1 : news) {
+            if (!news1.isRead()) {
                 news1.setRead(true);
                 newsMessages.add(news1.getMessage());
             }
@@ -29,10 +29,10 @@ public class NewsManager {
     }
 
 
-    public ArrayList<String> extractAllNews(){
-        ArrayList<String > newsMessages = new ArrayList<>();
-        for (News news1:news){
-            if(!news1.isRead())
+    public ArrayList<String> extractAllNews() {
+        ArrayList<String> newsMessages = new ArrayList<>();
+        for (News news1 : news) {
+            if (!news1.isRead())
                 news1.setRead(true);
             newsMessages.add(news1.getMessage());
         }
@@ -40,8 +40,7 @@ public class NewsManager {
     }
 
 
-
-    public void addNews(News news){
+    public void addNews(News news) {
         this.news.add(news);
     }
 

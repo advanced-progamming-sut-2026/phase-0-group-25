@@ -2,8 +2,6 @@ package src.Model.PlantsAndZombies.Abilities;
 
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Entity;
-import src.Model.PlantsAndZombies.Plant;
-import tools.jackson.databind.DeserializationFeature;
 
 public class Mint implements Ability {
     @Override

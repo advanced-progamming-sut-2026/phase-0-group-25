@@ -4,7 +4,7 @@ import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Entity;
 import src.Model.Sun.Sun;
 
-import java.util.*;
+import java.util.List;
 
 public class ProducingSun implements Ability {
     private boolean isCollected = false;

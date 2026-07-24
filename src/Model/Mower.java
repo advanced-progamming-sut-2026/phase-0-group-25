@@ -1,7 +1,6 @@
 package src.Model;
 
 import src.Model.GamePlayType.GamePlay;
-import src.Model.PlantsAndZombies.Position;
 import src.Model.PlantsAndZombies.Zombie;
 
 public class Mower {
@@ -13,7 +12,7 @@ public class Mower {
         this.y = y;
     }
 
-    public void killZombies(GamePlay thisGame){
+    public void killZombies(GamePlay thisGame) {
         isUsed = true;
         for (Zombie z : thisGame.getGameZombies()) {
             if (z.getPosition().getY() == y) {

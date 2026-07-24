@@ -35,10 +35,6 @@ public enum ZombieType {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public static ZombieType fromName(String name) {
         for (ZombieType type : values()) {
             if (type.name.equalsIgnoreCase(name)) {
@@ -46,5 +42,9 @@ public enum ZombieType {
             }
         }
         throw new IllegalArgumentException("Unknown zombie name: " + name);
+    }
+
+    public String getName() {
+        return name;
     }
 }

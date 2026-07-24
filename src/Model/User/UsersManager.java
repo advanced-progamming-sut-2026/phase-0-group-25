@@ -15,28 +15,23 @@ import java.util.HashMap;
 import java.util.regex.Pattern;
 
 public class UsersManager {
-    private static UsersManager instance;
     private static final String FILE_PATH = "users.json";
     private static final String STATE_FILE = "loginstate.json";
-    private final ObjectMapper mapper = new ObjectMapper();
-    private HashMap<String, User> userCache = new HashMap<>();
-    private User loggedInUser = null;
-
     private static final int PLANT_PURCHASE_COST = 2000;
-
     private static final Pattern USERNAME_CHAR_REGEX = Pattern.compile("^[a-zA-Z0-9_]+$");
-
     private static final Pattern PASSWORD_COMPLEXITY_REGEX = Pattern.compile(
             "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+={}\\[\\]|\\\\:;\"',<>?])\\S{8,}$"
     );
-
     private static final Pattern EMAIL_USERNAME_REGEX = Pattern.compile(
             "^[a-zA-Z0-9]$|^[a-zA-Z0-9](?!.*\\.\\.)[a-zA-Z0-9._-]*[a-zA-Z0-9]$"
     );
-
     private static final Pattern EMAIL_DOMAIN_REGEX = Pattern.compile(
             "^[a-zA-Z0-9](?:[a-zA-Z0-9.-]*[a-zA-Z0-9])?\\.[a-zA-Z0-9]{2,}$"
     );
+    private static UsersManager instance;
+    private final ObjectMapper mapper = new ObjectMapper();
+    private HashMap<String, User> userCache = new HashMap<>();
+    private User loggedInUser = null;
 
     private UsersManager() {
         loadUsers();
@@ -57,19 +52,20 @@ public class UsersManager {
         }
 
         try {
-            userCache = mapper.readValue(file, new TypeReference<HashMap<String, User>>() {});
+            userCache = mapper.readValue(file, new TypeReference<HashMap<String, User>>() {
+            });
         } catch (Exception e) {
             throw new RuntimeException("Failed to read or parse users.json", e);
         }
     }
 
-    public void addUser(User user){
+    public void addUser(User user) {
         userCache.put(user.getUserName(), user);
         writeUsers();
     }
 
     public String validateAndChangeNickname(String newNickname) {
-        if(loggedInUser.getNickName().equals(newNickname)){
+        if (loggedInUser.getNickName().equals(newNickname)) {
             return "you are already using this nickname.";
         }
 
@@ -97,7 +93,7 @@ public class UsersManager {
             return "Invalid password: Old password does not match.";
         }
 
-        if(loggedInUser.getPassword().equals(newPassword)){
+        if (loggedInUser.getPassword().equals(newPassword)) {
             return "you are already using this password.";
         }
 
@@ -424,9 +420,9 @@ public class UsersManager {
      * 3. Unlocks all reward plants and zombies from the level
      * 4. Saves all changes to the user JSON file
      *
-     * @param chapterType The chapter that was completed
-     * @param currentLevel The level number that was completed (1-4)
-     * @param plantRewards ArrayList of PlantType rewards for this level
+     * @param chapterType   The chapter that was completed
+     * @param currentLevel  The level number that was completed (1-4)
+     * @param plantRewards  ArrayList of PlantType rewards for this level
      * @param zombieRewards ArrayList of ZombieType rewards for this level
      */
     public void handleLevelWin(ChapterType chapterType, int currentLevel,
@@ -476,7 +472,6 @@ public class UsersManager {
     }
 
 
-
     public void addPlantFood(int amount) {
         if (loggedInUser == null) return;
         UserProgress progress = loggedInUser.getUserProgress();
@@ -492,6 +487,7 @@ public class UsersManager {
         progress.addSeedPackets(plant, amount);
         updateUser();
     }
+
     public void markDailyOfferPurchased() {
         if (loggedInUser == null) return;
         UserProgress progress = loggedInUser.getUserProgress();
@@ -506,7 +502,6 @@ public class UsersManager {
         if (loggedInUser == null) return false;
         return loggedInUser.getUserProgress().isDailyOfferBoughtToday();
     }
-
 
 
     /**
@@ -543,7 +538,6 @@ public class UsersManager {
     }
 
 
-
     public void unlockZombie(ZombieType zombieType) {
         if (loggedInUser != null) {
             loggedInUser.unlockZombie(zombieType);
@@ -571,15 +565,6 @@ public class UsersManager {
         updateUser();
         return news;
     }
-
-
-
-
-
-
-
-
-
 
 
     public void unlockPot(int x, int y) {
@@ -619,7 +604,7 @@ public class UsersManager {
 
     public void acceleratePlant(int x, int y) {
         if (loggedInUser == null) return;
-        GreenhousePlant plant = loggedInUser.getUserProgress().getPotPlants()[y-1][x-1];
+        GreenhousePlant plant = loggedInUser.getUserProgress().getPotPlants()[y - 1][x - 1];
         if (plant != null) {
             plant.forceReady();
             updateUser();
@@ -704,7 +689,6 @@ public class UsersManager {
         loggedInUser.getUserProgress().addGems(amount);
         updateUser();
     }
-
 
 
 }

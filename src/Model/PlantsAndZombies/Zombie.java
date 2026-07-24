@@ -11,7 +11,8 @@ import src.Model.PlantsAndZombies.Projectiles.Dynamite;
 import src.Model.PlantsAndZombies.Projectiles.Projectile;
 import src.Model.Sun.Sun;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 
 public class Zombie extends Entity {
@@ -314,6 +315,7 @@ public class Zombie extends Entity {
     public void setHypnotized(boolean hypnotized) {
         isHypnotized = hypnotized;
     }
+
     public int getCost() {
         return this.zombieStats.getWaveCost();
     }

@@ -2,8 +2,6 @@ package src.View.ConcreteViews;
 
 import src.View.ViewInterfaces.ProfileMenuView;
 
-import java.util.Scanner;
-
 public class ProfileMenuTerminalView extends AbstractTerminalView implements ProfileMenuView {
 
     @Override

@@ -1,4 +1,4 @@
 package src.View.ViewInterfaces;
 
-public interface SettingMenuView extends BaseView{
+public interface SettingMenuView extends BaseView {
 }

@@ -3,25 +3,19 @@ package src.Model.PlantsAndZombies.Projectiles;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Position;
 import src.Model.PlantsAndZombies.Zombie;
-import src.Model.Tile;
 
 public class Projectile {
-    private double velocityX;
-    private double velocityY;
-
-    private int damage;
-
-    private Position position;
-    private Position basePosition;
-
-    private int pierceAmount;
-    private int range;
-    private int knockback;
-
-
     protected boolean isActive;
     protected boolean icy;
     protected boolean firing;
+    private double velocityX;
+    private double velocityY;
+    private int damage;
+    private Position position;
+    private Position basePosition;
+    private int pierceAmount;
+    private int range;
+    private int knockback;
     private boolean poisonous;
     private boolean isHypnotizer;
 
@@ -156,12 +150,12 @@ public class Projectile {
         this.firing = firing;
     }
 
-    public void setPoisonous(boolean poisonous) {
-        this.poisonous = poisonous;
-    }
-
     public boolean isPoisonous() {
         return poisonous;
+    }
+
+    public void setPoisonous(boolean poisonous) {
+        this.poisonous = poisonous;
     }
 
     public int getPierceAmount() {

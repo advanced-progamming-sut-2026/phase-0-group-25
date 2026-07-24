@@ -2,8 +2,6 @@ package src.View.ConcreteViews;
 
 import src.View.ViewInterfaces.GemWalletMenuView;
 
-import java.util.Scanner;
-
 public class GemWalletMenuTerminalView extends AbstractTerminalView implements GemWalletMenuView {
 
     @Override

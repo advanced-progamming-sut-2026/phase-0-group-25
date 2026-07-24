@@ -1,8 +1,6 @@
 package src.Model;
 
-import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.BattlePlant;
-import src.Model.PlantsAndZombies.Plant;
 import src.Model.PlantsAndZombies.Position;
 import src.Model.PlantsAndZombies.Projectiles.Projectile;
 import src.Model.PlantsAndZombies.Zombie;
@@ -41,6 +39,10 @@ public class Tile {
         return isArable;
     }
 
+    public void setArable(boolean arable) {
+        isArable = arable;
+    }
+
     public void removePlant() {
         plants.remove(0);
     }
@@ -51,10 +53,6 @@ public class Tile {
 
     public ArrayList<Zombie> getZombies() {
         return zombies;
-    }
-
-    public void setArable(boolean arable) {
-        isArable = arable;
     }
 
     public int getHP() {

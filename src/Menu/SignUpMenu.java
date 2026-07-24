@@ -11,7 +11,7 @@ import src.View.ViewInterfaces.SignUpMenuView;
 
 import java.util.regex.Matcher;
 
-public class SignUpMenu extends Menu{
+public class SignUpMenu extends Menu {
     private final SignUpMenuView signUpMenuView;
     private final UsersManager usersManager;
 
@@ -29,6 +29,7 @@ public class SignUpMenu extends Menu{
     public void exit() {
         MenuManager.getInstance().setMustExit();
     }
+
     @Override
     public void handleSpecificCommands(String input) {
         Matcher matcher;

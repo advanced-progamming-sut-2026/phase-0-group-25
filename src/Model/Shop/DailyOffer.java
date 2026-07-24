@@ -18,10 +18,21 @@ public class DailyOffer {
     }
 
     // Getters
-    public PlantType getPlantType() { return plantType; }
-    public int getPrice() { return price; }
-    public int getSeedPacketCount() { return seedPacketCount; }
-    public LocalDate getDate() { return date; }
+    public PlantType getPlantType() {
+        return plantType;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public int getSeedPacketCount() {
+        return seedPacketCount;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
 
     public boolean isValidForToday() {
         return date.equals(LocalDate.now());

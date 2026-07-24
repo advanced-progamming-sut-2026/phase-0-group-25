@@ -6,7 +6,7 @@ import src.Model.User.UsersManager;
 import src.View.ViewInterfaces.BaseView;
 import src.View.ViewInterfaces.CoinWalletMenuView;
 
-public class CoinWalletMenu extends Menu{
+public class CoinWalletMenu extends Menu {
     private final CoinWalletMenuView coinWalletMenuView;
 
     public CoinWalletMenu(CoinWalletMenuView coinWalletMenuView) {

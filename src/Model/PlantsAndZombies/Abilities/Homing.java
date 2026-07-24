@@ -1,6 +1,5 @@
 package src.Model.PlantsAndZombies.Abilities;
 
-import src.Model.PlantsAndZombies.Armors.Armor;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Entity;
 import src.Model.PlantsAndZombies.Position;
@@ -9,7 +8,9 @@ import src.Model.PlantsAndZombies.Projectiles.Projectile;
 import src.Model.PlantsAndZombies.Zombie;
 import src.Model.Tile;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
 
 public class Homing implements Ability {
     @Override

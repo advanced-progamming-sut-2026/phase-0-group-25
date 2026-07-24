@@ -76,6 +76,7 @@ public enum Command {
 
 
     private final String regex;
+
     Command(String regex) {
         this.regex = regex;
     }

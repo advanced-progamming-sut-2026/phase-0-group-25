@@ -31,6 +31,9 @@ public class User {
         unlockZombie(ZombieType.DEFAULT);
     }
 
+    public User() {
+    }
+
     public void unlockPlant(PlantType plantType) {
         if (!userProgress.getUnlockedPlantsAndTheirLevels().containsKey(plantType)) {
             userProgress.unlockPlant(plantType);
@@ -66,18 +69,25 @@ public class User {
         this.userProgress = userProgress;
     }
 
-    public User() {
-    }
-
     public NewsManager getNewsManager() {
         return newsManager;
     }
 
-    public SecurityQuestionType getSecurityQuestion() { return securityQuestion; }
-    public void setSecurityQuestion(SecurityQuestionType securityQuestion) { this.securityQuestion = securityQuestion; }
+    public SecurityQuestionType getSecurityQuestion() {
+        return securityQuestion;
+    }
 
-    public String getSecurityAnswer() { return securityAnswer; }
-    public void setSecurityAnswer(String securityAnswer) { this.securityAnswer = securityAnswer; }
+    public void setSecurityQuestion(SecurityQuestionType securityQuestion) {
+        this.securityQuestion = securityQuestion;
+    }
+
+    public String getSecurityAnswer() {
+        return securityAnswer;
+    }
+
+    public void setSecurityAnswer(String securityAnswer) {
+        this.securityAnswer = securityAnswer;
+    }
 
     public String getUserName() {
         return userName;

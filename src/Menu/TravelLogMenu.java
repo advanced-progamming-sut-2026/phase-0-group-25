@@ -2,12 +2,10 @@ package src.Menu;
 
 import src.Enums.Command;
 import src.Enums.MenuType;
-import src.Model.Quests.Quest;
 import src.Model.Quests.QuestManager;
 import src.View.ViewInterfaces.BaseView;
 import src.View.ViewInterfaces.TravelLogMenuView;
 
-import java.util.List;
 import java.util.regex.Matcher;
 
 public class TravelLogMenu extends Menu {

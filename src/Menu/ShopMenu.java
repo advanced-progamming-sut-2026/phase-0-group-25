@@ -2,7 +2,6 @@ package src.Menu;
 
 import src.Enums.Command;
 import src.Enums.MenuType;
-import src.Model.Shop.ShopItem;
 import src.Model.Shop.ShopManager;
 import src.View.ViewInterfaces.BaseView;
 import src.View.ViewInterfaces.ShopMenuView;
