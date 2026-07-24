@@ -7,9 +7,16 @@ import src.Model.Sun.Sun;
 import java.util.*;
 
 public class ProducingSun implements Ability {
+    private boolean isCollected = false;
+    private boolean isProduced = false;
+    private Sun sun;
 
     @Override
     public void executeAbility(Entity entity) {
+        if (this.isProduced && !this.isCollected) {
+            return;
+        }
+
         BattlePlant plant = (BattlePlant) entity;
         if (plant.isEffected()) {
             if (checkTime(plant)) {
@@ -40,10 +47,7 @@ public class ProducingSun implements Ability {
             numberOfSun = (int) plant.getPlantStats().getAttributes().get("sun_quantity");
         }
 
-        Sun producedSun = new Sun(numberOfSun, plant.getPosition());
-        //System.out.println();//todo: printing the info of produced sun
-
-        //currentUser.addSun(numberOfSun);
+        makeSun(numberOfSun, plant);
     }
 
     private boolean checkTime(BattlePlant plant) {
@@ -56,15 +60,34 @@ public class ProducingSun implements Ability {
         return false;
     }
 
-    public void plantFoodEffect(BattlePlant plant) {
+    private void plantFoodEffect(BattlePlant plant) {
         int numberOfSun = (int) plant.getPlantStats().getPlantFoodEffect().get("sun_quantity");
 
         if (plant.getPlantStats().getName().equals("SUN_SHROOM")) {
             plant.setPlantTime(-72);
         }
-        Sun producedSun = new Sun(numberOfSun, plant.getPosition());
-
-        //System.out.println();//todo: printing the info of produced sun
+        makeSun(numberOfSun, plant);
     }
 
+    private void makeSun(int numberOfSun, BattlePlant plant) {
+        Sun producedSun = new Sun(numberOfSun, plant.getPosition());
+        this.sun = producedSun;
+        this.isProduced = true;
+
+        System.out.println("plant + " + plant.getPlantStats().getName() +
+                " produced a sun at (<" + plant.getColumn() + ">, <"
+                + plant.getRow() + ">)");
+    }
+
+    public boolean isCollected() {
+        return isCollected;
+    }
+
+    public boolean isProduced() {
+        return isProduced;
+    }
+
+    public Sun getSun() {
+        return sun;
+    }
 }

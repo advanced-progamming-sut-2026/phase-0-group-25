@@ -3,6 +3,7 @@ package src.Model.PlantsAndZombies.Projectiles;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Position;
 import src.Model.PlantsAndZombies.Zombie;
+import src.Model.Tile;
 
 public class Projectile {
     private double velocityX;
@@ -65,7 +66,6 @@ public class Projectile {
     }
 
 
-
     public void setHypnotizer(boolean isHypnotizer) {
         this.isHypnotizer = isHypnotizer;
     }
@@ -98,19 +98,33 @@ public class Projectile {
 
     public void checkCollision() {
         for (Zombie zombie : game.getAliveZombies()) {
-            if (this.position.equals(zombie.getPosition())) {
-                if ((zombie.getZombieStats().getName().equals("SNORKEL")) &&
-                        (zombie.getZombieStats().getAttributes().get("submarine").equals("on"))) {
-                    continue;
-                }
-                zombie.takeDamage(this, this.damage);
-                zombie.setPosition(new Position(
-                        zombie.getPosition().getX() + this.knockback,
-                        zombie.getPosition().getY()));
+            if (!zombie.isHypnotized()) {
+                if (this.position.equals(zombie.getPosition())) {
+                    if ((zombie.getZombieStats().getName().equals("SNORKEL")) &&
+                            (zombie.getZombieStats().getAttributes().get("submarine").equals("on"))) {
+                        continue;
+                    }
+                    zombie.takeDamage(this, this.damage);
+                    zombie.setPosition(new Position(
+                            zombie.getPosition().getX() + this.knockback,
+                            zombie.getPosition().getY()));
 
-                this.setPierceAmount(this.getPierceAmount() - 1);
+                    this.setPierceAmount(this.getPierceAmount() - 1);
+                }
             }
         }
+        //todo
+        for (BattlePlant plant : game.getPlants()) {
+            if (this.firing) {
+                plant.setFrozen(false);
+                plant.setIceTime(0);
+            } else {
+                if (plant.isFrozen()) {
+                    plant.takeIceDamage(this.damage);
+                }
+            }
+        }
+
     }
 
     public void setKnockback(int knockback) {
@@ -159,5 +173,17 @@ public class Projectile {
         if (this.pierceAmount == 0) {
             this.isActive = false;
         }
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
 }

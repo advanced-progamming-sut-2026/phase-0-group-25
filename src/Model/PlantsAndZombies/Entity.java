@@ -37,7 +37,17 @@ public abstract class Entity {
         return position;
     }
 
-    public String getName() {
-        return name;
+    public int getRow() {
+        Position rowAndColumn = Position.getRowAndColumn(this.position);
+
+        return (int) rowAndColumn.getY();
     }
+
+    public int getColumn() {
+        Position rowAndColumn = Position.getRowAndColumn(this.position);
+
+        return (int) rowAndColumn.getX();
+    }
+
+
 }
