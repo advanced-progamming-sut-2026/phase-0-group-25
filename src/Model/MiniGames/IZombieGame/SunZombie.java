@@ -1,14 +1,23 @@
 package src.Model.MiniGames.IZombieGame;
 
+import src.Model.PlantsAndZombies.GameDataLoader;
 import src.Model.PlantsAndZombies.Position;
 import src.Model.PlantsAndZombies.Zombie;
+import src.Model.PlantsAndZombies.Armors.ArmorConfig;
 
 public class SunZombie extends Zombie {
     private int ticksSinceLastSun = 0;
     private int baseInterval = 120;
 
     public SunZombie(Position position) {
-        super("SunZombie", position, 1300, 10, 0.1);
+        super(GameDataLoader.getStatesForZombie("DEFAULT"), position);
+
+        this.name = "SunZombie";
+        this.currentHP = 190;
+
+        this.getActiveArmors().add(ArmorConfig.BUCKET.createArmor());
+
+        this.setCurrentVelocity(0.185);
     }
 
     public int generateSun(int totalTicksPassed) {
@@ -21,5 +30,10 @@ public class SunZombie extends Zombie {
             return 25;
         }
         return 0;
+    }
+
+    @Override
+    public void update() {
+        super.update();
     }
 }
