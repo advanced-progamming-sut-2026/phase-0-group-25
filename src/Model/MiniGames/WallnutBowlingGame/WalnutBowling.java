@@ -8,6 +8,7 @@ import src.Model.User.User;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Set;
 
 public class WalnutBowling extends GamePlay {
 
@@ -15,15 +16,16 @@ public class WalnutBowling extends GamePlay {
     private ArrayList<String> conveyorBelt = new ArrayList<>();
     private ArrayList<Walnut> activeWalnuts = new ArrayList<>();
 
-    public WalnutBowling(ChapterType chapterType, int level, int difficulty, User thisUser) {
-        super(chapterType, level, difficulty, thisUser, new ArrayList<>(), new ArrayList<>());
+    public WalnutBowling(ChapterType chapterType, int level, int difficulty, User thisUser,
+                         ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
+        super(chapterType, level, difficulty, thisUser, plants, zombies, boosted);
     }
 
     @Override
     public void sunMaker() {
     }
 
-    public void getPlants() {
+    public void generateConveyorPlants() {
         if (conveyorBelt.size() < 10) {
             int chance = random.nextInt(100);
             if (chance < 70) conveyorBelt.add("BowlingWalnut");
@@ -68,7 +70,7 @@ public class WalnutBowling extends GamePlay {
         totalTicksPassed++;
 
         if (totalTicksPassed % 50 == 0) {
-            getPlants();
+            generateConveyorPlants();
         }
 
         Iterator<Walnut> wIter = activeWalnuts.iterator();

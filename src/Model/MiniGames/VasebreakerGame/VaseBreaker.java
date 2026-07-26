@@ -1,6 +1,7 @@
 package src.Model.MiniGames.VasebreakerGame;
 
 import src.Enums.ChapterType;
+import src.Enums.PlantType;
 import src.Model.GamePlayType.GamePlay;
 import src.Model.Mower;
 import src.Model.PlantsAndZombies.*;
@@ -10,6 +11,7 @@ import src.Model.User.User;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Set;
 
 public class VaseBreaker extends GamePlay {
 
@@ -18,8 +20,8 @@ public class VaseBreaker extends GamePlay {
     private ArrayList<BattlePlant> inventory = new ArrayList<>();
 
     public VaseBreaker(ChapterType chapterType, int level, int difficulty, User thisUser,
-                       ArrayList<String> availablePlants, ArrayList<String> availableZombies) {
-        super(chapterType, level, difficulty, thisUser, availablePlants, availableZombies);
+                       ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
+        super(chapterType, level, difficulty, thisUser, plants, zombies, boosted);
         setupJars();
     }
 
@@ -29,13 +31,14 @@ public class VaseBreaker extends GamePlay {
                 Position pos = new Position(x, y);
 
                 if (x == 9 && y == 3) {
-                    Zombie gargantuar = ZombieFactory.create("Gargantuar", pos);
+                    Zombie gargantuar = ZombieFactory.createZombie("GARGANTUAR", pos);
                     jars.add(new GargantuarJar(pos, gargantuar));
                 } else if ((x + y) % 3 == 0) {
-                    BattlePlant plant = PlantFactory.create("Peashooter");
+                    BattlePlant plant = PlantFactory.createBattlePlant(PlantType.PEASHOOTER.getName(), 1, pos);
                     jars.add(new PlantJar(pos, plant));
                 } else {
-                    jars.add(new SimpleJar(pos, content));
+                    Zombie basicZombie = ZombieFactory.createZombie("DEFAULT", pos);
+                    jars.add(new SimpleJar(pos, basicZombie));
                 }
             }
         }

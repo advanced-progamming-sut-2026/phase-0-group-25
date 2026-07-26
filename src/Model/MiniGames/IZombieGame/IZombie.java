@@ -1,8 +1,7 @@
 package src.Model.MiniGames.IZombieGame;
 
-import src.Model.PlantsAndZombies.BattlePlant;
-import src.Model.PlantsAndZombies.Position;
-import src.Model.PlantsAndZombies.Zombie;
+import src.Enums.PlantType;
+import src.Model.PlantsAndZombies.*;
 import src.Model.PlayGroundType.PlayGround;
 import src.Model.Tile;
 
@@ -31,11 +30,11 @@ public class IZombie {
         this.brainsEaten = new boolean[5];
 
         this.availableZombies = new LinkedHashMap<>();
-        availableZombies.put("RegularZombie", 50);
-        availableZombies.put("ConeheadZombie", 75);
-        availableZombies.put("PoleVaultingZombie", 100);
-        availableZombies.put("BucketheadZombie", 125);
-        availableZombies.put("NewspaperZombie", 100);
+        availableZombies.put("DEFAULT", 50);
+        availableZombies.put("CONE_HEAD", 75);
+        availableZombies.put("BUCKET_HEAD", 100);
+        availableZombies.put("KNIGHT", 125);
+        availableZombies.put("NEWSPAPER", 100);
 
         initTiles();
         setPlants();
@@ -45,18 +44,26 @@ public class IZombie {
     private void initTiles() {
         for (int y = 1; y <= 5; y++) {
             for (int x = 1; x <= 9; x++) {
-                tiles.add(new Tile(new Position(x, y), true));
+                tiles.add(new Tile(new Position(x, y), true, 0));
             }
         }
     }
 
     public void setPlants() {
-        String[] plantTypes = {"Peashooter", "Sunflower", "WallNut", "SnowPea"};
+        String[] plantTypes = {
+                PlantType.PEASHOOTER.getName(),
+                PlantType.SUNFLOWER.getName(),
+                PlantType.WALL_NUT.getName(),
+                PlantType.SNOW_PEA.getName()
+        };
+
         for (int y = 1; y <= 5; y++) {
             for (int x = 1; x <= 4; x++) {
                 if (random.nextBoolean()) {
-                    String randomPlant = plantTypes[random.nextInt(plantTypes.length)];
-                    BattlePlant plant = new BattlePlant(randomPlant, new Position(x, y), 300);
+                    String randomPlantName = plantTypes[random.nextInt(plantTypes.length)];
+                    Position pos = new Position(x, y);
+
+                    BattlePlant plant = PlantFactory.createBattlePlant(randomPlantName, 1, pos);
                     plant.setColumn(x);
                     plant.setRow(y);
                     fieldPlants.add(plant);
@@ -66,7 +73,7 @@ public class IZombie {
                 }
             }
         }
-        System.out.println("Random plants were planted on the left side of the red line.");
+        System.out.println("Random plants were planted using PlantFactory.");
     }
 
     private void initSunZombies() {
@@ -81,7 +88,7 @@ public class IZombie {
 
     public void placeZombie(String zombieName, int x, int y) {
         if (x <= RED_LINE_X) {
-            System.out.println("Invalid position! You must place zombies behind the RED LINE (Column > 5).");
+            System.out.println("Invalid position! Place behind the RED LINE.");
             return;
         }
 
@@ -98,12 +105,12 @@ public class IZombie {
 
         mySuns -= cost;
         Position pos = new Position(x, y);
-        Zombie newZombie = new Zombie(zombieName, pos, 200, 10, 0.2);
+
+        Zombie newZombie = ZombieFactory.createZombie(zombieName, pos);
         myZombies.add(newZombie);
 
         System.out.printf("Placed %s at (%d, %d) for %d suns.\n", zombieName, x, y, cost);
     }
-
 
     public void update() {
         if (isPaused) return;
