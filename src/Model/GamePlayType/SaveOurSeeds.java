@@ -31,7 +31,7 @@ public class SaveOurSeeds extends GamePlay {
     public void update() {
         if (isPaused) return;
         totalTicksPassed++;
-        timeToSpwan--;
+        timeToSpawn--;
 
         if (this.chapterType != ChapterType.DARK_AGE) {
             sunMaker();
@@ -93,8 +93,8 @@ public class SaveOurSeeds extends GamePlay {
         }
 
         // Spawning zombies :
-        if (timeToSpwan == 0) {
-            timeToSpwan = getRandomTime();
+        if (timeToSpawn == 0) {
+            timeToSpawn = getRandomTime();
             for (Wave thisWave : allWaves) {
                 if (thisWave.hasZombiesLeftToSpawn()) {
                     if (!thisWave.getStarted()) {
@@ -158,10 +158,6 @@ public class SaveOurSeeds extends GamePlay {
         Tile tile1 = getTileByPosition(5, 2);
         Tile tile2 = getTileByPosition(5, 4);
 
-        if (tile1.getPlants().isEmpty() || tile2.getPlants().isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
+        return !tile1.getPlants().isEmpty() && !tile2.getPlants().isEmpty();
     }
 }

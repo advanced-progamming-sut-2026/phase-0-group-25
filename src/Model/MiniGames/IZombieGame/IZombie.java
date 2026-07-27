@@ -1,32 +1,29 @@
 package src.Model.MiniGames.IZombieGame;
 
+import src.Enums.ChapterType;
 import src.Enums.PlantType;
+import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.*;
-import src.Model.PlayGroundType.PlayGround;
 import src.Model.Tile;
-
+import src.Model.User.User;
 import java.util.*;
 
-public class IZombie {
+public class IZombie extends GamePlay {
     private final int RED_LINE_X = 5;
-    private int mySuns;
-    private PlayGround playGround;
-    private ArrayList<Zombie> myZombies;
     private ArrayList<SunZombie> sunZombies;
-    private ArrayList<BattlePlant> fieldPlants;
-    private ArrayList<Tile> tiles;
     private boolean[] brainsEaten;
     private Map<String, Integer> availableZombies;
-    private int totalTicksPassed = 0;
-    private boolean isPaused = false;
-    private Random random = new Random();
 
-    public IZombie() {
+    public IZombie(ChapterType chapterType, int level, int difficulty, User thisUser,
+                   ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
+        super(chapterType, level, difficulty, thisUser, plants, zombies, boosted);
+
+        this.allWaves.clear();
+        this.gameZombies.clear();
+        this.mowers.clear();
+
         this.mySuns = 150;
-        this.myZombies = new ArrayList<>();
         this.sunZombies = new ArrayList<>();
-        this.fieldPlants = new ArrayList<>();
-        this.tiles = new ArrayList<>();
         this.brainsEaten = new boolean[5];
 
         this.availableZombies = new LinkedHashMap<>();
@@ -36,17 +33,8 @@ public class IZombie {
         availableZombies.put("KNIGHT", 125);
         availableZombies.put("NEWSPAPER", 100);
 
-        initTiles();
         setPlants();
         initSunZombies();
-    }
-
-    private void initTiles() {
-        for (int y = 1; y <= 5; y++) {
-            for (int x = 1; x <= 9; x++) {
-                tiles.add(new Tile(new Position(x, y), true, 0));
-            }
-        }
     }
 
     public void setPlants() {
@@ -66,9 +54,10 @@ public class IZombie {
                     BattlePlant plant = PlantFactory.createBattlePlant(randomPlantName, 1, pos);
                     plant.setColumn(x);
                     plant.setRow(y);
-                    fieldPlants.add(plant);
 
-                    Tile tile = getTileAt(x, y);
+                    this.gamePlants.add(plant);
+
+                    Tile tile = getTileByPosition(x, y);
                     if (tile != null) tile.addPlant(plant);
                 }
             }
@@ -81,10 +70,10 @@ public class IZombie {
             Position pos = new Position(9, y);
             SunZombie sz = new SunZombie(pos);
             sunZombies.add(sz);
-            myZombies.add(sz);
+
+            this.gameZombies.add(sz);
         }
     }
-
 
     public void placeZombie(String zombieName, int x, int y) {
         if (x <= RED_LINE_X) {
@@ -107,11 +96,12 @@ public class IZombie {
         Position pos = new Position(x, y);
 
         Zombie newZombie = ZombieFactory.createZombie(zombieName, pos);
-        myZombies.add(newZombie);
+        this.gameZombies.add(newZombie);
 
         System.out.printf("Placed %s at (%d, %d) for %d suns.\n", zombieName, x, y, cost);
     }
 
+    @Override
     public void update() {
         if (isPaused) return;
         totalTicksPassed++;
@@ -131,7 +121,7 @@ public class IZombie {
             }
         }
 
-        Iterator<Zombie> zIter = myZombies.iterator();
+        Iterator<Zombie> zIter = gameZombies.iterator();
         while (zIter.hasNext()) {
             Zombie z = zIter.next();
             if (!z.isAlive() || z.getCurrentHP() <= 0) {
@@ -150,13 +140,13 @@ public class IZombie {
             }
         }
 
-        Iterator<BattlePlant> pIter = fieldPlants.iterator();
+        Iterator<BattlePlant> pIter = gamePlants.iterator();
         while (pIter.hasNext()) {
             BattlePlant plant = pIter.next();
             if (plant.isAlive() && plant.getCurrentHP() > 0) {
                 plant.update();
             } else {
-                Tile tile = getTileAt(plant.getColumn(), plant.getRow());
+                Tile tile = getTileByPosition(plant.getColumn(), plant.getRow());
                 if (tile != null) tile.removePlant();
                 pIter.remove();
             }
@@ -176,29 +166,19 @@ public class IZombie {
 
         if (allBrainsEaten) {
             System.out.println("VICTORY! You ate all 5 brains and defeated the plants!");
-            finishGame();
+            Pause();
             return;
         }
 
         int minCost = Collections.min(availableZombies.values());
 
-        if (mySuns < minCost && myZombies.isEmpty()) {
+        if (mySuns < minCost && gameZombies.isEmpty()) {
             System.out.println("GAME OVER! You ran out of suns and zombies before eating all brains.");
-            finishGame();
+            Pause();
         }
     }
 
-    public void advanceTime(int ticks) {
-        for (int i = 0; i < ticks; i++) {
-            update();
-        }
-    }
-
-    public void finishGame() {
-        this.isPaused = true;
-        System.out.println("Game Finished.");
-    }
-
+    @Override
     public void showMap() {
         System.out.println("=== I, ZOMBIE BOARD ===");
         System.out.println("Suns: " + mySuns);
@@ -212,7 +192,7 @@ public class IZombie {
             for (int x = 1; x <= 9; x++) {
                 if (x == RED_LINE_X) System.out.print("|RED LINE| ");
 
-                Tile t = getTileAt(x, y);
+                Tile t = getTileByPosition(x, y);
                 boolean hasPlant = t != null && !t.getPlants().isEmpty();
                 boolean hasZombie = t != null && !t.getZombies().isEmpty();
 
@@ -225,35 +205,10 @@ public class IZombie {
         System.out.println("------------------------------------------------");
     }
 
-    public void showTileStatus(int x, int y) {
-        Tile tile = getTileAt(x, y);
-        if (tile != null) {
-            System.out.printf("Tile (%d, %d) -> Plants: %d, Zombies: %d\n",
-                    x, y, tile.getPlants().size(), tile.getZombies().size());
-        }
-    }
-
     public void showPlantStatus() {
         System.out.println("=== Available Zombies to Buy ===");
         for (Map.Entry<String, Integer> entry : availableZombies.entrySet()) {
             System.out.printf("- %s : %d Suns\n", entry.getKey(), entry.getValue());
         }
-    }
-
-    // --- Cheat Functions ---
-    public void cheatAddSun(int amount) {
-        this.mySuns += amount;
-        System.out.println("Cheat Activated: Added " + amount + " suns. Total: " + mySuns);
-    }
-
-    public void removeCooldown() {
-        System.out.println("Cooldowns removed (Not applicable in I, Zombie mode).");
-    }
-
-    private Tile getTileAt(int x, int y) {
-        return tiles.stream()
-                .filter(t -> (int) t.getPosition().getX() == x && (int) t.getPosition().getY() == y)
-                .findFirst()
-                .orElse(null);
     }
 }

@@ -29,7 +29,7 @@ public class TimedWar extends GamePlay {
     public void update() {
         if (isPaused) return;
         totalTicksPassed++;
-        timeToSpwan--;
+        timeToSpawn--;
 
         if (this.chapterType != ChapterType.DARK_AGE) {
             sunMaker();
@@ -92,8 +92,8 @@ public class TimedWar extends GamePlay {
         }
 
         // Spawning zombies :
-        if (timeToSpwan == 0) {
-            timeToSpwan = getRandomTime();
+        if (timeToSpawn == 0) {
+            timeToSpawn = getRandomTime();
             for (Wave thisWave : allWaves) {
                 if (thisWave.hasZombiesLeftToSpawn()) {
                     if (!thisWave.getStarted()) {

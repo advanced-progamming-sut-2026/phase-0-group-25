@@ -187,4 +187,8 @@ public class BattlePlant extends Plant {
     public ArrayList<Ability> getOriginalAbilities() {
         return originalAbilities;
     }
+
+    public int getLevel() {
+        return this.plantStats.getLevel();
+    }
 }
