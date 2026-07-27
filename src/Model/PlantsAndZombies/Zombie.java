@@ -340,5 +340,7 @@ public class Zombie extends Entity {
         return spawnTime;
     }
 
-
+    public ArrayList<String> getAbilities() {
+        return abilities;
+    }
 }

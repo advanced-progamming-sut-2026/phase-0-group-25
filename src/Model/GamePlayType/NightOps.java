@@ -28,7 +28,7 @@ public class NightOps extends GamePlay {
     public void update() {
         if (isPaused) return;
         totalTicksPassed++;
-        timeToSpwan--;
+        timeToSpawn--;
 
         applyIcyWind();
 
@@ -87,8 +87,8 @@ public class NightOps extends GamePlay {
         }
 
         // Spawning zombies :
-        if (timeToSpwan == 0) {
-            timeToSpwan = getRandomTime();
+        if (timeToSpawn == 0) {
+            timeToSpawn = getRandomTime();
             for (Wave thisWave : allWaves) {
                 if (thisWave.hasZombiesLeftToSpawn()) {
                     if (!thisWave.getStarted()) {

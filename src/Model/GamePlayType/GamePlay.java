@@ -41,7 +41,7 @@ public abstract class GamePlay {
     protected int ticksSinceLastDrop = 0;
     protected Random random = new Random();
     protected User thisUser;
-    protected int timeToSpwan = 0;
+    protected int timeToSpawn = 0;
     protected int numOfPlantFood;
     protected int mySuns;
     protected PlayGround playGround;
@@ -146,11 +146,7 @@ public abstract class GamePlay {
     public abstract void update();
 
     public Boolean checkingTheEndOfTheGame() {
-        if (this.gameZombies.isEmpty()) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.gameZombies.isEmpty();
     }
 
     public void Pause() {
@@ -286,7 +282,7 @@ public abstract class GamePlay {
         Tile thisTile = getTileByPosition((int) thisPosition.getX(), (int) thisPosition.getY());
 
         if (thisPlant.checkingPlantable(mySuns, thisTile) && thisTile.isArable()) {
-            Boolean isImitaterBoosted = false;
+            boolean isImitaterBoosted = false;
             int thisPX = (int) thisPosition.getY();
             int thisPY = (int) thisPosition.getY();
             String thisPName = thisPlant.getName();
@@ -510,7 +506,7 @@ public abstract class GamePlay {
     }
 
     public void killAward(User thisUser) {
-        Boolean hasAward = Math.random() >= 0.9;
+        boolean hasAward = Math.random() >= 0.9;
         int kindOfAward = (int) (Math.random() * 3) + 1;
 
         if (hasAward) {
@@ -535,7 +531,7 @@ public abstract class GamePlay {
     }
 
     public void glowingAward(GamePlay thisGame) {
-        Boolean isGlowing = Math.random() <= 0.05;
+        boolean isGlowing = Math.random() <= 0.05;
         if (isGlowing) {
             thisGame.addPlantFood();
             System.out.printf("The glowing zombie dropped a plant food; you have %d plant foods now.\n",
@@ -587,12 +583,11 @@ public abstract class GamePlay {
     }
 
     public Tile getTileByPosition(int x, int y) {
-        Tile thisTIle = tiles.stream()
+        return tiles.stream()
                 .filter(t -> (int) t.getPosition().getX() == x &&
                         (int) t.getPosition().getY() == y)
                 .findFirst()
                 .orElse(null);
-        return thisTIle;
     }
 
     public int getRandomTime() {

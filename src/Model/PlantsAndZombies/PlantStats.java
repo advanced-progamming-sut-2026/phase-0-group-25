@@ -30,6 +30,10 @@ public class PlantStats {
         this.level = level;
     }
 
+    public int getLevel() {
+        return level;
+    }
+
     public double getActionInterval() {
         return actionInterval;
     }
