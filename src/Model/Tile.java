@@ -16,7 +16,7 @@ public class Tile {
     private int HP;
     private Position position;
     private boolean isArable;
-    private String kindOfTile;
+    private boolean isHole = false;
 
     public Tile(Position position, Boolean isArable, int HP) {
         this.position = position;
@@ -41,6 +41,14 @@ public class Tile {
 
     public void setArable(boolean arable) {
         isArable = arable;
+    }
+
+    public void setHole(boolean hole) {
+        isHole = hole;
+    }
+
+    public boolean isHole() {
+        return isHole;
     }
 
     public void removePlant() {

@@ -133,10 +133,12 @@ public class DeadLine extends GamePlay {
                     thisMower.killZombies(this);
                 } else {
                     System.out.println("The zombie ate your brain; LOSER!!!");
+                    this.isPaused = true;
                 }
             } else if (x <= 620) {
                 System.out.println("A zombie crossed the dead line!!");
                 System.out.println("The zombie ate your brain; LOSER!!!");
+                this.isPaused = true;
             }
         }
 
@@ -144,6 +146,7 @@ public class DeadLine extends GamePlay {
         if (checkingTheEndOfTheGame()) {
             getLevelObject().completeLevel();
             System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
+            this.isPaused = true;
         }
     }
 }

@@ -137,6 +137,7 @@ public class SaveOurSeeds extends GamePlay {
                     thisMower.killZombies(this);
                 } else {
                     System.out.println("The zombie ate your brain; LOSER!!!");
+                    this.isPaused = true;
                 }
             }
         }
@@ -145,12 +146,14 @@ public class SaveOurSeeds extends GamePlay {
         if (!canSaved()) {
             System.out.println("You couldn't save your important plant!!");
             System.out.println("The zombie ate your brain; LOSER!!!");
+            this.isPaused = true;
         }
 
         // Checking if the end of the game (Winning) :
         if (checkingTheEndOfTheGame()) {
             getLevelObject().completeLevel();
             System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
+            this.isPaused = true;
         }
     }
 
