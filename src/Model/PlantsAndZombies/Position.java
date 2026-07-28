@@ -19,7 +19,7 @@ public class Position {
     public static Position getRowAndColumn(Position position) {
         Position newPosition = getRowAndColumn(position.getX(), position.getY());
 
-        return newPosition
+        return newPosition;
     }
 
     public double getX() {

@@ -134,6 +134,7 @@ public class Simple extends GamePlay {
                     thisMower.killZombies(this);
                 } else {
                     System.out.println("The zombie ate your brain; LOSER!!!");
+                    this.isPaused = true;
                 }
             }
         }
@@ -142,6 +143,7 @@ public class Simple extends GamePlay {
         if (checkingTheEndOfTheGame()) {
             getLevelObject().completeLevel();
             System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
+            this.isPaused = true;
         }
     }
 }

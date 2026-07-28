@@ -136,6 +136,7 @@ public class TimedWar extends GamePlay {
                     thisMower.killZombies(this);
                 } else {
                     System.out.println("The zombie ate your brain; LOSER!!!");
+                    this.isPaused = true;
                 }
             }
         }
@@ -144,12 +145,14 @@ public class TimedWar extends GamePlay {
         if (totalTicksPassed >= 150 && numOfDeadZombies < 10) {
             System.out.println("You must kill at least 10 zombies within 15 seconds!!");
             System.out.println("The zombie ate your brain; LOSER!!!");
+            this.isPaused = true;
         }
 
         // Checking if the end of the game (Winning) :
         if (checkingTheEndOfTheGame()) {
             getLevelObject().completeLevel();
             System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
+            this.isPaused = true;
         }
     }
 }

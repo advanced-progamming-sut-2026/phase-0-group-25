@@ -136,6 +136,7 @@ public class LoveYourPlants extends GamePlay {
                     thisMower.killZombies(this);
                 } else {
                     System.out.println("The zombie ate your brain; LOSER!!!");
+                    this.isPaused = true;
                 }
             }
         }
@@ -144,12 +145,14 @@ public class LoveYourPlants extends GamePlay {
         if (numOfLost > 5) {
             System.out.println("You lose more than 5 plants!!");
             System.out.println("The zombie ate your brain; LOSER!!!");
+            this.isPaused = true;
         }
 
         // Checking if the end of the game (Winning) :
         if (checkingTheEndOfTheGame()) {
             getLevelObject().completeLevel();
             System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
+            this.isPaused = true;
         }
     }
 

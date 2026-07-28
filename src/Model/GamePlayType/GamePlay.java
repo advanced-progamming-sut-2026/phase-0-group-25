@@ -544,7 +544,7 @@ public abstract class GamePlay {
             tile.getZombies().clear();
             // Removing broken graves for the game
             if (chapterType == ChapterType.ANCIENT_EGYPT || chapterType == ChapterType.DARK_AGE) {
-                if (tile.getHP() == 0 && !tile.isArable()) {
+                if (tile.getHP() == 0 && !tile.isArable() && !tile.isHole()) {
                     tile.setArable(true);
                 }
             }
