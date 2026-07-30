@@ -25,6 +25,11 @@ public class BattlePlant extends Plant {
 
     private static GamePlay GAME = GamePlayMenu.getGamePlay();
 
+    public BattlePlant(PlantStats plantStats, String name) {
+        this.plantStats = plantStats;
+        this.name = name;
+    }
+
     public BattlePlant(PlantStats plantStats, String name, Position position) {
         this.lastActionTime = 0;
 

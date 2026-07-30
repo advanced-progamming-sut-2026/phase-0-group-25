@@ -37,6 +37,11 @@ public class Zombie extends Entity {
     private double lastActionTime;
     private double spawnTime;
 
+    public Zombie(ZombieStats zombieStats, String name) {
+        this.zombieStats = zombieStats;
+        this.name = name;
+    }
+
     public Zombie(ZombieStats zombieStats, String name, Position position) {
         this.zombieStats = zombieStats;
         this.name = name;
