@@ -1,5 +1,7 @@
 package src.Model.PlantsAndZombies.Abilities;
 
+import src.Menu.GamePlayMenu;
+import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Entity;
 import src.Model.PlantsAndZombies.Zombie;
@@ -10,6 +12,7 @@ import java.util.Random;
 
 public class Explosion implements Ability {
     private static Random RANDOM = new Random();
+    private static GamePlay GAME = GamePlayMenu.getGamePlay();
 
     @Override
     public void executeAbility(Entity entity) {
@@ -49,8 +52,7 @@ public class Explosion implements Ability {
     private boolean isNotArmored(BattlePlant plant) {
         if (plant.getPlantStats().getTags().contains("Trap")) {
             int armTime = (int) plant.getPlantStats().getAttributes().get("armTime");
-            //todo
-            if ((game.getCurrentTime() - plant.getPlantTime()) < armTime) {
+            if ((GAME.getTotalTimePassed() - plant.getPlantTime()) < armTime) {
                 return true;
             }
             return false;
@@ -61,8 +63,7 @@ public class Explosion implements Ability {
 
     private void plantFoodEffect(Zombie attacker, BattlePlant plant, ArrayList<String> tags) {
         if (tags.contains("Ice")) {
-            //todo
-            for (Zombie zombie : game.getZombies()) {
+            for (Zombie zombie : GAME.getGameZombies()) {
                 int frozenTime = (int) plant.getPlantStats().getAttributes().get("freezeTime");
                 zombie.freeze(frozenTime);
             }
@@ -85,12 +86,13 @@ public class Explosion implements Ability {
                 int randomColumn = RANDOM.nextInt(9) + 1;
 
                 if (tags.contains("AoE")) {
-                    //todo
                     AoEDamage(plant, randomRow, randomColumn);
                 }
 
-                //todo
-                Tile tile = game.getTile();
+                Tile tile = GAME.getTileByPosition(randomColumn, randomRow);
+                if (tile == null) {
+                    continue;
+                }
                 int damage = (int) plant.getPlantStats().getAttributes().get("damage");
 
                 for (Zombie zombie : tile.getZombies()) {
@@ -102,17 +104,15 @@ public class Explosion implements Ability {
 
         int damage = (int) plant.getPlantStats().getAttributes().get("damage");
         for (int i = 0; i < number; i++) {
-            //todo
-            int randomIndex = RANDOM.nextInt(game.getZombies().size());
-            game.getZombies().get(randomIndex).takeDamage(damage);
+            int randomIndex = RANDOM.nextInt(GAME.getGameZombies().size());
+            GAME.getGameZombies().get(randomIndex).takeDamage(damage);
         }
     }
 
     private void handleWaterPlant(Zombie attacker, BattlePlant plant, int number) {
         attacker.setCurrentHP(0);
-        //todo
         outer:
-        for (Tile tile : game.getTiles()) {
+        for (Tile tile : GAME.getTiles()) {
             if (!tile.isArable()) {
                 for (Zombie zombie : tile.getZombies()) {
                     zombie.setCurrentHP(0);
@@ -131,8 +131,10 @@ public class Explosion implements Ability {
 
         for (int i = -range; i <= range; i++) {
             for (int j = -range; j <= range; j++) {
-                //todo
-                Tile tile = game.getTile();
+                Tile tile = GAME.getTileByPosition(column + i, row + j);
+                if (tile == null) {
+                    continue;
+                }
                 for (Zombie zombie : tile.getZombies()) {
                     zombie.takeDamage(damage);
                 }

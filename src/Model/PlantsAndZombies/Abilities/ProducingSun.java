@@ -1,5 +1,7 @@
 package src.Model.PlantsAndZombies.Abilities;
 
+import src.Menu.GamePlayMenu;
+import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Entity;
 import src.Model.Sun.Sun;
@@ -7,6 +9,8 @@ import src.Model.Sun.Sun;
 import java.util.List;
 
 public class ProducingSun implements Ability {
+    private static GamePlay GAME = GamePlayMenu.getGamePlay();
+
     private boolean isCollected = false;
     private boolean isProduced = false;
     private Sun sun;
@@ -33,8 +37,7 @@ public class ProducingSun implements Ability {
             List<Integer> productionStages = (List<Integer>) sunAttributes;
             List<Integer> timeStages = (List<Integer>) timeAttributes;
 
-            //todo
-            double plantLifespanTime = (game.getCurrentTime() - plant.getPlantTime());
+            double plantLifespanTime = (GAME.getTotalTimePassed() - plant.getPlantTime());
 
             if (timeStages.get(1) <= plantLifespanTime) {
                 numberOfSun = productionStages.get(2);
@@ -51,8 +54,7 @@ public class ProducingSun implements Ability {
     }
 
     private boolean checkTime(BattlePlant plant) {
-        //todo:
-        double currentTime = game.getCurrentTime();
+        double currentTime = GAME.getTotalTimePassed();
         double timeDifference = (currentTime - plant.getEffectedTime());
         if ((timeDifference % 1) == 0) {//every second, sun producers execute their special ability
             return true;
@@ -92,8 +94,6 @@ public class ProducingSun implements Ability {
     }
 
     public Sun getSun() {
-        if (this.isReadyToCollect()) {
-            return sun;
-        }
+        return this.sun;
     }
 }

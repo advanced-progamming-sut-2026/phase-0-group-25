@@ -1,5 +1,7 @@
 package src.Model.PlantsAndZombies;
 
+import src.Menu.GamePlayMenu;
+import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.Abilities.*;
 
 import java.util.ArrayList;
@@ -20,13 +22,13 @@ public class BattlePlant extends Plant {
     private boolean frozen;
     private int iceTime;
     private double iceHP;
-    private boolean octopusated;
+
+    private static GamePlay GAME = GamePlayMenu.getGamePlay();
 
     public BattlePlant(PlantStats plantStats, String name, Position position) {
         this.lastActionTime = 0;
 
-        //todo:
-        this.plantTime = game.getCurrentTime();
+        this.plantTime = GAME.getTotalTimePassed();
         this.plantStats = plantStats;
         this.name = name;
         this.position = position;
@@ -39,7 +41,7 @@ public class BattlePlant extends Plant {
     public void update() {
         if (this.plantStats.getAttributes().containsKey("life_span")) {
             int lifespan = (int) this.plantStats.getAttributes().get("life_span");
-            if ((game.getCurrentTime() - this.plantTime) >= lifespan) {
+            if ((GAME.getTotalTimePassed() - this.plantTime) >= lifespan) {
                 this.setCurrentHP(0);
             }
             return;
@@ -57,7 +59,7 @@ public class BattlePlant extends Plant {
                 !this.plantStats.getCategory().equals("Explosive")) {
 
             if (this.isEffected) {
-                if ((game.getCurrentTime() - this.effectedTime) >= this.effectedLifeSpan) {
+                if ((GAME.getTotalTimePassed() - this.effectedTime) >= this.effectedLifeSpan) {
                     this.isEffected = false;
                     return;
                 }
@@ -66,11 +68,11 @@ public class BattlePlant extends Plant {
                 }
             }
 
-            if ((game.getCurrentTime() - this.lastActionTime) >= this.plantStats.getActionInterval()) {
+            if ((GAME.getTotalTimePassed() - this.lastActionTime) >= this.plantStats.getActionInterval()) {
                 for (Ability ability : this.originalAbilities) {
                     ability.executeAbility(this);
                 }
-                this.lastActionTime = game.getCurretnTime();
+                this.lastActionTime = GAME.getTotalTimePassed();
             }
 
         }
@@ -121,14 +123,6 @@ public class BattlePlant extends Plant {
             this.setFrozen(true);
             this.iceTime = 0;
         }
-    }
-
-    public boolean isOctopusated() {
-        return octopusated;
-    }
-
-    public void setOctopusated(boolean octopusated) {
-        this.octopusated = octopusated;
     }
 
     public boolean isEffected() {

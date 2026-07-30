@@ -1,5 +1,7 @@
 package src.Model.PlantsAndZombies.Projectiles;
 
+import src.Menu.GamePlayMenu;
+import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Position;
 import src.Model.PlantsAndZombies.Zombie;
@@ -18,6 +20,8 @@ public class Projectile {
     private int knockback;
     private boolean poisonous;
     private boolean isHypnotizer;
+
+    private static GamePlay GAME = GamePlayMenu.getGamePlay();
 
     public Projectile() {
 
@@ -68,7 +72,6 @@ public class Projectile {
         position.setX(position.getX() + (0.1 * velocityX));
         position.setY(position.getY() + (0.1 * velocityY));
 
-        //todo: updating the mechanism of row and column
 
         updateActivation();
 
@@ -91,7 +94,7 @@ public class Projectile {
     }
 
     public void checkCollision() {
-        for (Zombie zombie : game.getAliveZombies()) {
+        for (Zombie zombie : GAME.getGameZombies()) {
             if (!zombie.isHypnotized()) {
                 if (this.position.equals(zombie.getPosition())) {
                     if ((zombie.getZombieStats().getName().equals("SNORKEL")) &&
@@ -107,8 +110,7 @@ public class Projectile {
                 }
             }
         }
-        //todo
-        for (BattlePlant plant : game.getPlants()) {
+        for (BattlePlant plant : GAME.getPlants()) {
             if (this.firing) {
                 plant.setFrozen(false);
                 plant.setIceTime(0);

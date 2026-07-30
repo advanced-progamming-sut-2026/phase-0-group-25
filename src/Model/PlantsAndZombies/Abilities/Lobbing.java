@@ -1,5 +1,7 @@
 package src.Model.PlantsAndZombies.Abilities;
 
+import src.Menu.GamePlayMenu;
+import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Entity;
 import src.Model.PlantsAndZombies.Position;
@@ -13,6 +15,8 @@ import java.util.Random;
 public class Lobbing implements Ability {
     private static int LOBBING_SHOT = 1820;
     private static Random RANDOM = new Random();
+    private static GamePlay GAME = GamePlayMenu.getGamePlay();
+
 
     @Override
     public void executeAbility(Entity entity) {
@@ -30,7 +34,7 @@ public class Lobbing implements Ability {
         int damage;
         double speed;
 
-        double targetX = findNearestZombieInRow(plant);//todo
+        double targetX = findNearestZombieInRow(plant);
 
         if (plant.getPlantStats().getAttributes().containsKey("probable")) {
             List<Double> probableAttributes = (List<Double>) plant.getPlantStats().getAttributes().get("probable");
@@ -67,8 +71,7 @@ public class Lobbing implements Ability {
     }
 
     private boolean checkTime(BattlePlant plant) {
-        //todo:
-        double currentTime = game.getCurrentTime();
+        double currentTime = GAME.getTotalTimePassed();
         double timeDifference = (currentTime - plant.getEffectedTime());
         if ((timeDifference % 0.6) == 0) {//every 0.6 second, lobbers execute their special ability
             return true;
@@ -77,16 +80,14 @@ public class Lobbing implements Ability {
     }
 
     private double findNearestZombieInRow(BattlePlant plant) {
-        Position plantRowAndColumn = Position.getRowAndColumn(plant.getPosition());
-        int plantColumn = (int) plantRowAndColumn.getX();
-        int plantRow = (int) plantRowAndColumn.getY();
+        int plantColumn = plant.getColumn();
+        int plantRow = plant.getRow();
         double distance = 99999;
         double targetX = LOBBING_SHOT;
 
         for (int i = 0; i < 9; i++) {
-            Tile tile = Tile.getTile();//todo
+            Tile tile = GAME.getTileByPosition(plantColumn + i, plantRow);
 
-            //todo
             for (Zombie zombie : tile.getZombies()) {
                 double tempDistance = zombie.getPosition().distance(plant.getPosition());
                 if (tempDistance <= distance) {
@@ -109,8 +110,7 @@ public class Lobbing implements Ability {
         if (plant.getPlantStats().getName().equals("KERNEL_PULT")) {
             int damage = damageAttributes.get(1);
             double speed = speedAttributes.get(1);
-            //todo:
-            for (Zombie zombie : game.getZombie()) {
+            for (Zombie zombie : GAME.getGameZombies()) {
                 LobbedProjectile lobbedProjectile = new LobbedProjectile(
                         plant.getPosition().getX(), plant.getPosition().getY(),
                         zombie.getPosition().getX(), speed,
@@ -119,9 +119,8 @@ public class Lobbing implements Ability {
             }
         } else {
             for (int i = 0; i < 3; i++) {
-                //todo
-                int randomIndex = RANDOM.nextInt(game.getZombies().size());
-                Zombie zombie = game.getZombies.size();
+                int randomIndex = RANDOM.nextInt(GAME.getGameZombies().size());
+                Zombie zombie = GAME.getGameZombies().get(randomIndex);
 
                 int damage = damageAttributes.get(0);
                 double speed = speedAttributes.get(0);

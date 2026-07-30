@@ -1,5 +1,7 @@
 package src.Model.PlantsAndZombies.Abilities;
 
+import src.Menu.GamePlayMenu;
+import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Entity;
 import src.Model.PlantsAndZombies.Position;
@@ -13,6 +15,11 @@ public class Shooting implements Ability {
     private static int TILE_Y_LENGTH = 200;
     private static int UPPER_LIMIT = 240;
     private static int BOTTOM_LIMIT = 1740;
+
+    private static GamePlay GAME = GamePlayMenu.getGamePlay();
+    private BattlePlant plant;
+    private int startingPoint;
+
 
     @Override
     public void executeAbility(Entity entity) {
@@ -78,11 +85,11 @@ public class Shooting implements Ability {
     }
 
     private Position findPosition(BattlePlant plant, int startingPoint) {
+        this.plant = plant;
+        this.startingPoint = startingPoint;
         int plantY = (int) plant.getPosition().getY();
 
-        if (startingPoint == 0) {
-            return plant.getPosition();
-        } else if (startingPoint == 1) {
+        if (startingPoint == 1) {
             if (plantY > UPPER_LIMIT) {
                 return new Position(plant.getPosition().getX(),
                         plant.getPosition().getY() - TILE_Y_LENGTH);
@@ -93,11 +100,13 @@ public class Shooting implements Ability {
                         plant.getPosition().getY() + TILE_Y_LENGTH);
             }
         }
+
+        return plant.getPosition();
     }
 
     private boolean checkTime(BattlePlant plant) {
-        //todo:
-        double currentTime = game.getCurrentTime();
+
+        double currentTime = GAME.getTotalTimePassed();
         double timeDifference = (currentTime - plant.getEffectedTime());
         if ((timeDifference % 0.5) == 0) {//every 0.5 second, shooters & strike-throughs execute their special ability
             return true;
@@ -117,36 +126,41 @@ public class Shooting implements Ability {
         checkResetting(plant);
 
         if (plant.getPlantStats().getTags().contains("ice")) {
-            //todo;
-            Position plantRowAndColumn = Position.getRowAndColumn(plant.getPosition());
-            int plantColumn = (int) plantRowAndColumn.getX();
-            int plantRow = (int) plantRowAndColumn.getY();
-            for (int i = 0; i < 9; i++) {
-                Tile tile = Tile.getTile();//todo
+
+            int plantRow = plant.getRow();
+            for (int i = 1; i <= 9; i++) {
+                Tile tile = GAME.getTileByPosition(i, plantRow);
+                if (tile == null) {
+                    return;
+                }
+
                 for (Zombie zombie : tile.getZombies()) {
                     zombie.freeze();
                 }
             }
         }
         if (plant.getPlantStats().getTags().contains("fire")) {
-            //todo;
-            Position plantRowAndColumn = Position.getRowAndColumn(plant.getPosition());
-            int plantColumn = (int) plantRowAndColumn.getX();
-            int plantRow = (int) plantRowAndColumn.getY();
-            for (int i = 0; i < 9; i++) {
-                Tile tile = Tile.getTile();//todo
+
+            int plantRow = plant.getRow();
+            for (int i = 1; i <= 9; i++) {
+                Tile tile = GAME.getTileByPosition(i, plantRow);
+                if (tile == null) {
+                    return;
+                }
+
                 for (Zombie zombie : tile.getZombies()) {
                     zombie.unfreeze();
                 }
             }
         }
         if (plant.getPlantStats().getTags().contains("charge")) {
-            //todo;
-            Position plantRowAndColumn = Position.getRowAndColumn(plant.getPosition());
-            int plantColumn = (int) plantRowAndColumn.getX();
-            int plantRow = (int) plantRowAndColumn.getY();
-            for (int i = 0; i < 9; i++) {
-                Tile tile = Tile.getTile();//todo
+
+            int plantRow = plant.getRow();
+            for (int i = 1; i <= 9; i++) {
+                Tile tile = GAME.getTileByPosition(i, plantRow);
+                if (tile == null) {
+                    return;
+                }
                 for (Zombie zombie : tile.getZombies()) {
                     zombie.setCurrentHP(0);
                 }
@@ -171,19 +185,17 @@ public class Shooting implements Ability {
 
     private void checkResetting(BattlePlant plant) {
         if (plant.getPlantStats().getName().equals("SEA_SHROOM")) {
-            //todo
-            for (BattlePlant plant1 : game.getPlants()) {
+            for (BattlePlant plant1 : GAME.getPlants()) {
                 if (plant1.getPlantStats().getName().equals("SEA_SHROOM")) {
                     //todo:
-                    plant1.setPlantTime(game.getCurrentTime());
+                    plant1.setPlantTime(GAME.getTotalTimePassed());
                 }
             }
         } else if (plant.getPlantStats().getName().equals("PUFF_SHROOM")) {
-            //todo
-            for (BattlePlant plant1 : game.getPlants()) {
+            for (BattlePlant plant1 : GAME.getPlants()) {
                 if (plant1.getPlantStats().getName().equals("PUFF_SHROOM")) {
                     //todo:
-                    plant1.setPlantTime(game.getCurrentTime());
+                    plant1.setPlantTime(GAME.getTotalTimePassed());
                 }
             }
         }

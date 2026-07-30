@@ -1,10 +1,8 @@
 package src.Model.PlantsAndZombies;
 
-import src.Enums.Status;
-import src.Model.PlantsAndZombies.Abilities.Ability;
-import src.Model.PlantsAndZombies.Abilities.Eating;
-import src.Model.PlantsAndZombies.Abilities.Moving;
-import src.Model.PlantsAndZombies.Abilities.StealingSun;
+import src.Menu.GamePlayMenu;
+import src.Model.GamePlayType.GamePlay;
+import src.Model.PlantsAndZombies.Abilities.*;
 import src.Model.PlantsAndZombies.Armors.Armor;
 import src.Model.PlantsAndZombies.Armors.ArmorConfig;
 import src.Model.PlantsAndZombies.Projectiles.Dynamite;
@@ -19,31 +17,28 @@ public class Zombie extends Entity {
     private static int FROZEN_TIME = 3;
     private static int TILE_X_LENGTH = 200;
     private static Random RANDOM = new Random();
+    private static GamePlay GAME = GamePlayMenu.getGamePlay();
 
 
     private ZombieStats zombieStats;
-    private Status status;
     private Entity rival;
 
     private double currentVelocity;
-    private ArrayList<String> abilities;
     private ArrayList<Ability> originalAbilities;
 
     private boolean isHalated;
     private boolean isHypnotized;
     private boolean isFrozen;
-    private int timeWhenFrozen;
+    private double timeWhenFrozen;
     private int frozenTime;
 
 
     private ArrayList<Armor> activeArmors;
-    private int lastActionTime;
-    private int spawnTime;
-    //private HashMap<String, Double> effectsInfo;
+    private double lastActionTime;
+    private double spawnTime;
 
-    public Zombie(ZombieStats zombieStats, Position position) {
+    public Zombie(ZombieStats zombieStats, String name, Position position) {
         this.zombieStats = zombieStats;
-        this.status = Status.MOVING;
         this.name = name;
 
         this.position = position;
@@ -52,6 +47,8 @@ public class Zombie extends Entity {
         this.isHalated = false;
         this.isHypnotized = false;
 
+        addAbilities();
+
         this.activeArmors = new ArrayList<>();
         if (zombieStats.getArmors() != null) {
             for (Armor armor : zombieStats.getArmors()) {
@@ -59,8 +56,28 @@ public class Zombie extends Entity {
                         armor.getCurrentHP(), armor.isMetallic()));
             }
         }
-        //todo: function for current time
-        this.spawnTime = game.getCurrentTime();
+
+        this.spawnTime = GAME.getTotalTimePassed();
+    }
+
+    private void addAbilities() {
+        for (String ability : this.zombieStats.getAbilities()) {
+            if (ability.equals("moving")) {
+                this.originalAbilities.add(new Moving());
+            } else if (ability.equals("eating")) {
+                this.originalAbilities.add(new Eating());
+            } else if (ability.equals("fatalDamage")) {
+                this.originalAbilities.add(new FatalDamage());
+            } else if (ability.equals("flying")) {
+                this.originalAbilities.add(new Flying());
+            } else if (ability.equals("stealingSun")) {
+                this.originalAbilities.add(new StealingSun());
+            } else if (ability.equals("throwing")) {
+                this.originalAbilities.add(new Throwing());
+            } else if (ability.equals("repelLobbers")) {
+                this.originalAbilities.add(new RepelLobbers());
+            }
+        }
     }
 
 
@@ -69,37 +86,20 @@ public class Zombie extends Entity {
 
         if ((this.zombieStats.getName().equals("PROSPECTOR")) &&
                 (this.zombieStats.getAttributes().get("dynamite").equals("on"))) {
-            if ((game.getCurrentTime() - this.spawnTime) >= 10) {
-                Dynamite dynamite = new Dynamite(new Position());//todo: initialize with proper coordinates
+            if ((GAME.getTotalTimePassed() - this.spawnTime) >= 10) {
+                Dynamite dynamite = new Dynamite(new Position(20, this.position.getY()));
 
-                //todo: add this recently-generated dynamite to active dynamites arraylist of game
+                GAME.getDynamites().add(dynamite);
             }
 
         }
 
 
-        if (this.status.equals(Status.MOVING)) {
-            for (Ability ability : this.originalAbilities) {
-                if (ability instanceof Moving) {
-                    ability.executeAbility(this);
-                }
-            }
-        } else if (this.status.equals(Status.EATING)) {
-            for (Ability ability : this.originalAbilities) {
-                if (ability instanceof Eating) {
-                    ability.executeAbility(this);
-                }
-            }
-        } else if (this.status.equals(Status.EXECUTING_ABILITY)) {
-            for (Ability ability : this.originalAbilities) {
-                if ((ability instanceof Moving) || (ability instanceof Eating)) {
-                    continue;
-                } else {
-                    ability.executeAbility(this);
-                }
-            }
+        for (Ability ability : this.originalAbilities) {
+            ability.executeAbility(this);
         }
     }
+
 
     public void disarmament() {
         for (Armor armor : this.activeArmors) {
@@ -115,25 +115,24 @@ public class Zombie extends Entity {
     }
 
     public void changeRow() {
-        Position rowAndColumn = Position.getRowAndColumn(this.position);
-        int column = (int) rowAndColumn.getX();
-        int row = (int) rowAndColumn.getY();
+
+        int row = this.getRow();
 
         if (row == 1) {
             this.position = new Position(
-                    this.position.getX() + TILE_X_LENGTH,
-                    this.position.getY());
+                    this.position.getX(),
+                    this.position.getY() + TILE_X_LENGTH);
         } else if (row == 5) {
             this.position = new Position(
-                    this.position.getX() - TILE_X_LENGTH,
-                    this.position.getY());
+                    this.position.getX(),
+                    this.position.getY() - TILE_X_LENGTH);
         } else {
             int randomIndex = RANDOM.nextInt(2);
             int difference = (randomIndex == 1) ? TILE_X_LENGTH : (-1) * TILE_X_LENGTH;
 
             this.position = new Position(
-                    this.position.getX() + TILE_X_LENGTH,
-                    this.position.getY());
+                    this.position.getX(),
+                    this.position.getY() + difference);
         }
     }
 
@@ -218,8 +217,7 @@ public class Zombie extends Entity {
 
     public void checkFreeze() {
         if (this.isFrozen) {
-            //todo: getter for current game time
-            if ((game.getCurrentTime() - this.timeWhenFrozen) >= this.frozenTime) {
+            if ((GAME.getTotalTimePassed() - this.timeWhenFrozen) >= this.frozenTime) {
                 this.isFrozen = false;
                 this.currentVelocity = this.zombieStats.getVelocity();
             }
@@ -227,16 +225,14 @@ public class Zombie extends Entity {
     }
 
     public void freeze(int frozenTime) {
-        //todo: getter for current game time
-        this.timeWhenFrozen = game.getCurrentTime();
+        this.timeWhenFrozen = GAME.getTotalTimePassed();
         this.isFrozen = true;
         this.frozenTime = frozenTime;
         this.currentVelocity = (this.zombieStats.getVelocity() * 0.7); //decreasing the zombie velocity after collision with icy projectiles
     }
 
     public void freeze() {
-        //todo: getter for current game time
-        this.timeWhenFrozen = game.getCurrentTime();
+        this.timeWhenFrozen = GAME.getTotalTimePassed();
         this.isFrozen = true;
         this.frozenTime = FROZEN_TIME;
         this.currentVelocity = (this.zombieStats.getVelocity() * 0.7); //decreasing the zombie velocity after collision with icy projectiles
@@ -250,7 +246,10 @@ public class Zombie extends Entity {
     public void checkLife() {
         if (this.name.equals("GARGANTUAR")) {
             if (this.currentHP <= (this.zombieStats.getBaseHP() / 2)) {
-                //todo: throw a imp zombie to third column of its own row
+                Position impPosition = new Position((this.getColumn() * 200 - 80), this.position.getY());
+                Zombie imp = ZombieFactory.createZombie("Imp", impPosition);
+
+                GAME.getGameZombies().add(imp);
             }
         }
 
@@ -263,17 +262,17 @@ public class Zombie extends Entity {
     }
 
     public void checkSteal() {
-        if (this.abilities.contains("steal sun")) {
+        if (this.getZombieStats().getAbilities().contains("stealingSun")) {
             for (Ability ability : this.originalAbilities) {
                 if (ability instanceof StealingSun) {
                     double stolenSun = ((StealingSun) ability).getStolenSun();
 
                     if (zombieStats.getName().equals("Turquoise")) {
                         Sun sun = new Sun((int) (stolenSun / 2), this.position);
-                        //todo: add this sun to board;
+                        GAME.getActiveSuns().add(sun);
+
                     } else if (zombieStats.getName().equals("Ra")) {
-                        //todo: define a function which gives and sets current sun amount;
-                        game.setSunAmount(game.getSunAmount() + (int) stolenSun);
+                        GAME.setMySuns(GAME.getMySuns() + (int) stolenSun);
                     }
                 }
             }
@@ -282,14 +281,6 @@ public class Zombie extends Entity {
 
     public ZombieStats getZombieStats() {
         return zombieStats;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 
     public ArrayList<Armor> getActiveArmors() {
@@ -328,19 +319,19 @@ public class Zombie extends Entity {
         this.currentVelocity = currentVelocity;
     }
 
-    public int getLastActionTime() {
+    public double getLastActionTime() {
         return lastActionTime;
     }
 
-    public void setLastActionTime(int lastActionTime) {
+    public void setLastActionTime(double lastActionTime) {
         this.lastActionTime = lastActionTime;
     }
 
-    public int getSpawnTime() {
+    public double getSpawnTime() {
         return spawnTime;
     }
 
-    public ArrayList<String> getAbilities() {
-        return abilities;
+    public ArrayList<Ability> getOriginalAbilities() {
+        return originalAbilities;
     }
 }

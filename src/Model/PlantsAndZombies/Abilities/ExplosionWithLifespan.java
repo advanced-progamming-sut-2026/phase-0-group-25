@@ -1,6 +1,8 @@
 package src.Model.PlantsAndZombies.Abilities;
 
 import src.Enums.ChapterType;
+import src.Menu.GamePlayMenu;
+import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Entity;
 import src.Model.PlantsAndZombies.Zombie;
@@ -9,6 +11,8 @@ import src.Model.Tile;
 import java.util.ArrayList;
 
 public class ExplosionWithLifespan implements Ability {
+    private static GamePlay GAME = GamePlayMenu.getGamePlay();
+
     @Override
     public void executeAbility(Entity entity) {
         BattlePlant plant = (BattlePlant) entity;
@@ -36,21 +40,19 @@ public class ExplosionWithLifespan implements Ability {
     private void handleShroomPlants(BattlePlant plant, ArrayList<String> tags) {
         int damage = (int) plant.getPlantStats().getAttributes().get("damage");
         if (tags.contains("Ice")) {
-            //todo;
-            for (Zombie zombie : game.getZombies()) {
+            for (Zombie zombie : GAME.getGameZombies()) {
                 int frozenTime = (int) plant.getPlantStats().getAttributes().get("freezeTime");
                 zombie.freeze(frozenTime);
                 zombie.takeDamage(damage);
             }
         } else {
-            //todo:
-            for (Tile tile : game.getTiles()) {
+            for (Tile tile : GAME.getTiles()) {
                 for (Zombie zombie : tile.getZombies()) {
                     zombie.takeDamage(damage);
                 }
             }
             //todo:
-            Tile tile = game.getTile();
+            Tile tile = GAME.getTileByPosition(plant.getColumn(), plant.getRow());
             tile.setArable(false);
         }
     }
@@ -61,7 +63,7 @@ public class ExplosionWithLifespan implements Ability {
         int row = plant.getRow();
         for (int i = 0; i < 9; i++) {
             //todo
-            Tile tile = game.getTile();
+            Tile tile = GAME.getTileByPosition(i, row);
             for (Zombie zombie : tile.getZombies()) {
                 zombie.unfreeze();
                 zombie.takeDamage(damage);
@@ -80,8 +82,10 @@ public class ExplosionWithLifespan implements Ability {
 
         for (int i = -range; i <= range; i++) {
             for (int j = -range; j <= range; j++) {
-                //todo
-                Tile tile = game.getTile();
+                Tile tile = GAME.getTileByPosition(plantColumn + i, plantRow + j);
+                if (tile == null) {
+                    continue;
+                }
                 for (Zombie zombie : tile.getZombies()) {
                     zombie.takeDamage(damage);
                 }
@@ -94,20 +98,18 @@ public class ExplosionWithLifespan implements Ability {
             int row = plant.getRow();
             int column = plant.getColumn();
             if (plant.getPlantStats().getAttributes().containsKey("range")) {
-                rangeMelt();
+                rangeMelt(plant);
             } else {
-                //todo:
-                Tile tile = game.getTile();
+                Tile tile = GAME.getTileByPosition(column, row);
                 for (BattlePlant plant1 : tile.getPlants()) {
                     plant1.setFrozen(false);
                 }
             }
 
         } else {
-            //todo
-            for (Tile tile : game.getTile()) {
-                if ((game.getChapter.equals(ChapterType.ANCIENT_EGYPT)) ||
-                        ((game.getChapter.equals(ChapterType.DARK_AGE))) {
+            for (Tile tile : GAME.getTiles()) {
+                if ((GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT)) ||
+                        ((GAME.getChapterType().equals(ChapterType.DARK_AGE)))) {
                     if (!tile.isArable()) {
                         tile.setArable(true);
                     }
@@ -118,7 +120,7 @@ public class ExplosionWithLifespan implements Ability {
         if (plant.getPlantStats().getAttributes().containsKey("damage")) {
             int damage = (int) plant.getPlantStats().getAttributes().get("damage");
 
-            Tile tile = game.getTile();//todo
+            Tile tile = GAME.getTileByPosition(plant.getColumn(), plant.getRow());
             for (Zombie zombie : tile.getZombies()) {
                 zombie.takeDamage(damage);
             }
@@ -132,8 +134,11 @@ public class ExplosionWithLifespan implements Ability {
 
         for (int i = -range; i <= range; i++) {
             for (int j = -range; j <= range; j++) {
-                //todo
-                Tile tile = game.getTile();
+                Tile tile = GAME.getTileByPosition(plantColumn + i, plantRow + j);
+                if (tile == null) {
+                    return;
+                }
+
                 for (BattlePlant plant1 : tile.getPlants()) {
                     plant1.setFrozen(false);
                 }

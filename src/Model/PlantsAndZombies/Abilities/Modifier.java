@@ -1,5 +1,7 @@
 package src.Model.PlantsAndZombies.Abilities;
 
+import src.Menu.GamePlayMenu;
+import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Entity;
 import src.Model.PlantsAndZombies.Projectiles.Projectile;
@@ -9,12 +11,14 @@ import src.Model.Tile;
 import java.util.ArrayList;
 
 public class Modifier implements Ability {
+    private static GamePlay GAME = GamePlayMenu.getGamePlay();
+
     @Override
     public void executeAbility(Entity entity) {
         BattlePlant plant = (BattlePlant) entity;
         ArrayList<String> tags = plant.getPlantStats().getTags();
         if (plant.isEffected()) {
-            plantFoodEffect(plant);
+            plantFoodEffect(plant, tags);
             return;
         }
 
@@ -24,7 +28,7 @@ public class Modifier implements Ability {
                 return;
             }
             //todo
-            for (Projectile projectile : game.getProjectiles()) {
+            for (Projectile projectile : GAME.getProjectiles()) {
                 if (projectile.getPosition().equals(plant.getPosition())) {
                     projectile.setFiring(true);
                 }
@@ -37,7 +41,7 @@ public class Modifier implements Ability {
     private void plantFoodEffect(BattlePlant plant, ArrayList<String> tags) {
         if (tags.contains("fire")) {
             //todo
-            for (Projectile projectile : game.getProjectiles()) {
+            for (Projectile projectile : GAME.getProjectiles()) {
                 if (projectile.getPosition().equals(plant.getPosition())) {
                     projectile.setDamage(projectile.getDamage() * 3);
                 }
@@ -51,8 +55,11 @@ public class Modifier implements Ability {
 
         for (int i = -range; i <= range; i++) {
             for (int j = -range; j <= range; j++) {
-                //todo
-                Tile tile = game.getTile();
+                Tile tile = GAME.getTileByPosition(column + i, row + j);
+
+                if (tile == null) {
+                    continue;
+                }
                 for (Zombie zombie : tile.getZombies()) {
                     zombie.takeDamage(damage);
                 }

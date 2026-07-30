@@ -640,6 +640,34 @@ public abstract class GamePlay {
         return plants;
     }
 
+    public ArrayList<Sun> getActiveSuns() {
+        return activeSuns;
+    }
+
+    public int getTotalTicksPassed() {
+        return totalTicksPassed;
+    }
+
+    public double getTotalTimePassed() {
+        return totalTicksPassed / 10;
+    }
+
+    public ArrayList<Projectile> getProjectiles() {
+        return projectiles;
+    }
+
+    public ArrayList<Dynamite> getDynamites() {
+        return dynamites;
+    }
+
+    public ArrayList<Tile> getTiles() {
+        return tiles;
+    }
+
+    public void setMySuns(int mySuns) {
+        this.mySuns = mySuns;
+    }
+
     public void applyIcyWind() {
         if (chapterType == ChapterType.FROSTBITE_CAVES && Math.random() < 0.02) {
             int randomNumber = new Random().nextInt(5) + 1;
