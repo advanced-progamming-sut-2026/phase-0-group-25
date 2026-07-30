@@ -15,6 +15,9 @@ public class GreenhousePlant {
         this.plantedAt = LocalDateTime.now();
     }
 
+    public GreenhousePlant() {
+    }
+
     public PlantType getType() {
         return type;
     }

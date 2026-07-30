@@ -122,7 +122,7 @@ public class Simple extends GamePlay {
         }
 
         // Checking if the end of the game (Losing) + Activate Mowers :
-        int x = mowers.get(0).getX();
+        int x = 20;
         for (Zombie zombie : gameZombies) {
             int yOfz = (int) zombie.getPosition().getY();
             int xOfz = (int) zombie.getPosition().getX();

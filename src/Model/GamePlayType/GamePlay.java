@@ -52,7 +52,7 @@ public abstract class GamePlay {
 
     public GamePlay(ChapterType chapterType, int level, int difficulty, User thisUser,
                     ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
-        this.numOfPlantFood = 0;
+        this.numOfPlantFood = thisUser.getUserProgress().getPlantFoodCount();
         this.mySuns = 0;
         this.isPaused = false;
         this.level = level;
@@ -60,13 +60,12 @@ public abstract class GamePlay {
         this.thisUser = thisUser;
 
         for (String pName : plants) {
-            Position PPos = new Position(1, 1);
-            this.plants.add(PlantFactory.createBattlePlant(pName, getLevelOfPlant(pName), PPos));
+            this.plants.add(PlantFactory.createBattlePlant(pName, getLevelOfPlant(pName)));
         }
 
         ArrayList<Zombie> tempZ = new ArrayList<>();
         for (String zName : zombies) {
-            tempZ.add(ZombieFactory.createZombie(zName, new Position(1, 1)));
+            tempZ.add(ZombieFactory.createZombie(zName));
         }
 
         this.numOfWaves = calculateWaves(chapterType, level);
@@ -81,10 +80,8 @@ public abstract class GamePlay {
         this.allWaves.add(thisFinal);
         thisFinal.zombieMaker(tempZ);
 
-        this.playGround = new PlayGround() {
-            @Override
-            public void makeGround() {
-                if (chapterType == ChapterType.BIG_WAVE_BEACH) {
+
+        if (chapterType == ChapterType.BIG_WAVE_BEACH){
                     for (int y = 1; y < 6; y++) {
                         mowers.add(new Mower(y));
                         for (int x = 1; x < 10; x++) {
@@ -94,7 +91,8 @@ public abstract class GamePlay {
                             tiles.add(newTile);
                         }
                     }
-                } else {
+                }
+        else {
                     for (int y = 1; y < 6; y++) {
                         mowers.add(new Mower(y));
                         for (int x = 1; x < 10; x++) {
@@ -105,8 +103,6 @@ public abstract class GamePlay {
                         }
                     }
                 }
-            }
-        };
 
         if (chapterType == ChapterType.FROSTBITE_CAVES) {
             String thisPName1 = plants.get(0);
@@ -280,7 +276,6 @@ public abstract class GamePlay {
 
     public void planting(BattlePlant thisPlant, Position thisPosition) {
         Tile thisTile = getTileByPosition((int) thisPosition.getX(), (int) thisPosition.getY());
-
         if (thisPlant.checkingPlantable(mySuns, thisTile) && thisTile.isArable()) {
             boolean isImitaterBoosted = false;
             int thisPX = (int) thisPosition.getY();
@@ -357,7 +352,7 @@ public abstract class GamePlay {
         for (Zombie z : thisTile.getZombies()) {
             System.out.println("->  " + z.getName() + " | HP : " + z.getCurrentHP());
             System.out.println("Abilities");
-            for (String ability : z.getAbilities()) {
+            for (String ability : z.getZombieStats().getAbilities()) {
                 System.out.printf(" # %s", ability);
             }
         }

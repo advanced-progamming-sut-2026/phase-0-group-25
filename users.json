@@ -21,6 +21,12 @@
       }, {
         "message" : "plant SUN_SHROOM unlocked!",
         "read" : false
+      }, {
+        "message" : "level 2 of ancient egypt unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie CONE_HEAD unlocked!",
+        "read" : false
       } ]
     },
     "nickName" : "amir",
@@ -29,12 +35,19 @@
     "securityQuestion" : "FAVORITE_COLOR",
     "userName" : "amir",
     "userProgress" : {
+      "claimedQuestIds" : [ ],
       "coinsCount" : 3400,
-      "dailyOfferBoughtToday" : true,
+      "completedQuestIds" : [ ],
+      "dailyOfferBoughtToday" : false,
       "dailyOfferPurchaseDate" : "2026-07-23",
+      "dailyQuestsCompleted" : 0,
       "gameDifficulty" : 1,
-      "gamesPlayed" : 0,
+      "gamesPlayed" : 1,
       "gemsCount" : 0,
+      "greenhouseBoosts" : [ ],
+      "lastDailyReset" : null,
+      "miniGamesCompleted" : 0,
+      "nonDailyQuestsCompleted" : 0,
       "plantFoodCount" : 0,
       "potsCount" : 2,
       "seedPackets" : {
@@ -44,11 +57,12 @@
         "ANCIENT_EGYPT" : 1
       },
       "unlockedPlantsAndTheirLevels" : {
-        "SUNFLOWER" : 1,
         "SUN_SHROOM" : 1,
+        "SUNFLOWER" : 1,
         "PEASHOOTER" : 1
       },
-      "unlockedZombies" : [ "DEFAULT" ]
+      "unlockedPots" : [ [ true, true, true, true, true ], [ false, false, false, false, false ], [ false, false, false, false, false ], [ false, false, false, false, false ] ],
+      "unlockedZombies" : [ "DEFAULT", "CONE_HEAD" ]
     }
   }
 }

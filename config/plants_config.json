@@ -104,12 +104,6 @@
     { "category": "Homing", "baseHP": 300, "cost": 125, "actionInterval": 12, "rechargeTime": 13, "abilities": ["homing"], "tags": ["charge", "healthiest"], "attributes": {"damage":  5000}, "plantFoodEffect": {"number":  3} }
   ],
 
-  "BOWLING_BULB": [
-    { "category": "Shooter", "baseHP": 300, "cost": 200, "actionInterval": 2, "rechargeTime": 5, "abilities": ["shooting"], "tags": [], "attributes": {, "direction":  []} },
-    { "category": "Shooter", "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": ["shooting"], "tags": [], "attributes": {, "direction":  []} },
-    { "category": "Shooter", "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": ["shooting"], "tags": [], "attributes": {, "direction":  []} },
-    { "category": "Shooter", "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": ["shooting"], "tags": [], "attributes": {, "direction":  []} }
-  ],
 
   "CACTUS": [
     { "category": "Strike-through", "baseHP": 300, "cost": 175, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": [], "attributes": {"damage":  [30], "direction":  [[0, 1, 0]], "pierce":  3}, "plantFoodEffect": {"damage":  [100], "direction":  [[0, 1, 0]], "pierce":  -1} },
@@ -230,12 +224,6 @@
     { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 17, "abilities": ["explosion"], "tags": ["Trap"], "attributes": {"damage": 4800}, "plantFoodEffect": {"number": 2} }
   ],
 
-  "GRAPESHOT": [
-    { "category": "Explosive", "baseHP": 0, "cost": 150, "actionInterval": 0, "rechargeTime": 35, "abilities": ["explosion"], "tags": [], "attributes": {}, "plantFoodEffect": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
-  ],
 
   "JALAPENO": [
     { "category": "Explosive", "baseHP": 0, "cost": 125, "actionInterval": 0, "rechargeTime": 35, "abilities": ["explosionWithLifeSpan"], "tags": ["fire"], "attributes": {"life-span": 0, "damage": 1800}, "plantFoodEffect": {} },
@@ -382,13 +370,6 @@
     { "category": "Homing", "baseHP": 300, "cost": 175, "actionInterval": 1.5, "rechargeTime": 20, "abilities": ["homing"], "tags": ["directed"], "attributes": {"damage": 25}, "plantFoodEffect": {} },
     { "category": "Homing", "baseHP": 500, "cost": 175, "actionInterval": 1.5, "rechargeTime": 20, "abilities": ["homing"], "tags": ["directed"], "attributes": {"damage": 25}, "plantFoodEffect": {} },
     { "category": "Homing", "baseHP": 500, "cost": 150, "actionInterval": 1.5, "rechargeTime": 20, "abilities": ["homing"], "tags": ["directed"], "attributes": {"damage": 25}, "plantFoodEffect": {} }
-  ],
-
-  "IMITATER": [
-    { "category": "Modifier", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 0, "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} },
-    { "baseHP": , "cost": , "actionInterval": , "rechargeTime": , "abilities": [], "tags": [], "attributes": {} }
   ],
 
   "ICE_SHROOM": [

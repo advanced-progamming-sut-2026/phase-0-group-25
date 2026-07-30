@@ -24,7 +24,7 @@ public class Zombie extends Entity {
     private Entity rival;
 
     private double currentVelocity;
-    private ArrayList<Ability> originalAbilities;
+    private ArrayList<Ability> originalAbilities = new ArrayList<>();
 
     private boolean isHalated;
     private boolean isHypnotized;

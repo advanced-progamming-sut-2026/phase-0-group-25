@@ -49,8 +49,8 @@ public class WallNutAbility implements Ability {
 
                 for (Tile tile : GAME.getTiles()) {
                     //todo: 1. getter of all zombies in proper range tile; 2. getter of row and column of tile
-                    int distanceX = Math.abs(tile.getRow() - plantRowAndColumn.getX());
-                    int distanceY = Math.abs(tile.getColumn() - plantRowAndColumn.getY());
+                    int distanceX = Math.abs((int)tile.getPosition().getY() - (int)plantRowAndColumn.getX());
+                    int distanceY = Math.abs((int)tile.getPosition().getX() - (int)plantRowAndColumn.getY());
                     if ((distanceX <= range) && (distanceY <= range)) {
                         for (Zombie zombie : tile.getZombies()) {
                             zombie.setCurrentHP(zombie.getCurrentHP() - damage);

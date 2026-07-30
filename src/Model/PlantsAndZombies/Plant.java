@@ -13,8 +13,11 @@ public abstract class Plant extends Entity {
     public abstract void update();
 
     public boolean checkingPlantable(int sun, Tile thisTile) {
-        BattlePlant upperPlant = thisTile.getPlants().get(thisTile.getPlants().size());
-        boolean isStack = upperPlant.getPlantStats().getTags().contains("Stack") || thisTile.getPlants().isEmpty();
+        BattlePlant upperPlant = null;
+        if (!thisTile.getPlants().isEmpty()) {
+            upperPlant = thisTile.getPlants().get(thisTile.getPlants().size()-1);
+        }
+        boolean isStack = (upperPlant != null  && upperPlant.getPlantStats().getTags().contains("Stack")) || thisTile.getPlants().isEmpty();
         return (sun >= this.price) && (this.cooldown == 0 || !this.activeCooldown) && isStack;
     }
 
