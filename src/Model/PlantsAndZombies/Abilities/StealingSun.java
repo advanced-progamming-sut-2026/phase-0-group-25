@@ -1,8 +1,9 @@
 package src.Model.PlantsAndZombies.Abilities;
 
+import src.Menu.GamePlayMenu;
+import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Entity;
-import src.Model.PlantsAndZombies.Position;
 import src.Model.PlantsAndZombies.Zombie;
 import src.Model.Sun.Sun;
 import src.Model.Tile;
@@ -12,59 +13,70 @@ public class StealingSun implements Ability {
     private double stolenSun = 0;
     private boolean isActivated = false;
 
+    private static GamePlay GAME = GamePlayMenu.getGamePlay();
+    private static double TURQUOISE_STEAL = 2.5;
+
     @Override
     public void executeAbility(Entity entity) {
         Zombie zombie = (Zombie) entity;
 
         if (zombie.getZombieStats().getName().equals("TURQUOISE")) {
-            Position zombieRowAndColumn = Position.getRowAndColumn(zombie.getPosition());
-            int zombieColumn = (int) zombieRowAndColumn.getX();
-            int zombieRow = (int) zombieRowAndColumn.getY();
+            int zombieColumn = zombie.getColumn();
+            int zombieRow = zombie.getRow();
 
             if (!this.isActivated) {
-
                 for (int i = 0; i <= 4; i++) {
-                    //todo: proper getter tile function with defined row and column
-                    Tile tile = game.getTile();
-                    //todo: proper getter for plants in defined tile;
+                    Tile tile = GAME.getTileByPosition(zombieColumn - i, zombieRow);
+                    if (tile == null) {
+                        continue;
+                    }
                     if (tile.getPlants() == null) {
                         continue;
                     } else {
                         zombie.setCurrentVelocity(0);
-                        //todo: define a function for getting current time
-                        zombie.setLastActionTime(game.getCurrentTime());
-                        this.setActivated(true);
-                        zombie.setStatus(Status.EXECUTING_ABILITY);
+                        zombie.setLastActionTime(GAME.getTotalTimePassed());
+                        this.isActivated = true;
+                        changeMovingActivation(zombie, false);
                         break;
                     }
                 }
             } else {
-                //todo: define a function for getting current time
-                if ((game.getCurrentTime() - zombie.getLastActionTime()) < 5) {
-                    //todo: define a function which gives current sun amount;
-                    if (game.getSunAmount() < 2.5) {
-                        this.stolenSun += game.getSunAmount();
+                if ((GAME.getTotalTimePassed() - zombie.getLastActionTime()) < 5) {
+                    if (GAME.getMySuns() < TURQUOISE_STEAL) {
+                        this.stolenSun += GAME.getMySuns();
+                        GAME.setMySuns(0);
                     } else {
-                        this.stolenSun += 2.5;
+                        this.stolenSun += TURQUOISE_STEAL;
+                        GAME.setMySuns(GAME.getMySuns() - (int) TURQUOISE_STEAL);
                     }
                 } else {
                     for (int i = 0; i <= 4; i++) {
-                        //todo: proper getter tile function with defined row and column
-                        Tile tile = game.getTile();
-                        //todo: proper getter for plants in defined tile;
+                        Tile tile = GAME.getTileByPosition(zombieColumn - i, zombieRow);
+                        if (tile == null) {
+                            continue;
+                        }
+
                         for (BattlePlant plant : tile.getPlants()) {
                             plant.setAlive(false);
                         }
                     }
                     this.setActivated(false);
-                    zombie.setStatus(Status.MOVING);
+                    changeMovingActivation(zombie, true);
                 }
             }
 
         } else if (zombie.getZombieStats().getName().equals("RA")) {
-            //todo: a function which attracts all untouchable suns on game board;
-            for (Sun sun : game.getOnBoardSuns()) {
+            for (Sun sun : GAME.getActiveSuns()) {
+                sun.setCollected(true);
                 this.stolenSun += sun.getNumberOfSun();
+            }
+        }
+    }
+
+    private void changeMovingActivation(Zombie zombie, boolean activation) {
+        for (Ability ability : zombie.getOriginalAbilities()) {
+            if (ability instanceof Moving) {
+                ((Moving) ability).setActivated(activation);
             }
         }
     }

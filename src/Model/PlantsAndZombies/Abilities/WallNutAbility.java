@@ -1,19 +1,23 @@
 package src.Model.PlantsAndZombies.Abilities;
 
+import src.Menu.GamePlayMenu;
+import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.*;
 import src.Model.Sun.Sun;
+import src.Model.Tile;
 
 import java.util.ArrayList;
 
 
 public class WallNutAbility implements Ability {
+    private static GamePlay GAME = GamePlayMenu.getGamePlay();
 
     @Override
     public void executeAbility(Entity entity) {
         Zombie attacker = (Zombie) entity;
         BattlePlant plant = (BattlePlant) attacker.getRival();
         if (plant.isEffected()) {
-            plantFoodEffect(plant);
+            plantFoodEffect(attacker, plant);
         }
 
         ArrayList<String> tags = plant.getPlantStats().getTags();
@@ -43,13 +47,12 @@ public class WallNutAbility implements Ability {
                 int range = (int) plant.getPlantStats().getAttributes().get("range");
                 int damage = checkEffected(plant);
 
-                //todo: getter of tiles in game
-                for (Tile tile : game.getTiles()) {
+                for (Tile tile : GAME.getTiles()) {
                     //todo: 1. getter of all zombies in proper range tile; 2. getter of row and column of tile
                     int distanceX = Math.abs(tile.getRow() - plantRowAndColumn.getX());
                     int distanceY = Math.abs(tile.getColumn() - plantRowAndColumn.getY());
                     if ((distanceX <= range) && (distanceY <= range)) {
-                        for (Zombie zombie : tile.getAliveZombies()) {
+                        for (Zombie zombie : tile.getZombies()) {
                             zombie.setCurrentHP(zombie.getCurrentHP() - damage);
                         }
                     }
@@ -59,9 +62,8 @@ public class WallNutAbility implements Ability {
 
         if (tags.contains("sun")) {
             int numberOfSun = (int) plant.getPlantStats().getAttributes().get("sun_quantity");
-            Sun sun = new Sun(numberOfSun, plant.getPosition());
 
-            //todo: increase sun amount of user
+            GAME.setMySuns(GAME.getMySuns() + numberOfSun);
         }
 
         if (tags.contains("shroom")) {
@@ -91,12 +93,11 @@ public class WallNutAbility implements Ability {
     }
 
     private void repelZombiesInEffected(BattlePlant plant) {
-        Position plantRowAndColumn = Position.getRowAndColumn(plant.getPosition());
-        int plantRow = (int) plantRowAndColumn.getY();
-        int plantColumn = (int) plantRowAndColumn.getX();
-        for (int i = 0; i < 9; i++) {
-            Tile tile = Tile.getTile();//todo
-            //todo
+
+        int plantRow = plant.getRow();
+        for (int i = 1; i <= 9; i++) {
+            Tile tile = GAME.getTileByPosition(i, plantRow);
+
             for (Zombie zombie : tile.getZombies()) {
                 zombie.changeRow();
             }
@@ -110,7 +111,7 @@ public class WallNutAbility implements Ability {
         Zombie newGargantuar = ZombieFactory.createZombie("GARGANTUAR", attackerPosition);
         newGargantuar.setHypnotized(true);
         //todo
-        game.getZombies().add(newGargantuar);
+        GAME.getGameZombies().add(newGargantuar);
     }
 
     private void hypnotizeZombie(Zombie attacker, BattlePlant plant) {

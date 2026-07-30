@@ -6,6 +6,7 @@ public class Sun {
     private int numberOfSun;
     private Position position;
     private double timeToReach;
+    private boolean isCollected = false;
 
     public Sun(int numberOfSun, Position position) {
         this.numberOfSun = numberOfSun;
@@ -32,6 +33,14 @@ public class Sun {
 
     public void setTimeToReach(double timeToReach) {
         this.timeToReach = timeToReach;
+    }
+
+    public void setCollected(boolean isCollected) {
+        this.isCollected = isCollected;
+    }
+
+    public boolean isCollected() {
+        return isCollected;
     }
 }
 

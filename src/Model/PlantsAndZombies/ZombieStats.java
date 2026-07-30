@@ -14,7 +14,7 @@ public class ZombieStats {
     private int waveCost;
 
     private Map<String, Object> attributes;
-
+    private ArrayList<String> abilities;
 
     public String getName() {
         return name;
@@ -50,5 +50,9 @@ public class ZombieStats {
 
     public Map<String, Object> getAttributes() {
         return attributes;
+    }
+
+    public ArrayList<String> getAbilities() {
+        return abilities;
     }
 }

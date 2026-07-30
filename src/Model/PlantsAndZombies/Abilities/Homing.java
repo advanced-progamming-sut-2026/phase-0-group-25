@@ -1,5 +1,7 @@
 package src.Model.PlantsAndZombies.Abilities;
 
+import src.Menu.GamePlayMenu;
+import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Entity;
 import src.Model.PlantsAndZombies.Position;
@@ -13,6 +15,8 @@ import java.util.Collections;
 import java.util.Map;
 
 public class Homing implements Ability {
+    private static GamePlay GAME = GamePlayMenu.getGamePlay();
+
     @Override
     public void executeAbility(Entity entity) {
         BattlePlant plant = (BattlePlant) entity;
@@ -28,8 +32,7 @@ public class Homing implements Ability {
     }
 
     private boolean checkTime(BattlePlant plant) {
-        //todo:
-        double currentTime = game.getCurrentTime();
+        double currentTime = GAME.getTotalTimePassed();
         double timeDifference = (currentTime - plant.getEffectedTime());
         if ((timeDifference % 0.4) == 0) {//every 0.4 second, homings execute their special ability
             return true;
@@ -39,8 +42,7 @@ public class Homing implements Ability {
 
 
     public Zombie findRandomZombie() {
-        //todo: writing a function which gives all alive zombies in game
-        ArrayList<Zombie> zombies = game.getAliveZombies();
+        ArrayList<Zombie> zombies = GAME.getGameZombies();
         if (zombies.isEmpty()) {
             return null;
         }
@@ -50,12 +52,11 @@ public class Homing implements Ability {
 
     public Zombie findTheHealthiestZombie() {
         Zombie target = null;
-        //todo: writing a function which gives all alive zombies in game
-        if (game.getAliveZombies().isEmpty()) {
+        if (GAME.getGameZombies().isEmpty()) {
             return null;
         }
 
-        for (Zombie zombie : game.getAliveZombies()) {
+        for (Zombie zombie : GAME.getGameZombies()) {
             if (target == null) {
                 target = zombie;
             } else {
@@ -72,12 +73,11 @@ public class Homing implements Ability {
         Zombie target = null;
         double distance = 1000000000;
 
-        //todo: writing a function which gives all alive zombies in game
-        if (game.getAliveZombies().isEmpty()) {
+        if (GAME.getGameZombies().isEmpty()) {
             return null;
         }
 
-        for (Zombie zombie : game.getAliveZombies()) {
+        for (Zombie zombie : GAME.getGameZombies()) {
             if (target == null) {
                 target = zombie;
             } else {
@@ -191,15 +191,16 @@ public class Homing implements Ability {
         } else if (plantTags.contains("disarmament")) {
             int range = (int) plant.getPlantStats().getAttributes().get("front-range");
 
-            Position plantRowAndColumn = Position.getRowAndColumn(plant.getPosition().getX(), plant.getPosition().getY());
-            int plantRow = (int) plantRowAndColumn.getX();
-            int plantColumn = (int) plantRowAndColumn.getY();
+            int plantRow = plant.getRow();
+            int plantColumn = plant.getColumn();
 
             for (int i = 0; i <= range; i++) {
-                Tile tile = getTile(); //todo: writing tile getter with row and column
-                ArrayList<Zombie> zombies = tile.getZombies();//todo: getter of alive zombies in tile
+                Tile tile = GAME.getTileByPosition(plantColumn + i, plantRow);
+                if (tile == null) {
+                    continue;
+                }
 
-                for (Zombie zombie : zombies) {
+                for (Zombie zombie : tile.getZombies()) {
                     zombie.disarmament();
                 }
             }

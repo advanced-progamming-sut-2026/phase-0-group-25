@@ -1,5 +1,7 @@
 package src.Model.PlantsAndZombies.Projectiles;
 
+import src.Menu.GamePlayMenu;
+import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.Position;
 import src.Model.PlantsAndZombies.Zombie;
 
@@ -18,6 +20,8 @@ public class LobbedProjectile extends Projectile {
     private int AoERange;
     private int damage;
     private boolean isFromLobberPlant;
+
+    private static GamePlay GAME = GamePlayMenu.getGamePlay();
 
     public LobbedProjectile(double startX, double startY, double targetX, double speed,
                             int AoEDamage, int AoERange, int damage) {
@@ -83,10 +87,9 @@ public class LobbedProjectile extends Projectile {
     }
 
     private ArrayList<Zombie> findZombiesInRange(int targetRow, int targetColumn, int AoERange) {
-        //todo
         ArrayList<Zombie> properZombies = new ArrayList<>();
 
-        for (Zombie zombie : game.getAliveZombies()) {
+        for (Zombie zombie : GAME.getGameZombies()) {
             Position zombieRowAndColumn = Position.getRowAndColumn(zombie.getPosition().getX(), zombie.getPosition().getY());
             int zombieRow = (int) zombieRowAndColumn.getX();
             int zombieColumn = (int) zombieRowAndColumn.getY();

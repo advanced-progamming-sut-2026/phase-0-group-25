@@ -17,8 +17,21 @@ public class Flying implements Ability {
                     zombie.getPosition().getX() - TILE_X_LENGTH,
                     zombie.getPosition().getY()
             ));
-            //todo: activate moving
-        }
 
+            this.isActivated = false;
+            makeMovingActivated(zombie);
+        }
+    }
+
+    private void makeMovingActivated(Zombie zombie) {
+        for (Ability ability : zombie.getOriginalAbilities()) {
+            if (ability instanceof Moving) {
+                ((Moving) ability).setActivated(true);
+            }
+        }
+    }
+
+    public void setActivated(boolean isActivated) {
+        this.isActivated = isActivated;
     }
 }
