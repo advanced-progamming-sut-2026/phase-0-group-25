@@ -47,6 +47,14 @@ public class Sun {
     public boolean isCollected() {
         return isCollected;
     }
+
+    public boolean isFromSky() {
+        return isFromSky;
+    }
+
+    public void setFromSky(boolean fromSky) {
+        isFromSky = fromSky;
+    }
 }
 
 
