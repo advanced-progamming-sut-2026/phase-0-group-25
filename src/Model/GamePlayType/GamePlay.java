@@ -660,6 +660,10 @@ public abstract class GamePlay {
         return plants;
     }
 
+    public ArrayList<BattlePlant> getGamePlants() {
+        return gamePlants;
+    }
+
     public ArrayList<Sun> getActiveSuns() {
         return activeSuns;
     }
@@ -691,7 +695,7 @@ public abstract class GamePlay {
     public void applyIcyWind() {
         if (chapterType == ChapterType.FROSTBITE_CAVES && Math.random() < 0.02) {
             int randomNumber = new Random().nextInt(5) + 1;
-
+            System.out.println("An icy wind blew in row " + randomNumber + "!");
             for (BattlePlant bp : this.gamePlants) {
                 Position thisPos = Position.getRowAndColumn(bp.getPosition());
                 if (thisPos.getY() == randomNumber) {
