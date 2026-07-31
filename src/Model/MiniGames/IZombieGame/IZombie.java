@@ -1,11 +1,14 @@
 package src.Model.MiniGames.IZombieGame;
 
 import src.Enums.ChapterType;
+import src.Enums.MiniGameType;
 import src.Enums.PlantType;
 import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.*;
 import src.Model.Tile;
 import src.Model.User.User;
+import src.Model.User.UsersManager;
+
 import java.util.*;
 
 public class IZombie extends GamePlay {
@@ -13,6 +16,7 @@ public class IZombie extends GamePlay {
     private ArrayList<SunZombie> sunZombies;
     private boolean[] brainsEaten;
     private Map<String, Integer> availableZombies;
+    private final MiniGameType miniGameType = MiniGameType.I_ZOMBIE;
 
     public IZombie(ChapterType chapterType, int level, int difficulty, User thisUser,
                    ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
@@ -165,6 +169,7 @@ public class IZombie extends GamePlay {
         }
 
         if (allBrainsEaten) {
+            onWin();
             System.out.println("VICTORY! You ate all 5 brains and defeated the plants!");
             Pause();
             return;
@@ -177,6 +182,11 @@ public class IZombie extends GamePlay {
             Pause();
         }
     }
+    @Override
+    public void onWin() {
+        UsersManager.getInstance().handleMiniGameWin(miniGameType, this.level);
+    }
+
 
     @Override
     public void showMap() {

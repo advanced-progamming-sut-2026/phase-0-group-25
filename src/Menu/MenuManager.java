@@ -69,6 +69,10 @@ public class MenuManager {
         this.currentMenu.onEnter();
     }
 
+    public GameMenu getGameMenu() {
+        return (GameMenu) menusAndTheirNames.get(MenuType.Game);
+    }
+
     public void startAppLoop() {
         while (!mustExit) {
             String input = scanner.nextLine().trim();
