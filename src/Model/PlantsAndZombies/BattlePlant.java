@@ -40,6 +40,8 @@ public class BattlePlant extends Plant {
         this.currentHP = plantStats.getBaseHP();
         this.plantTime = GAME.getTotalTimePassed();
         this.plantStats = plantStats;
+        this.plantStats.setName(name);
+
         this.name = name;
         this.position = position;
         this.price = this.plantStats.getCost();
@@ -91,9 +93,9 @@ public class BattlePlant extends Plant {
     public boolean checkingPlantable(int sun, Tile thisTile) {
         BattlePlant upperPlant = null;
         if (!thisTile.getPlants().isEmpty()) {
-            upperPlant = thisTile.getPlants().get(thisTile.getPlants().size()-1);
+            upperPlant = thisTile.getPlants().get(thisTile.getPlants().size() - 1);
         }
-        boolean isStack = (upperPlant != null  && upperPlant.getPlantStats().getTags().contains("Stack")) || thisTile.getPlants().isEmpty();
+        boolean isStack = (upperPlant != null && upperPlant.getPlantStats().getTags().contains("Stack")) || thisTile.getPlants().isEmpty();
         return (sun >= this.plantStats.getCost()) && (this.cooldown == 0 || !this.activeCooldown) && isStack;
     }
 
