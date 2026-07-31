@@ -17,11 +17,13 @@ public class ProducingSun implements Ability {
 
     @Override
     public void executeAbility(Entity entity) {
+
+        BattlePlant plant = (BattlePlant) entity;
+
         if (this.isProduced && !this.isCollected) {
             return;
         }
 
-        BattlePlant plant = (BattlePlant) entity;
         if (plant.isEffected()) {
             if (checkTime(plant)) {
                 plantFoodEffect(plant);

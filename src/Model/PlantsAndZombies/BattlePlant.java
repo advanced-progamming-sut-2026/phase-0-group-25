@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class BattlePlant extends Plant {
     private static int PLANT_FOOD_EFFECT_TIME = 2;
-    private boolean isEffected = true;
+    private boolean isEffected = false;
     private double effectedTime;
     private double effectedLifeSpan;
 
