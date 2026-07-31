@@ -73,6 +73,8 @@ public class ProducingSun implements Ability {
     private void makeSun(int numberOfSun, BattlePlant plant) {
         Sun producedSun = new Sun(numberOfSun, plant.getPosition());
         this.sun = producedSun;
+        GAME.getActiveSuns().add(this.sun);
+
         this.isProduced = true;
 
         System.out.println("plant " + plant.getPlantStats().getName() +
