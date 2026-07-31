@@ -75,9 +75,9 @@ public class ProducingSun implements Ability {
         this.sun = producedSun;
         this.isProduced = true;
 
-        System.out.println("plant + " + plant.getPlantStats().getName() +
-                " produced a sun at (<" + plant.getColumn() + ">, <"
-                + plant.getRow() + ">)");
+        System.out.println("plant " + plant.getPlantStats().getName() +
+                " produced a sun at (" + plant.getColumn() + ", "
+                + plant.getRow() + ")");
     }
 
     public boolean isCollected() {
