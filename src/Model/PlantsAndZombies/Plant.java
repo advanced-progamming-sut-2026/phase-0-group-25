@@ -23,10 +23,6 @@ public abstract class Plant extends Entity {
         activeCooldown = false;
     }
 
-    public int getCooldown() {
-        return cooldown;
-    }
-
     public void setCooldown(int cooldown) {
         this.cooldown = cooldown;
     }

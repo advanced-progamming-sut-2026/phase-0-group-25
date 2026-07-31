@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class BattlePlant extends Plant {
     private static int PLANT_FOOD_EFFECT_TIME = 2;
-    private boolean isEffected = false;
+    private boolean isEffected = true;
     private double effectedTime;
     private double effectedLifeSpan;
 
@@ -71,12 +71,12 @@ public class BattlePlant extends Plant {
                 !this.plantStats.getCategory().equals("Explosive")) {
 
             if (this.isEffected) {
+                for (Ability ability : this.originalAbilities) {
+                    ability.executeAbility(this);
+                }
                 if ((GAME.getTotalTimePassed() - this.effectedTime) >= this.effectedLifeSpan) {
                     this.isEffected = false;
                     return;
-                }
-                for (Ability ability : this.originalAbilities) {
-                    ability.executeAbility(this);
                 }
             }
 
@@ -103,6 +103,9 @@ public class BattlePlant extends Plant {
         return plantStats;
     }
 
+    public int getCooldown() {
+        return (int) this.plantStats.getRechargeTime()*10 ;
+    }
 
     public double getPlantTime() {
         return plantTime;

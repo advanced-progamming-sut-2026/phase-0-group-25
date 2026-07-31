@@ -11,6 +11,8 @@ import src.Model.PlantsAndZombies.*;
 import src.Model.PlantsAndZombies.Projectiles.Dynamite;
 import src.Model.PlantsAndZombies.Projectiles.Projectile;
 import src.Model.PlayGroundType.PlayGround;
+import src.Model.Quests.Events.SunCollectedEvent;
+import src.Model.Quests.QuestManager;
 import src.Model.Sun.RadioActiveSun;
 import src.Model.Sun.Sun;
 import src.Model.Tile;
@@ -263,6 +265,7 @@ public abstract class GamePlay {
             activeSuns.remove(targetSun);
         } else {
             addSun(targetSun);
+            QuestManager.getInstance().notifyEvent(new SunCollectedEvent(targetSun.getNumberOfSun()));
             activeSuns.remove(targetSun);
         }
     }
