@@ -4,6 +4,7 @@ public enum Command {
     changeMenu("menu enter (?!chapter -c )(.+?)"),
     ShowMenu("menu show current"),
     Exit("menu exit"),
+    EnterMiniGame("^enter mini game (.+)$"),
     EnterChapter("menu enter chapter -c (.+?)"),
     EnterGreenHouse("menu greenhouse"),
     EnterTravelLog("menu travel-log"),
@@ -55,9 +56,9 @@ public enum Command {
     BreakJar("^break jar -l \\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$"),
     CollectSeedPacket("^collect seed packet -l \\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$"),
     PlantFromInventory("^plant from inventory -i\\s+(?<index>\\d+)\\s+-l\\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$"),
-    // Wallnut Bowling
+    
     PlantWalnut("^plant walnut -i\\s+(?<index>\\d+)\\s+-l\\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$"),
-    // I Zombie
+    
     PlaceZombie("^place zombie -t\\s+(?<type>[\\w-]+)\\s+-l\\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$"),
     EnterShop("enter shop"),
     ShopList("shop list"),
@@ -72,7 +73,7 @@ public enum Command {
     CollectPot("collect \\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)"),
     GrowPot("grow \\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)"),
     ShopBuy("shop buy -i (?<itemId>\\d+) -n (?<count>\\d+)( -t (?<plantType>.+))?"),
-    SortUsers("^sort -c (username|chapter|minigames|daily|nondaily) -o (asc|desc)$");
+    SortUsers("^sort -c (chapter|minigames|daily|nondaily) -o (asc|desc)$");
 
 
     private final String regex;

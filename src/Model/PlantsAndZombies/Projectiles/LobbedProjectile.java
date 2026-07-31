@@ -2,6 +2,7 @@ package src.Model.PlantsAndZombies.Projectiles;
 
 import src.Menu.GamePlayMenu;
 import src.Model.GamePlayType.GamePlay;
+import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Position;
 import src.Model.PlantsAndZombies.Zombie;
 
@@ -22,6 +23,7 @@ public class LobbedProjectile extends Projectile {
     private boolean isFromLobberPlant;
 
     private static GamePlay GAME = GamePlayMenu.getGamePlay();
+    private static int ICE_DAMAGE = 6;
 
     public LobbedProjectile(double startX, double startY, double targetX, double speed,
                             int AoEDamage, int AoERange, int damage) {
@@ -38,6 +40,8 @@ public class LobbedProjectile extends Projectile {
         this.damage = damage;
         this.isActive = true;
         this.icy = false;
+        this.firing = false;
+        this.poisonous = false;
         this.isFromLobberPlant = true;
     }
 
@@ -56,6 +60,8 @@ public class LobbedProjectile extends Projectile {
         this.damage = damage;
         this.isActive = true;
         this.icy = false;
+        this.firing = false;
+        this.poisonous = false;
         this.isFromLobberPlant = true;
     }
 
@@ -75,13 +81,34 @@ public class LobbedProjectile extends Projectile {
         ArrayList<Zombie> zombies = findZombiesInRange(targetRow, targetColumn, this.AoERange);
 
         for (Zombie zombie : zombies) {
-            Position zombieRowAndColumn = Position.getRowAndColumn(zombie.getPosition().getX(), zombie.getPosition().getY());
-            int zombieRow = (int) zombieRowAndColumn.getX();
-            int zombieColumn = (int) zombieRowAndColumn.getY();
+            int zombieRow = zombie.getRow();
+            int zombieColumn = zombie.getColumn();
             if ((zombieRow == targetRow) || (zombieColumn == targetColumn)) {
-                //reduce hp of zombie according to directDamage//todo
+                zombie.takeDamage(this, this.damage);
             } else {
-                //reduce hp of zombie according to AoEDamage//todo
+                zombie.takeDamage(this, this.damage);
+            }
+        }
+
+
+        ArrayList<BattlePlant> plants = findPlantsInRange(targetRow, targetColumn, this.AoERange);
+
+        for (BattlePlant plant : plants) {
+            int plantRow = plant.getRow();
+            int plantColumn = plant.getColumn();
+            if ((plantRow == targetRow) || (plantColumn == targetColumn)) {
+                if (this.firing) {
+                    plant.setFrozen(false);
+                }
+                if (this.icy) {
+                    plant.setIceTime(plant.getIceTime() + 1);
+                }
+            } else {
+                if (this.firing) {
+                    if (plant.isFrozen()) {
+                        plant.takeIceDamage(ICE_DAMAGE);
+                    }
+                }
             }
         }
     }
@@ -90,9 +117,8 @@ public class LobbedProjectile extends Projectile {
         ArrayList<Zombie> properZombies = new ArrayList<>();
 
         for (Zombie zombie : GAME.getGameZombies()) {
-            Position zombieRowAndColumn = Position.getRowAndColumn(zombie.getPosition().getX(), zombie.getPosition().getY());
-            int zombieRow = (int) zombieRowAndColumn.getX();
-            int zombieColumn = (int) zombieRowAndColumn.getY();
+            int zombieRow = zombie.getRow();
+            int zombieColumn = zombie.getColumn();
 
             int rowDistance = Math.abs(targetRow - zombieRow);
             int columnDistance = Math.abs(targetColumn - zombieColumn);
@@ -103,6 +129,24 @@ public class LobbedProjectile extends Projectile {
         }
 
         return properZombies;
+    }
+
+    private ArrayList<BattlePlant> findPlantsInRange(int targetRow, int targetColumn, int AoERange) {
+        ArrayList<BattlePlant> properPlants = new ArrayList<>();
+
+        for (BattlePlant plant : GAME.getPlants()) {
+            int plantRow = plant.getRow();
+            int plantColumn = plant.getColumn();
+
+            int rowDistance = Math.abs(targetRow - plantRow);
+            int columnDistance = Math.abs(targetColumn - plantColumn);
+
+            if ((rowDistance <= AoERange) && (columnDistance <= AoERange)) {
+                properPlants.add(plant);
+            }
+        }
+
+        return properPlants;
     }
 
     public boolean isFromLobberPlant() {

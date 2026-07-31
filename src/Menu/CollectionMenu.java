@@ -148,7 +148,7 @@ public class CollectionMenu extends Menu {
             }
         }
 
-        BattlePlant plant = PlantFactory.createBattlePlant(plantType.getName(), level, new Position(0, 0));
+        BattlePlant plant = PlantFactory.createBattlePlant(plantType.getName(), level);
         if (plant == null || plant.getPlantStats() == null) {
             getView().showError("Plant stats not found for: " + plantName);
             return;
@@ -168,7 +168,7 @@ public class CollectionMenu extends Menu {
         }
 
         if (zombieFactory != null) {
-            Zombie zombie = ZombieFactory.createZombie(zombieType.getName(), new Position(0, 0));
+            Zombie zombie = ZombieFactory.createZombie(zombieType.getName());
             if (zombie.getZombieStats() != null) {
                 ZombieStats stats = zombie.getZombieStats();
                 collectionMenuView.showZombieDetails(stats.getName(), zombie.getCurrentVelocity(), stats.getBaseHP());

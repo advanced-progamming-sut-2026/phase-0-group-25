@@ -3,6 +3,7 @@ package src.Model.User;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import src.Enums.ChapterType;
+import src.Enums.MiniGameType;
 import src.Enums.PlantType;
 import src.Enums.ZombieType;
 import src.Model.Greenhouse.GreenhousePlant;
@@ -22,6 +23,9 @@ public class UserProgress {
     private int coinsCount;
     private int gameDifficulty;
     private int gamesPlayed;
+
+
+    private Map<MiniGameType, Integer> miniGameLevels;
 
     private Map<String, Integer> questProgress;
     private List<String> completedQuestIds;
@@ -73,6 +77,24 @@ public class UserProgress {
         this.completedQuestIds = new ArrayList<>();
         this.claimedQuestIds = new ArrayList<>();
         this.lastDailyReset = null;
+
+
+        this.miniGameLevels = new HashMap<>();
+        for (MiniGameType type : MiniGameType.values()) {
+            miniGameLevels.put(type, 1);
+        }
+    }
+
+    public Map<MiniGameType, Integer> getMiniGameLevels() {
+        return miniGameLevels;
+    }
+
+    public void setMiniGameLevels(Map<MiniGameType, Integer> miniGameLevels) {
+        this.miniGameLevels = miniGameLevels;
+    }
+
+    public int getMiniGameLevel(MiniGameType type) {
+        return miniGameLevels.getOrDefault(type, 1);
     }
 
     public int getMiniGamesCompleted() {
@@ -200,7 +222,7 @@ public class UserProgress {
         greenhouseBoosts.add(plant);
     }
 
-    boolean hasGreenhouseBoost(PlantType plant) {
+    public boolean hasGreenhouseBoost(PlantType plant) {
         return greenhouseBoosts.contains(plant);
     }
 
@@ -276,9 +298,9 @@ public class UserProgress {
     public int extractTotalLevelsPassed() {
         int total = 0;
         for (Integer level : unlockedChaptersAndLevels.values()) {
-            total += (level - 1);
+            total += level;
         }
-        return total;
+        return total-1;
     }
 
     public int getGemsCount() {

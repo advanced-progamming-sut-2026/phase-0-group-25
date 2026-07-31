@@ -225,6 +225,13 @@ public abstract class GamePlay {
         }
     }
 
+
+    public void onWin() {
+        if (levelObject != null) {
+            levelObject.completeLevel();
+        }
+    }
+
     public void collectSun(int x, int y) {
         Sun targetSun = null;
 
