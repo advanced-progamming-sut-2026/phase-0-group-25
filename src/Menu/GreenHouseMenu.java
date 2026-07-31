@@ -56,7 +56,7 @@ public class GreenHouseMenu extends Menu {
         getView().showError("Invalid command format for this menu state.");
     }
 
-    // ---------- Command handlers ----------
+    
 
     private void showGreenhouse() {
         String status = manager.getGreenhouseStatus();
@@ -66,7 +66,7 @@ public class GreenHouseMenu extends Menu {
     private void plantPot(int x, int y) {
         String result = manager.plantPot(x, y);
         if (result.startsWith("Planted")) {
-            // Extract the plant name (e.g., "Planted SUNFLOWER in pot (1,2).")
+            
             String plantName = result.substring(result.indexOf("Planted") + 8, result.indexOf(" in pot")).trim();
             greenHouseMenuView.showPlantPlanted(plantName, x, y);
         } else {
@@ -86,7 +86,7 @@ public class GreenHouseMenu extends Menu {
                 String plantName = result.substring(result.indexOf("for ") + 4, result.indexOf(". Pot cleared")).trim();
                 greenHouseMenuView.showAlreadyHasBoost(plantName);
             } else {
-                // Fallback: treat as error/info
+                
                 getView().showError(result);
             }
         } else {

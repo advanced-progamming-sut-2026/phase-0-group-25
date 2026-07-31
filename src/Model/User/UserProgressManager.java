@@ -8,10 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Handles all modifications to the currently logged-in user's progress.
- * Every method persists changes to the JSON file via UsersManager.updateUser().
- */
+
 public class UserProgressManager {
 
     private static UserProgressManager instance;
@@ -27,7 +24,7 @@ public class UserProgressManager {
         return instance;
     }
 
-    // ----- Helper to get current user and save after modification -----
+    
     private User getLoggedInUser() {
         return UsersManager.getInstance().getLoggedInUser();
     }
@@ -36,7 +33,7 @@ public class UserProgressManager {
         UsersManager.getInstance().updateUser();
     }
 
-    // ========== Currency ==========
+    
     public void addCoins(int amount) {
         User user = getLoggedInUser();
         if (user == null || amount <= 0) return;
@@ -75,13 +72,36 @@ public class UserProgressManager {
         return null;
     }
 
-    // ========== Seed Packets & Plant Food ==========
+    
     public void addSeedPackets(PlantType plant, int amount) {
         User user = getLoggedInUser();
         if (user == null || amount <= 0) return;
         user.getUserProgress().addSeedPackets(plant, amount);
         save();
     }
+
+
+    public int getMiniGameLevel(MiniGameType type) {
+        User user = getLoggedInUser();
+        if (user == null) return 1;
+        return user.getUserProgress().getMiniGameLevel(type);
+    }
+
+    
+    public void handleMiniGameWin(MiniGameType type, int levelCompleted) {
+        User user = getLoggedInUser();
+        if (user == null) return;
+        UserProgress progress = user.getUserProgress();
+
+        int currentLevel = progress.getMiniGameLevel(type);
+        if (levelCompleted >= currentLevel && currentLevel < 3) {
+            progress.getMiniGameLevels().put(type, currentLevel + 1);
+        }
+
+        progress.incrementMiniGamesCompleted();  
+        save();
+    }
+
 
     public void addPlantFood(int amount) {
         User user = getLoggedInUser();
@@ -92,7 +112,7 @@ public class UserProgressManager {
         save();
     }
 
-    // ========== Unlocks ==========
+    
     public void unlockPlant(PlantType plantType) {
         User user = getLoggedInUser();
         if (user == null) return;
@@ -121,7 +141,7 @@ public class UserProgressManager {
         save();
     }
 
-    // ========== Plant Purchase & Upgrade ==========
+    
     private static final int PLANT_PURCHASE_COST = 2000;
 
     public String purchasePlant(String plantName) {
@@ -175,7 +195,7 @@ public class UserProgressManager {
         return null;
     }
 
-    // ========== Greenhouse ==========
+    
     public void unlockPot(int x, int y) {
         User user = getLoggedInUser();
         if (user == null) return;
@@ -237,7 +257,7 @@ public class UserProgressManager {
         }
     }
 
-    // ========== Shop Daily Offer ==========
+    
     public void markDailyOfferPurchased() {
         User user = getLoggedInUser();
         if (user == null) return;
@@ -251,7 +271,7 @@ public class UserProgressManager {
         return user.getUserProgress().isDailyOfferBoughtToday();
     }
 
-    // ========== Quest Progress (called by QuestManager) ==========
+    
     public void setQuestProgressForCurrentUser(Map<String, Integer> progress) {
         User user = getLoggedInUser();
         if (user == null) return;
@@ -280,7 +300,7 @@ public class UserProgressManager {
         save();
     }
 
-    // ========== Leaderboard Counters ==========
+    
     public void incrementMiniGamesCompleted() {
         User user = getLoggedInUser();
         if (user == null) return;
@@ -302,7 +322,7 @@ public class UserProgressManager {
         save();
     }
 
-    // ========== Cheat (direct add) ==========
+    
     public String cheat(int amount, WalletType walletType) {
         User user = getLoggedInUser();
         if (user == null || user.getUserProgress() == null)
@@ -321,7 +341,7 @@ public class UserProgressManager {
         return null;
     }
 
-    // ========== Level Completion ==========
+    
     public void handleLevelWin(ChapterType chapterType, int currentLevel,
                                ArrayList<PlantType> plantRewards,
                                ArrayList<ZombieType> zombieRewards) {

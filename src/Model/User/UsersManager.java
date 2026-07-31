@@ -19,7 +19,7 @@ public class UsersManager {
     private HashMap<String, User> userCache = new HashMap<>();
     private User loggedInUser = null;
 
-    // Validation patterns
+    
     private static final Pattern USERNAME_CHAR_REGEX = Pattern.compile("^[a-zA-Z0-9_]+$");
     private static final Pattern PASSWORD_COMPLEXITY_REGEX = Pattern.compile(
             "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+={}\\[\\]|\\\\:;\"',<>?])\\S{8,}$"
@@ -40,7 +40,7 @@ public class UsersManager {
         return instance;
     }
 
-    // ----- Persistence -----
+    
     private void loadUsers() {
         File file = new File(FILE_PATH);
         if (!file.exists() || file.length() == 0) {
@@ -62,7 +62,7 @@ public class UsersManager {
         }
     }
 
-    // package‑private – used by UserProgressManager
+    
     void updateUser() {
         if (loggedInUser != null) {
             userCache.put(loggedInUser.getUserName(), loggedInUser);
@@ -70,7 +70,7 @@ public class UsersManager {
         }
     }
 
-    // ----- User cache & login state -----
+    
     public void addUser(User user) {
         userCache.put(user.getUserName(), user);
         writeUsers();
@@ -119,13 +119,23 @@ public class UsersManager {
         return null;
     }
 
+    public int getMiniGameLevel(MiniGameType type) {
+        return progressManager.getMiniGameLevel(type);
+    }
+
+    
+    public void handleMiniGameWin(MiniGameType type, int levelCompleted) {
+        progressManager.handleMiniGameWin(type, levelCompleted);
+    }
+
+
     public void logoutCurrentUser() {
         this.loggedInUser = null;
         File file = new File(STATE_FILE);
         if (file.exists()) file.delete();
     }
 
-    // ----- Profile changes (affecting User fields) -----
+    
     public String validateAndChangeNickname(String newNickname) {
         if (loggedInUser == null) return "No logged in user.";
         if (loggedInUser.getNickName().equals(newNickname))
@@ -188,7 +198,7 @@ public class UsersManager {
         userCache.put(newUsername, loggedInUser);
         writeUsers();
 
-        // Update stay‑logged‑in state file if it exists
+        
         File stateFile = new File(STATE_FILE);
         if (stateFile.exists()) {
             try {
@@ -200,7 +210,7 @@ public class UsersManager {
         return null;
     }
 
-    // ----- Registration validation -----
+    
     public String validateRegistration(String username, String password, String passwordConfirm,
                                        String nickname, String email, String gender) {
         if (userCache.containsKey(username))
@@ -237,7 +247,7 @@ public class UsersManager {
         return null;
     }
 
-    // ----- Forget password -----
+    
     public String validateForgetPasswordRequest(String username, String email, String answer) {
         if (!userCache.containsKey(username))
             return "Error: Entered username does not exist in the system.";
@@ -263,7 +273,7 @@ public class UsersManager {
         return null;
     }
 
-    // ----- Delegation to UserProgressManager for all progress-related operations -----
+    
     private final UserProgressManager progressManager = UserProgressManager.getInstance();
 
     public void addCoins(int amount) { progressManager.addCoins(amount); }
@@ -311,7 +321,7 @@ public class UsersManager {
         progressManager.handleLevelWin(chapterType, currentLevel, plantRewards, zombieRewards);
     }
 
-    // ----- News (still in UsersManager as it's about User's NewsManager) -----
+    
     public ArrayList<String> getUnreadNews() {
         if (loggedInUser == null) return new ArrayList<>();
         ArrayList<String> news = loggedInUser.getNewsManager().extractUnreadNews();
@@ -326,7 +336,7 @@ public class UsersManager {
         return news;
     }
 
-    // ----- Difficulty (setting) -----
+    
     public String changeDifficulty(String difficultyLevel) {
         if (loggedInUser == null) return "No logged in user.";
         int difficulty;

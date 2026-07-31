@@ -32,40 +32,40 @@
       "claimedQuestIds" : [ ],
       "coinsCount" : 984400,
       "completedQuestIds" : [ ],
-      "dailyOfferBoughtToday" : true,
+      "dailyOfferBoughtToday" : false,
       "dailyOfferPurchaseDate" : "2026-07-30",
       "dailyQuestsCompleted" : 0,
       "gameDifficulty" : 4,
       "gamesPlayed" : 0,
       "gemsCount" : 99931,
       "greenhouseBoosts" : [ ],
-      "lastDailyReset" : "2026-07-30",
+      "lastDailyReset" : "2026-07-31",
       "miniGamesCompleted" : 0,
       "nonDailyQuestsCompleted" : 0,
       "plantFoodCount" : 3,
       "potPlants" : [ [ {
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:56:43.302026",
-        "ready" : false,
-        "remainingHours" : 0.20111111111111102,
+        "ready" : true,
+        "remainingHours" : -15.879166666666666,
         "type" : "MARIGOLD"
       }, {
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:37:21.8724837",
         "ready" : true,
-        "remainingHours" : -0.12166666666666659,
+        "remainingHours" : -16.201666666666668,
         "type" : "MARIGOLD"
       }, {
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:37:31.2370238",
         "ready" : true,
-        "remainingHours" : -0.11888888888888882,
+        "remainingHours" : -16.199166666666667,
         "type" : "MARIGOLD"
       }, {
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:37:36.9804977",
         "ready" : true,
-        "remainingHours" : -0.11722222222222234,
+        "remainingHours" : -16.1975,
         "type" : "MARIGOLD"
       }, null ], [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ] ],
       "questProgress" : { },
@@ -79,8 +79,8 @@
       },
       "unlockedPlantsAndTheirLevels" : {
         "SUN_SHROOM" : 1,
-        "PEASHOOTER" : 1,
-        "SUNFLOWER" : 1
+        "SUNFLOWER" : 1,
+        "PEASHOOTER" : 1
       },
       "unlockedPots" : [ [ true, true, true, true, true ], [ true, true, true, true, false ], [ false, false, false, false, false ], [ false, false, false, false, false ] ],
       "unlockedZombies" : [ "DEFAULT" ]
