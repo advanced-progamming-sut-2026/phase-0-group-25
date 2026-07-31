@@ -237,6 +237,17 @@ public abstract class GamePlay {
 
         for (Sun sun : activeSuns) {
             if ((int) sun.getPosition().getX() == getRealX(x) && (int) sun.getPosition().getY() == getRealY(y)) {
+                if (sun.isFromSky()) {
+                    sun.setCollected(true);
+                } else {
+                    sun.setCollected(true);
+                    Tile thisTile = getTileByPosition(x, y);
+                    Ability thisAbility = thisTile.getPlants().get(0).getOriginalAbilities().get(0);
+                    if (thisAbility instanceof  ProducingSun) {
+                        ((ProducingSun) thisAbility).setCollected(false);
+                        ((ProducingSun) thisAbility).setProduced(false);
+                    }
+                }
                 targetSun = sun;
                 break;
             }

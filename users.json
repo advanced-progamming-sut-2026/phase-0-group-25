@@ -21,15 +21,6 @@
       }, {
         "message" : "plant SUN_SHROOM unlocked!",
         "read" : false
-      }, {
-        "message" : "level 2 of ancient egypt unlocked!",
-        "read" : false
-      }, {
-        "message" : "zombie CONE_HEAD unlocked!",
-        "read" : false
-      }, {
-        "message" : "level 2 of ancient egypt unlocked!",
-        "read" : false
       } ]
     },
     "nickName" : "amir khosravi",
@@ -49,6 +40,11 @@
       "gemsCount" : 99931,
       "greenhouseBoosts" : [ ],
       "lastDailyReset" : "2026-07-31",
+      "miniGameLevels" : {
+        "VASEBREAKER" : 1,
+        "WALNUT_BOWLING" : 1,
+        "I_ZOMBIE" : 1
+      },
       "miniGamesCompleted" : 0,
       "nonDailyQuestsCompleted" : 0,
       "plantFoodCount" : 3,
@@ -56,25 +52,25 @@
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:56:43.302026",
         "ready" : true,
-        "remainingHours" : -15.879166666666666,
+        "remainingHours" : -23.211111111111112,
         "type" : "MARIGOLD"
       }, {
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:37:21.8724837",
         "ready" : true,
-        "remainingHours" : -16.201666666666668,
+        "remainingHours" : -23.53388888888889,
         "type" : "MARIGOLD"
       }, {
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:37:31.2370238",
         "ready" : true,
-        "remainingHours" : -16.199166666666667,
+        "remainingHours" : -23.531111111111112,
         "type" : "MARIGOLD"
       }, {
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:37:36.9804977",
         "ready" : true,
-        "remainingHours" : -16.1975,
+        "remainingHours" : -23.529722222222222,
         "type" : "MARIGOLD"
       }, null ], [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ] ],
       "questProgress" : { },
@@ -84,7 +80,7 @@
         "PEASHOOTER" : 10
       },
       "unlockedChaptersAndLevels" : {
-        "ANCIENT_EGYPT" : 2
+        "ANCIENT_EGYPT" : 1
       },
       "unlockedPlantsAndTheirLevels" : {
         "SUN_SHROOM" : 1,
@@ -92,6 +88,66 @@
         "PEASHOOTER" : 1
       },
       "unlockedPots" : [ [ true, true, true, true, true ], [ true, true, true, true, false ], [ false, false, false, false, false ], [ false, false, false, false, false ] ],
+      "unlockedZombies" : [ "DEFAULT" ]
+    }
+  },
+  "amir2" : {
+    "email" : "test1@gmail.com",
+    "genderType" : "Male",
+    "newsManager" : {
+      "news" : [ {
+        "message" : "chapter ancient egypt unlocked!",
+        "read" : false
+      }, {
+        "message" : "level 1 of ancient egypt unlocked!",
+        "read" : false
+      }, {
+        "message" : "plant SUNFLOWER unlocked!",
+        "read" : false
+      }, {
+        "message" : "plant PEASHOOTER unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie DEFAULT unlocked!",
+        "read" : false
+      } ]
+    },
+    "nickName" : "amir",
+    "password" : "1234$AbCd",
+    "securityAnswer" : "blue",
+    "securityQuestion" : "FAVORITE_COLOR",
+    "userName" : "amir2",
+    "userProgress" : {
+      "claimedQuestIds" : [ ],
+      "coinsCount" : 0,
+      "completedQuestIds" : [ ],
+      "dailyOfferBoughtToday" : false,
+      "dailyOfferPurchaseDate" : null,
+      "dailyQuestsCompleted" : 0,
+      "gameDifficulty" : 3,
+      "gamesPlayed" : 0,
+      "gemsCount" : 0,
+      "greenhouseBoosts" : [ ],
+      "lastDailyReset" : "2026-07-31",
+      "miniGameLevels" : {
+        "VASEBREAKER" : 1,
+        "WALNUT_BOWLING" : 1,
+        "I_ZOMBIE" : 1
+      },
+      "miniGamesCompleted" : 0,
+      "nonDailyQuestsCompleted" : 0,
+      "plantFoodCount" : 0,
+      "potPlants" : [ [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ] ],
+      "questProgress" : { },
+      "seedPackets" : { },
+      "unlockedChaptersAndLevels" : {
+        "ANCIENT_EGYPT" : 1
+      },
+      "unlockedPlantsAndTheirLevels" : {
+        "SUNFLOWER" : 1,
+        "PEASHOOTER" : 1
+      },
+      "unlockedPots" : [ [ true, true, true, true, true ], [ false, false, false, false, false ], [ false, false, false, false, false ], [ false, false, false, false, false ] ],
       "unlockedZombies" : [ "DEFAULT" ]
     }
   }
