@@ -29,7 +29,7 @@ public enum Command {
     CollectSun("^collect sun -l \\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$"),
     ShowSunAmount("show sun amount"),
     ShowPlantFoodAmount("show sun amount"),
-    CheatAddSuns("cheat add -n <count> suns"),
+    CheatAddSuns("cheat add -n (?<count>\\d+) suns"),
     CheatCooldown("cheat remove-cooldown"),
     CheatPlantFood("cheat add-plant-food"),
     ReleaseTheNuke("release the nuke"),

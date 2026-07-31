@@ -64,9 +64,9 @@ public class GamePlayMenu extends Menu {
                 gamePlay.collectSun(x, y);
             }
         } else if ((matcher = getMatcher(input, Command.ShowSunAmount)) != null) {
-            System.out.println("You have" + gamePlay.getMySuns() + "suns");
+            System.out.println("You have " + gamePlay.getMySuns() + " suns");
         } else if ((matcher = getMatcher(input, Command.ShowPlantFoodAmount)) != null) {
-            System.out.println("You have" + gamePlay.getNumOfPlantFood() + "plant foods");
+            System.out.println("You have " + gamePlay.getNumOfPlantFood() + " plant foods");
         } else if ((matcher = getMatcher(input, Command.CheatAddSuns)) != null) {
             String count = matcher.group("count");
             gamePlay.cheatAddSun(Integer.parseInt(count));

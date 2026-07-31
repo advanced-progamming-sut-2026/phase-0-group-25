@@ -53,7 +53,7 @@ public abstract class GamePlay {
     public GamePlay(ChapterType chapterType, int level, int difficulty, User thisUser,
                     ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         this.numOfPlantFood = thisUser.getUserProgress().getPlantFoodCount();
-        this.mySuns = 0;
+        this.mySuns = 50;
         this.isPaused = false;
         this.level = level;
         this.chapterType = chapterType;
@@ -93,16 +93,16 @@ public abstract class GamePlay {
                     }
                 }
         else {
-                    for (int y = 1; y < 6; y++) {
-                        mowers.add(new Mower(y));
-                        for (int x = 1; x < 10; x++) {
-                            Position newPosition = new Position(x, y);
-                            Boolean isArable = Math.random() >= 0.06 || (x == 5 && (y == 2 || y == 4));
-                            Tile newTile = new Tile(newPosition, isArable, (isArable) ? 0 : 700);
-                            tiles.add(newTile);
-                        }
-                    }
+            for (int y = 1; y < 6; y++) {
+                mowers.add(new Mower(y));
+                for (int x = 1; x < 10; x++) {
+                    Position newPosition = new Position(x, y);
+                    Boolean isArable = Math.random() >= 0.06 || (x == 5 && (y == 2 || y == 4));
+                    Tile newTile = new Tile(newPosition, isArable, (isArable) ? 0 : 700);
+                    tiles.add(newTile);
                 }
+            }
+        }
 
         if (chapterType == ChapterType.FROSTBITE_CAVES) {
             String thisPName1 = plants.get(0);
@@ -276,9 +276,9 @@ public abstract class GamePlay {
 
     public void planting(BattlePlant thisPlant, Position thisPosition) {
         Tile thisTile = getTileByPosition((int) thisPosition.getX(), (int) thisPosition.getY());
-        if (thisPlant.checkingPlantable(mySuns, thisTile) && thisTile.isArable()) {
+        if (thisPlant.checkingPlantable(this.mySuns, thisTile) && thisTile.isArable()) {
             boolean isImitaterBoosted = false;
-            int thisPX = (int) thisPosition.getY();
+            int thisPX = (int) thisPosition.getX();
             int thisPY = (int) thisPosition.getY();
             String thisPName = thisPlant.getName();
             if (thisPName.equals("IMITATER")) {
@@ -302,9 +302,9 @@ public abstract class GamePlay {
 
             this.gamePlants.add(thisP);
             thisTile.addPlant(thisP);
-            this.mySuns -= thisPlant.getPlantStats().getCost();
+            this.mySuns = Math.max(0, this.mySuns - thisPlant.getPlantStats().getCost());
 
-            System.out.printf("%s was planted in (%d, %d)", thisPName, thisPX, thisPY);
+            System.out.printf("%s was planted in (%d, %d)\n", thisPName, thisPX, thisPY);
         } else {
             if (!thisTile.isArable()) {
                 System.out.println("This tile is not arable! Try another one...!");
@@ -343,10 +343,11 @@ public abstract class GamePlay {
             PlantStats ps = p.getPlantStats();
             System.out.printf("level: %d | cost: %d | baseHP: %d\n", ps.getLevel(),
                     ps.getCost(), ps.getBaseHP());
-            System.out.println("Abilities");
+            System.out.println("Abilities :");
             for (String ability : ps.getAbilities()) {
                 System.out.printf(" # %s", ability);
             }
+            System.out.println();
         }
         System.out.println("The Zombies :");
         for (Zombie z : thisTile.getZombies()) {
@@ -355,6 +356,7 @@ public abstract class GamePlay {
             for (String ability : z.getZombieStats().getAbilities()) {
                 System.out.printf(" # %s", ability);
             }
+            System.out.println();
         }
     }
 
@@ -470,7 +472,7 @@ public abstract class GamePlay {
 
     public void cheatAddSun(int sun) {
         this.mySuns += sun;
-        System.out.println("You added" + sun + "suns!!");
+        System.out.println("You added " + sun + " suns!!");
     }
 
     public void releaseTheNuke() {
@@ -586,7 +588,7 @@ public abstract class GamePlay {
     }
 
     public int getRandomTime() {
-        int[] numbers = {10, 40, 30, 50};
+        int[] numbers = {200, 350, 300, 450};
         int randomIndex = (int) (Math.random() * numbers.length);
         return numbers[randomIndex];
     }
@@ -644,7 +646,7 @@ public abstract class GamePlay {
     }
 
     public double getTotalTimePassed() {
-        return totalTicksPassed / 10;
+        return (double) totalTicksPassed / 10;
     }
 
     public ArrayList<Projectile> getProjectiles() {

@@ -45,6 +45,8 @@ public class Zombie extends Entity {
     public Zombie(ZombieStats zombieStats, String name, Position position) {
         this.zombieStats = zombieStats;
         this.name = name;
+        this.zombieStats.setName(name);
+        GAME = GamePlayMenu.getGamePlay();
 
         this.position = position;
         this.currentHP = zombieStats.getBaseHP();
@@ -88,7 +90,9 @@ public class Zombie extends Entity {
 
     public void update() {
         checkFreeze();
-
+        if (zombieStats.getName() == null) {
+            System.out.println("its nullllll");
+        }
         if ((this.zombieStats.getName().equals("PROSPECTOR")) &&
                 (this.zombieStats.getAttributes().get("dynamite").equals("on"))) {
             if ((GAME.getTotalTimePassed() - this.spawnTime) >= 10) {
