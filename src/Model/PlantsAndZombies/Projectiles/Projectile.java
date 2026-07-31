@@ -1,15 +1,19 @@
 package src.Model.PlantsAndZombies.Projectiles;
 
+import src.Enums.ChapterType;
 import src.Menu.GamePlayMenu;
 import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Position;
 import src.Model.PlantsAndZombies.Zombie;
+import src.Model.Tile;
 
 public class Projectile {
     protected boolean isActive;
     protected boolean icy;
     protected boolean firing;
+    protected boolean poisonous;
+
     private double velocityX;
     private double velocityY;
     private int damage;
@@ -18,10 +22,10 @@ public class Projectile {
     private int pierceAmount;
     private int range;
     private int knockback;
-    private boolean poisonous;
     private boolean isHypnotizer;
 
     private static GamePlay GAME = GamePlayMenu.getGamePlay();
+    private static int X_RIGHT_LIMIT = 1820;
 
     public Projectile() {
 
@@ -43,6 +47,7 @@ public class Projectile {
         this.icy = false;
         this.firing = false;
         this.poisonous = false;
+        this.isHypnotizer = false;
     }
 
     public Projectile(double velocityX, double velocityY, Position position,
@@ -61,6 +66,7 @@ public class Projectile {
         this.icy = false;
         this.firing = false;
         this.poisonous = false;
+        this.isHypnotizer = false;
     }
 
 
@@ -69,11 +75,12 @@ public class Projectile {
     }
 
     public void update() {
-        position.setX(position.getX() + (0.1 * velocityX));
-        position.setY(position.getY() + (0.1 * velocityY));
-
+        this.position = new Position((position.getX() + (0.1 * velocityX)),
+                (position.getY() + (0.1 * velocityY)));
 
         updateActivation();
+
+        checkTombCollision();
 
         checkCollision();
     }
@@ -90,6 +97,25 @@ public class Projectile {
         if (((currentRow - baseRow) > this.range) ||
                 ((currentColumn - baseColumn) > this.range)) {
             this.isActive = false;
+        }
+
+        if (this.position.getX() >= X_RIGHT_LIMIT) {
+            this.isActive = false;
+        }
+    }
+
+    private void checkTombCollision() {
+        Position rowAndColumn = Position.getRowAndColumn(this.position.getX(), this.position.getY());
+        int column = (int) rowAndColumn.getX();
+        int row = (int) rowAndColumn.getY();
+
+        Tile tile = GAME.getTileByPosition(column, row);
+        if ((GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT)) ||
+                (GAME.getChapterType().equals(ChapterType.DARK_AGE))) {
+            if (!tile.isArable()) {
+                tile.setHP(tile.getHP() - this.damage);
+                this.isActive = false;
+            }
         }
     }
 
@@ -113,14 +139,12 @@ public class Projectile {
         for (BattlePlant plant : GAME.getPlants()) {
             if (this.firing) {
                 plant.setFrozen(false);
-                plant.setIceTime(0);
             } else {
                 if (plant.isFrozen()) {
                     plant.takeIceDamage(this.damage);
                 }
             }
         }
-
     }
 
     public void setKnockback(int knockback) {
