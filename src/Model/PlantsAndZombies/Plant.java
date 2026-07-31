@@ -15,9 +15,6 @@ public abstract class Plant extends Entity {
 
     public abstract void update();
 
-    public boolean checkingSunCooldown(int sun) {
-        return (sun >= this.price) && (this.cooldown == 0 || !this.activeCooldown);
-    }
 
     public void inactivateCooldown() {
         activeCooldown = false;
@@ -29,6 +26,10 @@ public abstract class Plant extends Entity {
 
     public int getPrice() {
         return price;
+    }
+
+    public Boolean getActiveCooldown() {
+        return activeCooldown;
     }
 
     public PlantCategory getCategory() {

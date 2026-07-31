@@ -323,6 +323,7 @@ public abstract class GamePlay {
 
             this.gamePlants.add(thisP);
             thisTile.addPlant(thisP);
+            thisPlant.setCurrentCoolDown(thisPlant.getPlantStats().getRechargeTime());
             this.mySuns = Math.max(0, this.mySuns - thisPlant.getPlantStats().getCost());
 
             System.out.printf("%s was planted in (%d, %d)\n", thisPName, thisPX, thisPY);
@@ -437,8 +438,9 @@ public abstract class GamePlay {
         for (BattlePlant plant : this.plants) {
             String name = plant.getName();
             int cost = plant.getPlantStats().getCost();
-            boolean isPlantable = plant.checkingSunCooldown(this.mySuns);
-            int cooldown = plant.getCooldown();
+            boolean isPlantable = (this.mySuns >= plant.getPlantStats().getCost())
+                                        && (plant.getCurrentCoolDown() == 0 || !plant.getActiveCooldown());
+            int cooldown = (int) plant.getCurrentCoolDown();
 
             System.out.printf("- %s:\n", name);
             System.out.printf("  Sun required: %d\n", cost);

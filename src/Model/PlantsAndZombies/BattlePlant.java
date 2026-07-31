@@ -12,7 +12,7 @@ public class BattlePlant extends Plant {
     private boolean isEffected = false;
     private double effectedTime;
     private double effectedLifeSpan;
-
+    private double currentCoolDown = 0;
 
     private double lastActionTime;
     private double plantTime;
@@ -51,6 +51,8 @@ public class BattlePlant extends Plant {
 
     @Override
     public void update() {
+
+
         if (this.plantStats.getAttributes().containsKey("life_span")) {
             int lifespan = (int) this.plantStats.getAttributes().get("life_span");
             if ((GAME.getTotalTimePassed() - this.plantTime) >= lifespan) {
@@ -96,7 +98,7 @@ public class BattlePlant extends Plant {
             upperPlant = thisTile.getPlants().get(thisTile.getPlants().size() - 1);
         }
         boolean isStack = (upperPlant != null && upperPlant.getPlantStats().getTags().contains("Stack")) || thisTile.getPlants().isEmpty();
-        return (sun >= this.plantStats.getCost()) && (this.cooldown == 0 || !this.activeCooldown) && isStack;
+        return (sun >= this.plantStats.getCost()) && (this.currentCoolDown == 0 || !this.activeCooldown) && isStack;
     }
 
     public PlantStats getPlantStats() {
@@ -199,6 +201,14 @@ public class BattlePlant extends Plant {
             abilities.add(new Heating());
         }
         return abilities;
+    }
+
+    public double getCurrentCoolDown() {
+        return currentCoolDown;
+    }
+
+    public void setCurrentCoolDown(double currentCoolDown) {
+        this.currentCoolDown = currentCoolDown;
     }
 
     public ArrayList<Ability> getOriginalAbilities() {

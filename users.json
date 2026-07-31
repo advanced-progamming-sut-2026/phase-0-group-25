@@ -52,25 +52,25 @@
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:56:43.302026",
         "ready" : true,
-        "remainingHours" : -24.941666666666666,
+        "remainingHours" : -25.296944444444446,
         "type" : "MARIGOLD"
       }, {
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:37:21.8724837",
         "ready" : true,
-        "remainingHours" : -25.264166666666668,
+        "remainingHours" : -25.619444444444444,
         "type" : "MARIGOLD"
       }, {
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:37:31.2370238",
         "ready" : true,
-        "remainingHours" : -25.261666666666667,
+        "remainingHours" : -25.616944444444446,
         "type" : "MARIGOLD"
       }, {
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:37:36.9804977",
         "ready" : true,
-        "remainingHours" : -25.26,
+        "remainingHours" : -25.615277777777777,
         "type" : "MARIGOLD"
       }, null ], [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ] ],
       "questProgress" : { },
@@ -83,9 +83,9 @@
         "ANCIENT_EGYPT" : 1
       },
       "unlockedPlantsAndTheirLevels" : {
+        "PEASHOOTER" : 1,
         "SUNFLOWER" : 1,
-        "SUN_SHROOM" : 1,
-        "PEASHOOTER" : 1
+        "SUN_SHROOM" : 1
       },
       "unlockedPots" : [ [ true, true, true, true, true ], [ true, true, true, true, false ], [ false, false, false, false, false ], [ false, false, false, false, false ] ],
       "unlockedZombies" : [ "DEFAULT" ]
@@ -153,7 +153,7 @@
         "mower_time_40" : 0,
         "night_or_morning" : 0,
         "almost_victory" : 0,
-        "daily_sun_collector_3000" : 50,
+        "daily_sun_collector_3000" : 200,
         "one_column_less_4" : 0,
         "one_column_less_5" : 0,
         "one_column_less_2" : 0,
@@ -172,7 +172,7 @@
         "defenseless_cross_3" : 0,
         "hunter_ancient_egypt" : 0,
         "mower_time_10" : 0,
-        "daily_sun_collector_4000" : 50,
+        "daily_sun_collector_4000" : 200,
         "only_cactus" : 0,
         "one_column_less_8" : 0,
         "one_column_less_9" : 0,
@@ -185,7 +185,7 @@
         "defenseless_row_4" : 0,
         "defenseless_row_3" : 0,
         "defenseless_row_2" : 0,
-        "daily_sun_collector_5000" : 50,
+        "daily_sun_collector_5000" : 200,
         "defenseless_row_1" : 0,
         "hunter_big_wave_beach" : 0,
         "no_ocd" : 0,
@@ -201,8 +201,8 @@
         "ANCIENT_EGYPT" : 2
       },
       "unlockedPlantsAndTheirLevels" : {
-        "SUNFLOWER" : 1,
-        "PEASHOOTER" : 1
+        "PEASHOOTER" : 1,
+        "SUNFLOWER" : 1
       },
       "unlockedPots" : [ [ true, true, true, true, true ], [ true, false, false, false, false ], [ false, false, false, false, false ], [ false, false, false, false, false ] ],
       "unlockedZombies" : [ "DEFAULT", "CONE_HEAD" ]
