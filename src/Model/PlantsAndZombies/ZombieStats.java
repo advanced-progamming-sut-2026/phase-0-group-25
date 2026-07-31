@@ -20,6 +20,10 @@ public class ZombieStats {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public int getBaseHP() {
         return baseHP;
     }

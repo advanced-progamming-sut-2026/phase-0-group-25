@@ -5,18 +5,15 @@ import src.Model.Tile;
 
 public abstract class Plant extends Entity {
     protected PlantCategory category;
-    private boolean hasBoost;
-    private int price;
-    private int cooldown;
-    private Boolean activeCooldown = true;
+    protected boolean hasBoost;
+    protected int price;
+    protected int cooldown;
+    protected Boolean activeCooldown = true;
+
+    public Plant() {
+    }
 
     public abstract void update();
-
-    public boolean checkingPlantable(int sun, Tile thisTile) {
-        BattlePlant upperPlant = thisTile.getPlants().get(thisTile.getPlants().size());
-        boolean isStack = upperPlant.getPlantStats().getTags().contains("Stack") || thisTile.getPlants().isEmpty();
-        return (sun >= this.price) && (this.cooldown == 0 || !this.activeCooldown) && isStack;
-    }
 
     public boolean checkingSunCooldown(int sun) {
         return (sun >= this.price) && (this.cooldown == 0 || !this.activeCooldown);
@@ -32,6 +29,10 @@ public abstract class Plant extends Entity {
 
     public void setCooldown(int cooldown) {
         this.cooldown = cooldown;
+    }
+
+    public int getPrice() {
+        return price;
     }
 
     public PlantCategory getCategory() {

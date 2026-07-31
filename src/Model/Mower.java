@@ -15,7 +15,7 @@ public class Mower {
     public void killZombies(GamePlay thisGame) {
         isUsed = true;
         for (Zombie z : thisGame.getGameZombies()) {
-            if (z.getPosition().getY() == y) {
+            if (z.getPosition().getY() == thisGame.getRealY(y)) {
                 System.out.println(z.getName());
                 z.setAlive(false);
             }
