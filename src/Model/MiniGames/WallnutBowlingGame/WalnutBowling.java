@@ -1,10 +1,12 @@
 package src.Model.MiniGames.WallnutBowlingGame;
 
 import src.Enums.ChapterType;
+import src.Enums.MiniGameType;
 import src.Model.GamePlayType.GamePlay;
 import src.Model.Mower;
 import src.Model.PlantsAndZombies.Zombie;
 import src.Model.User.User;
+import src.Model.User.UsersManager;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,6 +17,7 @@ public class WalnutBowling extends GamePlay {
     private final int RED_LINE_LIMIT_X = 3;
     private ArrayList<String> conveyorBelt = new ArrayList<>();
     private ArrayList<Walnut> activeWalnuts = new ArrayList<>();
+    private final MiniGameType miniGameType = MiniGameType.WALNUT_BOWLING;
 
     public WalnutBowling(ChapterType chapterType, int level, int difficulty, User thisUser,
                          ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
@@ -113,10 +116,16 @@ public class WalnutBowling extends GamePlay {
             }
         }
 
+
         // Checking if the end of the game (Winning) :
         if (checkingTheEndOfTheGame()) {
+            onWin();
             System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
         }
+    }
+    @Override
+    public void onWin() {
+        UsersManager.getInstance().handleMiniGameWin(miniGameType, this.level);
     }
 
     public ArrayList<Walnut> getActiveWalnuts() {

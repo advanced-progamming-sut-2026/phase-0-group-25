@@ -1,6 +1,7 @@
 package src.Model.MiniGames.VasebreakerGame;
 
 import src.Enums.ChapterType;
+import src.Enums.MiniGameType;
 import src.Enums.PlantType;
 import src.Model.GamePlayType.GamePlay;
 import src.Model.Mower;
@@ -8,6 +9,7 @@ import src.Model.PlantsAndZombies.*;
 import src.Model.PlantsAndZombies.Projectiles.Projectile;
 import src.Model.Tile;
 import src.Model.User.User;
+import src.Model.User.UsersManager;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -18,6 +20,7 @@ public class VaseBreaker extends GamePlay {
     private ArrayList<Jar> jars = new ArrayList<>();
     private ArrayList<DroppedSeedPacket> droppedSeedPackets = new ArrayList<>();
     private ArrayList<BattlePlant> inventory = new ArrayList<>();
+    private final MiniGameType miniGameType = MiniGameType.VASEBREAKER;  // identify this game
 
     public VaseBreaker(ChapterType chapterType, int level, int difficulty, User thisUser,
                        ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
@@ -207,11 +210,16 @@ public class VaseBreaker extends GamePlay {
         }
 
         if (checkWinCondition()) {
+            onWin();
             System.out.println("CONGRATULATIONS! You broke all jars and defeated all zombies!");
             this.isPaused = true;
         }
     }
 
+    @Override
+    public void onWin() {
+        UsersManager.getInstance().handleMiniGameWin(miniGameType, this.level);
+    }
 
     private boolean checkWinCondition() {
         boolean allJarsBroken = jars.stream().allMatch(Jar::isBroken);

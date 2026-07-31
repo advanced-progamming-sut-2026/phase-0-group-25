@@ -229,6 +229,13 @@ public abstract class GamePlay {
         }
     }
 
+
+    public void onWin() {
+        if (levelObject != null) {
+            levelObject.completeLevel();
+        }
+    }
+
     public void collectSun(int x, int y) {
         Sun targetSun = null;
 
@@ -357,9 +364,9 @@ public abstract class GamePlay {
         for (Zombie z : thisTile.getZombies()) {
             System.out.println("->  " + z.getName() + " | HP : " + z.getCurrentHP());
             System.out.println("Abilities");
-            for (String ability : z.getAbilities()) {
-                System.out.printf(" # %s", ability);
-            }
+//            for (String ability : z.getAbilities()) {
+//                System.out.printf(" # %s", ability);
+//            }
         }
     }
 

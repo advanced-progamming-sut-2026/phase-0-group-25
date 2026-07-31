@@ -23,7 +23,7 @@ public class GreenHouseManager {
         return instance;
     }
 
-    // ---------- Helper ----------
+    
     private String getUserError() {
         if (usersManager.getLoggedInUser() == null) {
             return "No logged in user.";
@@ -31,11 +31,9 @@ public class GreenHouseManager {
         return null;
     }
 
-    // ---------- Public API ----------
+    
 
-    /**
-     * Returns a multi‑line string representing the current greenhouse state.
-     */
+    
     public String getGreenhouseStatus() {
         String error = getUserError();
         if (error != null) return error;
@@ -69,10 +67,7 @@ public class GreenHouseManager {
         return sb.toString();
     }
 
-    /**
-     * Plants a random plant in the given pot.
-     * @return a message describing the outcome (success or error).
-     */
+    
     public String plantPot(int x, int y) {
         String error = getUserError();
         if (error != null) return error;
@@ -111,10 +106,7 @@ public class GreenHouseManager {
         return "Planted " + chosen.getName() + " in pot (" + x + "," + y + ").";
     }
 
-    /**
-     * Collects a ready plant from the pot.
-     * @return a message describing the outcome.
-     */
+    
     public String collectPot(int x, int y) {
         String error = getUserError();
         if (error != null) return error;
@@ -149,10 +141,7 @@ public class GreenHouseManager {
         }
     }
 
-    /**
-     * Accelerates growth of a plant in the given pot using gems.
-     * @return a message describing the outcome.
-     */
+    
     public String growPot(int x, int y) {
         String error = getUserError();
         if (error != null) return error;
