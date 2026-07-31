@@ -10,7 +10,7 @@ public class SunZombie extends Zombie {
     private int baseInterval = 120;
 
     public SunZombie(Position position) {
-        super(GameDataLoader.getStatsForZombie("DEFAULT"), "DEFAULT");
+        super(GameDataLoader.getStatsForZombie("DEFAULT"), "SunZombie", position);
 
         this.name = "SunZombie";
         this.currentHP = 190;

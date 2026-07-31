@@ -21,6 +21,15 @@
       }, {
         "message" : "plant SUN_SHROOM unlocked!",
         "read" : false
+      }, {
+        "message" : "level 2 of ancient egypt unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie CONE_HEAD unlocked!",
+        "read" : false
+      }, {
+        "message" : "level 2 of ancient egypt unlocked!",
+        "read" : false
       } ]
     },
     "nickName" : "amir khosravi",
@@ -75,7 +84,7 @@
         "PEASHOOTER" : 10
       },
       "unlockedChaptersAndLevels" : {
-        "ANCIENT_EGYPT" : 1
+        "ANCIENT_EGYPT" : 2
       },
       "unlockedPlantsAndTheirLevels" : {
         "SUN_SHROOM" : 1,

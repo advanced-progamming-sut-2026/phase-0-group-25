@@ -62,6 +62,10 @@ public class PlantStats {
         return abilities;
     }
 
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
+
     public void upgradePlant() {
 
     }

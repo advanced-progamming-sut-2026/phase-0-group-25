@@ -3,6 +3,7 @@ package src.Model.PlantsAndZombies;
 import src.Menu.GamePlayMenu;
 import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.Abilities.*;
+import src.Model.Tile;
 
 import java.util.ArrayList;
 
@@ -31,13 +32,17 @@ public class BattlePlant extends Plant {
     }
 
     public BattlePlant(PlantStats plantStats, String name, Position position) {
+        super();
         this.lastActionTime = 0;
+        GAME = GamePlayMenu.getGamePlay();
 
+        this.isAlive = true;
+        this.currentHP = plantStats.getBaseHP();
         this.plantTime = GAME.getTotalTimePassed();
         this.plantStats = plantStats;
         this.name = name;
         this.position = position;
-
+        this.price = this.plantStats.getCost();
         this.originalAbilities = addAbilities();
     }
 
@@ -83,6 +88,14 @@ public class BattlePlant extends Plant {
         }
     }
 
+    public boolean checkingPlantable(int sun, Tile thisTile) {
+        BattlePlant upperPlant = null;
+        if (!thisTile.getPlants().isEmpty()) {
+            upperPlant = thisTile.getPlants().get(thisTile.getPlants().size()-1);
+        }
+        boolean isStack = (upperPlant != null  && upperPlant.getPlantStats().getTags().contains("Stack")) || thisTile.getPlants().isEmpty();
+        return (sun >= this.plantStats.getCost()) && (this.cooldown == 0 || !this.activeCooldown) && isStack;
+    }
 
     public PlantStats getPlantStats() {
         return plantStats;
