@@ -51,7 +51,6 @@ public enum Command {
     ChooseAddPlant("^add plant -t\\s+(.+)$"),
     ChooseRemovePlant("^remove plant -t\\s+(.+)$"),
     StartGame("^start game$"),
-    EnterShop("menu shop"),
     // Vasebreaker
     BreakJar("^break jar -l \\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$"),
     CollectSeedPacket("^collect seed packet -l \\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$"),
@@ -73,7 +72,7 @@ public enum Command {
     CollectPot("collect \\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)"),
     GrowPot("grow \\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)"),
     ShopBuy("shop buy -i (?<itemId>\\d+) -n (?<count>\\d+)( -t (?<plantType>.+))?"),
-    SortUsers("^sort -c (username|chapter|minigames|daily|nondaily) -o (asc|desc)$");
+    SortUsers("^sort -c (chapter|minigames|daily|nondaily) -o (asc|desc)$");
 
 
     private final String regex;

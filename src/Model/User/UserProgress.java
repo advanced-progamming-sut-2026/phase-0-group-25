@@ -200,7 +200,7 @@ public class UserProgress {
         greenhouseBoosts.add(plant);
     }
 
-    boolean hasGreenhouseBoost(PlantType plant) {
+    public boolean hasGreenhouseBoost(PlantType plant) {
         return greenhouseBoosts.contains(plant);
     }
 
@@ -276,9 +276,9 @@ public class UserProgress {
     public int extractTotalLevelsPassed() {
         int total = 0;
         for (Integer level : unlockedChaptersAndLevels.values()) {
-            total += (level - 1);
+            total += level;
         }
-        return total;
+        return total-1;
     }
 
     public int getGemsCount() {
