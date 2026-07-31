@@ -71,12 +71,13 @@ public class BattlePlant extends Plant {
                 !this.plantStats.getCategory().equals("Explosive")) {
 
             if (this.isEffected) {
+                for (Ability ability : this.originalAbilities) {
+                    ability.executeAbility(this);
+                }
+
                 if ((GAME.getTotalTimePassed() - this.effectedTime) >= this.effectedLifeSpan) {
                     this.isEffected = false;
                     return;
-                }
-                for (Ability ability : this.originalAbilities) {
-                    ability.executeAbility(this);
                 }
             }
 
