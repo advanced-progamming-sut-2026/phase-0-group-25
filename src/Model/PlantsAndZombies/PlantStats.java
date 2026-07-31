@@ -70,4 +70,7 @@ public class PlantStats {
 
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 }
