@@ -150,7 +150,7 @@ public class TimedWar extends GamePlay {
 
         // Checking if the end of the game (Winning) :
         if (checkingTheEndOfTheGame()) {
-            getLevelObject().completeLevel();
+            onWin();
             System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
             this.isPaused = true;
         }

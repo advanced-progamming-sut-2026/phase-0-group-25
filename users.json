@@ -1,6 +1,6 @@
 {
-  "amir" : {
-    "email" : "test1@gmail.com",
+  "amirKh" : {
+    "email" : "test1@gamil.com",
     "genderType" : "Male",
     "newsManager" : {
       "news" : [ {
@@ -21,52 +21,69 @@
       }, {
         "message" : "plant SUN_SHROOM unlocked!",
         "read" : false
-      }, {
-        "message" : "level 2 of ancient egypt unlocked!",
-        "read" : false
-      }, {
-        "message" : "zombie CONE_HEAD unlocked!",
-        "read" : false
-      }, {
-        "message" : "level 2 of ancient egypt unlocked!",
-        "read" : false
       } ]
     },
-    "nickName" : "amir",
+    "nickName" : "amir khosravi",
     "password" : "1234$AbCd",
     "securityAnswer" : "blue",
     "securityQuestion" : "FAVORITE_COLOR",
-    "userName" : "amir",
+    "userName" : "amirKh",
     "userProgress" : {
       "claimedQuestIds" : [ ],
-      "coinsCount" : 3450,
+      "coinsCount" : 984400,
       "completedQuestIds" : [ ],
       "dailyOfferBoughtToday" : false,
-      "dailyOfferPurchaseDate" : "2026-07-23",
+      "dailyOfferPurchaseDate" : "2026-07-30",
       "dailyQuestsCompleted" : 0,
-      "gameDifficulty" : 1,
-      "gamesPlayed" : 2,
-      "gemsCount" : 1,
+      "gameDifficulty" : 4,
+      "gamesPlayed" : 0,
+      "gemsCount" : 99931,
       "greenhouseBoosts" : [ ],
-      "lastDailyReset" : null,
+      "lastDailyReset" : "2026-07-31",
       "miniGamesCompleted" : 0,
       "nonDailyQuestsCompleted" : 0,
-      "plantFoodCount" : 0,
-      "potPlants" : [ [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ] ],
+      "plantFoodCount" : 3,
+      "potPlants" : [ [ {
+        "growthHours" : 2.0,
+        "plantedAt" : "2026-07-30T16:56:43.302026",
+        "ready" : true,
+        "remainingHours" : -15.879166666666666,
+        "type" : "MARIGOLD"
+      }, {
+        "growthHours" : 2.0,
+        "plantedAt" : "2026-07-30T16:37:21.8724837",
+        "ready" : true,
+        "remainingHours" : -16.201666666666668,
+        "type" : "MARIGOLD"
+      }, {
+        "growthHours" : 2.0,
+        "plantedAt" : "2026-07-30T16:37:31.2370238",
+        "ready" : true,
+        "remainingHours" : -16.199166666666667,
+        "type" : "MARIGOLD"
+      }, {
+        "growthHours" : 2.0,
+        "plantedAt" : "2026-07-30T16:37:36.9804977",
+        "ready" : true,
+        "remainingHours" : -16.1975,
+        "type" : "MARIGOLD"
+      }, null ], [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ] ],
       "questProgress" : { },
       "seedPackets" : {
-        "SUN_SHROOM" : 10
+        "SUNFLOWER" : 20,
+        "SUN_SHROOM" : 15,
+        "PEASHOOTER" : 10
       },
       "unlockedChaptersAndLevels" : {
-        "ANCIENT_EGYPT" : 2
+        "ANCIENT_EGYPT" : 1
       },
       "unlockedPlantsAndTheirLevels" : {
-        "PEASHOOTER" : 1,
         "SUN_SHROOM" : 1,
-        "SUNFLOWER" : 1
+        "SUNFLOWER" : 1,
+        "PEASHOOTER" : 1
       },
-      "unlockedPots" : [ [ true, true, true, true, true ], [ true, true, false, false, false ], [ false, false, false, false, false ], [ false, false, false, false, false ] ],
-      "unlockedZombies" : [ "DEFAULT", "CONE_HEAD" ]
+      "unlockedPots" : [ [ true, true, true, true, true ], [ true, true, true, true, false ], [ false, false, false, false, false ], [ false, false, false, false, false ] ],
+      "unlockedZombies" : [ "DEFAULT" ]
     }
   }
 }
