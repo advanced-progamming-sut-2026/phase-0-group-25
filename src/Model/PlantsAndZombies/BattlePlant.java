@@ -1,8 +1,12 @@
 package src.Model.PlantsAndZombies;
 
+import src.Enums.PlantCategory;
+import src.Enums.PlantType;
 import src.Menu.GamePlayMenu;
 import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.Abilities.*;
+import src.Model.Quests.Events.ExplosiveUsedEvent;
+import src.Model.Quests.QuestManager;
 import src.Model.Tile;
 
 import java.util.ArrayList;
@@ -205,5 +209,15 @@ public class BattlePlant extends Plant {
 
     public int getLevel() {
         return this.plantStats.getLevel();
+    }
+
+    @Override
+    public void setCurrentHP(double currentHP) {
+        super.setCurrentHP(currentHP);
+        if (!this.isAlive) {
+            if (this.plantStats.getCategory().equals(PlantCategory.EXPLOSIVE.name())) {
+                QuestManager.getInstance().notifyEvent(new ExplosiveUsedEvent(this.name));
+            }
+        }
     }
 }
