@@ -30,12 +30,11 @@ public class ProducingSun implements Ability {
         }
         int numberOfSun = 0;
 
-        Object sunAttributes = plant.getPlantStats().getAttributes().get("sun_quantity");
-        Object timeAttributes = plant.getPlantStats().getAttributes().get("growth_time");
 
-        if (sunAttributes instanceof List) {
-            List<Integer> productionStages = (List<Integer>) sunAttributes;
-            List<Integer> timeStages = (List<Integer>) timeAttributes;
+        if (plant.getPlantStats().getTags().contains("wramp-up")) {
+            List<Integer> productionStages = (List<Integer>) plant.getPlantStats().getAttributes().get("sun_quantity");
+            List<Integer> timeStages = (List<Integer>) plant.getPlantStats().getAttributes().get("growth_time");
+
 
             double plantLifespanTime = (GAME.getTotalTimePassed() - plant.getPlantTime());
 
@@ -76,9 +75,9 @@ public class ProducingSun implements Ability {
         this.sun = producedSun;
         this.isProduced = true;
 
-        System.out.println("plant + " + plant.getPlantStats().getName() +
-                " produced a sun at (<" + plant.getColumn() + ">, <"
-                + plant.getRow() + ">)");
+        System.out.println("plant " + plant.getPlantStats().getName() +
+                " produced a sun at (" + plant.getColumn() + ", "
+                + plant.getRow() + ")");
     }
 
     public boolean isCollected() {

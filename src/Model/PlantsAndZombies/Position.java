@@ -13,7 +13,7 @@ public class Position {
         int column = (int) Math.floor((x - 20) / 200) + 1;
         int row = (int) Math.floor((y - 40) / 200) + 1;
 
-        return new Position(row, column);
+        return new Position(column, row);
     }
 
     public static Position getRowAndColumn(Position position) {
