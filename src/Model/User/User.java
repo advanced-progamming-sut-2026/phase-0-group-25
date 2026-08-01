@@ -26,6 +26,9 @@ public class User {
         this.userProgress = new UserProgress();
         this.newsManager = new NewsManager();
         unlockChapter(ChapterType.ANCIENT_EGYPT);
+        unlockChapter(ChapterType.DARK_AGE);
+        unlockChapter(ChapterType.FROSTBITE_CAVES);
+        unlockChapter(ChapterType.BIG_WAVE_BEACH);
         unlockPlant(PlantType.SUNFLOWER);
         unlockPlant(PlantType.PEASHOOTER);
         unlockZombie(ZombieType.DEFAULT);

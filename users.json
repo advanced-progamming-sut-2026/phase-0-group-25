@@ -1,4 +1,143 @@
 {
+  "amir3" : {
+    "email" : "test3@gamil.com",
+    "genderType" : "Male",
+    "newsManager" : {
+      "news" : [ {
+        "message" : "chapter ancient egypt unlocked!",
+        "read" : true
+      }, {
+        "message" : "level 1 of ancient egypt unlocked!",
+        "read" : true
+      }, {
+        "message" : "plant SUNFLOWER unlocked!",
+        "read" : true
+      }, {
+        "message" : "plant PEASHOOTER unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie DEFAULT unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie CONE_HEAD unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie BUCKET_HEAD unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie BRICK_HEAD unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie KNIGHT unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie GARGANTUAR unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie IMP unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie RA unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie EXPLORER unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie TOMB_RAISER unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie ALL_STAR unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie ARCADE unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie UMBRELLA unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie TURQUOISE unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie PROSPECTOR unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie PIANO unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie NEWSPAPER unlocked!",
+        "read" : true
+      } ]
+    },
+    "nickName" : "amir",
+    "password" : "1234$AbCd",
+    "securityAnswer" : "cat",
+    "securityQuestion" : "FIRST_PET",
+    "userName" : "amir3",
+    "userProgress" : {
+      "claimedQuestIds" : [ ],
+      "coinsCount" : 0,
+      "completedQuestIds" : [ ],
+      "dailyOfferBoughtToday" : false,
+      "dailyOfferPurchaseDate" : null,
+      "dailyQuestsCompleted" : 0,
+      "gameDifficulty" : 5,
+      "gamesPlayed" : 0,
+      "gemsCount" : 2,
+      "greenhouseBoosts" : [ ],
+      "lastDailyReset" : "2026-08-01",
+      "miniGameLevels" : {
+        "VASEBREAKER" : 1,
+        "WALNUT_BOWLING" : 1,
+        "I_ZOMBIE" : 1
+      },
+      "miniGamesCompleted" : 0,
+      "nonDailyQuestsCompleted" : 0,
+      "plantFoodCount" : 0,
+      "potPlants" : [ [ {
+        "growthHours" : 8.0,
+        "plantedAt" : "2026-08-01T16:58:56.6021673",
+        "ready" : false,
+        "remainingHours" : 0.7077777777777774,
+        "type" : "SUNFLOWER"
+      }, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ] ],
+      "questProgress" : {
+        "one_column_less" : 0,
+        "defenseless_row" : 0,
+        "thrifty_farmer" : 0,
+        "speed_demon" : 0,
+        "chapter_hunter" : 0,
+        "mower_time" : 9,
+        "defenseless_cross" : 0,
+        "only_cactus" : 0,
+        "daily_sun_collector" : 0,
+        "master_defense" : 0,
+        "professional_demolisher" : 0,
+        "win_streak" : 0,
+        "cloudy_day" : 0,
+        "professional_killer" : 0
+      },
+      "questVariables" : {
+        "one_column_less" : "9",
+        "defenseless_row" : "2",
+        "thrifty_farmer" : "3",
+        "chapter_hunter" : "MINI_GAME",
+        "mower_time" : "50",
+        "daily_sun_collector" : "5000",
+        "defenseless_cross" : "5",
+        "professional_killer" : "MELON_PULT"
+      },
+      "seedPackets" : { },
+      "unlockedChaptersAndLevels" : {
+        "ANCIENT_EGYPT" : 1
+      },
+      "unlockedPlantsAndTheirLevels" : {
+        "SUNFLOWER" : 1,
+        "PEASHOOTER" : 1
+      },
+      "unlockedPots" : [ [ true, true, true, true, true ], [ false, false, false, false, false ], [ false, false, false, false, false ], [ false, false, false, false, false ] ],
+      "unlockedZombies" : [ "DEFAULT", "CONE_HEAD", "BUCKET_HEAD", "BRICK_HEAD", "KNIGHT", "GARGANTUAR", "IMP", "RA", "EXPLORER", "TOMB_RAISER", "ALL_STAR", "ARCADE", "UMBRELLA", "TURQUOISE", "PROSPECTOR", "PIANO", "NEWSPAPER" ]
+    }
+  },
   "amirKh" : {
     "email" : "test1@gamil.com",
     "genderType" : "Male",
@@ -100,25 +239,25 @@
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:56:43.302026",
         "ready" : true,
-        "remainingHours" : -50.81388888888889,
+        "remainingHours" : -53.329166666666666,
         "type" : "MARIGOLD"
       }, {
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:37:21.8724837",
         "ready" : true,
-        "remainingHours" : -51.13666666666666,
+        "remainingHours" : -53.651666666666664,
         "type" : "MARIGOLD"
       }, {
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:37:31.2370238",
         "ready" : true,
-        "remainingHours" : -51.13388888888889,
+        "remainingHours" : -53.649166666666666,
         "type" : "MARIGOLD"
       }, {
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:37:36.9804977",
         "ready" : true,
-        "remainingHours" : -51.1325,
+        "remainingHours" : -53.6475,
         "type" : "MARIGOLD"
       }, null ], [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ] ],
       "questProgress" : {
@@ -162,6 +301,112 @@
       },
       "unlockedPots" : [ [ true, true, true, true, true ], [ true, true, true, true, true ], [ false, false, false, false, false ], [ false, false, false, false, false ] ],
       "unlockedZombies" : [ "DEFAULT", "CONE_HEAD", "BUCKET_HEAD", "BRICK_HEAD", "KNIGHT", "GARGANTUAR", "IMP", "RA", "EXPLORER", "TOMB_RAISER", "ALL_STAR", "ARCADE", "UMBRELLA", "TURQUOISE", "PROSPECTOR", "PIANO", "NEWSPAPER" ]
+    }
+  },
+  "amir4" : {
+    "email" : "test4@gmail.com",
+    "genderType" : "Male",
+    "newsManager" : {
+      "news" : [ {
+        "message" : "chapter ancient egypt unlocked!",
+        "read" : false
+      }, {
+        "message" : "level 1 of ancient egypt unlocked!",
+        "read" : false
+      }, {
+        "message" : "chapter dark age unlocked!",
+        "read" : false
+      }, {
+        "message" : "level 1 of dark age unlocked!",
+        "read" : false
+      }, {
+        "message" : "chapter frostbite caves unlocked!",
+        "read" : false
+      }, {
+        "message" : "level 1 of frostbite caves unlocked!",
+        "read" : false
+      }, {
+        "message" : "chapter big wave beach unlocked!",
+        "read" : false
+      }, {
+        "message" : "level 1 of big wave beach unlocked!",
+        "read" : false
+      }, {
+        "message" : "plant SUNFLOWER unlocked!",
+        "read" : false
+      }, {
+        "message" : "plant PEASHOOTER unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie DEFAULT unlocked!",
+        "read" : false
+      } ]
+    },
+    "nickName" : "amir",
+    "password" : "1234$AbCd",
+    "securityAnswer" : "somewhere",
+    "securityQuestion" : "BORN_CITY",
+    "userName" : "amir4",
+    "userProgress" : {
+      "claimedQuestIds" : [ ],
+      "coinsCount" : 0,
+      "completedQuestIds" : [ ],
+      "dailyOfferBoughtToday" : false,
+      "dailyOfferPurchaseDate" : null,
+      "dailyQuestsCompleted" : 0,
+      "gameDifficulty" : 3,
+      "gamesPlayed" : 0,
+      "gemsCount" : 0,
+      "greenhouseBoosts" : [ ],
+      "lastDailyReset" : "2026-08-02",
+      "miniGameLevels" : {
+        "VASEBREAKER" : 1,
+        "I_ZOMBIE" : 1,
+        "WALNUT_BOWLING" : 1
+      },
+      "miniGamesCompleted" : 0,
+      "nonDailyQuestsCompleted" : 0,
+      "plantFoodCount" : 0,
+      "potPlants" : [ [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ] ],
+      "questProgress" : {
+        "one_column_less" : 0,
+        "defenseless_row" : 0,
+        "thrifty_farmer" : 0,
+        "speed_demon" : 0,
+        "chapter_hunter" : 0,
+        "mower_time" : 0,
+        "defenseless_cross" : 0,
+        "only_cactus" : 0,
+        "daily_sun_collector" : 0,
+        "master_defense" : 0,
+        "professional_demolisher" : 0,
+        "win_streak" : 0,
+        "cloudy_day" : 0,
+        "professional_killer" : 0
+      },
+      "questVariables" : {
+        "one_column_less" : "1",
+        "defenseless_row" : "4",
+        "thrifty_farmer" : "0",
+        "chapter_hunter" : "MINI_GAME",
+        "mower_time" : "20",
+        "daily_sun_collector" : "5000",
+        "defenseless_cross" : "5",
+        "professional_killer" : "CABBAGE_PULT"
+      },
+      "seedPackets" : { },
+      "unlockedChaptersAndLevels" : {
+        "ANCIENT_EGYPT" : 1,
+        "FROSTBITE_CAVES" : 1,
+        "BIG_WAVE_BEACH" : 1,
+        "DARK_AGE" : 1
+      },
+      "unlockedPlantsAndTheirLevels" : {
+        "SUNFLOWER" : 1,
+        "PEASHOOTER" : 1
+      },
+      "unlockedPots" : [ [ true, true, true, true, true ], [ false, false, false, false, false ], [ false, false, false, false, false ], [ false, false, false, false, false ] ],
+      "unlockedZombies" : [ "DEFAULT" ]
     }
   },
   "amir2" : {
