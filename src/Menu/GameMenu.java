@@ -90,7 +90,7 @@ public class GameMenu extends Menu {
             return;
         }
 
-        // LEVEL BOUNDS CHECK
+        
         if (requestedLevel < 1 || requestedLevel > 4) {
             getView().showError("We only have 4 levels.");
             return;
@@ -99,7 +99,7 @@ public class GameMenu extends Menu {
         ChapterType chapterType = this.chapter.getChapterType();
         int maxUnlockedLevelForChapter = currentUser.getUserProgress().getUnlockedChaptersAndLevels().getOrDefault(chapterType, 1);
 
-        // LEVEL UNLOCK CHECK
+        
         if (requestedLevel > maxUnlockedLevelForChapter) {
             getView().showError("This level is locked. You must beat level " + (requestedLevel - 1) + " first.");
             return;
