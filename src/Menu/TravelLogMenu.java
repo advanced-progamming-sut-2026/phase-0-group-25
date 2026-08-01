@@ -82,10 +82,10 @@ public class TravelLogMenu extends Menu {
         GameMenu gameMenu = MenuManager.getInstance().getGameMenu();
         ArrayList<String> selectedPlants = gameMenu.getPlantsStr();
 
-        if (selectedPlants == null || selectedPlants.isEmpty()) {
-            getView().showError("No plants selected! Please select plants in choose plant menu first.");
-            return;
-        }
+//        if (selectedPlants == null || selectedPlants.isEmpty()) {
+//            getView().showError("No plants selected! Please select plants in choose plant menu first.");
+//            return;
+//        }
 
 
         HashSet<String> boostedSet = new HashSet<>(gameMenu.getBoostedPlants());
@@ -101,21 +101,21 @@ public class TravelLogMenu extends Menu {
 
         int difficulty = currentUser.getUserProgress().getGameDifficulty();
 
-        ChapterType dummyChapter = null; 
+
 
         GamePlay gamePlay = null;
 
         switch (type) {
             case VASEBREAKER:
-                gamePlay = new VaseBreaker(dummyChapter, level, difficulty, currentUser,
+                gamePlay = new VaseBreaker(ChapterType.MINI_GAME, level, difficulty, currentUser,
                         selectedPlants, unlockedZombieNames, boostedSet);
                 break;
             case WALNUT_BOWLING:
-                gamePlay = new WalnutBowling(dummyChapter, level, difficulty, currentUser,
+                gamePlay = new WalnutBowling(ChapterType.MINI_GAME, level, difficulty, currentUser,
                         selectedPlants, unlockedZombieNames, boostedSet);
                 break;
             case I_ZOMBIE:
-                gamePlay = new IZombie(dummyChapter, level, difficulty, currentUser,
+                gamePlay = new IZombie(ChapterType.MINI_GAME, level, difficulty, currentUser,
                         selectedPlants, unlockedZombieNames, boostedSet);
                 break;
             default:
@@ -147,7 +147,7 @@ public class TravelLogMenu extends Menu {
                     .filter(q -> q.isCompleted() && !q.isClaimed())
                     .collect(Collectors.toList());
         }
-        active.sort(Comparator.comparing(Quest::getPriority, Comparator.reverseOrder()));
+//        active.sort(Comparator.comparing(Quest::getPriority, Comparator.reverseOrder()));
         travelLogMenuView.showQuests(active, completed, page);
     }
 
