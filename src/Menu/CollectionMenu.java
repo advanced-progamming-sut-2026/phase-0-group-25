@@ -171,7 +171,7 @@ public class CollectionMenu extends Menu {
             Zombie zombie = ZombieFactory.createZombie(zombieType.getName());
             if (zombie.getZombieStats() != null) {
                 ZombieStats stats = zombie.getZombieStats();
-                collectionMenuView.showZombieDetails(stats.getName(), zombie.getCurrentVelocity(), stats.getBaseHP());
+                collectionMenuView.showZombieDetails(stats.getName(), zombie.getZombieStats().getVelocity(), stats.getBaseHP());
                 return;
             }
         }
