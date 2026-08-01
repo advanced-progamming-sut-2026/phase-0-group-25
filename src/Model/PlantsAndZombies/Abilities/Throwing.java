@@ -71,7 +71,7 @@ public class Throwing implements Ability {
             for (int i = 0; i < 2; i++) {
                 int row = RANDOM.nextInt(5) + 1;
                 int column = RANDOM.nextInt(9) + 1;
-                Tile tile = GAME.getTileByPosition(row, column);
+                Tile tile = GAME.getTileByPosition(column, row);
                 tile.setArable(false);
             }
 
