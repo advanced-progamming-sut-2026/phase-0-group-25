@@ -80,6 +80,13 @@ public class UserProgressManager {
         save();
     }
 
+    public void setQuestVariablesForCurrentUser(Map<String, String> variables) {
+        User user = getLoggedInUser();
+        if (user == null) return;
+        user.getUserProgress().setQuestVariables(variables);
+        save();
+    }
+
 
     public int getMiniGameLevel(MiniGameType type) {
         User user = getLoggedInUser();
