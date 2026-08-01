@@ -52,6 +52,7 @@ public abstract class GamePlay {
     protected int totalTicksPassed = 0;
     private List<Integer> rowBag = new ArrayList<>();
     protected int lostPlants = 0;
+    protected boolean settedThePlants = false;
 
 
     public GamePlay(ChapterType chapterType, int level, int difficulty, User thisUser,
@@ -105,21 +106,6 @@ public abstract class GamePlay {
                     Tile newTile = new Tile(newPosition, isArable, (isArable) ? 0 : 700);
                     tiles.add(newTile);
                 }
-            }
-        }
-
-        if (chapterType == ChapterType.FROSTBITE_CAVES) {
-            String thisPName1 = plants.get(0);
-            String thisPName2 = plants.get(1);
-            Position position1 = new Position(2, 2);
-            Position position2 = new Position(3, 5);
-            BattlePlant thisP1 = PlantFactory.createBattlePlant(thisPName1, getLevelOfPlant(thisPName1), position1);
-            BattlePlant thisP2 = PlantFactory.createBattlePlant(thisPName2, getLevelOfPlant(thisPName2), position2);
-            this.planting(thisP1, position1);
-            this.planting(thisP2, position2);
-
-            for (BattlePlant p : this.gamePlants) {
-                p.setFrozen(true);
             }
         }
     }

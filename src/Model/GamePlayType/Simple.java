@@ -2,12 +2,9 @@ package src.Model.GamePlayType;
 
 import src.Enums.ChapterType;
 import src.Model.Mower;
-import src.Model.PlantsAndZombies.BattlePlant;
-import src.Model.PlantsAndZombies.Position;
+import src.Model.PlantsAndZombies.*;
 import src.Model.PlantsAndZombies.Projectiles.Dynamite;
 import src.Model.PlantsAndZombies.Projectiles.Projectile;
-import src.Model.PlantsAndZombies.Zombie;
-import src.Model.PlantsAndZombies.ZombieFactory;
 import src.Model.Tile;
 import src.Model.User.User;
 import src.Model.Wave.FinalWave;
@@ -29,6 +26,24 @@ public class Simple extends GamePlay {
         if (isPaused) return;
         totalTicksPassed++;
         timeToSpawn = Math.max(timeToSpawn - 1, 0);
+
+        if (!settedThePlants) {
+            if (chapterType == ChapterType.FROSTBITE_CAVES) {
+                String thisPName1 = plants.get(0).getName();
+                String thisPName2 = plants.get(1).getName();
+                Position position1 = new Position(2, 2);
+                Position position2 = new Position(3, 5);
+                BattlePlant thisP1 = PlantFactory.createBattlePlant(thisPName1, getLevelOfPlant(thisPName1), position1);
+                BattlePlant thisP2 = PlantFactory.createBattlePlant(thisPName2, getLevelOfPlant(thisPName2), position2);
+                this.planting(thisP1, position1);
+                this.planting(thisP2, position2);
+
+                for (BattlePlant p : this.gamePlants) {
+                    p.setFrozen(true);
+                }
+            }
+            this.settedThePlants = true;
+        }
 
         if (this.chapterType != ChapterType.DARK_AGE) {
             sunMaker();
