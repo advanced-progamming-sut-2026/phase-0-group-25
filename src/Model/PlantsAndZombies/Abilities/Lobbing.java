@@ -55,7 +55,7 @@ public class Lobbing implements Ability {
         int AoEDamage = (int) plant.getPlantStats().getAttributes().get("AoEDamage");
         int AoERange = (int) plant.getPlantStats().getAttributes().get("AoERange");
 
-        LobbedProjectile lobbedProjectile = new LobbedProjectile(
+        LobbedProjectile lobbedProjectile = new LobbedProjectile(plant,
                 plant.getPosition().getX(), plant.getPosition().getY(),
                 targetX, speed, AoEDamage, AoERange, damage
         );
@@ -67,7 +67,7 @@ public class Lobbing implements Ability {
             lobbedProjectile.setFiring(true);
         }
 
-        //game.addProjectile(lobbedProjectile);
+        GAME.getProjectiles().add(lobbedProjectile);
     }
 
     private boolean checkTime(BattlePlant plant) {
@@ -111,11 +111,12 @@ public class Lobbing implements Ability {
             int damage = damageAttributes.get(1);
             double speed = speedAttributes.get(1);
             for (Zombie zombie : GAME.getGameZombies()) {
-                LobbedProjectile lobbedProjectile = new LobbedProjectile(
+                LobbedProjectile lobbedProjectile = new LobbedProjectile(plant,
                         plant.getPosition().getX(), plant.getPosition().getY(),
                         zombie.getPosition().getX(), speed,
                         AoEDamage, AoERange, damage
                 );
+                GAME.getProjectiles().add(lobbedProjectile);
             }
         } else {
             for (int i = 0; i < 3; i++) {
@@ -124,12 +125,13 @@ public class Lobbing implements Ability {
 
                 int damage = damageAttributes.get(0);
                 double speed = speedAttributes.get(0);
-                //todo:
-                LobbedProjectile lobbedProjectile = new LobbedProjectile(
+                LobbedProjectile lobbedProjectile = new LobbedProjectile(plant,
                         plant.getPosition().getX(), plant.getPosition().getY(),
                         zombie.getPosition().getX(), speed,
                         AoEDamage, AoERange, damage
                 );
+
+                GAME.getProjectiles().add(lobbedProjectile);
             }
         }
     }

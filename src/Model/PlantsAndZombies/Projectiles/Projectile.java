@@ -13,6 +13,7 @@ public class Projectile {
     protected boolean icy;
     protected boolean firing;
     protected boolean poisonous;
+    protected BattlePlant plant;
 
     private double velocityX;
     private double velocityY;
@@ -31,8 +32,9 @@ public class Projectile {
 
     }
 
-    public Projectile(double velocityX, double velocityY, Position position,
+    public Projectile(BattlePlant plant, double velocityX, double velocityY, Position position,
                       int damage, int pierceAmount) {
+        this.plant = plant;
         this.velocityX = velocityX;
         this.velocityY = velocityY;
         this.position = position;
@@ -50,8 +52,9 @@ public class Projectile {
         this.isHypnotizer = false;
     }
 
-    public Projectile(double velocityX, double velocityY, Position position,
+    public Projectile(BattlePlant plant, double velocityX, double velocityY, Position position,
                       int damage, int pierceAmount, int range) {
+        this.plant = plant;
         this.velocityX = velocityX;
         this.velocityY = velocityY;
         this.position = position;
@@ -205,5 +208,9 @@ public class Projectile {
 
     public void setDamage(int damage) {
         this.damage = damage;
+    }
+
+    public BattlePlant getPlant() {
+        return plant;
     }
 }

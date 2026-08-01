@@ -44,7 +44,7 @@ public class Explosion implements Ability {
         }
 
         int damage = (int) plant.getPlantStats().getAttributes().get("damage");
-        attacker.takeDamage(damage);
+        attacker.takeDamage(plant, damage);
 
 
     }
@@ -96,7 +96,7 @@ public class Explosion implements Ability {
                 int damage = (int) plant.getPlantStats().getAttributes().get("damage");
 
                 for (Zombie zombie : tile.getZombies()) {
-                    zombie.takeDamage(damage);
+                    zombie.takeDamage(plant, damage);
                 }
             }
             return;
@@ -105,7 +105,7 @@ public class Explosion implements Ability {
         int damage = (int) plant.getPlantStats().getAttributes().get("damage");
         for (int i = 0; i < number; i++) {
             int randomIndex = RANDOM.nextInt(GAME.getGameZombies().size());
-            GAME.getGameZombies().get(randomIndex).takeDamage(damage);
+            GAME.getGameZombies().get(randomIndex).takeDamage(plant, damage);
         }
     }
 
@@ -136,7 +136,7 @@ public class Explosion implements Ability {
                     continue;
                 }
                 for (Zombie zombie : tile.getZombies()) {
-                    zombie.takeDamage(damage);
+                    zombie.takeDamage(plant, damage);
                 }
             }
         }

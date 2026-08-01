@@ -1,5 +1,6 @@
 package src.Model.PlantsAndZombies;
 
+import src.Enums.ChapterType;
 import src.Menu.GamePlayMenu;
 import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.Abilities.*;
@@ -183,7 +184,8 @@ public class Zombie extends Entity {
             }
 
             if (projectile.isIcy()) {
-                if (!this.zombieStats.getName().equals("IMP_DRAGON")) {
+                if ((!this.zombieStats.getName().equals("IMP_DRAGON")) &&
+                        !(this.zombieStats.getCategory().equals(ChapterType.DARK_AGE.getName()))) {
                     freeze();
                 }
             } else if (projectile.isFiring()) {
@@ -191,8 +193,11 @@ public class Zombie extends Entity {
             }
 
             if ((!this.zombieStats.getName().equals("IMP_DRAGON")) || (!projectile.isFiring())) {
-                this.currentHP -= leftoverDamage;
-                checkLife();
+                this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
+                if (!this.isAlive) {
+                    BattlePlant plant = projectile.getPlant();
+                    plant.setZombieKilled(plant.getZombieKilled() + 1);
+                }
             }
         }
     }
@@ -222,7 +227,40 @@ public class Zombie extends Entity {
         if (leftoverDamage > 0) {
             this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
         }
+
     }
+
+    public void takeDamage(BattlePlant plant, double damage) {
+        int leftoverDamage = (int) Math.ceil(damage);
+
+        for (int i = 0; i < activeArmors.size(); i++) {
+            Armor armor = activeArmors.get(i);
+
+            leftoverDamage = armor.takeDamage(leftoverDamage);
+
+            if (armor.isDisarmed()) {
+                activeArmors.remove(armor);
+                i -= 1;
+                if (this.name.equals("NEWSPAPER")) { //increasing velocity & damage per second of NEWSPAPER_ZOMBIE
+                    this.zombieStats.setVelocity(this.zombieStats.getVelocity() * 2.5);
+                    this.zombieStats.setEatdps(this.zombieStats.getEatdps() * 2.5);
+                }
+            }
+
+            if (leftoverDamage <= 0) {
+                break;
+            }
+        }
+
+        if (leftoverDamage > 0) {
+            this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
+            if (!this.isAlive) {
+                plant.setZombieKilled(plant.getZombieKilled() + 1);
+            }
+        }
+
+    }
+
 
     public void checkFreeze() {
         if (this.isFrozen) {
