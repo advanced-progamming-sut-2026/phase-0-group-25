@@ -604,6 +604,13 @@ public abstract class GamePlay {
             int currentY = (int) zombiePosition.getY();
             Tile currentTile = getTileByPosition(currentX, currentY);
 
+            if(zombie.getPosition().getX() <= 20){
+                zombie.setCurrentHP(0);
+                zombie.setAlive(false);
+                continue;
+            }
+
+
             if (!currentTile.isArable() && chapterType == ChapterType.FROSTBITE_CAVES) {
                 zombie.changeRow();
 
