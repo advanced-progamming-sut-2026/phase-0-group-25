@@ -612,7 +612,6 @@ public abstract class GamePlay {
                 continue;
             }
 
-
             if (!currentTile.isArable() && chapterType == ChapterType.FROSTBITE_CAVES) {
                 zombie.changeRow();
 

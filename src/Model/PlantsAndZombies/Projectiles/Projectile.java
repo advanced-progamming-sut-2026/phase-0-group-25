@@ -113,6 +113,9 @@ public class Projectile {
         int row = (int) rowAndColumn.getY();
 
         Tile tile = GAME.getTileByPosition(column, row);
+        if (tile == null) {
+            return;
+        }
         if (GAME.getChapterType() != null) {
             if ((GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT)) ||
                     (GAME.getChapterType().equals(ChapterType.DARK_AGE))) {

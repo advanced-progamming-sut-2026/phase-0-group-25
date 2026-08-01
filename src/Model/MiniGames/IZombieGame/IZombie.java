@@ -5,6 +5,7 @@ import src.Enums.MiniGameType;
 import src.Enums.PlantType;
 import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.*;
+import src.Model.PlantsAndZombies.Projectiles.Projectile;
 import src.Model.Tile;
 import src.Model.User.User;
 import src.Model.User.UsersManager;
@@ -150,6 +151,17 @@ public class IZombie extends GamePlay {
         }
 
         updateZombieTiles();
+
+        Iterator<Projectile> pj = projectiles.iterator();
+        while (pj.hasNext()) {
+            Projectile thisProjectile = pj.next();
+
+            if (thisProjectile.isActive()) {
+                thisProjectile.update();
+            } else {
+                pj.remove();
+            }
+        }
 
         Iterator<BattlePlant> pIter = gamePlants.iterator();
         while (pIter.hasNext()) {

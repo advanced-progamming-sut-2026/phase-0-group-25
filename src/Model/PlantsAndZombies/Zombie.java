@@ -21,7 +21,7 @@ public class Zombie extends Entity {
     private static int FROZEN_TIME = 3;
     private static int TILE_X_LENGTH = 200;
     private static Random RANDOM = new Random();
-    private static GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlayMenu.getGamePlay();
 
 
     private ZombieStats zombieStats;

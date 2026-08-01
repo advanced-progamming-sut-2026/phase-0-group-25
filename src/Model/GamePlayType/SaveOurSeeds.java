@@ -18,13 +18,10 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class SaveOurSeeds extends GamePlay {
-
+    private boolean isSetted = false;
     public SaveOurSeeds(ChapterType chapterType, int level, int difficulty, User thisUser,
                         ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         super(chapterType, level, difficulty, thisUser, plants, zombies, boosted);
-
-        this.planting(this.plants.get(0), new Position(5, 2));
-        this.planting(this.plants.get(0), new Position(5, 4));
     }
 
     @Override
@@ -32,6 +29,12 @@ public class SaveOurSeeds extends GamePlay {
         if (isPaused) return;
         totalTicksPassed++;
         timeToSpawn = Math.max(timeToSpawn - 1, 0);
+
+        if (!isSetted) {
+            this.planting(this.plants.get(0), new Position(5, 2));
+            this.planting(this.plants.get(0), new Position(5, 4));
+            this.isSetted = true;
+        }
 
         if (this.chapterType != ChapterType.DARK_AGE) {
             sunMaker();
