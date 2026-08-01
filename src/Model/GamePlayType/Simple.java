@@ -89,6 +89,10 @@ public class Simple extends GamePlay {
             thisDynamite.update();
         }
 
+        for (BattlePlant battlePlant : plants) {
+            battlePlant.setCurrentCoolDown(Math.max(battlePlant.getCurrentCoolDown() - 1, 0));
+        }
+
         // Spawning zombies :
         if (timeToSpawn == 0) {
             timeToSpawn = getRandomTime();

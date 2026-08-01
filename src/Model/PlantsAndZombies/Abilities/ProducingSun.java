@@ -17,11 +17,13 @@ public class ProducingSun implements Ability {
 
     @Override
     public void executeAbility(Entity entity) {
+
+        BattlePlant plant = (BattlePlant) entity;
+
         if (this.isProduced && !this.isCollected) {
             return;
         }
 
-        BattlePlant plant = (BattlePlant) entity;
         if (plant.isEffected()) {
             if (checkTime(plant)) {
                 plantFoodEffect(plant);
@@ -73,6 +75,8 @@ public class ProducingSun implements Ability {
     private void makeSun(int numberOfSun, BattlePlant plant) {
         Sun producedSun = new Sun(numberOfSun, plant.getPosition());
         this.sun = producedSun;
+        GAME.getActiveSuns().add(this.sun);
+
         this.isProduced = true;
 
         System.out.println("plant " + plant.getPlantStats().getName() +
@@ -94,5 +98,13 @@ public class ProducingSun implements Ability {
 
     public Sun getSun() {
         return this.sun;
+    }
+
+    public void setCollected(boolean collected) {
+        isCollected = collected;
+    }
+
+    public void setProduced(boolean produced) {
+        isProduced = produced;
     }
 }

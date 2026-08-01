@@ -41,7 +41,7 @@ public class Moving implements Ability {
                 }
             }
 
-            for (BattlePlant plant : GAME.getPlants()) {
+            for (BattlePlant plant : GAME.getGamePlants()) {
                 Position plantPosition = plant.getPosition();
 
                 if (zombie.getPosition().equals(plantPosition)) {
@@ -74,7 +74,7 @@ public class Moving implements Ability {
 
     private void handleHypnotizedZombie(Zombie zombie) {
         double velocity = zombie.getCurrentVelocity();
-        double differenceX = velocity * 0.1;
+        double differenceX = velocity * 10;
 
         double zombieFinalPositionX = zombie.getPosition().getX() + differenceX;
         Position newPosition = new Position(zombieFinalPositionX, zombie.getPosition().getY());
@@ -96,7 +96,7 @@ public class Moving implements Ability {
         int initialColumn = zombie.getColumn();
 
         double velocity = zombie.getCurrentVelocity();
-        double differenceX = velocity * 0.1;
+        double differenceX = velocity * 10;
 
         double zombieFinalPositionX = zombie.getPosition().getX() - differenceX;
         Position newPosition = new Position(zombieFinalPositionX, zombie.getPosition().getY());

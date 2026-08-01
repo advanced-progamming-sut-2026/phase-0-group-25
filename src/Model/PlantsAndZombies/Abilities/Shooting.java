@@ -52,7 +52,7 @@ public class Shooting implements Ability {
         for (int i = 0; i < damageAttributes.size(); i++) {
             Projectile projectile = makeProjectile(plant, directionAttributes,
                     damageAttributes, pierce, rangeAmount, i);
-            //game.addProjectile(projectile);//todo
+            GAME.getProjectiles().add(projectile);
         }
     }
 
@@ -178,7 +178,7 @@ public class Shooting implements Ability {
             for (int i = 0; i < damageAttributes.size(); i++) {
                 Projectile projectile = makeProjectile(plant, directionAttributes,
                         damageAttributes, pierce, rangeAmount, i);
-                //game.addProjectile(projectile);//todo
+                GAME.getProjectiles().add(projectile);
             }
         }
     }
@@ -187,14 +187,12 @@ public class Shooting implements Ability {
         if (plant.getPlantStats().getName().equals("SEA_SHROOM")) {
             for (BattlePlant plant1 : GAME.getPlants()) {
                 if (plant1.getPlantStats().getName().equals("SEA_SHROOM")) {
-                    //todo:
                     plant1.setPlantTime(GAME.getTotalTimePassed());
                 }
             }
         } else if (plant.getPlantStats().getName().equals("PUFF_SHROOM")) {
             for (BattlePlant plant1 : GAME.getPlants()) {
                 if (plant1.getPlantStats().getName().equals("PUFF_SHROOM")) {
-                    //todo:
                     plant1.setPlantTime(GAME.getTotalTimePassed());
                 }
             }
@@ -225,7 +223,7 @@ public class Shooting implements Ability {
                 int knockback = (int) plant.getPlantStats().getPlantFoodEffect().get("knockback");
                 projectile.setKnockback(knockback);
             }
-            //game.addProjectile(projectile);//todo
+            GAME.getProjectiles().add(projectile);
         }
     }
 }

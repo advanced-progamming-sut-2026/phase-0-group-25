@@ -49,7 +49,6 @@ public class VaseBreaker extends GamePlay {
 
     @Override
     public void sunMaker() {
-        // خورشید از آسمان نمی‌افتد؛ این متد خالی می‌ماند.
     }
 
     public void breakJar(int x, int y) {

@@ -11,6 +11,8 @@ import src.Model.PlantsAndZombies.*;
 import src.Model.PlantsAndZombies.Projectiles.Dynamite;
 import src.Model.PlantsAndZombies.Projectiles.Projectile;
 import src.Model.PlayGroundType.PlayGround;
+import src.Model.Quests.Events.SunCollectedEvent;
+import src.Model.Quests.QuestManager;
 import src.Model.Sun.RadioActiveSun;
 import src.Model.Sun.Sun;
 import src.Model.Tile;
@@ -237,6 +239,17 @@ public abstract class GamePlay {
 
         for (Sun sun : activeSuns) {
             if ((int) sun.getPosition().getX() == getRealX(x) && (int) sun.getPosition().getY() == getRealY(y)) {
+                if (sun.isFromSky()) {
+                    sun.setCollected(true);
+                } else {
+                    sun.setCollected(true);
+                    Tile thisTile = getTileByPosition(x, y);
+                    Ability thisAbility = thisTile.getPlants().get(0).getOriginalAbilities().get(0);
+                    if (thisAbility instanceof  ProducingSun) {
+                        ((ProducingSun) thisAbility).setCollected(false);
+                        ((ProducingSun) thisAbility).setProduced(false);
+                    }
+                }
                 targetSun = sun;
                 break;
             }
@@ -252,6 +265,7 @@ public abstract class GamePlay {
             activeSuns.remove(targetSun);
         } else {
             addSun(targetSun);
+            QuestManager.getInstance().notifyEvent(new SunCollectedEvent(targetSun.getNumberOfSun()));
             activeSuns.remove(targetSun);
         }
     }
@@ -309,6 +323,7 @@ public abstract class GamePlay {
 
             this.gamePlants.add(thisP);
             thisTile.addPlant(thisP);
+            thisPlant.setCurrentCoolDown(thisPlant.getPlantStats().getRechargeTime());
             this.mySuns = Math.max(0, this.mySuns - thisPlant.getPlantStats().getCost());
 
             System.out.printf("%s was planted in (%d, %d)\n", thisPName, thisPX, thisPY);
@@ -423,8 +438,9 @@ public abstract class GamePlay {
         for (BattlePlant plant : this.plants) {
             String name = plant.getName();
             int cost = plant.getPlantStats().getCost();
-            boolean isPlantable = plant.checkingSunCooldown(this.mySuns);
-            int cooldown = plant.getCooldown();
+            boolean isPlantable = (this.mySuns >= plant.getPlantStats().getCost())
+                                        && (plant.getCurrentCoolDown() == 0 || !plant.getActiveCooldown());
+            int cooldown = (int) plant.getCurrentCoolDown();
 
             System.out.printf("- %s:\n", name);
             System.out.printf("  Sun required: %d\n", cost);
@@ -644,6 +660,10 @@ public abstract class GamePlay {
         return plants;
     }
 
+    public ArrayList<BattlePlant> getGamePlants() {
+        return gamePlants;
+    }
+
     public ArrayList<Sun> getActiveSuns() {
         return activeSuns;
     }
@@ -675,7 +695,7 @@ public abstract class GamePlay {
     public void applyIcyWind() {
         if (chapterType == ChapterType.FROSTBITE_CAVES && Math.random() < 0.02) {
             int randomNumber = new Random().nextInt(5) + 1;
-
+            System.out.println("An icy wind blew in row " + randomNumber + "!");
             for (BattlePlant bp : this.gamePlants) {
                 Position thisPos = Position.getRowAndColumn(bp.getPosition());
                 if (thisPos.getY() == randomNumber) {

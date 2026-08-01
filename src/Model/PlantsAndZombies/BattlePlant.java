@@ -1,8 +1,12 @@
 package src.Model.PlantsAndZombies;
 
+import src.Enums.PlantCategory;
+import src.Enums.PlantType;
 import src.Menu.GamePlayMenu;
 import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.Abilities.*;
+import src.Model.Quests.Events.ExplosiveUsedEvent;
+import src.Model.Quests.QuestManager;
 import src.Model.Tile;
 
 import java.util.ArrayList;
@@ -12,7 +16,7 @@ public class BattlePlant extends Plant {
     private boolean isEffected = false;
     private double effectedTime;
     private double effectedLifeSpan;
-
+    private double currentCoolDown = 0;
 
     private double lastActionTime;
     private double plantTime;
@@ -51,6 +55,8 @@ public class BattlePlant extends Plant {
 
     @Override
     public void update() {
+
+
         if (this.plantStats.getAttributes().containsKey("life_span")) {
             int lifespan = (int) this.plantStats.getAttributes().get("life_span");
             if ((GAME.getTotalTimePassed() - this.plantTime) >= lifespan) {
@@ -71,12 +77,12 @@ public class BattlePlant extends Plant {
                 !this.plantStats.getCategory().equals("Explosive")) {
 
             if (this.isEffected) {
+                for (Ability ability : this.originalAbilities) {
+                    ability.executeAbility(this);
+                }
                 if ((GAME.getTotalTimePassed() - this.effectedTime) >= this.effectedLifeSpan) {
                     this.isEffected = false;
                     return;
-                }
-                for (Ability ability : this.originalAbilities) {
-                    ability.executeAbility(this);
                 }
             }
 
@@ -96,13 +102,16 @@ public class BattlePlant extends Plant {
             upperPlant = thisTile.getPlants().get(thisTile.getPlants().size() - 1);
         }
         boolean isStack = (upperPlant != null && upperPlant.getPlantStats().getTags().contains("Stack")) || thisTile.getPlants().isEmpty();
-        return (sun >= this.plantStats.getCost()) && (this.cooldown == 0 || !this.activeCooldown) && isStack;
+        return (sun >= this.plantStats.getCost()) && (this.currentCoolDown == 0 || !this.activeCooldown) && isStack;
     }
 
     public PlantStats getPlantStats() {
         return plantStats;
     }
 
+    public int getCooldown() {
+        return (int) this.plantStats.getRechargeTime()*10 ;
+    }
 
     public double getPlantTime() {
         return plantTime;
@@ -198,11 +207,29 @@ public class BattlePlant extends Plant {
         return abilities;
     }
 
+    public double getCurrentCoolDown() {
+        return currentCoolDown;
+    }
+
+    public void setCurrentCoolDown(double currentCoolDown) {
+        this.currentCoolDown = currentCoolDown;
+    }
+
     public ArrayList<Ability> getOriginalAbilities() {
         return originalAbilities;
     }
 
     public int getLevel() {
         return this.plantStats.getLevel();
+    }
+
+    @Override
+    public void setCurrentHP(double currentHP) {
+        super.setCurrentHP(currentHP);
+        if (!this.isAlive) {
+            if (this.plantStats.getCategory().equals(PlantCategory.EXPLOSIVE.name())) {
+                QuestManager.getInstance().notifyEvent(new ExplosiveUsedEvent(this.name));
+            }
+        }
     }
 }
