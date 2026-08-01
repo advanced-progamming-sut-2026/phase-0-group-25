@@ -2,19 +2,15 @@ package src.Model.Quests;
 
 import src.Enums.*;
 import src.Model.Quests.Events.Event;
-
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
 
 public abstract class Quest {
     private final String id;
-    private final String name;
-    private final String description;
+    protected String name;
+    protected String description;
     private final QuestCategory category;
     private final QuestPriority priority;
-    private final List<Reward> rewards;
-    private final Map<String, Object> conditions;
+    protected Reward reward;
     private final boolean dailyReset;
     private final QuestPage page;
 
@@ -23,17 +19,10 @@ public abstract class Quest {
     private boolean isClaimed;
     private LocalDate dateAssigned;
 
-    protected Quest(String id, String name, String description,
-                    QuestCategory category, QuestPriority priority,
-                    List<Reward> rewards, Map<String, Object> conditions,
-                    boolean dailyReset, QuestPage page) {
+    protected Quest(String id, QuestCategory category, QuestPriority priority, boolean dailyReset, QuestPage page) {
         this.id = id;
-        this.name = name;
-        this.description = description;
         this.category = category;
         this.priority = priority;
-        this.rewards = rewards;
-        this.conditions = conditions;
         this.dailyReset = dailyReset;
         this.page = page;
         this.currentProgress = 0;
@@ -44,15 +33,18 @@ public abstract class Quest {
 
     public abstract void check(Event event);
     public abstract int getRequiredCount();
+    public void randomizeVariable() {}
 
-    
+    // ADDED HOOKS FOR SERIALIZATION
+    public String getQuestVariable() { return null; }
+    public void setQuestVariable(String variable) {}
+
     public String getId() { return id; }
     public String getName() { return name; }
     public String getDescription() { return description; }
     public QuestCategory getCategory() { return category; }
     public QuestPriority getPriority() { return priority; }
-    public List<Reward> getRewards() { return rewards; }
-    public Map<String, Object> getConditions() { return conditions; }
+    public Reward getReward() { return reward; }
     public boolean isDailyReset() { return dailyReset; }
     public QuestPage getPage() { return page; }
 
@@ -60,17 +52,13 @@ public abstract class Quest {
     public void setCurrentProgress(int progress) {
         this.currentProgress = Math.min(progress, getRequiredCount());
     }
-
     public boolean isCompleted() { return isCompleted; }
-    public void setCompleted(boolean completed) { isCompleted = completed; }
-
+    public void setCompleted(boolean completed) { this.isCompleted = completed; }
     public boolean isClaimed() { return isClaimed; }
-    public void setClaimed(boolean claimed) { isClaimed = claimed; }
-
+    public void setClaimed(boolean claimed) { this.isClaimed = claimed; }
     public LocalDate getDateAssigned() { return dateAssigned; }
     public void setDateAssigned(LocalDate date) { this.dateAssigned = date; }
 
-    
     protected void incrementProgress(int amount) {
         if (!isCompleted && !isClaimed) {
             currentProgress = Math.min(currentProgress + amount, getRequiredCount());

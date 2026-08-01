@@ -40,7 +40,12 @@ public class UsersManager {
         return instance;
     }
 
-    
+
+    public void setQuestVariablesForCurrentUser(Map<String, String> variables) {
+        progressManager.setQuestVariablesForCurrentUser(variables);
+    }
+
+
     private void loadUsers() {
         File file = new File(FILE_PATH);
         if (!file.exists() || file.length() == 0) {
