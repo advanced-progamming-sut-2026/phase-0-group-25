@@ -5,6 +5,8 @@ import src.Enums.*;
 import src.Model.ChaptersAndLevels.Chapter;
 import src.Model.ChaptersAndLevels.ChapterFactory;
 import src.Model.GamePlayType.GamePlay;
+import src.Model.PlantsAndZombies.GameDataLoader;
+import src.Model.PlantsAndZombies.ZombieStats;
 import src.Model.User.User;
 import src.Model.User.UsersManager;
 import src.View.ViewInterfaces.BaseView;
@@ -78,13 +80,11 @@ public class GameMenu extends Menu {
             getView().showError("You must enter a chapter first using 'menu enter chapter -c <chapter_name>'.");
             return;
         }
-
         User currentUser = UsersManager.getInstance().getLoggedInUser();
         if (currentUser == null || currentUser.getUserProgress() == null) {
             getView().showError("No logged in user found.");
             return;
         }
-
         if (this.plantsStr == null || this.plantsStr.isEmpty()) {
             getView().showError("No plants selected! Please select plants in choose plant menu first.");
             return;
@@ -97,11 +97,24 @@ public class GameMenu extends Menu {
             getView().showError("All levels of this chapter have already been completed!");
             return;
         }
-        ArrayList<String> zombiesStrToPlay = new ArrayList<>();
-        for (ZombieType zombieType : currentUser.getUserProgress().getUnlockedZombies()) {
-            zombiesStrToPlay.add(zombieType.getName());
-        }
 
+        ArrayList<String> zombiesStrToPlay = new ArrayList<>();
+        String chapterNameStr = chapterType.getName().toLowerCase();
+
+        for (ZombieType zombieType : ZombieType.values()) {
+            ZombieStats stats = GameDataLoader.getStatsForZombie(zombieType.getName());
+            if (stats != null && stats.getCategory() != null) {
+                String categoryStr = stats.getCategory().toLowerCase();
+
+                if (categoryStr.equals("all") || categoryStr.equals(chapterNameStr)) {
+                    zombiesStrToPlay.add(zombieType.getName());
+
+                    if (!currentUser.getUserProgress().getUnlockedZombies().contains(zombieType)) {
+                        UsersManager.getInstance().unlockZombie(zombieType);
+                    }
+                }
+            }
+        }
 
         GamePlay gamePlay = this.chapter.makeGame(
                 unlockedLevel,

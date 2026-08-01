@@ -61,7 +61,7 @@ public class Modifier implements Ability {
                     continue;
                 }
                 for (Zombie zombie : tile.getZombies()) {
-                    zombie.takeDamage(damage);
+                    zombie.takeDamage(plant, damage);
                 }
             }
         }

@@ -23,6 +23,7 @@ public class UserProgress {
     private int coinsCount;
     private int gameDifficulty;
     private int gamesPlayed;
+    private Map<String, String> questVariables;
 
 
     private Map<MiniGameType, Integer> miniGameLevels;
@@ -72,6 +73,7 @@ public class UserProgress {
         this.miniGamesCompleted = 0;
         this.dailyQuestsCompleted = 0;
         this.nonDailyQuestsCompleted = 0;
+        this.questVariables = new HashMap<>();
 
         this.questProgress = new HashMap<>();
         this.completedQuestIds = new ArrayList<>();
@@ -109,6 +111,14 @@ public class UserProgress {
         return nonDailyQuestsCompleted;
     }
 
+
+    public Map<String, String> getQuestVariables() {
+        return questVariables;
+    }
+
+    void setQuestVariables(Map<String, String> questVariables) {
+        this.questVariables = questVariables;
+    }
 
     void incrementMiniGamesCompleted() {
         this.miniGamesCompleted++;

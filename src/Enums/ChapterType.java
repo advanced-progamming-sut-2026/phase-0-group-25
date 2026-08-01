@@ -1,6 +1,7 @@
 package src.Enums;
 
 public enum ChapterType {
+    MINI_GAME("mini game", 0),
     ANCIENT_EGYPT("ancient egypt", 1),
     DARK_AGE("dark age", 2),
     FROSTBITE_CAVES("frostbite caves", 3),

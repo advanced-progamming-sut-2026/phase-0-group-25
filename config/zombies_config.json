@@ -1,55 +1,55 @@
 {
-  "DEFAULT": {"eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 100, "armor": [], "abilities": ["moving", "eating"] },
+  "DEFAULT": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 100, "armor": [], "abilities": ["moving", "eating"] },
 
-  "CONE_HEAD": {"eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 200, "armor": ["Cone"], "abilities": ["moving", "eating"]},
+  "CONE_HEAD": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 200, "armor": ["Cone"], "abilities": ["moving", "eating"]},
 
-  "BUCKET_HEAD": {"eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 400, "armor": ["Bucket"], "abilities": ["moving", "eating"]},
+  "BUCKET_HEAD": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 400, "armor": ["Bucket"], "abilities": ["moving", "eating"]},
 
-  "BRICK_HEAD": {"eatdps": 100, "baseHP":  190, "velocity": 0.185,  "waveCost": 700, "armor": ["Brick"], "abilities": ["moving", "eating"]},
+  "BRICK_HEAD": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185,  "waveCost": 700, "armor": ["Brick"], "abilities": ["moving", "eating"]},
 
-  "KNIGHT": {"eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 550, "armor": ["Crown", "Shoulder Armor"], "abilities": ["moving", "eating"]},
+  "KNIGHT": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 550, "armor": ["Crown", "Shoulder Armor"], "abilities": ["moving", "eating"]},
 
-  "GARGANTUAR": {"eatdps": 1500, "baseHP":  3600, "velocity": 0.24, "waveCost": 1500, "armor": [], "abilities": ["moving", "fatalDamage"]},
+  "GARGANTUAR": {"category": "all", "eatdps": 1500, "baseHP":  3600, "velocity": 0.24, "waveCost": 1500, "armor": [], "abilities": ["moving", "fatalDamage"]},
 
-  "IMP": {"eatdps": 100, "baseHP":  190, "velocity": 0.22, "waveCost": 100, "armor": [], "abilities": ["moving", "eating"]},
+  "IMP": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.22, "waveCost": 100, "armor": [], "abilities": ["moving", "eating"]},
 
-  "RA": {"eatdps": 100, "baseHP":  190, "velocity": 0.2, "waveCost": 100, "armor": [], "abilities": ["moving", "eating", "stealingSun"]},
+  "RA": {"category": "ancient egypt", "eatdps": 100, "baseHP":  190, "velocity": 0.2, "waveCost": 100, "armor": [], "abilities": ["moving", "eating", "stealingSun"]},
 
-  "EXPLORER": {"eatdps": 100, "baseHP":  250, "velocity": 0.25, "waveCost": 250, "armor": [], "abilities": ["moving", "eating"], "attributes": {"torch":  "on"}},
+  "EXPLORER": {"category": "ancient egypt", "eatdps": 100, "baseHP":  250, "velocity": 0.25, "waveCost": 250, "armor": [], "abilities": ["moving", "eating"], "attributes": {"torch":  "on"}},
 
-  "TOMB_RAISER": {"eatdps": 100, "baseHP":  380, "velocity": 0.185, "waveCost": 300, "armor": [], "abilities": ["moving", "eating", "throwing"]},
+  "TOMB_RAISER": {"category": "ancient egypt", "eatdps": 100, "baseHP":  380, "velocity": 0.185, "waveCost": 300, "armor": [], "abilities": ["moving", "eating", "throwing"]},
 
-  "DODO": {"eatdps": 100, "baseHP":  490, "velocity": 0.3, "waveCost": 600, "armor": [], "abilities": ["moving", "eating", "flying"]},
+  "DODO": {"category": "frostbite caves", "eatdps": 100, "baseHP":  490, "velocity": 0.3, "waveCost": 600, "armor": [], "abilities": ["moving", "eating", "flying"]},
 
-  "HUNTER": {"eatdps": 100, "baseHP":  700, "velocity": 0.12, "waveCost": 500, "armor": [], "abilities": ["moving", "eating", "throwing"]},
+  "HUNTER": {"category": "frostbite caves", "eatdps": 100, "baseHP":  700, "velocity": 0.12, "waveCost": 500, "armor": [], "abilities": ["moving", "eating", "throwing"]},
 
-  "TROGLOBITE": {"eatdps": 100, "baseHP":  470, "velocity": 0.185, "waveCost": 600, "armor": [], "abilities": ["moving", "fatalDamage"]},
+  "TROGLOBITE": {"category": "frostbite caves", "eatdps": 100, "baseHP":  470, "velocity": 0.185, "waveCost": 600, "armor": [], "abilities": ["moving", "fatalDamage"]},
 
-  "FISHERMAN": {"eatdps": 100, "baseHP":  1000, "velocity": 0, "waveCost": 700, "armor": [], "abilities": ["eating", "throwing"]},
+  "FISHERMAN": {"category": "big wave beach", "eatdps": 100, "baseHP":  1000, "velocity": 0, "waveCost": 700, "armor": [], "abilities": ["eating", "throwing"]},
 
-  "OCTOPUS": {"eatdps": 100, "baseHP":  910, "velocity": 0.12, "waveCost": 900, "armor": [], "abilities": ["moving", "eating", "throwing"]},
+  "OCTOPUS": {"category": "big wave beach", "eatdps": 100, "baseHP":  910, "velocity": 0.12, "waveCost": 900, "armor": [], "abilities": ["moving", "eating", "throwing"]},
 
-  "SNORKEL": {"eatdps": 100, "baseHP":  350, "velocity": 0.185, "waveCost": 200, "armor": [], "abilities": ["moving", "eating"], "attributes": {"submarine":  "on"}},
+  "SNORKEL": {"category": "big wave beach", "eatdps": 100, "baseHP":  350, "velocity": 0.185, "waveCost": 200, "armor": [], "abilities": ["moving", "eating"], "attributes": {"submarine":  "on"}},
 
-  "JUGGLER": {"eatdps": 100, "baseHP":  420, "velocity": 0.2, "waveCost": 450, "armor": [], "abilities": ["moving", "eating"]},
+  "JUGGLER": {"category": "dark age", "eatdps": 100, "baseHP":  420, "velocity": 0.2, "waveCost": 450, "armor": [], "abilities": ["moving", "eating"]},
 
-  "WIZARD": {"eatdps": 100, "baseHP":  490, "velocity": 0.12, "waveCost": 800, "armor": [], "abilities": ["moving", "eating"]},
+  "WIZARD": {"category": "dark age", "eatdps": 100, "baseHP":  490, "velocity": 0.12, "waveCost": 800, "armor": [], "abilities": ["moving", "eating"]},
 
-  "KING": {"eatdps": 100, "baseHP":  100, "velocity": 0, "waveCost": 750, "armor": [], "abilities": ["throwing"]},
+  "KING": {"category": "dark age", "eatdps": 100, "baseHP":  100, "velocity": 0, "waveCost": 750, "armor": [], "abilities": ["throwing"]},
 
-  "IMP_DRAGON": {"eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 150, "armor": [], "abilities": ["moving", "eating"]},
+  "IMP_DRAGON": {"category": "dark age", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 150, "armor": [], "abilities": ["moving", "eating"]},
 
-  "ALL_STAR": {"eatdps": 100, "baseHP":  1100, "velocity": 0.16, "waveCost": 1000, "armor": ["Arcade"], "abilities": ["moving", "eating", "fatalDamage"]},
+  "ALL_STAR": {"category": "all", "eatdps": 100, "baseHP":  1100, "velocity": 0.16, "waveCost": 1000, "armor": ["Arcade"], "abilities": ["moving", "eating", "fatalDamage"]},
 
-  "ARCADE": {"eatdps": 100, "baseHP":  490, "velocity": 0.19, "waveCost": 600, "armor": [], "abilities": ["moving", "eating", "fatalDamage"]},
+  "ARCADE": {"category": "all", "eatdps": 100, "baseHP":  490, "velocity": 0.19, "waveCost": 600, "armor": [], "abilities": ["moving", "eating", "fatalDamage"]},
 
-  "UMBRELLA": {"eatdps": 100, "baseHP":  350, "velocity": 0.25, "waveCost": 200, "armor": [], "abilities": ["moving", "eating", "repelLobbers"]},
+  "UMBRELLA": {"category": "all", "eatdps": 100, "baseHP":  350, "velocity": 0.25, "waveCost": 200, "armor": [], "abilities": ["moving", "eating", "repelLobbers"]},
 
-  "TURQUOISE": {"eatdps": 100, "baseHP":  250, "velocity": 0.185, "waveCost": 500, "armor": [], "abilities": ["moving", "eating", "stealingSun"]},
+  "TURQUOISE": {"category": "all", "eatdps": 100, "baseHP":  250, "velocity": 0.185, "waveCost": 500, "armor": [], "abilities": ["moving", "eating", "stealingSun"]},
 
-  "PROSPECTOR": {"eatdps": 100, "baseHP":  190, "velocity": 0.16, "waveCost": 200, "armor": [], "abilities": ["moving", "eating"], "attributes": {"dynamite":  "on"}},
+  "PROSPECTOR": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.16, "waveCost": 200, "armor": [], "abilities": ["moving", "eating"], "attributes": {"dynamite":  "on"}},
 
-  "PIANO": {"eatdps": 4000, "baseHP":  840, "velocity": 0.12, "waveCost": 400, "armor": [], "abilities": ["moving", "fatalDamage"]},
+  "PIANO": {"category": "all", "eatdps": 4000, "baseHP":  840, "velocity": 0.12, "waveCost": 400, "armor": [], "abilities": ["moving", "fatalDamage"]},
 
-  "NEWSPAPER": {"eatdps": 200, "baseHP":  460, "velocity": 0.22, "waveCost": 700, "armor": ["Newspaper"], "abilities": ["moving", "eating"]}
+  "NEWSPAPER": {"category": "all", "eatdps": 200, "baseHP":  460, "velocity": 0.22, "waveCost": 700, "armor": ["Newspaper"], "abilities": ["moving", "eating"]}
 }

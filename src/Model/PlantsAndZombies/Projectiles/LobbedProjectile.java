@@ -25,7 +25,7 @@ public class LobbedProjectile extends Projectile {
     private static GamePlay GAME = GamePlayMenu.getGamePlay();
     private static int ICE_DAMAGE = 6;
 
-    public LobbedProjectile(double startX, double startY, double targetX, double speed,
+    public LobbedProjectile(BattlePlant plant, double startX, double startY, double targetX, double speed,
                             int AoEDamage, int AoERange, int damage) {
         this.startX = startX;
         this.startY = startY;
@@ -45,7 +45,7 @@ public class LobbedProjectile extends Projectile {
         this.isFromLobberPlant = true;
     }
 
-    public LobbedProjectile(double startX, double startY, double targetX, double targetY, double speed,
+    public LobbedProjectile(BattlePlant plant, double startX, double startY, double targetX, double targetY, double speed,
                             int AoEDamage, int AoERange, int damage) {
         this.startX = startX;
         this.startY = startY;

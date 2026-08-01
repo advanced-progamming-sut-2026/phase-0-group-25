@@ -80,6 +80,13 @@ public class UserProgressManager {
         save();
     }
 
+    public void setQuestVariablesForCurrentUser(Map<String, String> variables) {
+        User user = getLoggedInUser();
+        if (user == null) return;
+        user.getUserProgress().setQuestVariables(variables);
+        save();
+    }
+
 
     public int getMiniGameLevel(MiniGameType type) {
         User user = getLoggedInUser();
@@ -341,10 +348,9 @@ public class UserProgressManager {
         return null;
     }
 
-    
+
     public void handleLevelWin(ChapterType chapterType, int currentLevel,
-                               ArrayList<PlantType> plantRewards,
-                               ArrayList<ZombieType> zombieRewards) {
+                               ArrayList<PlantType> plantRewards) {
         User user = getLoggedInUser();
         if (user == null) return;
 
@@ -365,9 +371,6 @@ public class UserProgressManager {
 
         if (plantRewards != null) {
             for (PlantType pt : plantRewards) unlockPlant(pt);
-        }
-        if (zombieRewards != null) {
-            for (ZombieType zt : zombieRewards) unlockZombie(zt);
         }
 
         progress.setGamesPlayed(progress.getGamesPlayed() + 1);

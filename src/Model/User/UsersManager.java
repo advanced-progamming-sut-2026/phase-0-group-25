@@ -40,7 +40,12 @@ public class UsersManager {
         return instance;
     }
 
-    
+
+    public void setQuestVariablesForCurrentUser(Map<String, String> variables) {
+        progressManager.setQuestVariablesForCurrentUser(variables);
+    }
+
+
     private void loadUsers() {
         File file = new File(FILE_PATH);
         if (!file.exists() || file.length() == 0) {
@@ -316,9 +321,8 @@ public class UsersManager {
     public String cheat(int amount, WalletType walletType) { return progressManager.cheat(amount, walletType); }
 
     public void handleLevelWin(ChapterType chapterType, int currentLevel,
-                               ArrayList<PlantType> plantRewards,
-                               ArrayList<ZombieType> zombieRewards) {
-        progressManager.handleLevelWin(chapterType, currentLevel, plantRewards, zombieRewards);
+                               ArrayList<PlantType> plantRewards) {
+        progressManager.handleLevelWin(chapterType, currentLevel, plantRewards);
     }
 
     

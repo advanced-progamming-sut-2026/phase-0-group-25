@@ -68,7 +68,7 @@ public class Shooting implements Ability {
         }
         Position position = findPosition(plant, directionAttributes.get(i).get(0));
 
-        Projectile projectile = new Projectile(velocityX, velocityY, position,
+        Projectile projectile = new Projectile(plant, velocityX, velocityY, position,
                 damage, pierce, rangeAmount);
 
         if (plant.getPlantStats().getTags().contains("ice")) {

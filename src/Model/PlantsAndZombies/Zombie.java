@@ -1,5 +1,7 @@
 package src.Model.PlantsAndZombies;
 
+import src.Enums.ChapterType;
+import src.Enums.PlantType;
 import src.Menu.GamePlayMenu;
 import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.Abilities.*;
@@ -7,6 +9,8 @@ import src.Model.PlantsAndZombies.Armors.Armor;
 import src.Model.PlantsAndZombies.Armors.ArmorConfig;
 import src.Model.PlantsAndZombies.Projectiles.Dynamite;
 import src.Model.PlantsAndZombies.Projectiles.Projectile;
+import src.Model.Quests.Events.ZombieKilledEvent;
+import src.Model.Quests.QuestManager;
 import src.Model.Sun.Sun;
 
 import java.util.ArrayList;
@@ -146,13 +150,11 @@ public class Zombie extends Entity {
 
     public void takeDamage(Projectile projectile, int damage) {
         int leftoverDamage = damage;
-
         if (!projectile.isPoisonous()) {
             for (int i = 0; i < activeArmors.size(); i++) {
                 Armor armor = activeArmors.get(i);
 
                 leftoverDamage = armor.takeDamage(leftoverDamage);
-
                 if (armor.isDisarmed()) {
                     activeArmors.remove(armor);
                     i -= 1;
@@ -161,7 +163,6 @@ public class Zombie extends Entity {
                         this.zombieStats.setEatdps(this.zombieStats.getEatdps() * 2.5);
                     }
                 }
-
                 if (leftoverDamage <= 0) {
                     break;
                 }
@@ -182,7 +183,8 @@ public class Zombie extends Entity {
             }
 
             if (projectile.isIcy()) {
-                if (!this.zombieStats.getName().equals("IMP_DRAGON")) {
+                if ((!this.zombieStats.getName().equals("IMP_DRAGON")) &&
+                        !(this.zombieStats.getCategory().equals(ChapterType.DARK_AGE.getName()))) {
                     freeze();
                 }
             } else if (projectile.isFiring()) {
@@ -190,8 +192,10 @@ public class Zombie extends Entity {
             }
 
             if ((!this.zombieStats.getName().equals("IMP_DRAGON")) || (!projectile.isFiring())) {
-                this.currentHP -= leftoverDamage;
-                checkLife();
+                this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
+                if (!this.isAlive) {
+                    checkKiller(projectile);
+                }
             }
         }
     }
@@ -220,6 +224,49 @@ public class Zombie extends Entity {
 
         if (leftoverDamage > 0) {
             this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
+        }
+    }
+
+    public void takeDamage(BattlePlant plant, double damage) {
+        int leftoverDamage = (int) Math.ceil(damage);
+
+        for (int i = 0; i < activeArmors.size(); i++) {
+            Armor armor = activeArmors.get(i);
+
+            leftoverDamage = armor.takeDamage(leftoverDamage);
+
+            if (armor.isDisarmed()) {
+                activeArmors.remove(armor);
+                i -= 1;
+                if (this.name.equals("NEWSPAPER")) { //increasing velocity & damage per second of NEWSPAPER_ZOMBIE
+                    this.zombieStats.setVelocity(this.zombieStats.getVelocity() * 2.5);
+                    this.zombieStats.setEatdps(this.zombieStats.getEatdps() * 2.5);
+                }
+            }
+
+            if (leftoverDamage <= 0) {
+                break;
+            }
+        }
+
+        if (leftoverDamage > 0) {
+            this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
+            if (!this.isAlive) {
+                checkKiller(plant);
+            }
+        }
+    }
+
+    private void checkKiller(Projectile projectile) {
+        BattlePlant plant = projectile.getPlant();
+        if (plant != null) {
+            QuestManager.getInstance().notifyEvent(new ZombieKilledEvent(GAME.getChapterType(), GAME.getTotalTimePassed(), plant.getName()));
+        }
+    }
+
+    private void checkKiller(BattlePlant plant) {
+        if (plant != null) {
+            QuestManager.getInstance().notifyEvent(new ZombieKilledEvent(GAME.getChapterType(), GAME.getTotalTimePassed(), plant.getName()));
         }
     }
 

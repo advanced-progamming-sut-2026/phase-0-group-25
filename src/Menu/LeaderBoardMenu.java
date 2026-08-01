@@ -19,7 +19,7 @@ public class LeaderBoardMenu extends Menu {
     private boolean ascending = true;
 
     public LeaderBoardMenu(LeaderBoardMenuView view) {
-        super(MenuType.Main);
+        super(MenuType.Game);
         this.view = view;
     }
 

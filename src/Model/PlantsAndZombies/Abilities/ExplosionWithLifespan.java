@@ -43,12 +43,12 @@ public class ExplosionWithLifespan implements Ability {
             for (Zombie zombie : GAME.getGameZombies()) {
                 int frozenTime = (int) plant.getPlantStats().getAttributes().get("freezeTime");
                 zombie.freeze(frozenTime);
-                zombie.takeDamage(damage);
+                zombie.takeDamage(plant, damage);
             }
         } else {
             for (Tile tile : GAME.getTiles()) {
                 for (Zombie zombie : tile.getZombies()) {
-                    zombie.takeDamage(damage);
+                    zombie.takeDamage(plant, damage);
                 }
             }
             //todo:
@@ -66,7 +66,7 @@ public class ExplosionWithLifespan implements Ability {
             Tile tile = GAME.getTileByPosition(i, row);
             for (Zombie zombie : tile.getZombies()) {
                 zombie.unfreeze();
-                zombie.takeDamage(damage);
+                zombie.takeDamage(plant, damage);
             }
             for (BattlePlant battlePlant : tile.getPlants()) {
                 battlePlant.setFrozen(false);
@@ -87,7 +87,7 @@ public class ExplosionWithLifespan implements Ability {
                     continue;
                 }
                 for (Zombie zombie : tile.getZombies()) {
-                    zombie.takeDamage(damage);
+                    zombie.takeDamage(plant, damage);
                 }
             }
         }
@@ -122,7 +122,7 @@ public class ExplosionWithLifespan implements Ability {
 
             Tile tile = GAME.getTileByPosition(plant.getColumn(), plant.getRow());
             for (Zombie zombie : tile.getZombies()) {
-                zombie.takeDamage(damage);
+                zombie.takeDamage(plant, damage);
             }
         }
     }

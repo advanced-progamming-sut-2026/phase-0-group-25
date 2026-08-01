@@ -1,8 +1,8 @@
 package src.Enums;
 
 public enum QuestPriority {
-    CRITICAL,
-    HIGH,
+    LOW,
     MEDIUM,
-    LOW
+    HIGH,
+    CRITICAL,
 }

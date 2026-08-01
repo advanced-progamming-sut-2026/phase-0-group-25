@@ -27,7 +27,7 @@ public class Dynamite {
     }
 
     public void checkCollision() {
-        for (BattlePlant plant : GAME.getPlants()) {
+        for (BattlePlant plant : GAME.getGamePlants()) {
             if (plant.getPosition().equals(this.position)) {
                 plant.setCurrentHP(plant.getCurrentHP() - damage);
             }

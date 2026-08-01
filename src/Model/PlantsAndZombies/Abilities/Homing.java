@@ -154,14 +154,14 @@ public class Homing implements Ability {
 
             int damage = (int) plant.getPlantStats().getAttributes().get("damage");
             Position velocity = findVelocity(plant.getPosition(), target.getPosition());
-            LobbedProjectile lobbedProjectile = new LobbedProjectile(
+            LobbedProjectile lobbedProjectile = new LobbedProjectile(plant,
                     plant.getPosition().getX(), plant.getPosition().getY(),
                     target.getPosition().getX(), target.getPosition().getY(),
                     1, 0, 0, damage);
             if (plantTags.contains("hypnotize")) {
                 lobbedProjectile.setHypnotizer(true);
             }
-            //todo: add lobbed projectile to game`s projectiles
+            GAME.getProjectiles().add(lobbedProjectile);
 
         } else if (plantTags.contains("healthiest")) {
             Zombie target = findTheHealthiestZombie();
@@ -171,11 +171,12 @@ public class Homing implements Ability {
 
             int damage = (int) plant.getPlantStats().getAttributes().get("damage");
             Position velocity = findVelocity(plant.getPosition(), target.getPosition());
-            LobbedProjectile lobbedProjectile = new LobbedProjectile(
+            LobbedProjectile lobbedProjectile = new LobbedProjectile(plant,
                     plant.getPosition().getX(), plant.getPosition().getY(),
                     target.getPosition().getX(), target.getPosition().getY(),
                     1, 0, 0, damage);
-            //todo: add lobbed projectile to game`s projectiles
+
+            GAME.getProjectiles().add(lobbedProjectile);
 
         } else if (plantTags.contains("directed")) {
             Zombie target = findTheNearestZombie(plant.getPosition());
@@ -184,10 +185,10 @@ public class Homing implements Ability {
             }
             int damage = (int) plant.getPlantStats().getAttributes().get("damage");
             Position velocity = findVelocity(plant.getPosition(), target.getPosition());
-            Projectile projectile = new Projectile(velocity.getX(), velocity.getY(),
+            Projectile projectile = new Projectile(plant, velocity.getX(), velocity.getY(),
                     plant.getPosition(), damage, 1);
-            //todo: add projectile to game`s projectiles
 
+            GAME.getProjectiles().add(projectile);
         } else if (plantTags.contains("disarmament")) {
             int range = (int) plant.getPlantStats().getAttributes().get("front-range");
 

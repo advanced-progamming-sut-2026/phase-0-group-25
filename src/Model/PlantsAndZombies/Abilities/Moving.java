@@ -120,6 +120,8 @@ public class Moving implements Ability {
 
         Tile tile = GAME.getTileByPosition(zombieColumn, zombieRow);
 
+        if(tile == null)
+            return;
         for (BattlePlant plant : tile.getPlants()) {
             plant.setCurrentHP(0);
         }

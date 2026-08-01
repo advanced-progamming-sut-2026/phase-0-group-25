@@ -51,6 +51,8 @@ public abstract class GamePlay {
     protected int numOfWaves;
     protected int totalTicksPassed = 0;
     private List<Integer> rowBag = new ArrayList<>();
+    protected int lostPlants = 0;
+
 
     public GamePlay(ChapterType chapterType, int level, int difficulty, User thisUser,
                     ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
@@ -121,6 +123,12 @@ public abstract class GamePlay {
             }
         }
     }
+
+
+    public void incrementLostPlants() {
+        this.lostPlants++;
+    }
+
 
     public static int calculateCost(ChapterType chapterType, int level, int waveNumber) {
         int chapterNumber = (chapterType != null)? chapterType.ordinal() + 1 : 2;
@@ -233,6 +241,26 @@ public abstract class GamePlay {
         if (levelObject != null) {
             levelObject.completeLevel();
         }
+
+        int sunProducersCount = (int) gamePlants.stream()
+                .filter(p -> p.getCategory() == PlantCategory.SUN_PRODUCER)
+                .count();
+
+        boolean[] emptyColumns = new boolean[10];
+        boolean[] emptyRows = new boolean[6];
+        java.util.Arrays.fill(emptyColumns, true);
+        java.util.Arrays.fill(emptyRows, true);
+
+        for (BattlePlant p : gamePlants) {
+            emptyColumns[p.getColumn()] = false;
+            emptyRows[p.getRow()] = false;
+        }
+
+        src.Model.Quests.QuestManager.getInstance().notifyEvent(new src.Model.Quests.Events.LevelWonEvent(
+                lostPlants, mySuns,
+                thisUser.getUserProgress().getGameDifficulty(),
+                sunProducersCount, emptyColumns, emptyRows
+        ));
     }
 
     public void collectSun(int x, int y) {
@@ -577,6 +605,13 @@ public abstract class GamePlay {
             int currentX = (int) zombiePosition.getX();
             int currentY = (int) zombiePosition.getY();
             Tile currentTile = getTileByPosition(currentX, currentY);
+
+            if(zombie.getPosition().getX() <= 20){
+                zombie.setCurrentHP(0);
+                zombie.setAlive(false);
+                continue;
+            }
+
 
             if (!currentTile.isArable() && chapterType == ChapterType.FROSTBITE_CAVES) {
                 zombie.changeRow();

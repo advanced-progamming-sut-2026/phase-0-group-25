@@ -1,33 +1,21 @@
 package src.Model.Quests.QuestSubclasses;
-
 import src.Enums.*;
-import src.Model.Quests.Events.Event;
-import src.Model.Quests.Events.LevelWonEvent;
-import src.Model.Quests.Events.SunCollectedEvent;
-import src.Model.Quests.Quest;
-import src.Model.Quests.Reward;
+import src.Model.Quests.Events.*;
+import src.Model.Quests.*;
+import java.util.*;
 
-import java.util.List;
-import java.util.Map;
 public class MasterOfDefenseQuest extends Quest {
     private final int required = 1;
 
-    public MasterOfDefenseQuest(String id, String name, String description,
-                                QuestCategory category, QuestPriority priority,
-                                List<Reward> rewards, Map<String, Object> conditions,
-                                boolean dailyReset, QuestPage page) {
-        super(id, name, description, category, priority, rewards, conditions, dailyReset, page);
+    public MasterOfDefenseQuest(String id, QuestCategory category, QuestPriority priority, boolean dailyReset, QuestPage page) {
+        super(id, category, priority, dailyReset, page);
+        this.name = "Master of Defense";
+        this.description = "Finish a level with exactly zero sun left.";
+        this.reward = new Reward(RewardType.GEMS, 200);
     }
 
-    @Override
-    public int getRequiredCount() { return required; }
-
-    @Override
-    public void check(Event event) {
-        if (!(event instanceof LevelWonEvent)) return;
-        LevelWonEvent e = (LevelWonEvent) event;
-        if (e.getFinalSun() == 0) {
-            incrementProgress(1);
-        }
+    @Override public int getRequiredCount() { return required; }
+    @Override public void check(Event event) {
+        if (event instanceof LevelWonEvent && ((LevelWonEvent) event).getFinalSun() == 0) incrementProgress(1);
     }
 }
