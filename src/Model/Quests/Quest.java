@@ -35,7 +35,7 @@ public abstract class Quest {
     public abstract int getRequiredCount();
     public void randomizeVariable() {}
 
-    // ADDED HOOKS FOR SERIALIZATION
+    
     public String getQuestVariable() { return null; }
     public void setQuestVariable(String variable) {}
 

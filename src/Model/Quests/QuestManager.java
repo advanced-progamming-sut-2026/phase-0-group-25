@@ -35,7 +35,7 @@ public class QuestManager {
         UserProgress progress = currentUser.getUserProgress();
         Map<String, Integer> questProgress = progress.getQuestProgress();
 
-        // Fetch variables, handle null safety for older JSONs
+        
         Map<String, String> questVariables = progress.getQuestVariables();
         if (questVariables == null) questVariables = new HashMap<>();
 
@@ -52,7 +52,7 @@ public class QuestManager {
         }
 
         for (Quest q : allQuests) {
-            // If it's a daily quest and we just reset it, skip loading the old JSON states.
+            
             if (performedDailyReset && q.isDailyReset()) {
                 q.setDateAssigned(today);
                 continue;
@@ -71,14 +71,14 @@ public class QuestManager {
                 q.setClaimed(true);
             }
 
-            // Backup catch for missed daily assignments
+            
             if (q.isDailyReset() && q.getDateAssigned() != null && !q.getDateAssigned().equals(today)) {
                 q.reset();
                 q.setDateAssigned(today);
             }
         }
 
-        // Immediately resave to dump yesterday's targets
+        
         if (performedDailyReset) {
             saveProgress();
         }
@@ -87,14 +87,14 @@ public class QuestManager {
     public void saveProgress() {
         if (currentUser == null) return;
         Map<String, Integer> questProgress = new HashMap<>();
-        Map<String, String> questVariables = new HashMap<>(); // Added
+        Map<String, String> questVariables = new HashMap<>(); 
         List<String> completedIds = new ArrayList<>();
         List<String> claimedIds = new ArrayList<>();
 
         for (Quest q : allQuests) {
             questProgress.put(q.getId(), q.getCurrentProgress());
             if (q.getQuestVariable() != null) {
-                questVariables.put(q.getId(), q.getQuestVariable()); // Extract Variable
+                questVariables.put(q.getId(), q.getQuestVariable()); 
             }
             if (q.isCompleted()) completedIds.add(q.getId());
             if (q.isClaimed()) claimedIds.add(q.getId());
@@ -102,7 +102,7 @@ public class QuestManager {
 
         UsersManager um = UsersManager.getInstance();
         um.setQuestProgressForCurrentUser(questProgress);
-        um.setQuestVariablesForCurrentUser(questVariables); // Delegate Variable
+        um.setQuestVariablesForCurrentUser(questVariables); 
         um.setCompletedQuestIdsForCurrentUser(completedIds);
         um.setClaimedQuestIdsForCurrentUser(claimedIds);
     }
@@ -203,9 +203,9 @@ public class QuestManager {
                 if (q.isClaimed()) return "Reward already claimed.";
 
                 q.setClaimed(true);
-                applyReward(q.getReward()); // Issue reward upon claim
+                applyReward(q.getReward()); 
 
-                // Immediately cycle variant and reset for non-daily chain quests
+                
                 if (!q.isDailyReset()) {
                     q.randomizeVariable();
                     q.reset();

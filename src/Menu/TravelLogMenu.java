@@ -82,19 +82,19 @@ public class TravelLogMenu extends Menu {
         GameMenu gameMenu = MenuManager.getInstance().getGameMenu();
         ArrayList<String> selectedPlants = gameMenu.getPlantsStr();
 
-//        if (selectedPlants == null || selectedPlants.isEmpty()) {
-//            getView().showError("No plants selected! Please select plants in choose plant menu first.");
-//            return;
-//        }
+
+
+
+
 
 
         HashSet<String> boostedSet = new HashSet<>(gameMenu.getBoostedPlants());
 
         
         ArrayList<String> zombies = new ArrayList<>();
-//        for (ZombieType zt : currentUser.getUserProgress().getUnlockedZombies()) {
-//            unlockedZombieNames.add(zt.getName());
-//        }
+
+
+
 
         
         int level = currentUser.getUserProgress().getMiniGameLevel(type);
@@ -150,7 +150,7 @@ public class TravelLogMenu extends Menu {
                     .filter(q -> q.isCompleted() && !q.isClaimed())
                     .collect(Collectors.toList());
         }
-//        active.sort(Comparator.comparing(Quest::getPriority, Comparator.reverseOrder()));
+
         travelLogMenuView.showQuests(active, completed, page);
     }
 
