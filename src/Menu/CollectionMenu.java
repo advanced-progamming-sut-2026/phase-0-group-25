@@ -149,13 +149,9 @@ public class CollectionMenu extends Menu {
         }
 
         BattlePlant plant = PlantFactory.createBattlePlant(plantType.getName(), level);
-        if (plant == null || plant.getPlantStats() == null) {
-            getView().showError("Plant stats not found for: " + plantName);
-            return;
-        }
 
         PlantStats stats = plant.getPlantStats();
-        collectionMenuView.showPlantDetails(plantType.getName(), stats.getCost(), stats.getBaseHP());
+        collectionMenuView.showPlantDetails(plantType.getName(), stats.getCost(), stats.getBaseHP(), stats.getCategory());
     }
 
     private void showZombieDetails(String zombieName) {
@@ -167,16 +163,10 @@ public class CollectionMenu extends Menu {
             return;
         }
 
-        if (zombieFactory != null) {
-            Zombie zombie = ZombieFactory.createZombie(zombieType.getName());
-            if (zombie.getZombieStats() != null) {
-                ZombieStats stats = zombie.getZombieStats();
-                collectionMenuView.showZombieDetails(stats.getName(), zombie.getZombieStats().getVelocity(), stats.getBaseHP());
-                return;
-            }
-        }
 
-        collectionMenuView.showZombieDetails(zombieType.getName(), 0.0, 0);
+        Zombie zombie = ZombieFactory.createZombie(zombieType.getName());
+        ZombieStats stats = zombie.getZombieStats();
+        collectionMenuView.showZombieDetails(stats.getName(), zombie.getZombieStats().getVelocity(), stats.getBaseHP(), stats.getCategory());
     }
 
     private void purchasePlant(String plantName) {

@@ -57,14 +57,17 @@ public class CollectionMenuTerminalView extends AbstractTerminalView implements 
     }
 
     @Override
-    public void showPlantDetails(String plantName, int cost, int baseHP) {
+    public void showPlantDetails(String plantName, int cost, int baseHP, String category) {
         System.out.println("Plant Name: " + plantName);
-        System.out.println("Cost: " + cost + " | Base HP: " + baseHP);
+        System.out.println("Category: " + category);
+        System.out.println("Cost: " + cost);
+        System.out.println("Base HP: " + baseHP);
     }
 
     @Override
-    public void showZombieDetails(String zombieName, double velocity, int baseHP) {
+    public void showZombieDetails(String zombieName, double velocity, int baseHP, String category) {
         System.out.println("Zombie Name: " + zombieName);
+        System.out.println("Category: " + category);
         System.out.println("Velocity: " + velocity);
         System.out.println("Base HP: " + baseHP);
     }

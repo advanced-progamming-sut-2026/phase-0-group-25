@@ -51,7 +51,7 @@ public enum Command {
     ChooseShowAvailablePlants("^show available plants$"),
     ChooseAddPlant("^add plant -t\\s+(.+)$"),
     ChooseRemovePlant("^remove plant -t\\s+(.+)$"),
-    StartGame("^start game$"),
+    StartGame("^start game level -l (\\d+)$"),
     // Vasebreaker
     BreakJar("^break jar -l \\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$"),
     CollectSeedPacket("^collect seed packet -l \\s*\\((?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\)$"),
