@@ -1,6 +1,7 @@
 package src.Model.PlantsAndZombies;
 
 import src.Enums.ChapterType;
+import src.Enums.PlantType;
 import src.Menu.GamePlayMenu;
 import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.Abilities.*;
@@ -148,13 +149,11 @@ public class Zombie extends Entity {
 
     public void takeDamage(Projectile projectile, int damage) {
         int leftoverDamage = damage;
-
         if (!projectile.isPoisonous()) {
             for (int i = 0; i < activeArmors.size(); i++) {
                 Armor armor = activeArmors.get(i);
 
                 leftoverDamage = armor.takeDamage(leftoverDamage);
-
                 if (armor.isDisarmed()) {
                     activeArmors.remove(armor);
                     i -= 1;
@@ -163,7 +162,6 @@ public class Zombie extends Entity {
                         this.zombieStats.setEatdps(this.zombieStats.getEatdps() * 2.5);
                     }
                 }
-
                 if (leftoverDamage <= 0) {
                     break;
                 }
@@ -195,8 +193,7 @@ public class Zombie extends Entity {
             if ((!this.zombieStats.getName().equals("IMP_DRAGON")) || (!projectile.isFiring())) {
                 this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
                 if (!this.isAlive) {
-                    BattlePlant plant = projectile.getPlant();
-                    plant.setZombieKilled(plant.getZombieKilled() + 1);
+                    checkKiller(projectile);
                 }
             }
         }
@@ -227,7 +224,6 @@ public class Zombie extends Entity {
         if (leftoverDamage > 0) {
             this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
         }
-
     }
 
     public void takeDamage(BattlePlant plant, double damage) {
@@ -258,9 +254,15 @@ public class Zombie extends Entity {
                 plant.setZombieKilled(plant.getZombieKilled() + 1);
             }
         }
-
     }
 
+    private void checkKiller(Projectile projectile) {
+        BattlePlant plant = projectile.getPlant();
+        plant.setZombieKilled(plant.getZombieKilled() + 1);
+        if (plant.getPlantStats().getName().equals(PlantType.CACTUS.getName())) {
+            GAME.setCactusKiller(GAME.getCactusKiller() + 1);
+        }
+    }
 
     public void checkFreeze() {
         if (this.isFrozen) {

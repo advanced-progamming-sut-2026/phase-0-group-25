@@ -52,6 +52,8 @@ public abstract class GamePlay {
     protected int totalTicksPassed = 0;
     private List<Integer> rowBag = new ArrayList<>();
 
+    protected int cactusKiller = 0;
+
     public GamePlay(ChapterType chapterType, int level, int difficulty, User thisUser,
                     ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         this.numOfPlantFood = thisUser.getUserProgress().getPlantFoodCount();
@@ -703,5 +705,13 @@ public abstract class GamePlay {
                 }
             }
         }
+    }
+
+    public int getCactusKiller() {
+        return cactusKiller;
+    }
+
+    public void setCactusKiller(int cactusKiller) {
+        this.cactusKiller = cactusKiller;
     }
 }
