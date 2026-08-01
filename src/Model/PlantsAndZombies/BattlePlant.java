@@ -27,7 +27,6 @@ public class BattlePlant extends Plant {
     private boolean frozen;
     private int iceTime;
     private double iceHP;
-    private int zombieKilled = 0;
 
     private static GamePlay GAME = GamePlayMenu.getGamePlay();
 
@@ -232,13 +231,5 @@ public class BattlePlant extends Plant {
                 QuestManager.getInstance().notifyEvent(new ExplosiveUsedEvent(this.name));
             }
         }
-    }
-
-    public int getZombieKilled() {
-        return zombieKilled;
-    }
-
-    public void setZombieKilled(int zombieKilled) {
-        this.zombieKilled = zombieKilled;
     }
 }

@@ -251,17 +251,19 @@ public class Zombie extends Entity {
         if (leftoverDamage > 0) {
             this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
             if (!this.isAlive) {
-                plant.setZombieKilled(plant.getZombieKilled() + 1);
+                checkKiller(plant);
             }
         }
     }
 
     private void checkKiller(Projectile projectile) {
         BattlePlant plant = projectile.getPlant();
-        plant.setZombieKilled(plant.getZombieKilled() + 1);
         if (plant.getPlantStats().getName().equals(PlantType.CACTUS.getName())) {
-            GAME.setCactusKiller(GAME.getCactusKiller() + 1);
         }
+    }
+
+    private void checkKiller(BattlePlant plant) {
+
     }
 
     public void checkFreeze() {
