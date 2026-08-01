@@ -8,6 +8,7 @@ import java.util.Map;
 public class ZombieStats {
     private String name;
     private int baseHP;
+    private String category;
     private double eatdps;
     private double velocity;
     private ArrayList<Armor> armors;
@@ -26,6 +27,10 @@ public class ZombieStats {
 
     public int getBaseHP() {
         return baseHP;
+    }
+
+    public String getCategory() {
+        return category;
     }
 
     public double getEatdps() {
