@@ -15,7 +15,7 @@ import java.util.Random;
 public class Lobbing implements Ability {
     private static int LOBBING_SHOT = 1820;
     private static Random RANDOM = new Random();
-    private static GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlayMenu.getGamePlay();
 
 
     @Override

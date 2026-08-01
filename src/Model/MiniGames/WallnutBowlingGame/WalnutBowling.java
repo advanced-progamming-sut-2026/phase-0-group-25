@@ -140,6 +140,7 @@ public class WalnutBowling extends GamePlay {
                     System.out.printf("Zombie %s spawned at wave %d in lane %d which costed %d.\n",
                             nameOfZ, thisWave.getWaveNum(), spawnY, newZombie.getCost());
                     this.gameZombies.add(newZombie);
+                    thisWave.addZombieToSpawned(newZombie);
                 }
                 if (!thisWave.isReadyForNextWave()) {
                     break;

@@ -15,7 +15,7 @@ public class SunZombie extends Zombie {
         this.getZombieStats().setName("SunZombie");
         this.name = "SunZombie";
         this.currentHP = 1290;
-        this.setCurrentVelocity(0.1);
+        this.setCurrentVelocity(0);
     }
 
     public int generateSun(int totalTicksPassed) {

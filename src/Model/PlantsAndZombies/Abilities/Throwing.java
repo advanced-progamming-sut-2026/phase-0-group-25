@@ -20,7 +20,7 @@ public class Throwing implements Ability {
     private static int KING_ACTION_INTERVAL = 5;
     private static Random RANDOM = new Random();
 
-    private static GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlayMenu.getGamePlay();
 
     private boolean isActivated = false;
 

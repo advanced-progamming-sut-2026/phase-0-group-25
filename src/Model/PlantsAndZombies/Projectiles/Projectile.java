@@ -25,7 +25,7 @@ public class Projectile {
     private int knockback;
     private boolean isHypnotizer;
 
-    private static GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlayMenu.getGamePlay();
     private static int X_RIGHT_LIMIT = 1820;
 
     public Projectile() {

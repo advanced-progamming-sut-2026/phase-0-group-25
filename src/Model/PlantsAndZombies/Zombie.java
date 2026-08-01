@@ -26,6 +26,7 @@ public class Zombie extends Entity {
 
     private ZombieStats zombieStats;
     private Entity rival;
+    private int waveNum;
 
     private double currentVelocity;
     private ArrayList<Ability> originalAbilities = new ArrayList<>();
@@ -384,6 +385,14 @@ public class Zombie extends Entity {
 
     public double getSpawnTime() {
         return spawnTime;
+    }
+
+    public int getWaveNum() {
+        return waveNum;
+    }
+
+    public void setWaveNum(int waveNum) {
+        this.waveNum = waveNum;
     }
 
     public ArrayList<Ability> getOriginalAbilities() {
