@@ -118,6 +118,9 @@ public class Projectile {
                     (GAME.getChapterType().equals(ChapterType.DARK_AGE))) {
                 if (!tile.isArable()) {
                     tile.setHP(tile.getHP() - this.damage);
+                    if (tile.getHP() == 0) {
+                        System.out.println("Tomb destroyed!!!!!");
+                    }
                     this.isActive = false;
                 }
             }
