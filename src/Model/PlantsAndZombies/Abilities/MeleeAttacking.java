@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class MeleeAttacking implements Ability {
     private static Random RANDOM = new Random();
-    private static GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlayMenu.getGamePlay();
 
 
     @Override

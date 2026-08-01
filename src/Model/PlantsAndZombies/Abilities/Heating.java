@@ -7,7 +7,7 @@ import src.Model.PlantsAndZombies.Entity;
 import src.Model.Tile;
 
 public class Heating implements Ability {
-    private static GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlayMenu.getGamePlay();
     private static int ICE_MELTING_DAMAGE = 6;
 
     @Override

@@ -13,12 +13,12 @@ public class BigWalnut extends Walnut {
         x += speed;
 
         for (Zombie z : game.getGameZombies()) {
-            if (z.isAlive() && Math.abs(z.getPosition().getX() - x) < 0.5 && Math.abs(z.getPosition().getY() - y) < 0.5) {
+            if (z.isAlive() && Math.abs(z.getPosition().getX() - x) < 5 && Math.abs(z.getPosition().getY() - y) < 5) {
                 z.takeDamage(1800);
                 System.out.println("CRUNCH! Big Walnut crushed a zombie!");
             }
         }
 
-        if (x > 10.0) this.isActive = false;
+        if (x > 1800.0) this.isActive = false;
     }
 }

@@ -11,7 +11,7 @@ import src.Model.Tile;
 import java.util.ArrayList;
 
 public class Modifier implements Ability {
-    private static GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlayMenu.getGamePlay();
 
     @Override
     public void executeAbility(Entity entity) {

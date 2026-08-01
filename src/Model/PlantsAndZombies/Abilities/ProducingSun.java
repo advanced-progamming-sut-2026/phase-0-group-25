@@ -9,7 +9,7 @@ import src.Model.Sun.Sun;
 import java.util.List;
 
 public class ProducingSun implements Ability {
-    private static GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlayMenu.getGamePlay();
 
     private boolean isCollected = false;
     private boolean isProduced = false;

@@ -17,12 +17,13 @@ public class BowlingWalnut extends Walnut {
         x += velocityX * speed;
         y += velocityY * speed;
 
-        if ((y <= 1.0 && velocityY < 0) || (y >= 5.0 && velocityY > 0)) {
+        if ((y <= 40 && velocityY < 0) || (y >= 1040 && velocityY > 0)) {
             changeDirection(false);
         }
 
         for (Zombie z : game.getGameZombies()) {
-            if (z.isAlive() && Math.abs(z.getPosition().getX() - x) < 0.6 && Math.abs(z.getPosition().getY() - y) < 0.6) {
+            if (z.isAlive() && Math.abs(z.getPosition().getX() - x) < 5 && Math.abs(z.getPosition().getY() - y) < 5) {
+                System.out.println("DAMAGE! Bowling Walnut crushed a zombie!");
                 z.takeDamage(NORMAL_DAMAGE);
                 hitCount++;
                 changeDirection(true);
@@ -30,7 +31,7 @@ public class BowlingWalnut extends Walnut {
             }
         }
 
-        if (x > 10.0) {
+        if (x > 1800.0) {
             this.isActive = false;
         }
     }

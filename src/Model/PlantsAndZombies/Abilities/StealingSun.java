@@ -13,7 +13,7 @@ public class StealingSun implements Ability {
     private double stolenSun = 0;
     private boolean isActivated = false;
 
-    private static GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlayMenu.getGamePlay();
     private static double TURQUOISE_STEAL = 2.5;
 
     @Override

@@ -4,7 +4,7 @@ public abstract class Walnut {
     protected double x;
     protected double y;
     protected boolean isActive;
-    protected double speed = 0.2;
+    protected double speed = 2.5;
 
     public Walnut(double x, double y) {
         this.x = x;
