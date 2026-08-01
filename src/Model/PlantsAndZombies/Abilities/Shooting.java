@@ -60,8 +60,8 @@ public class Shooting implements Ability {
                                       List<Integer> damageAttributes, int pierce,
                                       int rangeAmount, int i) {
 
-        double velocityX = directionAttributes.get(i).get(1) * 0.5;//todo
-        double velocityY = directionAttributes.get(i).get(2) * 0.5;//todo
+        double velocityX = directionAttributes.get(i).get(1) * 50;//todo
+        double velocityY = directionAttributes.get(i).get(2) * 50;//todo
         int damage = damageAttributes.get(i);
         if (plant.isEffected()) {
             damage *= 20;

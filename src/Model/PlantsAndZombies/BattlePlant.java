@@ -147,7 +147,7 @@ public class BattlePlant extends Plant {
     public void setIceTime(int iceTime) {
         this.iceTime = iceTime;
         if (this.iceTime >= 3) {
-            this.iceTime = 0;
+            System.out.println("This Plant Was Frozen! (" + this.getPosition().getX() + " , " + this.getPosition().getY() + ")");
             this.setFrozen(true);
             this.iceTime = 0;
         }
