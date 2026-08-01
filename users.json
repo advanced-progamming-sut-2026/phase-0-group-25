@@ -51,6 +51,48 @@
       }, {
         "message" : "Quest completed: Thrifty Farmer! Claim your rewards in Travel Log.",
         "read" : false
+      }, {
+        "message" : "zombie BRICK_HEAD unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie KNIGHT unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie GARGANTUAR unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie IMP unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie RA unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie EXPLORER unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie TOMB_RAISER unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie ALL_STAR unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie ARCADE unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie UMBRELLA unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie TURQUOISE unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie PROSPECTOR unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie PIANO unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie NEWSPAPER unlocked!",
+        "read" : false
       } ]
     },
     "nickName" : "amir khosravi",
@@ -82,25 +124,25 @@
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:56:43.302026",
         "ready" : true,
-        "remainingHours" : -42.62555555555556,
+        "remainingHours" : -45.219722222222224,
         "type" : "MARIGOLD"
       }, {
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:37:21.8724837",
         "ready" : true,
-        "remainingHours" : -42.94833333333333,
+        "remainingHours" : -45.54222222222222,
         "type" : "MARIGOLD"
       }, {
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:37:31.2370238",
         "ready" : true,
-        "remainingHours" : -42.94555555555556,
+        "remainingHours" : -45.539722222222224,
         "type" : "MARIGOLD"
       }, {
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:37:36.9804977",
         "ready" : true,
-        "remainingHours" : -42.94416666666667,
+        "remainingHours" : -45.53805555555556,
         "type" : "MARIGOLD"
       }, null ], [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ] ],
       "questProgress" : {
@@ -117,6 +159,7 @@
         "win_streak" : 0,
         "cloudy_day" : 0
       },
+      "questVariables" : { },
       "seedPackets" : {
         "SUNFLOWER" : 36,
         "SUN_SHROOM" : 15,
@@ -126,13 +169,13 @@
         "ANCIENT_EGYPT" : 3
       },
       "unlockedPlantsAndTheirLevels" : {
-        "WALL_NUT" : 1,
-        "SUNFLOWER" : 1,
         "SUN_SHROOM" : 1,
-        "PEASHOOTER" : 1
+        "PEASHOOTER" : 1,
+        "WALL_NUT" : 1,
+        "SUNFLOWER" : 1
       },
       "unlockedPots" : [ [ true, true, true, true, true ], [ true, true, true, true, true ], [ true, false, false, false, false ], [ false, false, false, false, false ] ],
-      "unlockedZombies" : [ "DEFAULT", "CONE_HEAD", "BUCKET_HEAD" ]
+      "unlockedZombies" : [ "DEFAULT", "CONE_HEAD", "BUCKET_HEAD", "BRICK_HEAD", "KNIGHT", "GARGANTUAR", "IMP", "RA", "EXPLORER", "TOMB_RAISER", "ALL_STAR", "ARCADE", "UMBRELLA", "TURQUOISE", "PROSPECTOR", "PIANO", "NEWSPAPER" ]
     }
   },
   "amir2" : {
@@ -252,14 +295,15 @@
         "professional_killer" : 0,
         "hunter_dark_age" : 0
       },
+      "questVariables" : { },
       "seedPackets" : { },
       "unlockedChaptersAndLevels" : {
         "ANCIENT_EGYPT" : 3
       },
       "unlockedPlantsAndTheirLevels" : {
+        "PEASHOOTER" : 1,
         "WALL_NUT" : 1,
-        "SUNFLOWER" : 1,
-        "PEASHOOTER" : 1
+        "SUNFLOWER" : 1
       },
       "unlockedPots" : [ [ true, true, true, true, true ], [ true, true, false, false, false ], [ false, false, false, false, false ], [ false, false, false, false, false ] ],
       "unlockedZombies" : [ "DEFAULT", "CONE_HEAD", "BUCKET_HEAD" ]

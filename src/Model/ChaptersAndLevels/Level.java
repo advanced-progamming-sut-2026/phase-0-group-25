@@ -3,7 +3,6 @@ package src.Model.ChaptersAndLevels;
 import src.Enums.ChapterType;
 import src.Enums.GamePlayType;
 import src.Enums.PlantType;
-import src.Enums.ZombieType;
 import src.Model.GamePlayType.GamePlay;
 import src.Model.GamePlayType.GamePlayFactory;
 import src.Model.User.User;
@@ -13,18 +12,17 @@ import java.util.ArrayList;
 import java.util.Set;
 
 public class Level {
+
     private ChapterType chapterType;
     private int levelNumber;
     private GamePlayType gamePlayType;
     private ArrayList<PlantType> plantRewards;
-    private ArrayList<ZombieType> zombieRewards;
 
     public Level(ChapterType chapterType, int levelNumber, GamePlayType gamePlayType) {
         this.chapterType = chapterType;
         this.levelNumber = levelNumber;
         this.gamePlayType = gamePlayType;
         this.plantRewards = new ArrayList<>();
-        this.zombieRewards = new ArrayList<>();
     }
 
     public Level(int levelNumber, GamePlayType gamePlayType) {
@@ -57,16 +55,6 @@ public class Level {
         }
     }
 
-    public ArrayList<ZombieType> getZombieRewards() {
-        return zombieRewards;
-    }
-
-    public void addZombieReward(ZombieType zombieType) {
-        if (!zombieRewards.contains(zombieType)) {
-            zombieRewards.add(zombieType);
-        }
-    }
-
     public GamePlay createGame(ChapterType chapterType, int difficulty, User user, ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         this.chapterType = chapterType;
         GamePlay gamePlay = GamePlayFactory.createGamePlay(gamePlayType, chapterType, levelNumber, difficulty, user, plants, zombies, boosted);
@@ -77,6 +65,6 @@ public class Level {
     }
 
     public void completeLevel() {
-        UsersManager.getInstance().handleLevelWin(this.chapterType, this.levelNumber, this.plantRewards, this.zombieRewards);
+        UsersManager.getInstance().handleLevelWin(this.chapterType, this.levelNumber, this.plantRewards);
     }
 }
