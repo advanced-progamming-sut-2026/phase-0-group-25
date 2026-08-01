@@ -117,7 +117,10 @@ public class Simple extends GamePlay {
                     Zombie newZombie = ZombieFactory.createZombie(nameOfZ, positionOfZ);
                     System.out.printf("Zombie %s spawned at wave %d in lane %d which costed %d.\n",
                             nameOfZ, thisWave.getWaveNum(), spawnY, newZombie.getCost());
+
+                    newZombie.setWaveNum(thisWave.getWaveNum());
                     this.gameZombies.add(newZombie);
+                    thisWave.addZombieToSpawned(newZombie);
                 }
                 if (!thisWave.isReadyForNextWave()) {
                     break;

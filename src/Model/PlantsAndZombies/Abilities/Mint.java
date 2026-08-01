@@ -6,7 +6,7 @@ import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Entity;
 
 public class Mint implements Ability {
-    private static GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlayMenu.getGamePlay();
 
     @Override
     public void executeAbility(Entity entity) {

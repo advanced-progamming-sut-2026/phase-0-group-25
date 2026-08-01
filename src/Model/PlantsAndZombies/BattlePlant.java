@@ -28,7 +28,7 @@ public class BattlePlant extends Plant {
     private int iceTime;
     private double iceHP;
 
-    private static GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlayMenu.getGamePlay();
 
     public BattlePlant(PlantStats plantStats, String name) {
         this.plantStats = plantStats;
@@ -38,7 +38,6 @@ public class BattlePlant extends Plant {
     public BattlePlant(PlantStats plantStats, String name, Position position) {
         super();
         this.lastActionTime = 0;
-        GAME = GamePlayMenu.getGamePlay();
 
         this.isAlive = true;
         this.currentHP = plantStats.getBaseHP();
@@ -102,7 +101,7 @@ public class BattlePlant extends Plant {
             upperPlant = thisTile.getPlants().get(thisTile.getPlants().size() - 1);
         }
         boolean isStack = (upperPlant != null && upperPlant.getPlantStats().getTags().contains("Stack")) || thisTile.getPlants().isEmpty();
-        return (sun >= this.plantStats.getCost()) && (this.currentCoolDown == 0 || !this.activeCooldown) && isStack;
+        return (sun >= this.plantStats.getCost()) && (this.currentCoolDown <= 0 || !this.activeCooldown) && isStack;
     }
 
     public PlantStats getPlantStats() {

@@ -10,7 +10,7 @@ public class Dynamite {
     private Position position;
     private double damage = 10;
 
-    private static GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlayMenu.getGamePlay();
 
     public Dynamite(Position position) {
         this.position = position;

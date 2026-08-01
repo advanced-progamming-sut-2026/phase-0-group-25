@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.Map;
 
 public class Homing implements Ability {
-    private static GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlayMenu.getGamePlay();
 
     @Override
     public void executeAbility(Entity entity) {

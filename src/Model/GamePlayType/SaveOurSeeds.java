@@ -18,20 +18,23 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class SaveOurSeeds extends GamePlay {
-
+    private boolean isSetted = false;
     public SaveOurSeeds(ChapterType chapterType, int level, int difficulty, User thisUser,
                         ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         super(chapterType, level, difficulty, thisUser, plants, zombies, boosted);
-
-        this.planting(this.plants.get(0), new Position(5, 2));
-        this.planting(this.plants.get(0), new Position(5, 4));
     }
 
     @Override
     public void update() {
         if (isPaused) return;
         totalTicksPassed++;
-        timeToSpawn--;
+        timeToSpawn = Math.max(timeToSpawn - 1, 0);
+
+        if (!isSetted) {
+            this.planting(this.plants.get(0), new Position(5, 2));
+            this.planting(this.plants.get(0), new Position(5, 4));
+            this.isSetted = true;
+        }
 
         if (this.chapterType != ChapterType.DARK_AGE) {
             sunMaker();
@@ -92,6 +95,10 @@ public class SaveOurSeeds extends GamePlay {
             thisDynamite.update();
         }
 
+        for (BattlePlant battlePlant : plants) {
+            battlePlant.setCurrentCoolDown(Math.max(battlePlant.getCurrentCoolDown() - 1, 0));
+        }
+
         // Spawning zombies :
         if (timeToSpawn == 0) {
             timeToSpawn = getRandomTime();
@@ -109,14 +116,17 @@ public class SaveOurSeeds extends GamePlay {
                     Position positionOfZ;
                     int spawnY = getNextRandomY();
                     if (chapterType != ChapterType.FROSTBITE_CAVES && Math.random() >= 0.9) {
-                        positionOfZ = new Position(spawnX + 200, getRealY(spawnY));
+                        positionOfZ = new Position(spawnX - 200, getRealY(spawnY));
                     } else {
                         positionOfZ = new Position(spawnX, getRealY(spawnY));
                     }
                     Zombie newZombie = ZombieFactory.createZombie(nameOfZ, positionOfZ);
                     System.out.printf("Zombie %s spawned at wave %d in lane %d which costed %d.\n",
                             nameOfZ, thisWave.getWaveNum(), spawnY, newZombie.getCost());
+
+                    newZombie.setWaveNum(thisWave.getWaveNum());
                     this.gameZombies.add(newZombie);
+                    thisWave.addZombieToSpawned(newZombie);
                 }
                 if (!thisWave.isReadyForNextWave()) {
                     break;
@@ -125,15 +135,15 @@ public class SaveOurSeeds extends GamePlay {
         }
 
         // Checking if the end of the game (Losing) + Activate Mowers :
-        int x = mowers.get(0).getX();
+        int x = 20;
         for (Zombie zombie : gameZombies) {
             int yOfz = (int) zombie.getPosition().getY();
             int xOfz = (int) zombie.getPosition().getX();
-            Mower thisMower = mowers.stream().filter(p -> p.getY() == yOfz).findFirst().get();
+            Mower thisMower = mowers.stream().filter(m -> getRealY(m.getY()) == yOfz).findFirst().get();
 
             if (xOfz <= x) {
                 if (!thisMower.isUsed()) {
-                    System.out.println("The lawn mower in the row" + yOfz + "is triggered and killed these zombies:");
+                    System.out.println("The lawn mower in the row " + (int)(thisMower.getY()) + " is triggered and killed these zombies:");
                     thisMower.killZombies(this);
                 } else {
                     System.out.println("The zombie ate your brain; LOSER!!!");

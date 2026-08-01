@@ -6,6 +6,7 @@ import java.util.*;
 
 public class Wave {
     protected Queue<Zombie> pendingZombies;
+    protected ArrayList<Zombie> spawnedZombie = new ArrayList<>();
     protected int totalZombies;
     private int waveNum;
     private Boolean isStarted = false;
@@ -57,14 +58,16 @@ public class Wave {
     public boolean isReadyForNextWave() {
         if (pendingZombies.isEmpty()) return true;
 
-        double currentTotalHealth = 0;
-        for (Zombie z : pendingZombies) {
-            if (z.isAlive()) {
-                currentTotalHealth += z.getCurrentHP();
+        double damageAmount = 0;
+        for (Zombie z : spawnedZombie) {
+            if (!z.isAlive() || z.getCurrentHP() == 0) {
+                damageAmount += z.getZombieStats().getBaseHP();
+            } else {
+                damageAmount += z.getZombieStats().getBaseHP() - z.getCurrentHP();
             }
         }
 
-        return currentTotalHealth <= (initialTotalHealth * 0.25);
+        return damageAmount >= (initialTotalHealth * 0.75);
     }
 
     public Boolean getStarted() {
@@ -85,5 +88,9 @@ public class Wave {
 
     public Zombie spawnNextZombie() {
         return pendingZombies.poll();
+    }
+
+    public void addZombieToSpawned(Zombie thisZombie) {
+        this.spawnedZombie.add(thisZombie);
     }
 }

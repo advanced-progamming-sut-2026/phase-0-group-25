@@ -21,11 +21,12 @@ public class Zombie extends Entity {
     private static int FROZEN_TIME = 3;
     private static int TILE_X_LENGTH = 200;
     private static Random RANDOM = new Random();
-    private static GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlayMenu.getGamePlay();
 
 
     private ZombieStats zombieStats;
     private Entity rival;
+    private int waveNum;
 
     private double currentVelocity;
     private ArrayList<Ability> originalAbilities = new ArrayList<>();
@@ -44,6 +45,8 @@ public class Zombie extends Entity {
     public Zombie(ZombieStats zombieStats, String name) {
         this.zombieStats = zombieStats;
         this.name = name;
+
+        addAbilities();
     }
 
     public Zombie(ZombieStats zombieStats, String name, Position position) {
@@ -94,9 +97,6 @@ public class Zombie extends Entity {
 
     public void update() {
         checkFreeze();
-        if (zombieStats.getName() == null) {
-            System.out.println("its nullllll");
-        }
         if ((this.zombieStats.getName().equals("PROSPECTOR")) &&
                 (this.zombieStats.getAttributes().get("dynamite").equals("on"))) {
             if ((GAME.getTotalTimePassed() - this.spawnTime) >= 10) {
@@ -385,6 +385,14 @@ public class Zombie extends Entity {
 
     public double getSpawnTime() {
         return spawnTime;
+    }
+
+    public int getWaveNum() {
+        return waveNum;
+    }
+
+    public void setWaveNum(int waveNum) {
+        this.waveNum = waveNum;
     }
 
     public ArrayList<Ability> getOriginalAbilities() {

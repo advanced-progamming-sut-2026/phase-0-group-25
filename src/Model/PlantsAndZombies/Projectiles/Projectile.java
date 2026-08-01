@@ -25,7 +25,7 @@ public class Projectile {
     private int knockback;
     private boolean isHypnotizer;
 
-    private static GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlayMenu.getGamePlay();
     private static int X_RIGHT_LIMIT = 1820;
 
     public Projectile() {
@@ -113,11 +113,19 @@ public class Projectile {
         int row = (int) rowAndColumn.getY();
 
         Tile tile = GAME.getTileByPosition(column, row);
-        if ((GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT)) ||
-                (GAME.getChapterType().equals(ChapterType.DARK_AGE))) {
-            if (!tile.isArable()) {
-                tile.setHP(tile.getHP() - this.damage);
-                this.isActive = false;
+        if (tile == null) {
+            return;
+        }
+        if (GAME.getChapterType() != null) {
+            if ((GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT)) ||
+                    (GAME.getChapterType().equals(ChapterType.DARK_AGE))) {
+                if (!tile.isArable()) {
+                    tile.setHP(tile.getHP() - this.damage);
+                    if (tile.getHP() == 0) {
+                        System.out.println("Tomb destroyed!!!!!");
+                    }
+                    this.isActive = false;
+                }
             }
         }
     }

@@ -11,7 +11,7 @@ import src.Model.Tile;
 public class Moving implements Ability {
     private static int SNORKEL_X_LIMIT = 1420;
     private static int PIANO_ACTION_INTERVAL = 3;
-    private static GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlayMenu.getGamePlay();
 
 
     private boolean isActivated = true;
@@ -63,12 +63,14 @@ public class Moving implements Ability {
                     return;
                 }
             }
+
             if (zombie.getZombieStats().getName().equals("ALL_STAR") ||
                     (zombie.getZombieStats().getName().equals("TROGLOBITE")) ||
                     (zombie.getZombieStats().getName().equals("ARCADE"))) {
 
                 checkFatalDamageZombies(zombie);
             }
+
         }
     }
 
