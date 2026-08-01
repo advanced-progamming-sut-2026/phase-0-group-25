@@ -91,10 +91,10 @@ public class TravelLogMenu extends Menu {
         HashSet<String> boostedSet = new HashSet<>(gameMenu.getBoostedPlants());
 
         
-        ArrayList<String> unlockedZombieNames = new ArrayList<>();
-        for (ZombieType zt : currentUser.getUserProgress().getUnlockedZombies()) {
-            unlockedZombieNames.add(zt.getName());
-        }
+        ArrayList<String> zombies = new ArrayList<>();
+//        for (ZombieType zt : currentUser.getUserProgress().getUnlockedZombies()) {
+//            unlockedZombieNames.add(zt.getName());
+//        }
 
         
         int level = currentUser.getUserProgress().getMiniGameLevel(type);
@@ -108,15 +108,18 @@ public class TravelLogMenu extends Menu {
         switch (type) {
             case VASEBREAKER:
                 gamePlay = new VaseBreaker(ChapterType.MINI_GAME, level, difficulty, currentUser,
-                        selectedPlants, unlockedZombieNames, boostedSet);
+                        selectedPlants, zombies, boostedSet);
                 break;
             case WALNUT_BOWLING:
+                zombies.add(ZombieType.DEFAULT.getName());
+                zombies.add(ZombieType.CONE_HEAD.name());
+                zombies.add(ZombieType.BUCKET_HEAD.name());
                 gamePlay = new WalnutBowling(ChapterType.MINI_GAME, level, difficulty, currentUser,
-                        selectedPlants, unlockedZombieNames, boostedSet);
+                        selectedPlants, zombies, boostedSet);
                 break;
             case I_ZOMBIE:
                 gamePlay = new IZombie(ChapterType.MINI_GAME, level, difficulty, currentUser,
-                        selectedPlants, unlockedZombieNames, boostedSet);
+                        selectedPlants, zombies, boostedSet);
                 break;
             default:
                 getView().showError("Unhandled mini-game type.");
