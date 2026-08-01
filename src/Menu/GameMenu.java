@@ -75,7 +75,7 @@ public class GameMenu extends Menu {
         gameMenuView.showChapterEnterSuccess(chapterType.getName());
     }
 
-    private void startGame() {
+    private void startGame(int requestedLevel) {
         if (this.chapter == null) {
             getView().showError("You must enter a chapter first using 'menu enter chapter -c <chapter_name>'.");
             return;
@@ -90,11 +90,18 @@ public class GameMenu extends Menu {
             return;
         }
 
-        ChapterType chapterType = this.chapter.getChapterType();
-        int unlockedLevel = currentUser.getUserProgress().getUnlockedChaptersAndLevels().getOrDefault(chapterType, 1);
+        // LEVEL BOUNDS CHECK
+        if (requestedLevel < 1 || requestedLevel > 4) {
+            getView().showError("We only have 4 levels.");
+            return;
+        }
 
-        if (unlockedLevel > 4) {
-            getView().showError("All levels of this chapter have already been completed!");
+        ChapterType chapterType = this.chapter.getChapterType();
+        int maxUnlockedLevelForChapter = currentUser.getUserProgress().getUnlockedChaptersAndLevels().getOrDefault(chapterType, 1);
+
+        // LEVEL UNLOCK CHECK
+        if (requestedLevel > maxUnlockedLevelForChapter) {
+            getView().showError("This level is locked. You must beat level " + (requestedLevel - 1) + " first.");
             return;
         }
 
@@ -105,10 +112,8 @@ public class GameMenu extends Menu {
             ZombieStats stats = GameDataLoader.getStatsForZombie(zombieType.getName());
             if (stats != null && stats.getCategory() != null) {
                 String categoryStr = stats.getCategory().toLowerCase();
-
                 if (categoryStr.equals("all") || categoryStr.equals(chapterNameStr)) {
                     zombiesStrToPlay.add(zombieType.getName());
-
                     if (!currentUser.getUserProgress().getUnlockedZombies().contains(zombieType)) {
                         UsersManager.getInstance().unlockZombie(zombieType);
                     }
@@ -117,7 +122,7 @@ public class GameMenu extends Menu {
         }
 
         GamePlay gamePlay = this.chapter.makeGame(
-                unlockedLevel,
+                requestedLevel,
                 currentUser.getUserProgress().getGameDifficulty(),
                 currentUser,
                 plantsStr,
@@ -144,7 +149,8 @@ public class GameMenu extends Menu {
         }
 
         if ((matcher = getMatcher(input, Command.StartGame)) != null) {
-            startGame();
+            int level = Integer.parseInt(matcher.group(1));
+            startGame(level);
             return;
         }
 

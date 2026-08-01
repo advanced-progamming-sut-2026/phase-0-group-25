@@ -14,9 +14,9 @@ public interface CollectionMenuView extends BaseView {
 
     void showAllZombies(List<String> zombieNames);
 
-    void showPlantDetails(String plantName, int cost, int baseHP);
+    void showPlantDetails(String plantName, int cost, int baseHP, String category);
 
-    void showZombieDetails(String zombieName, double velocity, int baseHP);
+    void showZombieDetails(String zombieName, double velocity, int baseHP, String category);
 
     void showPlantPurchased(String plantName);
 }
