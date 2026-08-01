@@ -9,6 +9,8 @@ import src.Model.PlantsAndZombies.Armors.Armor;
 import src.Model.PlantsAndZombies.Armors.ArmorConfig;
 import src.Model.PlantsAndZombies.Projectiles.Dynamite;
 import src.Model.PlantsAndZombies.Projectiles.Projectile;
+import src.Model.Quests.Events.ZombieKilledEvent;
+import src.Model.Quests.QuestManager;
 import src.Model.Sun.Sun;
 
 import java.util.ArrayList;
@@ -258,12 +260,15 @@ public class Zombie extends Entity {
 
     private void checkKiller(Projectile projectile) {
         BattlePlant plant = projectile.getPlant();
-        if (plant.getPlantStats().getName().equals(PlantType.CACTUS.getName())) {
+        if (plant != null) {
+            QuestManager.getInstance().notifyEvent(new ZombieKilledEvent(GAME.getChapterType(), GAME.getTotalTimePassed(), plant.getName()));
         }
     }
 
     private void checkKiller(BattlePlant plant) {
-
+        if (plant != null) {
+            QuestManager.getInstance().notifyEvent(new ZombieKilledEvent(GAME.getChapterType(), GAME.getTotalTimePassed(), plant.getName()));
+        }
     }
 
     public void checkFreeze() {
