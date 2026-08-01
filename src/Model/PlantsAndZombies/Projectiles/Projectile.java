@@ -110,11 +110,13 @@ public class Projectile {
         int row = (int) rowAndColumn.getY();
 
         Tile tile = GAME.getTileByPosition(column, row);
-        if ((GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT)) ||
-                (GAME.getChapterType().equals(ChapterType.DARK_AGE))) {
-            if (!tile.isArable()) {
-                tile.setHP(tile.getHP() - this.damage);
-                this.isActive = false;
+        if (GAME.getChapterType() != null) {
+            if ((GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT)) ||
+                    (GAME.getChapterType().equals(ChapterType.DARK_AGE))) {
+                if (!tile.isArable()) {
+                    tile.setHP(tile.getHP() - this.damage);
+                    this.isActive = false;
+                }
             }
         }
     }

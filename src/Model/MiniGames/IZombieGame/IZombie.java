@@ -13,6 +13,7 @@ import java.util.*;
 
 public class IZombie extends GamePlay {
     private final int RED_LINE_X = 5;
+    private boolean isSeted = false;
     private ArrayList<SunZombie> sunZombies;
     private boolean[] brainsEaten;
     private Map<String, Integer> availableZombies;
@@ -36,9 +37,6 @@ public class IZombie extends GamePlay {
         availableZombies.put("BUCKET_HEAD", 100);
         availableZombies.put("KNIGHT", 125);
         availableZombies.put("NEWSPAPER", 100);
-
-        setPlants();
-        initSunZombies();
     }
 
     public void setPlants() {
@@ -51,27 +49,24 @@ public class IZombie extends GamePlay {
 
         for (int y = 1; y <= 5; y++) {
             for (int x = 1; x <= 4; x++) {
-                if (random.nextBoolean()) {
-                    String randomPlantName = plantTypes[random.nextInt(plantTypes.length)];
-                    Position pos = new Position(x, y);
+                String randomPlantName = plantTypes[random.nextInt(plantTypes.length)];
+                Position pos = new Position(getRealX(x), getRealY(y));
 
-                    BattlePlant plant = PlantFactory.createBattlePlant(randomPlantName, 1, pos);
-                    plant.setColumn(x);
-                    plant.setRow(y);
+                BattlePlant plant = PlantFactory.createBattlePlant(randomPlantName, 1, pos);
+                plant.setColumn(x);
+                plant.setRow(y);
 
-                    this.gamePlants.add(plant);
-
-                    Tile tile = getTileByPosition(x, y);
-                    if (tile != null) tile.addPlant(plant);
-                }
+                this.gamePlants.add(plant);
+                Tile tile = getTileByPosition(x, y);
+                 tile.addPlant(plant);
             }
         }
-        System.out.println("Random plants were planted using PlantFactory.");
+        System.out.println("Random plants were planted.");
     }
 
     private void initSunZombies() {
         for (int y = 1; y <= 5; y++) {
-            Position pos = new Position(9, y);
+            Position pos = new Position(1800, getRealY(y));
             SunZombie sz = new SunZombie(pos);
             sunZombies.add(sz);
 
@@ -80,7 +75,7 @@ public class IZombie extends GamePlay {
     }
 
     public void placeZombie(String zombieName, int x, int y) {
-        if (x <= RED_LINE_X) {
+        if (x < RED_LINE_X) {
             System.out.println("Invalid position! Place behind the RED LINE.");
             return;
         }
@@ -97,7 +92,7 @@ public class IZombie extends GamePlay {
         }
 
         mySuns -= cost;
-        Position pos = new Position(x, y);
+        Position pos = new Position(getRealX(x), getRealY(y));
 
         Zombie newZombie = ZombieFactory.createZombie(zombieName, pos);
         this.gameZombies.add(newZombie);
@@ -109,6 +104,12 @@ public class IZombie extends GamePlay {
     public void update() {
         if (isPaused) return;
         totalTicksPassed++;
+
+        if (!isSeted) {
+            setPlants();
+            initSunZombies();
+            isSeted = true;
+        }
 
         Iterator<SunZombie> szIter = sunZombies.iterator();
         while (szIter.hasNext()) {
@@ -129,29 +130,39 @@ public class IZombie extends GamePlay {
         while (zIter.hasNext()) {
             Zombie z = zIter.next();
             if (!z.isAlive() || z.getCurrentHP() <= 0) {
+                Position zPos = Position.getRowAndColumn(z.getPosition());
+                System.out.printf("Zombie of type %s is dead at (%d, %d)\n",
+                        z.getName(), (int) zPos.getX(), (int) zPos.getY());
                 zIter.remove();
                 continue;
             }
 
             z.update();
 
-            int row = (int) z.getPosition().getY();
-            if (z.getPosition().getX() <= 1.0) {
+            int row = (int) Position.getRowAndColumn(z.getPosition()).getY();
+            if (z.getPosition().getX() <= 20) {
                 if (!brainsEaten[row - 1]) {
                     brainsEaten[row - 1] = true;
+                    zIter.remove();
                     System.out.printf("A zombie ATE THE BRAIN in row %d! 🧠\n", row);
                 }
             }
         }
 
+        updateZombieTiles();
+
         Iterator<BattlePlant> pIter = gamePlants.iterator();
         while (pIter.hasNext()) {
             BattlePlant plant = pIter.next();
+            boolean isSunFlower = plant.getPlantStats().getAbilities().contains("producing sun");
             if (plant.isAlive() && plant.getCurrentHP() > 0) {
-                plant.update();
+                if (!isSunFlower) {
+                    plant.update();
+                }
             } else {
                 Tile tile = getTileByPosition(plant.getColumn(), plant.getRow());
                 if (tile != null) tile.removePlant();
+                System.out.printf("Plant %s at (%d, %d) is destroyed.\n", plant.getName(), plant.getColumn(), plant.getRow());
                 pIter.remove();
             }
         }
@@ -175,7 +186,7 @@ public class IZombie extends GamePlay {
             return;
         }
 
-        int minCost = Collections.min(availableZombies.values());
+        int minCost = 50;
 
         if (mySuns < minCost && gameZombies.isEmpty()) {
             System.out.println("GAME OVER! You ran out of suns and zombies before eating all brains.");
@@ -200,7 +211,7 @@ public class IZombie extends GamePlay {
         for (int y = 1; y <= 5; y++) {
             System.out.printf("Row %d: ", y);
             for (int x = 1; x <= 9; x++) {
-                if (x == RED_LINE_X) System.out.print("|RED LINE| ");
+                if (x == RED_LINE_X) System.out.print("|| ");
 
                 Tile t = getTileByPosition(x, y);
                 boolean hasPlant = t != null && !t.getPlants().isEmpty();

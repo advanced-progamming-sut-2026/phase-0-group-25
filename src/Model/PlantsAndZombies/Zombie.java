@@ -40,6 +40,8 @@ public class Zombie extends Entity {
     public Zombie(ZombieStats zombieStats, String name) {
         this.zombieStats = zombieStats;
         this.name = name;
+
+        addAbilities();
     }
 
     public Zombie(ZombieStats zombieStats, String name, Position position) {
@@ -90,9 +92,6 @@ public class Zombie extends Entity {
 
     public void update() {
         checkFreeze();
-        if (zombieStats.getName() == null) {
-            System.out.println("its nullllll");
-        }
         if ((this.zombieStats.getName().equals("PROSPECTOR")) &&
                 (this.zombieStats.getAttributes().get("dynamite").equals("on"))) {
             if ((GAME.getTotalTimePassed() - this.spawnTime) >= 10) {

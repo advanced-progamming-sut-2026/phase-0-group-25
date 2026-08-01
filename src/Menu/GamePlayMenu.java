@@ -143,7 +143,7 @@ public class GamePlayMenu extends Menu {
             int x = Integer.parseInt(matcher.group("x"));
             int y = Integer.parseInt(matcher.group("y"));
             if (gamePlay instanceof VaseBreaker) {
-                ((VaseBreaker) gamePlay).plantFromInventory(index, new Position(x, y));
+                ((VaseBreaker) gamePlay).plantFromInventory(index, x, y);
             } else {
                 System.out.println("This command is only available in the Vasebreaker mini-game!");
             }

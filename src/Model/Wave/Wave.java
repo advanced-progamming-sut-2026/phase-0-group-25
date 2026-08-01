@@ -6,6 +6,7 @@ import java.util.*;
 
 public class Wave {
     protected Queue<Zombie> pendingZombies;
+    protected ArrayList<Zombie> activeZombie;
     protected int totalZombies;
     private int waveNum;
     private Boolean isStarted = false;

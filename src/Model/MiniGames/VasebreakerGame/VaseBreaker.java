@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class VaseBreaker extends GamePlay {
-
+    private boolean isSeted = false;
     private ArrayList<Jar> jars = new ArrayList<>();
     private ArrayList<DroppedSeedPacket> droppedSeedPackets = new ArrayList<>();
     private ArrayList<BattlePlant> inventory = new ArrayList<>();
@@ -25,13 +25,15 @@ public class VaseBreaker extends GamePlay {
     public VaseBreaker(ChapterType chapterType, int level, int difficulty, User thisUser,
                        ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         super(chapterType, level, difficulty, thisUser, plants, zombies, boosted);
-        setupJars();
+        this.allWaves.clear();
+        this.gameZombies.clear();
+        this.gamePlants.clear();
     }
 
     private void setupJars() {
         for (int y = 1; y <= 5; y++) {
             for (int x = 5; x <= 9; x++) {
-                Position pos = new Position(x, y);
+                Position pos = new Position(getRealX(x), getRealY(y));
 
                 if (x == 9 && y == 3) {
                     Zombie gargantuar = ZombieFactory.createZombie("GARGANTUAR", pos);
@@ -45,6 +47,7 @@ public class VaseBreaker extends GamePlay {
                 }
             }
         }
+        System.out.println("The jars were placed.");
     }
 
     @Override
@@ -54,7 +57,7 @@ public class VaseBreaker extends GamePlay {
     public void breakJar(int x, int y) {
         Jar targetJar = null;
         for (Jar j : jars) {
-            if ((int) j.getPosition().getX() == x && (int) j.getPosition().getY() == y && !j.isBroken()) {
+            if ((int) j.getPosition().getX() == getRealX(x) && (int) j.getPosition().getY() == getRealY(y) && !j.isBroken()) {
                 targetJar = j;
                 break;
             }
@@ -71,13 +74,14 @@ public class VaseBreaker extends GamePlay {
         Entity content = targetJar.getContent();
         if (content instanceof Zombie) {
             Zombie z = (Zombie) content;
-            z.setPosition(new Position(x, y));
+            z.setPosition(new Position(getRealX(x), getRealY(y)));
             gameZombies.add(z);
             System.out.printf("A %s emerged from the jar at (%d, %d)!\n", z.getName(), x, y);
         } else if (content instanceof BattlePlant) {
             BattlePlant plant = (BattlePlant) content;
 
-            droppedSeedPackets.add(new DroppedSeedPacket(plant, new Position(x, y), 100));
+            droppedSeedPackets.add(
+                    new DroppedSeedPacket(plant, new Position(getRealX(x), getRealY(y)), 100));
             System.out.printf("A Seed Packet for %s dropped on ground at (%d, %d)!\n", plant.getName(), x, y);
         } else {
             System.out.println("The jar was empty!");
@@ -87,7 +91,7 @@ public class VaseBreaker extends GamePlay {
     public void collectSeedPacket(int x, int y) {
         DroppedSeedPacket targetPacket = null;
         for (DroppedSeedPacket sp : droppedSeedPackets) {
-            if ((int) sp.getPosition().getX() == x && (int) sp.getPosition().getY() == y) {
+            if ((int) sp.getPosition().getX() == getRealX(x) && (int) sp.getPosition().getY() == getRealY(y)) {
                 targetPacket = sp;
                 break;
             }
@@ -102,27 +106,25 @@ public class VaseBreaker extends GamePlay {
         }
     }
 
-    public void plantFromInventory(int inventoryIndex, Position targetPosition) {
+    public void plantFromInventory(int inventoryIndex, int x, int y) {
         if (inventoryIndex < 0 || inventoryIndex >= inventory.size()) {
             System.out.println("Invalid seed packet index!");
             return;
         }
 
-        Tile targetTile = tiles.stream()
-                .filter(t -> t.getPosition().equals(targetPosition))
-                .findFirst()
-                .orElse(null);
+        Tile targetTile = getTileByPosition(x, y);
 
         if (targetTile != null && targetTile.isArable() && targetTile.getPlants().isEmpty()) {
             BattlePlant plantToPlant = inventory.remove(inventoryIndex);
-            plantToPlant.setRow((int) targetPosition.getY());
-            plantToPlant.setColumn((int) targetPosition.getX());
+            plantToPlant.setRow(y);
+            plantToPlant.setColumn(x);
+            plantToPlant.setPosition(new Position(getRealX(x), getRealY(y)));
 
             this.gamePlants.add(plantToPlant);
             targetTile.addPlant(plantToPlant);
 
             System.out.printf("Planted %s at (%d, %d) from Seed Packet.\n",
-                    plantToPlant.getName(), (int) targetPosition.getX(), (int) targetPosition.getY());
+                    plantToPlant.getName(), x, y);
         } else {
             System.out.println("Cannot plant at this tile!");
         }
@@ -132,6 +134,11 @@ public class VaseBreaker extends GamePlay {
     public void update() {
         if (isPaused) return;
         totalTicksPassed++;
+
+        if (!isSeted) {
+            setupJars();
+            isSeted = true;
+        }
 
         Iterator<BattlePlant> bp = gamePlants.iterator();
         while (bp.hasNext()) {
@@ -161,12 +168,14 @@ public class VaseBreaker extends GamePlay {
             if (!zombie.isAlive() || zombie.getCurrentHP() <= 0) {
                 killAward(this.thisUser);
                 glowingAward(this);
+                Position zPos = Position.getRowAndColumn(zombie.getPosition());
+                System.out.printf("Zombie of type %s is dead at (%d, %d)\n",
+                        zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
                 z.remove();
             } else {
                 zombie.update();
             }
         }
-        updateZombieTiles();
 
         Iterator<Projectile> pj = projectiles.iterator();
         while (pj.hasNext()) {
@@ -190,23 +199,40 @@ public class VaseBreaker extends GamePlay {
             }
         }
 
-        int xLimit = mowers.get(0).getX();
+        int x = 20;
         for (Zombie zombie : gameZombies) {
             int yOfz = (int) zombie.getPosition().getY();
             int xOfz = (int) zombie.getPosition().getX();
-            Mower thisMower = mowers.stream().filter(p -> p.getY() == yOfz).findFirst().orElse(null);
+            Mower thisMower = mowers.stream().filter(m -> getRealY(m.getY()) == yOfz).findFirst().get();
 
-            if (thisMower != null && xOfz <= xLimit) {
+            if (xOfz <= x) {
                 if (!thisMower.isUsed()) {
-                    System.out.println("Lawn mower at row " + yOfz + " triggered!");
+                    System.out.println("The lawn mower in the row " + (int)(thisMower.getY()) + " is triggered and killed these zombies:");
                     thisMower.killZombies(this);
                 } else {
-                    System.out.println("Zombie reached your house! YOU LOST!!!");
+                    System.out.println("The zombie ate your brain; LOSER!!!");
                     this.isPaused = true;
-                    return;
                 }
             }
         }
+
+        z = gameZombies.iterator();
+        while (z.hasNext()) {
+            Zombie zombie = z.next();
+
+            if (!zombie.isAlive() || zombie.getCurrentHP() <= 0) {
+                killAward(this.thisUser);
+                glowingAward(this);
+                Position zPos = Position.getRowAndColumn(zombie.getPosition());
+                System.out.printf("Zombie of type %s is dead at (%d, %d)\n",
+                        zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
+                z.remove();
+            } else {
+                zombie.update();
+            }
+        }
+
+        updateZombieTiles();
 
         if (checkWinCondition()) {
             onWin();

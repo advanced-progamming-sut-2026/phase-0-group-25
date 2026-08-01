@@ -27,47 +27,50 @@ public class Moving implements Ability {
 
             moveZombie(zombie);
 
-            if (zombie.getZombieStats().getName().equals("EXPLORER")) {
-                if (zombie.getZombieStats().getAttributes().get("torch").equals("on")) {
-                    handleExplorerWithIgnitedTorch(zombie);
-                    return;
-                }
-            } else if (zombie.getZombieStats().getName().equals("PIANO")) {
-                if ((GAME.getTotalTimePassed() - zombie.getLastActionTime()) >= PIANO_ACTION_INTERVAL) {
-                    for (Zombie zombie1 : GAME.getGameZombies()) {
-                        zombie1.changeRow();
+            if (GAME != null) {
+                if (zombie.getZombieStats().getName().equals("EXPLORER")) {
+                    if (zombie.getZombieStats().getAttributes().get("torch").equals("on")) {
+                        handleExplorerWithIgnitedTorch(zombie);
+                        return;
                     }
-                    zombie.setLastActionTime(GAME.getTotalTimePassed());
-                }
-            }
-
-            for (BattlePlant plant : GAME.getGamePlants()) {
-                Position plantPosition = plant.getPosition();
-
-                if (zombie.getPosition().equals(plantPosition)) {
-                    zombie.setRival(plant);
-                    if (zombie.getZombieStats().getName().equals("DODO")) {
-                        if (isFlyable(plant)) {
-                            makeFlyingActivated(zombie);
-                            return;
+                } else if (zombie.getZombieStats().getName().equals("PIANO")) {
+                    if ((GAME.getTotalTimePassed() - zombie.getLastActionTime()) >= PIANO_ACTION_INTERVAL) {
+                        for (Zombie zombie1 : GAME.getGameZombies()) {
+                            zombie1.changeRow();
                         }
+                        zombie.setLastActionTime(GAME.getTotalTimePassed());
                     }
-
-                    makeEatingActivated(zombie);
-                    if (zombie.getZombieStats().getName().equals("EXPLORER")) {
-                        handleExplorerTorch(zombie, plant);
-                    } else if ((zombie.getZombieStats().getName().equals("SNORKEL")) &&
-                            (zombie.getPosition().getX() < SNORKEL_X_LIMIT)) {
-                        zombie.getZombieStats().getAttributes().replace("submarine", "off");
-                    }
-                    return;
                 }
-            }
-            if (zombie.getZombieStats().getName().equals("ALL_STAR") ||
-                    (zombie.getZombieStats().getName().equals("TROGLOBITE")) ||
-                    (zombie.getZombieStats().getName().equals("ARCADE"))) {
 
-                checkFatalDamageZombies(zombie);
+                for (BattlePlant plant : GAME.getGamePlants()) {
+                    Position plantPosition = plant.getPosition();
+
+                    if (zombie.getPosition().equals(plantPosition)) {
+                        zombie.setRival(plant);
+                        if (zombie.getZombieStats().getName().equals("DODO")) {
+                            if (isFlyable(plant)) {
+                                makeFlyingActivated(zombie);
+                                return;
+                            }
+                        }
+
+                        makeEatingActivated(zombie);
+                        if (zombie.getZombieStats().getName().equals("EXPLORER")) {
+                            handleExplorerTorch(zombie, plant);
+                        } else if ((zombie.getZombieStats().getName().equals("SNORKEL")) &&
+                                (zombie.getPosition().getX() < SNORKEL_X_LIMIT)) {
+                            zombie.getZombieStats().getAttributes().replace("submarine", "off");
+                        }
+                        return;
+                    }
+                }
+
+                if (zombie.getZombieStats().getName().equals("ALL_STAR") ||
+                        (zombie.getZombieStats().getName().equals("TROGLOBITE")) ||
+                        (zombie.getZombieStats().getName().equals("ARCADE"))) {
+
+                    checkFatalDamageZombies(zombie);
+                }
             }
         }
     }

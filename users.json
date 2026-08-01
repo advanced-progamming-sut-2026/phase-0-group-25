@@ -52,25 +52,25 @@
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:56:43.302026",
         "ready" : true,
-        "remainingHours" : -27.27027777777778,
+        "remainingHours" : -44.595,
         "type" : "MARIGOLD"
       }, {
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:37:21.8724837",
         "ready" : true,
-        "remainingHours" : -27.592777777777776,
+        "remainingHours" : -44.91777777777778,
         "type" : "MARIGOLD"
       }, {
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:37:31.2370238",
         "ready" : true,
-        "remainingHours" : -27.59027777777778,
+        "remainingHours" : -44.915277777777774,
         "type" : "MARIGOLD"
       }, {
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:37:36.9804977",
         "ready" : true,
-        "remainingHours" : -27.58861111111111,
+        "remainingHours" : -44.91361111111111,
         "type" : "MARIGOLD"
       }, null ], [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ] ],
       "questProgress" : { },
@@ -84,8 +84,8 @@
       },
       "unlockedPlantsAndTheirLevels" : {
         "SUNFLOWER" : 1,
-        "SUN_SHROOM" : 1,
-        "PEASHOOTER" : 1
+        "PEASHOOTER" : 1,
+        "SUN_SHROOM" : 1
       },
       "unlockedPots" : [ [ true, true, true, true, true ], [ true, true, true, true, false ], [ false, false, false, false, false ], [ false, false, false, false, false ] ],
       "unlockedZombies" : [ "DEFAULT" ]
@@ -110,24 +110,6 @@
       }, {
         "message" : "zombie DEFAULT unlocked!",
         "read" : false
-      }, {
-        "message" : "level 2 of ancient egypt unlocked!",
-        "read" : false
-      }, {
-        "message" : "zombie CONE_HEAD unlocked!",
-        "read" : false
-      }, {
-        "message" : "Quest completed: Mower Time (10)! Claim your rewards in Travel Log.",
-        "read" : false
-      }, {
-        "message" : "level 3 of ancient egypt unlocked!",
-        "read" : false
-      }, {
-        "message" : "plant WALL_NUT unlocked!",
-        "read" : false
-      }, {
-        "message" : "zombie BUCKET_HEAD unlocked!",
-        "read" : false
       } ]
     },
     "nickName" : "amir",
@@ -137,35 +119,35 @@
     "userName" : "amir2",
     "userProgress" : {
       "claimedQuestIds" : [ ],
-      "coinsCount" : 50,
-      "completedQuestIds" : [ "mower_time_10" ],
+      "coinsCount" : 0,
+      "completedQuestIds" : [ ],
       "dailyOfferBoughtToday" : false,
       "dailyOfferPurchaseDate" : null,
       "dailyQuestsCompleted" : 0,
       "gameDifficulty" : 3,
-      "gamesPlayed" : 2,
-      "gemsCount" : 11,
+      "gamesPlayed" : 0,
+      "gemsCount" : 0,
       "greenhouseBoosts" : [ ],
-      "lastDailyReset" : "2026-07-31",
+      "lastDailyReset" : "2026-08-01",
       "miniGameLevels" : {
         "VASEBREAKER" : 1,
-        "WALNUT_BOWLING" : 1,
+        "WALNUT_BOWLING" : 2,
         "I_ZOMBIE" : 1
       },
-      "miniGamesCompleted" : 0,
-      "nonDailyQuestsCompleted" : 1,
+      "miniGamesCompleted" : 1,
+      "nonDailyQuestsCompleted" : 0,
       "plantFoodCount" : 0,
       "potPlants" : [ [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ] ],
       "questProgress" : {
         "hunter_frostbite_caves" : 0,
         "speed_demon" : 0,
-        "mower_time_30" : 10,
+        "mower_time_30" : 8,
         "blossom_constraints" : 0,
         "symmetry" : 0,
-        "mower_time_40" : 10,
+        "mower_time_40" : 8,
         "night_or_morning" : 0,
         "almost_victory" : 0,
-        "daily_sun_collector_3000" : 200,
+        "daily_sun_collector_3000" : 0,
         "one_column_less_4" : 0,
         "one_column_less_5" : 0,
         "one_column_less_2" : 0,
@@ -179,12 +161,12 @@
         "thrifty_farmer_0" : 0,
         "defenseless_cross_2" : 0,
         "defenseless_cross_1" : 0,
-        "mower_time_50" : 10,
+        "mower_time_50" : 8,
         "defenseless_cross_4" : 0,
         "defenseless_cross_3" : 0,
         "hunter_ancient_egypt" : 0,
-        "mower_time_10" : 10,
-        "daily_sun_collector_4000" : 200,
+        "mower_time_10" : 8,
+        "daily_sun_collector_4000" : 0,
         "only_cactus" : 0,
         "one_column_less_8" : 0,
         "one_column_less_9" : 0,
@@ -192,12 +174,12 @@
         "one_column_less_7" : 0,
         "cloudy_day" : 0,
         "defenseless_cross_5" : 0,
-        "mower_time_20" : 10,
+        "mower_time_20" : 8,
         "defenseless_row_5" : 0,
         "defenseless_row_4" : 0,
         "defenseless_row_3" : 0,
         "defenseless_row_2" : 0,
-        "daily_sun_collector_5000" : 200,
+        "daily_sun_collector_5000" : 0,
         "defenseless_row_1" : 0,
         "hunter_big_wave_beach" : 0,
         "no_ocd" : 0,
@@ -210,15 +192,14 @@
       },
       "seedPackets" : { },
       "unlockedChaptersAndLevels" : {
-        "ANCIENT_EGYPT" : 3
+        "ANCIENT_EGYPT" : 1
       },
       "unlockedPlantsAndTheirLevels" : {
         "SUNFLOWER" : 1,
-        "WALL_NUT" : 1,
         "PEASHOOTER" : 1
       },
-      "unlockedPots" : [ [ true, true, true, true, true ], [ true, true, false, false, false ], [ false, false, false, false, false ], [ false, false, false, false, false ] ],
-      "unlockedZombies" : [ "DEFAULT", "CONE_HEAD", "BUCKET_HEAD" ]
+      "unlockedPots" : [ [ true, true, true, true, true ], [ false, false, false, false, false ], [ false, false, false, false, false ], [ false, false, false, false, false ] ],
+      "unlockedZombies" : [ "DEFAULT" ]
     }
   }
 }

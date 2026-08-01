@@ -123,10 +123,11 @@ public abstract class GamePlay {
     }
 
     public static int calculateCost(ChapterType chapterType, int level, int waveNumber) {
-        int chapterNumber = chapterType.ordinal() + 1;
+        int chapterNumber = (chapterType != null)? chapterType.ordinal() + 1 : 2;
+        int levelNumber = (Set.of(1, 2, 3, 4).contains(level))? level : 1;
         int stagesPerChapter = 4;
 
-        int globalLevel = ((chapterNumber - 1) * stagesPerChapter) + level;
+        int globalLevel = ((chapterNumber - 1) * stagesPerChapter) + levelNumber;
 
         int baseDifficultyForStage = 800 + (globalLevel * 250);
 
@@ -358,7 +359,7 @@ public abstract class GamePlay {
     }
 
     public void showTileStatus(Position thisPosition) {
-        Tile thisTile = tiles.stream().filter(p -> p.getPosition().equals(thisPosition)).findFirst().get();
+        Tile thisTile = getTileByPosition((int) thisPosition.getX(), (int) thisPosition.getY());
         System.out.println("The Plants :");
         for (BattlePlant p : thisTile.getPlants()) {
             System.out.println("->  " + p.getName() + " | HP : " + p.getCurrentHP());
@@ -512,11 +513,12 @@ public abstract class GamePlay {
     }
 
     public int calculateWaves(ChapterType chapterType, int level) {
-        int chapterNumber = chapterType.ordinal() + 1;
+        int chapterNumber = (chapterType != null)? chapterType.ordinal() + 1 : 2;
+        int levelNumber = (Set.of(1, 2, 3, 4).contains(level))? level : 1;
 
         int stagesPerChapter = 4;
 
-        int globalLevel = ((chapterNumber - 1) * stagesPerChapter) + level;
+        int globalLevel = ((chapterNumber - 1) * stagesPerChapter) + levelNumber;
 
         double calculatedWaves = 1.1 + (globalLevel * 0.26);
 
