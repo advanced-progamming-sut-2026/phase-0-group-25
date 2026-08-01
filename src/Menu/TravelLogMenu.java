@@ -13,7 +13,6 @@ import src.View.ViewInterfaces.BaseView;
 import src.View.ViewInterfaces.TravelLogMenuView;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -64,43 +63,34 @@ public class TravelLogMenu extends Menu {
     }
 
     private void startMiniGame(String miniGameName) {
-        
+
         MiniGameType type = MiniGameType.fromDisplayName(miniGameName);
         if (type == null) {
             getView().showError("Unknown mini-game: " + miniGameName + ". Available: Vasebreaker, Walnut Bowling, I Zombie");
             return;
         }
 
-        
+
         User currentUser = UsersManager.getInstance().getLoggedInUser();
         if (currentUser == null || currentUser.getUserProgress() == null) {
             getView().showError("No logged in user found.");
             return;
         }
 
-        
+
         GameMenu gameMenu = MenuManager.getInstance().getGameMenu();
         ArrayList<String> selectedPlants = gameMenu.getPlantsStr();
 
 
-
-
-
-
-
         HashSet<String> boostedSet = new HashSet<>(gameMenu.getBoostedPlants());
 
-        
+
         ArrayList<String> zombies = new ArrayList<>();
 
 
-
-
-        
         int level = currentUser.getUserProgress().getMiniGameLevel(type);
 
         int difficulty = currentUser.getUserProgress().getGameDifficulty();
-
 
 
         GamePlay gamePlay = null;

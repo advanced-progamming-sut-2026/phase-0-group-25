@@ -1,7 +1,7 @@
 package src.Enums;
 
 public enum QuestCategory {
-    DAILY,      
-    MAIN,       
-    CHALLENGE   
+    DAILY,
+    MAIN,
+    CHALLENGE
 }

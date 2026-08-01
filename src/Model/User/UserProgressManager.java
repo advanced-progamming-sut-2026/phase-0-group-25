@@ -11,11 +11,12 @@ import java.util.Map;
 
 public class UserProgressManager {
 
+    private static final int PLANT_PURCHASE_COST = 2000;
     private static UserProgressManager instance;
-
     private static int maxLevel = 4;
 
-    private UserProgressManager() {}
+    private UserProgressManager() {
+    }
 
     public static UserProgressManager getInstance() {
         if (instance == null) {
@@ -24,7 +25,6 @@ public class UserProgressManager {
         return instance;
     }
 
-    
     private User getLoggedInUser() {
         return UsersManager.getInstance().getLoggedInUser();
     }
@@ -33,7 +33,6 @@ public class UserProgressManager {
         UsersManager.getInstance().updateUser();
     }
 
-    
     public void addCoins(int amount) {
         User user = getLoggedInUser();
         if (user == null || amount <= 0) return;
@@ -72,7 +71,6 @@ public class UserProgressManager {
         return null;
     }
 
-    
     public void addSeedPackets(PlantType plant, int amount) {
         User user = getLoggedInUser();
         if (user == null || amount <= 0) return;
@@ -87,14 +85,12 @@ public class UserProgressManager {
         save();
     }
 
-
     public int getMiniGameLevel(MiniGameType type) {
         User user = getLoggedInUser();
         if (user == null) return 1;
         return user.getUserProgress().getMiniGameLevel(type);
     }
 
-    
     public void handleMiniGameWin(MiniGameType type, int levelCompleted) {
         User user = getLoggedInUser();
         if (user == null) return;
@@ -105,10 +101,9 @@ public class UserProgressManager {
             progress.getMiniGameLevels().put(type, currentLevel + 1);
         }
 
-        progress.incrementMiniGamesCompleted();  
+        progress.incrementMiniGamesCompleted();
         save();
     }
-
 
     public void addPlantFood(int amount) {
         User user = getLoggedInUser();
@@ -119,7 +114,6 @@ public class UserProgressManager {
         save();
     }
 
-    
     public void unlockPlant(PlantType plantType) {
         User user = getLoggedInUser();
         if (user == null) return;
@@ -147,9 +141,6 @@ public class UserProgressManager {
         user.unlockLevel(level, chapterType);
         save();
     }
-
-    
-    private static final int PLANT_PURCHASE_COST = 2000;
 
     public String purchasePlant(String plantName) {
         User user = getLoggedInUser();
@@ -182,7 +173,7 @@ public class UserProgressManager {
 
         int currentLevel = progress.getUnlockedPlantsAndTheirLevels().get(plant);
 
-        if(currentLevel == maxLevel)
+        if (currentLevel == maxLevel)
             return "already at max level.";
 
         int requiredCoins = currentLevel * 1000;
@@ -202,7 +193,7 @@ public class UserProgressManager {
         return null;
     }
 
-    
+
     public void unlockPot(int x, int y) {
         User user = getLoggedInUser();
         if (user == null) return;
@@ -257,14 +248,14 @@ public class UserProgressManager {
     public void acceleratePlant(int x, int y) {
         User user = getLoggedInUser();
         if (user == null) return;
-        GreenhousePlant plant = user.getUserProgress().getPotPlants()[y-1][x-1];
+        GreenhousePlant plant = user.getUserProgress().getPotPlants()[y - 1][x - 1];
         if (plant != null) {
             plant.forceReady();
             save();
         }
     }
 
-    
+
     public void markDailyOfferPurchased() {
         User user = getLoggedInUser();
         if (user == null) return;
@@ -278,7 +269,7 @@ public class UserProgressManager {
         return user.getUserProgress().isDailyOfferBoughtToday();
     }
 
-    
+
     public void setQuestProgressForCurrentUser(Map<String, Integer> progress) {
         User user = getLoggedInUser();
         if (user == null) return;
@@ -307,7 +298,7 @@ public class UserProgressManager {
         save();
     }
 
-    
+
     public void incrementMiniGamesCompleted() {
         User user = getLoggedInUser();
         if (user == null) return;
@@ -329,7 +320,7 @@ public class UserProgressManager {
         save();
     }
 
-    
+
     public String cheat(int amount, WalletType walletType) {
         User user = getLoggedInUser();
         if (user == null || user.getUserProgress() == null)
@@ -379,10 +370,14 @@ public class UserProgressManager {
 
     private ChapterType getNextChapter(ChapterType current) {
         switch (current) {
-            case ANCIENT_EGYPT: return ChapterType.DARK_AGE;
-            case DARK_AGE: return ChapterType.FROSTBITE_CAVES;
-            case FROSTBITE_CAVES: return ChapterType.BIG_WAVE_BEACH;
-            default: return null;
+            case ANCIENT_EGYPT:
+                return ChapterType.DARK_AGE;
+            case DARK_AGE:
+                return ChapterType.FROSTBITE_CAVES;
+            case FROSTBITE_CAVES:
+                return ChapterType.BIG_WAVE_BEACH;
+            default:
+                return null;
         }
     }
 }

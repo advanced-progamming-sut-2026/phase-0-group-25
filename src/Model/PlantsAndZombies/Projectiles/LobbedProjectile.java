@@ -9,21 +9,18 @@ import src.Model.PlantsAndZombies.Zombie;
 import java.util.ArrayList;
 
 public class LobbedProjectile extends Projectile {
+    private static int ICE_DAMAGE = 6;
     private double startX;
     private double startY;
     private double targetX;
     private double targetY;
-
     private double timeToReach;
     private double elapsedTime;
-
     private int AoEDamage;
     private int AoERange;
     private int damage;
     private boolean isFromLobberPlant;
-
     private GamePlay GAME = GamePlayMenu.getGamePlay();
-    private static int ICE_DAMAGE = 6;
 
     public LobbedProjectile(BattlePlant plant, double startX, double startY, double targetX, double speed,
                             int AoEDamage, int AoERange, int damage) {

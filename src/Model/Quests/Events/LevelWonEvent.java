@@ -1,5 +1,4 @@
 package src.Model.Quests.Events;
-import src.Enums.ChapterType;
 
 public class LevelWonEvent extends Event {
     private final int lostPlants;
@@ -18,10 +17,27 @@ public class LevelWonEvent extends Event {
         this.emptyRows = emptyRows.clone();
     }
 
-    public int getLostPlants() { return lostPlants; }
-    public int getFinalSun() { return finalSun; }
-    public int getDifficulty() { return difficulty; }
-    public int getSunProducersCount() { return sunProducersCount; }
-    public boolean[] getEmptyColumns() { return emptyColumns.clone(); }
-    public boolean[] getEmptyRows() { return emptyRows.clone(); }
+    public int getLostPlants() {
+        return lostPlants;
+    }
+
+    public int getFinalSun() {
+        return finalSun;
+    }
+
+    public int getDifficulty() {
+        return difficulty;
+    }
+
+    public int getSunProducersCount() {
+        return sunProducersCount;
+    }
+
+    public boolean[] getEmptyColumns() {
+        return emptyColumns.clone();
+    }
+
+    public boolean[] getEmptyRows() {
+        return emptyRows.clone();
+    }
 }

@@ -29,8 +29,19 @@ public class Reward {
         this.chapterType = chapterType;
     }
 
-    public RewardType getType() { return type; }
-    public int getAmount() { return amount; }
-    public PlantType getPlantType() { return plantType; }
-    public ChapterType getChapterType() { return chapterType; }
+    public RewardType getType() {
+        return type;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public PlantType getPlantType() {
+        return plantType;
+    }
+
+    public ChapterType getChapterType() {
+        return chapterType;
+    }
 }

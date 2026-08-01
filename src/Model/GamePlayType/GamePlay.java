@@ -50,9 +50,9 @@ public abstract class GamePlay {
     protected boolean isPaused;
     protected int numOfWaves;
     protected int totalTicksPassed = 0;
-    private List<Integer> rowBag = new ArrayList<>();
     protected int lostPlants = 0;
     protected boolean settedThePlants = false;
+    private List<Integer> rowBag = new ArrayList<>();
 
 
     public GamePlay(ChapterType chapterType, int level, int difficulty, User thisUser,
@@ -86,18 +86,17 @@ public abstract class GamePlay {
         thisFinal.zombieMaker(tempZ);
 
 
-        if (chapterType == ChapterType.BIG_WAVE_BEACH){
-                    for (int y = 1; y < 6; y++) {
-                        mowers.add(new Mower(y));
-                        for (int x = 1; x < 10; x++) {
-                            Position newPosition = new Position(x, y);
-                            Boolean isArable = (x != 9 && x != 8);
-                            Tile newTile = new Tile(newPosition, isArable, 0);
-                            tiles.add(newTile);
-                        }
-                    }
+        if (chapterType == ChapterType.BIG_WAVE_BEACH) {
+            for (int y = 1; y < 6; y++) {
+                mowers.add(new Mower(y));
+                for (int x = 1; x < 10; x++) {
+                    Position newPosition = new Position(x, y);
+                    Boolean isArable = (x != 9 && x != 8);
+                    Tile newTile = new Tile(newPosition, isArable, 0);
+                    tiles.add(newTile);
                 }
-        else {
+            }
+        } else {
             for (int y = 1; y < 6; y++) {
                 mowers.add(new Mower(y));
                 for (int x = 1; x < 10; x++) {
@@ -110,15 +109,9 @@ public abstract class GamePlay {
         }
     }
 
-
-    public void incrementLostPlants() {
-        this.lostPlants++;
-    }
-
-
     public static int calculateCost(ChapterType chapterType, int level, int waveNumber) {
-        int chapterNumber = (chapterType != null)? chapterType.ordinal() + 1 : 2;
-        int levelNumber = (Set.of(1, 2, 3, 4).contains(level))? level : 1;
+        int chapterNumber = (chapterType != null) ? chapterType.ordinal() + 1 : 2;
+        int levelNumber = (Set.of(1, 2, 3, 4).contains(level)) ? level : 1;
         int stagesPerChapter = 4;
 
         int globalLevel = ((chapterNumber - 1) * stagesPerChapter) + levelNumber;
@@ -134,6 +127,10 @@ public abstract class GamePlay {
         int finalCost = baseDifficultyForStage + waveMultiplier;
 
         return finalCost;
+    }
+
+    public void incrementLostPlants() {
+        this.lostPlants++;
     }
 
     public abstract void update();
@@ -260,7 +257,7 @@ public abstract class GamePlay {
                     sun.setCollected(true);
                     Tile thisTile = getTileByPosition(x, y);
                     Ability thisAbility = thisTile.getPlants().get(0).getOriginalAbilities().get(0);
-                    if (thisAbility instanceof  ProducingSun) {
+                    if (thisAbility instanceof ProducingSun) {
                         ((ProducingSun) thisAbility).setCollected(false);
                         ((ProducingSun) thisAbility).setProduced(false);
                     }
@@ -454,7 +451,7 @@ public abstract class GamePlay {
             String name = plant.getName();
             int cost = plant.getPlantStats().getCost();
             boolean isPlantable = (this.mySuns >= plant.getPlantStats().getCost())
-                                        && (plant.getCurrentCoolDown() == 0 || !plant.getActiveCooldown());
+                    && (plant.getCurrentCoolDown() == 0 || !plant.getActiveCooldown());
             int cooldown = (int) plant.getCurrentCoolDown();
 
             System.out.printf("- %s:\n", name);
@@ -508,6 +505,10 @@ public abstract class GamePlay {
         return mySuns;
     }
 
+    public void setMySuns(int mySuns) {
+        this.mySuns = mySuns;
+    }
+
     public void cheatAddSun(int sun) {
         this.mySuns += sun;
         System.out.println("You added " + sun + " suns!!");
@@ -527,8 +528,8 @@ public abstract class GamePlay {
     }
 
     public int calculateWaves(ChapterType chapterType, int level) {
-        int chapterNumber = (chapterType != null)? chapterType.ordinal() + 1 : 2;
-        int levelNumber = (Set.of(1, 2, 3, 4).contains(level))? level : 1;
+        int chapterNumber = (chapterType != null) ? chapterType.ordinal() + 1 : 2;
+        int levelNumber = (Set.of(1, 2, 3, 4).contains(level)) ? level : 1;
 
         int stagesPerChapter = 4;
 
@@ -592,7 +593,7 @@ public abstract class GamePlay {
             int currentY = (int) zombiePosition.getY();
             Tile currentTile = getTileByPosition(currentX, currentY);
 
-            if(zombie.getPosition().getX() <= 20){
+            if (zombie.getPosition().getX() <= 20) {
                 zombie.setCurrentHP(0);
                 zombie.setAlive(false);
                 continue;
@@ -712,10 +713,6 @@ public abstract class GamePlay {
 
     public ArrayList<Tile> getTiles() {
         return tiles;
-    }
-
-    public void setMySuns(int mySuns) {
-        this.mySuns = mySuns;
     }
 
     public void applyIcyWind() {

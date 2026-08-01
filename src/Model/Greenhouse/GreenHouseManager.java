@@ -2,7 +2,6 @@ package src.Model.Greenhouse;
 
 import src.Enums.PlantType;
 import src.Model.User.UserProgress;
-import src.Model.User.UserProgressManager;
 import src.Model.User.UsersManager;
 
 import java.util.Random;
@@ -23,7 +22,7 @@ public class GreenHouseManager {
         return instance;
     }
 
-    
+
     private String getUserError() {
         if (usersManager.getLoggedInUser() == null) {
             return "No logged in user.";
@@ -31,9 +30,7 @@ public class GreenHouseManager {
         return null;
     }
 
-    
 
-    
     public String getGreenhouseStatus() {
         String error = getUserError();
         if (error != null) return error;
@@ -67,7 +64,7 @@ public class GreenHouseManager {
         return sb.toString();
     }
 
-    
+
     public String plantPot(int x, int y) {
         String error = getUserError();
         if (error != null) return error;
@@ -80,10 +77,10 @@ public class GreenHouseManager {
         boolean[][] unlocked = progress.getUnlockedPots();
         GreenhousePlant[][] plants = progress.getPotPlants();
 
-        if (!unlocked[y-1][x-1]) {
+        if (!unlocked[y - 1][x - 1]) {
             return "Pot is locked.";
         }
-        if (plants[y-1][x-1] != null) {
+        if (plants[y - 1][x - 1] != null) {
             return "Pot is occupied.";
         }
 
@@ -106,7 +103,7 @@ public class GreenHouseManager {
         return "Planted " + chosen.getName() + " in pot (" + x + "," + y + ").";
     }
 
-    
+
     public String collectPot(int x, int y) {
         String error = getUserError();
         if (error != null) return error;
@@ -117,7 +114,7 @@ public class GreenHouseManager {
 
         UserProgress progress = usersManager.getLoggedInUser().getUserProgress();
         GreenhousePlant[][] plants = progress.getPotPlants();
-        GreenhousePlant plant = plants[y-1][x-1];
+        GreenhousePlant plant = plants[y - 1][x - 1];
 
         if (plant == null) {
             return "No plant in this pot.";
@@ -141,7 +138,7 @@ public class GreenHouseManager {
         }
     }
 
-    
+
     public String growPot(int x, int y) {
         String error = getUserError();
         if (error != null) return error;
@@ -152,7 +149,7 @@ public class GreenHouseManager {
 
         UserProgress progress = usersManager.getLoggedInUser().getUserProgress();
         GreenhousePlant[][] plants = progress.getPotPlants();
-        GreenhousePlant plant = plants[y-1][x-1];
+        GreenhousePlant plant = plants[y - 1][x - 1];
 
         if (plant == null) {
             return "No plant in this pot.";

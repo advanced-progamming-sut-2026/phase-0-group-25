@@ -3,7 +3,6 @@ package src.Model.PlantsAndZombies.Abilities;
 import src.Menu.GamePlayMenu;
 import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.*;
-import src.Model.Sun.Sun;
 import src.Model.Tile;
 
 import java.util.ArrayList;

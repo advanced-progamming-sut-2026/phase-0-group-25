@@ -8,14 +8,18 @@ public enum QuestPage {
 
     private final String commandName;
 
-    QuestPage(String commandName) { this.commandName = commandName; }
-
-    public String getCommandName() { return commandName; }
+    QuestPage(String commandName) {
+        this.commandName = commandName;
+    }
 
     public static QuestPage fromCommandName(String name) {
         for (QuestPage p : values()) {
             if (p.commandName.equalsIgnoreCase(name)) return p;
         }
         return null;
+    }
+
+    public String getCommandName() {
+        return commandName;
     }
 }

@@ -3,9 +3,11 @@ package src.Model.PlantsAndZombies.Abilities;
 import src.Enums.PlantType;
 import src.Menu.GamePlayMenu;
 import src.Model.GamePlayType.GamePlay;
-import src.Model.PlantsAndZombies.*;
+import src.Model.PlantsAndZombies.BattlePlant;
+import src.Model.PlantsAndZombies.Entity;
+import src.Model.PlantsAndZombies.Position;
+import src.Model.PlantsAndZombies.Zombie;
 import src.Model.Tile;
-
 
 
 public class Moving implements Ability {
@@ -119,7 +121,7 @@ public class Moving implements Ability {
 
         Tile tile = GAME.getTileByPosition(zombieColumn, zombieRow);
 
-        if(tile == null)
+        if (tile == null)
             return;
         for (BattlePlant plant : tile.getPlants()) {
             plant.setCurrentHP(0);

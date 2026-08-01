@@ -19,6 +19,7 @@ import java.util.Set;
 
 public class SaveOurSeeds extends GamePlay {
     private boolean isSetted = false;
+
     public SaveOurSeeds(ChapterType chapterType, int level, int difficulty, User thisUser,
                         ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         super(chapterType, level, difficulty, thisUser, plants, zombies, boosted);
@@ -143,7 +144,7 @@ public class SaveOurSeeds extends GamePlay {
 
             if (xOfz <= x) {
                 if (!thisMower.isUsed()) {
-                    System.out.println("The lawn mower in the row " + (int)(thisMower.getY()) + " is triggered and killed these zombies:");
+                    System.out.println("The lawn mower in the row " + (int) (thisMower.getY()) + " is triggered and killed these zombies:");
                     thisMower.killZombies(this);
                 } else {
                     System.out.println("The zombie ate your brain; LOSER!!!");

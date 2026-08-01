@@ -1,8 +1,12 @@
 package src.Model.Quests;
 
-import src.Enums.*;
+import src.Enums.QuestCategory;
+import src.Enums.QuestPage;
+import src.Enums.QuestPriority;
 import src.Model.Quests.QuestSubclasses.*;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class QuestDefinitionLoader {
     public static List<Quest> loadQuests() {

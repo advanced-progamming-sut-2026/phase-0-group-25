@@ -1,4 +1,3 @@
-
 package src.Menu;
 
 import src.Enums.*;
@@ -90,7 +89,7 @@ public class GameMenu extends Menu {
             return;
         }
 
-        
+
         if (requestedLevel < 1 || requestedLevel > 4) {
             getView().showError("We only have 4 levels.");
             return;
@@ -99,7 +98,7 @@ public class GameMenu extends Menu {
         ChapterType chapterType = this.chapter.getChapterType();
         int maxUnlockedLevelForChapter = currentUser.getUserProgress().getUnlockedChaptersAndLevels().getOrDefault(chapterType, 1);
 
-        
+
         if (requestedLevel > maxUnlockedLevelForChapter) {
             getView().showError("This level is locked. You must beat level " + (requestedLevel - 1) + " first.");
             return;

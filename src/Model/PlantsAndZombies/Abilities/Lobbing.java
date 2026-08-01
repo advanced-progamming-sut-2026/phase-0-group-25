@@ -4,7 +4,6 @@ import src.Menu.GamePlayMenu;
 import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.BattlePlant;
 import src.Model.PlantsAndZombies.Entity;
-import src.Model.PlantsAndZombies.Position;
 import src.Model.PlantsAndZombies.Projectiles.LobbedProjectile;
 import src.Model.PlantsAndZombies.Zombie;
 import src.Model.Tile;

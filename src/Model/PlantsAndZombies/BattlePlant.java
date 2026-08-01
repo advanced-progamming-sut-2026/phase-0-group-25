@@ -1,7 +1,6 @@
 package src.Model.PlantsAndZombies;
 
 import src.Enums.PlantCategory;
-import src.Enums.PlantType;
 import src.Menu.GamePlayMenu;
 import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.Abilities.*;
@@ -109,7 +108,7 @@ public class BattlePlant extends Plant {
     }
 
     public int getCooldown() {
-        return (int) this.plantStats.getRechargeTime()*10 ;
+        return (int) this.plantStats.getRechargeTime() * 10;
     }
 
     public double getPlantTime() {

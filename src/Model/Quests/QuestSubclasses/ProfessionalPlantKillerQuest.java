@@ -1,14 +1,16 @@
 package src.Model.Quests.QuestSubclasses;
 
 import src.Enums.*;
-import src.Model.Quests.Events.*;
-import src.Model.Quests.*;
+import src.Model.Quests.Events.Event;
+import src.Model.Quests.Events.ZombieKilledEvent;
+import src.Model.Quests.Quest;
+import src.Model.Quests.Reward;
 
 import java.util.Random;
 
 public class ProfessionalPlantKillerQuest extends Quest {
-    private PlantType targetPlant;
     private final int required = 10;
+    private PlantType targetPlant;
 
     public ProfessionalPlantKillerQuest(String id, QuestCategory category, QuestPriority priority, boolean dailyReset, QuestPage page) {
         super(id, category, priority, dailyReset, page);
@@ -29,7 +31,9 @@ public class ProfessionalPlantKillerQuest extends Quest {
     }
 
     @Override
-    public int getRequiredCount() { return required; }
+    public int getRequiredCount() {
+        return required;
+    }
 
     @Override
     public void check(Event event) {
@@ -42,7 +46,9 @@ public class ProfessionalPlantKillerQuest extends Quest {
     }
 
     @Override
-    public String getQuestVariable() { return targetPlant.name(); }
+    public String getQuestVariable() {
+        return targetPlant.name();
+    }
 
     @Override
     public void setQuestVariable(String v) {

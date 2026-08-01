@@ -13,7 +13,15 @@ public class ZombieKilledEvent extends Event {
         this.timeSinceFirstWave = timeSinceFirstWave;
     }
 
-    public String getPlantName() { return plantName; }
-    public ChapterType getChapter() { return chapter; }
-    public double getTimeSinceFirstWave() { return timeSinceFirstWave; }
+    public String getPlantName() {
+        return plantName;
+    }
+
+    public ChapterType getChapter() {
+        return chapter;
+    }
+
+    public double getTimeSinceFirstWave() {
+        return timeSinceFirstWave;
+    }
 }

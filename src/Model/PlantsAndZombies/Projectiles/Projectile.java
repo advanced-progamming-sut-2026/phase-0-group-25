@@ -9,12 +9,12 @@ import src.Model.PlantsAndZombies.Zombie;
 import src.Model.Tile;
 
 public class Projectile {
+    private static int X_RIGHT_LIMIT = 1820;
     protected boolean isActive;
     protected boolean icy;
     protected boolean firing;
     protected boolean poisonous;
     protected BattlePlant plant;
-
     private double velocityX;
     private double velocityY;
     private int damage;
@@ -24,9 +24,7 @@ public class Projectile {
     private int range;
     private int knockback;
     private boolean isHypnotizer;
-
     private GamePlay GAME = GamePlayMenu.getGamePlay();
-    private static int X_RIGHT_LIMIT = 1820;
 
     public Projectile() {
 

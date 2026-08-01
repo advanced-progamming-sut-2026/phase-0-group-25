@@ -11,10 +11,6 @@ public enum MiniGameType {
         this.displayName = displayName;
     }
 
-    public String getDisplayName() {
-        return displayName;
-    }
-
     public static MiniGameType fromDisplayName(String name) {
         for (MiniGameType type : values()) {
             if (type.displayName.equalsIgnoreCase(name)) {
@@ -22,5 +18,9 @@ public enum MiniGameType {
             }
         }
         return null;
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 }

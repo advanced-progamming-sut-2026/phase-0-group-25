@@ -43,12 +43,12 @@ public class Tile {
         isArable = arable;
     }
 
-    public void setHole(boolean hole) {
-        isHole = hole;
-    }
-
     public boolean isHole() {
         return isHole;
+    }
+
+    public void setHole(boolean hole) {
+        isHole = hole;
     }
 
     public void removePlant() {

@@ -16,11 +16,11 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class VaseBreaker extends GamePlay {
+    private final MiniGameType miniGameType = MiniGameType.VASEBREAKER;  // identify this game
     private boolean isSeted = false;
     private ArrayList<Jar> jars = new ArrayList<>();
     private ArrayList<DroppedSeedPacket> droppedSeedPackets = new ArrayList<>();
     private ArrayList<BattlePlant> inventory = new ArrayList<>();
-    private final MiniGameType miniGameType = MiniGameType.VASEBREAKER;  // identify this game
 
     public VaseBreaker(ChapterType chapterType, int level, int difficulty, User thisUser,
                        ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
@@ -207,7 +207,7 @@ public class VaseBreaker extends GamePlay {
 
             if (xOfz <= x) {
                 if (!thisMower.isUsed()) {
-                    System.out.println("The lawn mower in the row " + (int)(thisMower.getY()) + " is triggered and killed these zombies:");
+                    System.out.println("The lawn mower in the row " + (int) (thisMower.getY()) + " is triggered and killed these zombies:");
                     thisMower.killZombies(this);
                 } else {
                     System.out.println("The zombie ate your brain; LOSER!!!");

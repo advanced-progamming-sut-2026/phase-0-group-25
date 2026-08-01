@@ -1,7 +1,6 @@
 package src.Model.PlantsAndZombies;
 
 import src.Enums.ChapterType;
-import src.Enums.PlantType;
 import src.Menu.GamePlayMenu;
 import src.Model.GamePlayType.GamePlay;
 import src.Model.PlantsAndZombies.Abilities.*;

@@ -139,7 +139,7 @@ public class LoveYourPlants extends GamePlay {
 
             if (xOfz <= x) {
                 if (!thisMower.isUsed()) {
-                    System.out.println("The lawn mower in the row " + (int)(thisMower.getY()) + " is triggered and killed these zombies:");
+                    System.out.println("The lawn mower in the row " + (int) (thisMower.getY()) + " is triggered and killed these zombies:");
                     thisMower.killZombies(this);
                 } else {
                     System.out.println("The zombie ate your brain; LOSER!!!");

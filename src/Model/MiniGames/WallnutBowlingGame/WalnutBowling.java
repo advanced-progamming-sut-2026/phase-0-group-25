@@ -19,9 +19,9 @@ import java.util.Set;
 public class WalnutBowling extends GamePlay {
     static int spawnX = 1800;
     private final int RED_LINE_LIMIT_X = 3;
+    private final MiniGameType miniGameType = MiniGameType.WALNUT_BOWLING;
     private ArrayList<String> conveyorBelt = new ArrayList<>();
     private ArrayList<Walnut> activeWalnuts = new ArrayList<>();
-    private final MiniGameType miniGameType = MiniGameType.WALNUT_BOWLING;
 
     public WalnutBowling(ChapterType chapterType, int level, int difficulty, User thisUser,
                          ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
@@ -38,12 +38,10 @@ public class WalnutBowling extends GamePlay {
             if (chance < 70) {
                 conveyorBelt.add("BowlingWalnut");
                 System.out.println("A new BowlingWalnut arrived on the conveyor belt!");
-            }
-            else if (chance < 90) {
+            } else if (chance < 90) {
                 conveyorBelt.add("ExplodingWalnut");
                 System.out.println("A new ExplodingWalnut arrived on the conveyor belt!");
-            }
-            else {
+            } else {
                 conveyorBelt.add("BigWalnut");
                 System.out.println("A new BigWalnut arrived on the conveyor belt!");
             }
@@ -157,7 +155,7 @@ public class WalnutBowling extends GamePlay {
 
             if (xOfz <= x) {
                 if (!thisMower.isUsed()) {
-                    System.out.println("The lawn mower in the row " + (int)(thisMower.getY()) + " is triggered and killed these zombies:");
+                    System.out.println("The lawn mower in the row " + (int) (thisMower.getY()) + " is triggered and killed these zombies:");
                     thisMower.killZombies(this);
                 } else {
                     System.out.println("The zombie ate your brain; LOSER!!!");

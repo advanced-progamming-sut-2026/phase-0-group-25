@@ -12,10 +12,6 @@ public enum SortColumn {
         this.commandName = commandName;
     }
 
-    public String getCommandName() {
-        return commandName;
-    }
-
     public static SortColumn fromCommandName(String name) {
         for (SortColumn col : values()) {
             if (col.commandName.equalsIgnoreCase(name)) {
@@ -23,5 +19,9 @@ public enum SortColumn {
             }
         }
         return null;
+    }
+
+    public String getCommandName() {
+        return commandName;
     }
 }

@@ -1,7 +1,6 @@
 package src.View.ConcreteViews;
 
 import src.Enums.QuestPage;
-import src.Enums.QuestPriority;
 import src.Model.Quests.Quest;
 import src.View.ViewInterfaces.TravelLogMenuView;
 
@@ -11,10 +10,9 @@ import java.util.List;
 public class TravelLogMenuTerminalView extends AbstractTerminalView implements TravelLogMenuView {
 
 
-
     @Override
     public void showQuests(List<Quest> activeQuests, List<Quest> completedQuests, QuestPage page) {
-        
+
         activeQuests.sort(Comparator.comparing(Quest::getPriority, Comparator.reverseOrder()));
         completedQuests.sort(Comparator.comparing(Quest::getPriority, Comparator.reverseOrder()));
 

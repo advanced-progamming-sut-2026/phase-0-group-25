@@ -26,12 +26,16 @@ public class PlantStats {
         return name;
     }
 
-    public void setLevel(int level) {
-        this.level = level;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getLevel() {
         return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     public double getActionInterval() {
@@ -40,6 +44,10 @@ public class PlantStats {
 
     public int getCost() {
         return cost;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
     }
 
     public int getBaseHP() {
@@ -62,16 +70,8 @@ public class PlantStats {
         return abilities;
     }
 
-    public void setCost(int cost) {
-        this.cost = cost;
-    }
-
     public void upgradePlant() {
 
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public double getRechargeTime() {

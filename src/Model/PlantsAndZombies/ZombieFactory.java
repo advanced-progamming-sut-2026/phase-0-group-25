@@ -7,7 +7,7 @@ public class ZombieFactory {
         return new Zombie(zombieStats, zombieName, position);
     }
 
-    public static Zombie createZombie(String zombieName){
+    public static Zombie createZombie(String zombieName) {
         ZombieStats zombieStats = GameDataLoader.getStatsForZombie(zombieName);
 
         return new Zombie(zombieStats, zombieName);

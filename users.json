@@ -97,7 +97,7 @@
         "growthHours" : 8.0,
         "plantedAt" : "2026-08-01T16:58:56.6021673",
         "ready" : false,
-        "remainingHours" : 0.7077777777777774,
+        "remainingHours" : 0.1263888888888891,
         "type" : "SUNFLOWER"
       }, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ] ],
       "questProgress" : {
@@ -239,25 +239,25 @@
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:56:43.302026",
         "ready" : true,
-        "remainingHours" : -53.329166666666666,
+        "remainingHours" : -53.910555555555554,
         "type" : "MARIGOLD"
       }, {
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:37:21.8724837",
         "ready" : true,
-        "remainingHours" : -53.651666666666664,
+        "remainingHours" : -54.23305555555555,
         "type" : "MARIGOLD"
       }, {
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:37:31.2370238",
         "ready" : true,
-        "remainingHours" : -53.649166666666666,
+        "remainingHours" : -54.230555555555554,
         "type" : "MARIGOLD"
       }, {
         "growthHours" : 2.0,
         "plantedAt" : "2026-07-30T16:37:36.9804977",
         "ready" : true,
-        "remainingHours" : -53.6475,
+        "remainingHours" : -54.22888888888889,
         "type" : "MARIGOLD"
       }, null ], [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ] ],
       "questProgress" : {
@@ -295,9 +295,9 @@
         "ANCIENT_EGYPT" : 1
       },
       "unlockedPlantsAndTheirLevels" : {
+        "SUNFLOWER" : 1,
         "PEASHOOTER" : 1,
-        "SUN_SHROOM" : 1,
-        "SUNFLOWER" : 1
+        "SUN_SHROOM" : 1
       },
       "unlockedPots" : [ [ true, true, true, true, true ], [ true, true, true, true, true ], [ false, false, false, false, false ], [ false, false, false, false, false ] ],
       "unlockedZombies" : [ "DEFAULT", "CONE_HEAD", "BUCKET_HEAD", "BRICK_HEAD", "KNIGHT", "GARGANTUAR", "IMP", "RA", "EXPLORER", "TOMB_RAISER", "ALL_STAR", "ARCADE", "UMBRELLA", "TURQUOISE", "PROSPECTOR", "PIANO", "NEWSPAPER" ]
@@ -340,6 +340,54 @@
       }, {
         "message" : "zombie DEFAULT unlocked!",
         "read" : false
+      }, {
+        "message" : "zombie CONE_HEAD unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie BUCKET_HEAD unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie BRICK_HEAD unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie KNIGHT unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie GARGANTUAR unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie IMP unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie FISHERMAN unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie OCTOPUS unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie SNORKEL unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie ALL_STAR unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie ARCADE unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie UMBRELLA unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie TURQUOISE unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie PROSPECTOR unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie PIANO unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie NEWSPAPER unlocked!",
+        "read" : false
       } ]
     },
     "nickName" : "amir",
@@ -361,8 +409,8 @@
       "lastDailyReset" : "2026-08-02",
       "miniGameLevels" : {
         "VASEBREAKER" : 1,
-        "I_ZOMBIE" : 1,
-        "WALNUT_BOWLING" : 1
+        "WALNUT_BOWLING" : 1,
+        "I_ZOMBIE" : 1
       },
       "miniGamesCompleted" : 0,
       "nonDailyQuestsCompleted" : 0,
@@ -374,7 +422,7 @@
         "thrifty_farmer" : 0,
         "speed_demon" : 0,
         "chapter_hunter" : 0,
-        "mower_time" : 0,
+        "mower_time" : 1,
         "defenseless_cross" : 0,
         "only_cactus" : 0,
         "daily_sun_collector" : 0,
@@ -396,9 +444,9 @@
       },
       "seedPackets" : { },
       "unlockedChaptersAndLevels" : {
-        "ANCIENT_EGYPT" : 1,
         "FROSTBITE_CAVES" : 1,
         "BIG_WAVE_BEACH" : 1,
+        "ANCIENT_EGYPT" : 1,
         "DARK_AGE" : 1
       },
       "unlockedPlantsAndTheirLevels" : {
@@ -406,7 +454,7 @@
         "PEASHOOTER" : 1
       },
       "unlockedPots" : [ [ true, true, true, true, true ], [ false, false, false, false, false ], [ false, false, false, false, false ], [ false, false, false, false, false ] ],
-      "unlockedZombies" : [ "DEFAULT" ]
+      "unlockedZombies" : [ "DEFAULT", "CONE_HEAD", "BUCKET_HEAD", "BRICK_HEAD", "KNIGHT", "GARGANTUAR", "IMP", "FISHERMAN", "OCTOPUS", "SNORKEL", "ALL_STAR", "ARCADE", "UMBRELLA", "TURQUOISE", "PROSPECTOR", "PIANO", "NEWSPAPER" ]
     }
   },
   "amir2" : {
@@ -463,8 +511,8 @@
         "ANCIENT_EGYPT" : 1
       },
       "unlockedPlantsAndTheirLevels" : {
-        "PEASHOOTER" : 1,
-        "SUNFLOWER" : 1
+        "SUNFLOWER" : 1,
+        "PEASHOOTER" : 1
       },
       "unlockedPots" : [ [ true, true, true, true, true ], [ false, false, false, false, false ], [ false, false, false, false, false ], [ false, false, false, false, false ] ],
       "unlockedZombies" : [ "DEFAULT" ]

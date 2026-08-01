@@ -1,11 +1,14 @@
 package src.Model.Quests;
 
-import src.Enums.*;
+import src.Enums.PlantType;
+import src.Enums.QuestCategory;
+import src.Enums.QuestPage;
 import src.Model.News.News;
 import src.Model.Quests.Events.Event;
 import src.Model.User.User;
 import src.Model.User.UserProgress;
 import src.Model.User.UsersManager;
+
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,7 +38,7 @@ public class QuestManager {
         UserProgress progress = currentUser.getUserProgress();
         Map<String, Integer> questProgress = progress.getQuestProgress();
 
-        
+
         Map<String, String> questVariables = progress.getQuestVariables();
         if (questVariables == null) questVariables = new HashMap<>();
 
@@ -52,7 +55,7 @@ public class QuestManager {
         }
 
         for (Quest q : allQuests) {
-            
+
             if (performedDailyReset && q.isDailyReset()) {
                 q.setDateAssigned(today);
                 continue;
@@ -71,14 +74,14 @@ public class QuestManager {
                 q.setClaimed(true);
             }
 
-            
+
             if (q.isDailyReset() && q.getDateAssigned() != null && !q.getDateAssigned().equals(today)) {
                 q.reset();
                 q.setDateAssigned(today);
             }
         }
 
-        
+
         if (performedDailyReset) {
             saveProgress();
         }
@@ -87,14 +90,14 @@ public class QuestManager {
     public void saveProgress() {
         if (currentUser == null) return;
         Map<String, Integer> questProgress = new HashMap<>();
-        Map<String, String> questVariables = new HashMap<>(); 
+        Map<String, String> questVariables = new HashMap<>();
         List<String> completedIds = new ArrayList<>();
         List<String> claimedIds = new ArrayList<>();
 
         for (Quest q : allQuests) {
             questProgress.put(q.getId(), q.getCurrentProgress());
             if (q.getQuestVariable() != null) {
-                questVariables.put(q.getId(), q.getQuestVariable()); 
+                questVariables.put(q.getId(), q.getQuestVariable());
             }
             if (q.isCompleted()) completedIds.add(q.getId());
             if (q.isClaimed()) claimedIds.add(q.getId());
@@ -102,7 +105,7 @@ public class QuestManager {
 
         UsersManager um = UsersManager.getInstance();
         um.setQuestProgressForCurrentUser(questProgress);
-        um.setQuestVariablesForCurrentUser(questVariables); 
+        um.setQuestVariablesForCurrentUser(questVariables);
         um.setCompletedQuestIdsForCurrentUser(completedIds);
         um.setClaimedQuestIdsForCurrentUser(claimedIds);
     }
@@ -203,9 +206,9 @@ public class QuestManager {
                 if (q.isClaimed()) return "Reward already claimed.";
 
                 q.setClaimed(true);
-                applyReward(q.getReward()); 
+                applyReward(q.getReward());
 
-                
+
                 if (!q.isDailyReset()) {
                     q.randomizeVariable();
                     q.reset();
@@ -228,7 +231,7 @@ public class QuestManager {
     }
 
     public List<Quest> getCompletedQuests() {
-        List<Quest> completedQuests =  allQuests.stream()
+        List<Quest> completedQuests = allQuests.stream()
                 .filter(q -> q.isCompleted() && !q.isClaimed())
                 .sorted(Comparator.comparing(Quest::getPriority))
                 .collect(Collectors.toList());

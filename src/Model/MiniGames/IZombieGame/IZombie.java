@@ -14,11 +14,11 @@ import java.util.*;
 
 public class IZombie extends GamePlay {
     private final int RED_LINE_X = 5;
+    private final MiniGameType miniGameType = MiniGameType.I_ZOMBIE;
     private boolean isSeted = false;
     private ArrayList<SunZombie> sunZombies;
     private boolean[] brainsEaten;
     private Map<String, Integer> availableZombies;
-    private final MiniGameType miniGameType = MiniGameType.I_ZOMBIE;
 
     public IZombie(ChapterType chapterType, int level, int difficulty, User thisUser,
                    ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
@@ -59,7 +59,7 @@ public class IZombie extends GamePlay {
 
                 this.gamePlants.add(plant);
                 Tile tile = getTileByPosition(x, y);
-                 tile.addPlant(plant);
+                tile.addPlant(plant);
             }
         }
         System.out.println("Random plants were planted.");
@@ -205,6 +205,7 @@ public class IZombie extends GamePlay {
             Pause();
         }
     }
+
     @Override
     public void onWin() {
         UsersManager.getInstance().handleMiniGameWin(miniGameType, this.level);

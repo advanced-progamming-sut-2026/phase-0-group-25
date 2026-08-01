@@ -3,7 +3,6 @@ package src.Model.MiniGames.IZombieGame;
 import src.Model.PlantsAndZombies.GameDataLoader;
 import src.Model.PlantsAndZombies.Position;
 import src.Model.PlantsAndZombies.Zombie;
-import src.Model.PlantsAndZombies.Armors.ArmorConfig;
 
 public class SunZombie extends Zombie {
     private int ticksSinceLastSun = 0;

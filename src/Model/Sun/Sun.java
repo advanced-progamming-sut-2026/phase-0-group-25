@@ -40,12 +40,12 @@ public class Sun {
         this.timeToReach = timeToReach;
     }
 
-    public void setCollected(boolean isCollected) {
-        this.isCollected = isCollected;
-    }
-
     public boolean isCollected() {
         return isCollected;
+    }
+
+    public void setCollected(boolean isCollected) {
+        this.isCollected = isCollected;
     }
 
     public boolean isFromSky() {

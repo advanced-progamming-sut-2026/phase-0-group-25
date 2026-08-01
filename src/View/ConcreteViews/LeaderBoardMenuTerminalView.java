@@ -2,13 +2,11 @@ package src.View.ConcreteViews;
 
 import src.Enums.ChapterType;
 import src.Enums.SortColumn;
-import src.Model.ChaptersAndLevels.Chapter;
 import src.Model.User.User;
 import src.Model.User.UserProgress;
 import src.View.ViewInterfaces.LeaderBoardMenuView;
 
 import java.util.List;
-import java.util.Map;
 
 public class LeaderBoardMenuTerminalView extends AbstractTerminalView implements LeaderBoardMenuView {
 
@@ -46,11 +44,11 @@ public class LeaderBoardMenuTerminalView extends AbstractTerminalView implements
         UserProgress progress = user.getUserProgress();
         int maxChapterNumber = 0;
         String result = "None";
-        for (ChapterType chapterType:progress.getUnlockedChaptersAndLevels().keySet()){
+        for (ChapterType chapterType : progress.getUnlockedChaptersAndLevels().keySet()) {
             int lastUnlockedLevel = progress.getUnlockedChaptersAndLevels().get(chapterType);
-            if(lastUnlockedLevel > 1)
-                if(chapterType.getChapterNumber() > maxChapterNumber)
-                    result = "chapter " + chapterType.getName() + " level " + (lastUnlockedLevel-1);
+            if (lastUnlockedLevel > 1)
+                if (chapterType.getChapterNumber() > maxChapterNumber)
+                    result = "chapter " + chapterType.getName() + " level " + (lastUnlockedLevel - 1);
         }
         return result;
     }

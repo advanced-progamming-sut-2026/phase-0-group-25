@@ -20,7 +20,7 @@ public class Mower {
         for (Zombie z : thisGame.getGameZombies()) {
             if (z.getPosition().getY() == thisGame.getRealY(y)) {
                 System.out.println(z.getName());
-                countKilledZonbies ++;
+                countKilledZonbies++;
                 z.setAlive(false);
             }
         }

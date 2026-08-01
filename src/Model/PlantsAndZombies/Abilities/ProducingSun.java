@@ -88,8 +88,16 @@ public class ProducingSun implements Ability {
         return isCollected;
     }
 
+    public void setCollected(boolean collected) {
+        isCollected = collected;
+    }
+
     public boolean isProduced() {
         return isProduced;
+    }
+
+    public void setProduced(boolean produced) {
+        isProduced = produced;
     }
 
     public boolean isReadyToCollect() {
@@ -98,13 +106,5 @@ public class ProducingSun implements Ability {
 
     public Sun getSun() {
         return this.sun;
-    }
-
-    public void setCollected(boolean collected) {
-        isCollected = collected;
-    }
-
-    public void setProduced(boolean produced) {
-        isProduced = produced;
     }
 }

@@ -1,8 +1,13 @@
 package src.Model.Quests.QuestSubclasses;
 
-import src.Enums.*;
-import src.Model.Quests.Events.*;
-import src.Model.Quests.*;
+import src.Enums.QuestCategory;
+import src.Enums.QuestPage;
+import src.Enums.QuestPriority;
+import src.Enums.RewardType;
+import src.Model.Quests.Events.Event;
+import src.Model.Quests.Events.ZombieKilledEvent;
+import src.Model.Quests.Quest;
+import src.Model.Quests.Reward;
 
 public class OnlyCactusQuest extends Quest {
     private final int required = 10;
@@ -15,7 +20,9 @@ public class OnlyCactusQuest extends Quest {
     }
 
     @Override
-    public int getRequiredCount() { return required; }
+    public int getRequiredCount() {
+        return required;
+    }
 
     @Override
     public void check(Event event) {

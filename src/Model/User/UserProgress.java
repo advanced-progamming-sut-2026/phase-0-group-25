@@ -310,7 +310,7 @@ public class UserProgress {
         for (Integer level : unlockedChaptersAndLevels.values()) {
             total += level;
         }
-        return total-1;
+        return total - 1;
     }
 
     public int getGemsCount() {

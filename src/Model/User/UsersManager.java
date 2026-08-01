@@ -12,14 +12,8 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class UsersManager {
-    private static UsersManager instance;
     private static final String FILE_PATH = "users.json";
     private static final String STATE_FILE = "loginstate.json";
-    private final ObjectMapper mapper = new ObjectMapper();
-    private HashMap<String, User> userCache = new HashMap<>();
-    private User loggedInUser = null;
-
-    
     private static final Pattern USERNAME_CHAR_REGEX = Pattern.compile("^[a-zA-Z0-9_]+$");
     private static final Pattern PASSWORD_COMPLEXITY_REGEX = Pattern.compile(
             "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+={}\\[\\]|\\\\:;\"',<>?])\\S{8,}$"
@@ -30,6 +24,11 @@ public class UsersManager {
     private static final Pattern EMAIL_DOMAIN_REGEX = Pattern.compile(
             "^[a-zA-Z0-9](?:[a-zA-Z0-9.-]*[a-zA-Z0-9])?\\.[a-zA-Z0-9]{2,}$"
     );
+    private static UsersManager instance;
+    private final ObjectMapper mapper = new ObjectMapper();
+    private final UserProgressManager progressManager = UserProgressManager.getInstance();
+    private HashMap<String, User> userCache = new HashMap<>();
+    private User loggedInUser = null;
 
     private UsersManager() {
         loadUsers();
@@ -40,11 +39,9 @@ public class UsersManager {
         return instance;
     }
 
-
     public void setQuestVariablesForCurrentUser(Map<String, String> variables) {
         progressManager.setQuestVariablesForCurrentUser(variables);
     }
-
 
     private void loadUsers() {
         File file = new File(FILE_PATH);
@@ -53,7 +50,8 @@ public class UsersManager {
             return;
         }
         try {
-            userCache = mapper.readValue(file, new TypeReference<HashMap<String, User>>() {});
+            userCache = mapper.readValue(file, new TypeReference<HashMap<String, User>>() {
+            });
         } catch (Exception e) {
             throw new RuntimeException("Failed to read users.json", e);
         }
@@ -67,7 +65,6 @@ public class UsersManager {
         }
     }
 
-    
     void updateUser() {
         if (loggedInUser != null) {
             userCache.put(loggedInUser.getUserName(), loggedInUser);
@@ -75,7 +72,6 @@ public class UsersManager {
         }
     }
 
-    
     public void addUser(User user) {
         userCache.put(user.getUserName(), user);
         writeUsers();
@@ -128,11 +124,9 @@ public class UsersManager {
         return progressManager.getMiniGameLevel(type);
     }
 
-    
     public void handleMiniGameWin(MiniGameType type, int levelCompleted) {
         progressManager.handleMiniGameWin(type, levelCompleted);
     }
-
 
     public void logoutCurrentUser() {
         this.loggedInUser = null;
@@ -140,7 +134,6 @@ public class UsersManager {
         if (file.exists()) file.delete();
     }
 
-    
     public String validateAndChangeNickname(String newNickname) {
         if (loggedInUser == null) return "No logged in user.";
         if (loggedInUser.getNickName().equals(newNickname))
@@ -203,7 +196,7 @@ public class UsersManager {
         userCache.put(newUsername, loggedInUser);
         writeUsers();
 
-        
+
         File stateFile = new File(STATE_FILE);
         if (stateFile.exists()) {
             try {
@@ -215,7 +208,6 @@ public class UsersManager {
         return null;
     }
 
-    
     public String validateRegistration(String username, String password, String passwordConfirm,
                                        String nickname, String email, String gender) {
         if (userCache.containsKey(username))
@@ -252,7 +244,6 @@ public class UsersManager {
         return null;
     }
 
-    
     public String validateForgetPasswordRequest(String username, String email, String answer) {
         if (!userCache.containsKey(username))
             return "Error: Entered username does not exist in the system.";
@@ -278,54 +269,132 @@ public class UsersManager {
         return null;
     }
 
-    
-    private final UserProgressManager progressManager = UserProgressManager.getInstance();
+    public void addCoins(int amount) {
+        progressManager.addCoins(amount);
+    }
 
-    public void addCoins(int amount) { progressManager.addCoins(amount); }
-    public void addGems(int amount) { progressManager.addGems(amount); }
-    public String subtractCoins(int amount) { return progressManager.subtractCoins(amount); }
-    public String subtractGems(int amount) { return progressManager.subtractGems(amount); }
+    public void addGems(int amount) {
+        progressManager.addGems(amount);
+    }
 
-    public void addSeedPackets(PlantType plant, int amount) { progressManager.addSeedPackets(plant, amount); }
-    public void addPlantFood(int amount) { progressManager.addPlantFood(amount); }
+    public String subtractCoins(int amount) {
+        return progressManager.subtractCoins(amount);
+    }
 
-    public void unlockPlant(PlantType plantType) { progressManager.unlockPlant(plantType); }
-    public void unlockZombie(ZombieType zombieType) { progressManager.unlockZombie(zombieType); }
-    public void unlockChapter(ChapterType chapterType) { progressManager.unlockChapter(chapterType); }
-    public void unlockLevel(ChapterType chapterType, int level) { progressManager.unlockLevel(chapterType, level); }
+    public String subtractGems(int amount) {
+        return progressManager.subtractGems(amount);
+    }
 
-    public String purchasePlant(String plantName) { return progressManager.purchasePlant(plantName); }
-    public String upgradePlant(String plantName) { return progressManager.upgradePlant(plantName); }
+    public void addSeedPackets(PlantType plant, int amount) {
+        progressManager.addSeedPackets(plant, amount);
+    }
 
-    public void unlockPot(int x, int y) { progressManager.unlockPot(x, y); }
-    public void addPots(int amount) { progressManager.addPots(amount); }
-    public void plantInPot(int x, int y, GreenhousePlant plant) { progressManager.plantInPot(x, y, plant); }
-    public void removePlantFromPot(int x, int y) { progressManager.removePlantFromPot(x, y); }
-    public void addGreenhouseBoost(PlantType plant) { progressManager.addGreenhouseBoost(plant); }
-    public boolean hasGreenhouseBoost(PlantType plant) { return progressManager.hasGreenhouseBoost(plant); }
-    public void consumeGreenhouseBoost(PlantType plant) { progressManager.consumeGreenhouseBoost(plant); }
-    public void acceleratePlant(int x, int y) { progressManager.acceleratePlant(x, y); }
+    public void addPlantFood(int amount) {
+        progressManager.addPlantFood(amount);
+    }
 
-    public void markDailyOfferPurchased() { progressManager.markDailyOfferPurchased(); }
-    public boolean isDailyOfferBoughtToday() { return progressManager.isDailyOfferBoughtToday(); }
+    public void unlockPlant(PlantType plantType) {
+        progressManager.unlockPlant(plantType);
+    }
 
-    public void setQuestProgressForCurrentUser(Map<String, Integer> progress) { progressManager.setQuestProgressForCurrentUser(progress); }
-    public void setCompletedQuestIdsForCurrentUser(List<String> completed) { progressManager.setCompletedQuestIdsForCurrentUser(completed); }
-    public void setClaimedQuestIdsForCurrentUser(List<String> claimed) { progressManager.setClaimedQuestIdsForCurrentUser(claimed); }
-    public void setLastDailyResetForCurrentUser(LocalDate date) { progressManager.setLastDailyResetForCurrentUser(date); }
+    public void unlockZombie(ZombieType zombieType) {
+        progressManager.unlockZombie(zombieType);
+    }
 
-    public void incrementMiniGamesCompleted() { progressManager.incrementMiniGamesCompleted(); }
-    public void incrementDailyQuestsCompleted() { progressManager.incrementDailyQuestsCompleted(); }
-    public void incrementNonDailyQuestsCompleted() { progressManager.incrementNonDailyQuestsCompleted(); }
+    public void unlockChapter(ChapterType chapterType) {
+        progressManager.unlockChapter(chapterType);
+    }
 
-    public String cheat(int amount, WalletType walletType) { return progressManager.cheat(amount, walletType); }
+    public void unlockLevel(ChapterType chapterType, int level) {
+        progressManager.unlockLevel(chapterType, level);
+    }
+
+    public String purchasePlant(String plantName) {
+        return progressManager.purchasePlant(plantName);
+    }
+
+    public String upgradePlant(String plantName) {
+        return progressManager.upgradePlant(plantName);
+    }
+
+    public void unlockPot(int x, int y) {
+        progressManager.unlockPot(x, y);
+    }
+
+    public void addPots(int amount) {
+        progressManager.addPots(amount);
+    }
+
+    public void plantInPot(int x, int y, GreenhousePlant plant) {
+        progressManager.plantInPot(x, y, plant);
+    }
+
+    public void removePlantFromPot(int x, int y) {
+        progressManager.removePlantFromPot(x, y);
+    }
+
+    public void addGreenhouseBoost(PlantType plant) {
+        progressManager.addGreenhouseBoost(plant);
+    }
+
+    public boolean hasGreenhouseBoost(PlantType plant) {
+        return progressManager.hasGreenhouseBoost(plant);
+    }
+
+    public void consumeGreenhouseBoost(PlantType plant) {
+        progressManager.consumeGreenhouseBoost(plant);
+    }
+
+    public void acceleratePlant(int x, int y) {
+        progressManager.acceleratePlant(x, y);
+    }
+
+    public void markDailyOfferPurchased() {
+        progressManager.markDailyOfferPurchased();
+    }
+
+    public boolean isDailyOfferBoughtToday() {
+        return progressManager.isDailyOfferBoughtToday();
+    }
+
+    public void setQuestProgressForCurrentUser(Map<String, Integer> progress) {
+        progressManager.setQuestProgressForCurrentUser(progress);
+    }
+
+    public void setCompletedQuestIdsForCurrentUser(List<String> completed) {
+        progressManager.setCompletedQuestIdsForCurrentUser(completed);
+    }
+
+    public void setClaimedQuestIdsForCurrentUser(List<String> claimed) {
+        progressManager.setClaimedQuestIdsForCurrentUser(claimed);
+    }
+
+    public void setLastDailyResetForCurrentUser(LocalDate date) {
+        progressManager.setLastDailyResetForCurrentUser(date);
+    }
+
+    public void incrementMiniGamesCompleted() {
+        progressManager.incrementMiniGamesCompleted();
+    }
+
+    public void incrementDailyQuestsCompleted() {
+        progressManager.incrementDailyQuestsCompleted();
+    }
+
+    public void incrementNonDailyQuestsCompleted() {
+        progressManager.incrementNonDailyQuestsCompleted();
+    }
+
+    public String cheat(int amount, WalletType walletType) {
+        return progressManager.cheat(amount, walletType);
+    }
 
     public void handleLevelWin(ChapterType chapterType, int currentLevel,
                                ArrayList<PlantType> plantRewards) {
         progressManager.handleLevelWin(chapterType, currentLevel, plantRewards);
     }
 
-    
+
     public ArrayList<String> getUnreadNews() {
         if (loggedInUser == null) return new ArrayList<>();
         ArrayList<String> news = loggedInUser.getNewsManager().extractUnreadNews();
@@ -340,7 +409,7 @@ public class UsersManager {
         return news;
     }
 
-    
+
     public String changeDifficulty(String difficultyLevel) {
         if (loggedInUser == null) return "No logged in user.";
         int difficulty;

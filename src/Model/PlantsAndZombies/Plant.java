@@ -1,7 +1,6 @@
 package src.Model.PlantsAndZombies;
 
 import src.Enums.PlantCategory;
-import src.Model.Tile;
 
 public abstract class Plant extends Entity {
     protected PlantCategory category;
