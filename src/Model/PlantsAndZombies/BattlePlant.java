@@ -99,7 +99,8 @@ public class BattlePlant extends Plant {
         if (!thisTile.getPlants().isEmpty()) {
             upperPlant = thisTile.getPlants().get(thisTile.getPlants().size() - 1);
         }
-        boolean isStack = (upperPlant != null && upperPlant.getPlantStats().getTags().contains("Stack")) || thisTile.getPlants().isEmpty();
+        boolean isStack = (upperPlant != null && upperPlant.getPlantStats().getTags().contains("bottomStack")) ||
+                thisTile.getPlants().isEmpty() || this.getPlantStats().getTags().contains("upperStack");
         return (sun >= this.plantStats.getCost()) && (this.currentCoolDown <= 0 || !this.activeCooldown) && isStack;
     }
 
