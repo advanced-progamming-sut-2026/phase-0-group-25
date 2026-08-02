@@ -96,6 +96,8 @@ public class Zombie extends Entity {
 
     public void update() {
         checkFreeze();
+
+        checkLife();
         if ((this.zombieStats.getName().equals("PROSPECTOR")) &&
                 (this.zombieStats.getAttributes().get("dynamite").equals("on"))) {
             if ((GAME.getTotalTimePassed() - this.spawnTime) >= 10) {
