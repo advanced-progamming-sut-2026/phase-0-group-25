@@ -187,12 +187,12 @@ public class BattlePlant extends Plant {
                 abilities.add(new Homing());
             } else if (ability.equals("explosion")) {
                 abilities.add(new Explosion());
-            } else if (ability.equals("melee")) {
+            } else if (ability.equals("meleeAttacking")) {
                 abilities.add(new MeleeAttacking());
             } else if (ability.equals("explosionWithLifeSpan")) {
                 abilities.add(new ExplosionWithLifespan());
             } else if (ability.equals("wall-nut")) {
-                abilities.add(new MeleeAttacking());
+                abilities.add(new WallNutAbility());
             } else if (ability.equals("modifier")) {
                 abilities.add(new Modifier());
             } else if (ability.equals("mint")) {
