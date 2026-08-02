@@ -605,7 +605,7 @@ public abstract class GamePlay {
 
             if (!currentTile.isArable() && chapterType == ChapterType.FROSTBITE_CAVES) {
                 zombie.changeRow();
-
+                System.out.println("Changing the row...!!!");
                 zombiePosition = Position.getRowAndColumn(zombie.getPosition());
                 currentX = (int) zombiePosition.getX();
                 currentY = (int) zombiePosition.getY();
