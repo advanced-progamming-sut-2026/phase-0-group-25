@@ -154,10 +154,10 @@
   ],
 
   "FUME_SHROOM": [
-    { "category": "Strike-through", "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["shroom","ranged"], "attributes": {"damage": [30], "direction": [[0, 1, 0]], "range": 4, "pierce":  -1}, "plantFoodEffect": {"damage": [50], "direction": [[0, 1, 0]], "range": 4, "pierce":  -1,"knockback": 100} },
-    { "category": "Strike-through", "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["shroom","ranged"], "attributes": {"damage": [30], "direction": [[0, 1, 0]], "range": 5, "pierce":  -1}, "plantFoodEffect": {"damage": [30], "direction": [[0, 1, 0]], "range": 4, "pierce":  -1,"knockback": 100} },
-    { "category": "Strike-through", "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["shroom","ranged"], "attributes": {"damage": [40], "direction": [[0, 1, 0]], "range": 5, "pierce":  -1}, "plantFoodEffect": {"damage": [30], "direction": [[0, 1, 0]], "range": 4, "pierce":  -1,"knockback": 100} },
-    { "category": "Strike-through", "baseHP": 300, "cost": 100, "actionInterval": 1.5, "rechargeTime": 5, "abilities": [], "tags": ["shroom","ranged"], "attributes": {"damage": [40], "direction": [[0, 1, 0]], "range": 5, "pierce":  -1}, "plantFoodEffect": {"damage": [30], "direction": [[0, 1, 0]], "range": 4, "pierce":  -1,"knockback": 100} }
+    { "category": "Strike-through", "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["shroom","ranged"], "attributes": {"damage": [30], "direction": [[0, 1, 0]], "range": 4, "pierce":  -1}, "plantFoodEffect": {"damage": [50], "direction": [[0, 1, 0]], "range": 4, "pierce":  -1,"knockback": 100} },
+    { "category": "Strike-through", "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["shroom","ranged"], "attributes": {"damage": [30], "direction": [[0, 1, 0]], "range": 5, "pierce":  -1}, "plantFoodEffect": {"damage": [30], "direction": [[0, 1, 0]], "range": 4, "pierce":  -1,"knockback": 100} },
+    { "category": "Strike-through", "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["shroom","ranged"], "attributes": {"damage": [40], "direction": [[0, 1, 0]], "range": 5, "pierce":  -1}, "plantFoodEffect": {"damage": [30], "direction": [[0, 1, 0]], "range": 4, "pierce":  -1,"knockback": 100} },
+    { "category": "Strike-through", "baseHP": 300, "cost": 100, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["shroom","ranged"], "attributes": {"damage": [40], "direction": [[0, 1, 0]], "range": 5, "pierce":  -1}, "plantFoodEffect": {"damage": [30], "direction": [[0, 1, 0]], "range": 4, "pierce":  -1,"knockback": 100} }
   ],
 
   "CABBAGE_PULT": [
@@ -252,38 +252,38 @@
   ],
 
   "BONK_CHOY": [
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 0.25, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {"damage":  15, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 25} },
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 0.25, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {"damage":  20, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 30} },
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 0.23, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {"damage":  20, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 30} },
-    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 0.23, "rechargeTime": 5, "abilities": [], "tags": [], "attributes": {"damage":  20, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 30} }
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 0.25, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": [], "attributes": {"damage":  15, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 25} },
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 0.25, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": [], "attributes": {"damage":  20, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 30} },
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 0.23, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": [], "attributes": {"damage":  20, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 30} },
+    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 0.23, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": [], "attributes": {"damage":  20, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 30} }
   ],
 
   "PHAT_BEET": [
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": [], "tags": ["AoE"], "attributes": {"damage":  15, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 40} },
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": [], "tags": ["AoE"], "attributes": {"damage":  25, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 50} },
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 1.8, "rechargeTime": 5, "abilities": [], "tags": ["AoE"], "attributes": {"damage":  25, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 50} },
-    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 1.8, "rechargeTime": 5, "abilities": [], "tags": ["AoE"], "attributes": {"damage":  25, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 50} }
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE"], "attributes": {"damage":  15, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 40} },
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE"], "attributes": {"damage":  25, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 50} },
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 1.8, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE"], "attributes": {"damage":  25, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 50} },
+    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 1.8, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE"], "attributes": {"damage":  25, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 50} }
   ],
 
   "CHOMPER": [
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 40, "rechargeTime": 5, "abilities": [], "tags": ["insta-kill"], "attributes": {"digest_time": 40}, "plantFoodEffect": {"number": 3} },
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 38, "rechargeTime": 5, "abilities": [], "tags": ["insta-kill"], "attributes": {"digest_time": 38}, "plantFoodEffect": {"number": 3} },
-    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 38, "rechargeTime": 5, "abilities": [], "tags": ["insta-kill"], "attributes": {"digest_time": 38}, "plantFoodEffect": {"number": 3} },
-    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 35, "rechargeTime": 5, "abilities": [], "tags": ["insta-kill"], "attributes": {"digest_time": 35}, "plantFoodEffect": {"number": 3} }
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 40, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["insta-kill"], "attributes": {"digest_time": 40}, "plantFoodEffect": {"number": 3} },
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 38, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["insta-kill"], "attributes": {"digest_time": 38}, "plantFoodEffect": {"number": 3} },
+    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 38, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["insta-kill"], "attributes": {"digest_time": 38}, "plantFoodEffect": {"number": 3} },
+    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 35, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["insta-kill"], "attributes": {"digest_time": 35}, "plantFoodEffect": {"number": 3} }
   ],
 
   "WASABI_WHIP": [
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": [], "tags": ["fire"], "attributes": {"damage":  40, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 50} },
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": [], "tags": ["fire"], "attributes": {"damage":  50, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 60} },
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": [], "tags": ["fire"], "attributes": {"damage":  50, "front_range": 2, "back_range": 2}, "plantFoodEffect": {"range": 1,"damage": 60} },
-    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": [], "tags": ["fire"], "attributes": {"damage":  50, "front_range": 2, "back_range": 2}, "plantFoodEffect": {"range": 1,"damage": 60} }
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["fire"], "attributes": {"damage":  40, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 50} },
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["fire"], "attributes": {"damage":  50, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 60} },
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["fire"], "attributes": {"damage":  50, "front_range": 2, "back_range": 2}, "plantFoodEffect": {"range": 1,"damage": 60} },
+    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["fire"], "attributes": {"damage":  50, "front_range": 2, "back_range": 2}, "plantFoodEffect": {"range": 1,"damage": 60} }
   ],
 
   "KIWIBEAST": [
-    { "category": "Melee", "baseHP": 300, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": [], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [15, 30, 45], "range": 1}, "plantFoodEffect": {} },
-    { "category": "Melee", "baseHP": 500, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": [], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [15, 30, 45], "range": 1}, "plantFoodEffect": {} },
-    { "category": "Melee", "baseHP": 500, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": [], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [30, 45, 60], "range": 1}, "plantFoodEffect": {} },
-    { "category": "Melee", "baseHP": 500, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": [], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [30, 45, 60], "range": 1}, "plantFoodEffect": {} }
+    { "category": "Melee", "baseHP": 300, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [15, 30, 45], "range": 1}, "plantFoodEffect": {} },
+    { "category": "Melee", "baseHP": 500, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [15, 30, 45], "range": 1}, "plantFoodEffect": {} },
+    { "category": "Melee", "baseHP": 500, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [30, 45, 60], "range": 1}, "plantFoodEffect": {} },
+    { "category": "Melee", "baseHP": 500, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [30, 45, 60], "range": 1}, "plantFoodEffect": {} }
   ],
 
   "WALL_NUT": [
