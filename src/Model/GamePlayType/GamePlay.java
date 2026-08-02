@@ -600,7 +600,7 @@ public abstract class GamePlay {
             }
 
             if (currentTile == null) {
-                return;
+                continue;
             }
 
             if (!currentTile.isArable() && chapterType == ChapterType.FROSTBITE_CAVES) {
