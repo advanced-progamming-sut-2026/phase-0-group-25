@@ -70,10 +70,10 @@
   ],
 
   "PEA_POD": [
-    { "category": "Shooter", "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": [], "attributes": {"damage":  [20, 20, 20], "direction":  [[0, 1, 0], [0, -1, 0], [0, -1, 0]]}, "plantFoodEffect": {} },
-    { "category": "Shooter", "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": [], "attributes": {"damage":  [20, 20, 20], "direction":  [[0, 1, 0], [0, -1, 0], [0, -1, 0]]}, "plantFoodEffect": {} },
-    { "category": "Shooter", "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": [], "attributes": {"damage":  [20, 20, 20], "direction":  [[0, 1, 0], [0, -1, 0], [0, -1, 0]]}, "plantFoodEffect": {} },
-    { "category": "Shooter", "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": [], "attributes": {"damage":  [20, 20, 20], "direction":  [[0, 1, 0], [0, -1, 0], [0, -1, 0]]}, "plantFoodEffect": {} }
+    { "category": "Shooter", "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["pea", "Stack"], "attributes": {"damage":  [20, 20, 20], "direction":  [[0, 1, 0], [0, -1, 0], [0, -1, 0]]}, "plantFoodEffect": {} },
+    { "category": "Shooter", "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["pea", "Stack"], "attributes": {"damage":  [20, 20, 20], "direction":  [[0, 1, 0], [0, -1, 0], [0, -1, 0]]}, "plantFoodEffect": {} },
+    { "category": "Shooter", "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["pea", "Stack"], "attributes": {"damage":  [20, 20, 20], "direction":  [[0, 1, 0], [0, -1, 0], [0, -1, 0]]}, "plantFoodEffect": {} },
+    { "category": "Shooter", "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["pea", "Stack"], "attributes": {"damage":  [20, 20, 20], "direction":  [[0, 1, 0], [0, -1, 0], [0, -1, 0]]}, "plantFoodEffect": {} }
   ],
 
   "SPLIT_PEA": [
@@ -329,10 +329,10 @@
   ],
 
   "PUMPKIN": [
-    { "category": "Wall-nut", "baseHP": 4000, "cost": 150, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["stack"], "attributes": {}, "plantFoodEffect": {"armor": 4000} },
-    { "category": "Wall-nut", "baseHP": 5000, "cost": 150, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["stack"], "attributes": {}, "plantFoodEffect": {"armor": 4000} },
-    { "category": "Wall-nut", "baseHP": 5000, "cost": 150, "actionInterval": 0, "rechargeTime": 15, "abilities": ["wall-nut"], "tags": ["stack"], "attributes": {}, "plantFoodEffect": {"armor": 4000} },
-    { "category": "Wall-nut", "baseHP": 6500, "cost": 150, "actionInterval": 0, "rechargeTime": 15, "abilities": ["wall-nut"], "tags": ["stack"], "attributes": {}, "plantFoodEffect": {"armor": 4000} }
+    { "category": "Wall-nut", "baseHP": 4000, "cost": 150, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["Stack"], "attributes": {}, "plantFoodEffect": {"armor": 4000} },
+    { "category": "Wall-nut", "baseHP": 5000, "cost": 150, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["Stack"], "attributes": {}, "plantFoodEffect": {"armor": 4000} },
+    { "category": "Wall-nut", "baseHP": 5000, "cost": 150, "actionInterval": 0, "rechargeTime": 15, "abilities": ["wall-nut"], "tags": ["Stack"], "attributes": {}, "plantFoodEffect": {"armor": 4000} },
+    { "category": "Wall-nut", "baseHP": 6500, "cost": 150, "actionInterval": 0, "rechargeTime": 15, "abilities": ["wall-nut"], "tags": ["Stack"], "attributes": {}, "plantFoodEffect": {"armor": 4000} }
   ],
 
   "SUN_BEAN": [
@@ -385,10 +385,10 @@
   ],
 
   "LILY_PAD": [
-    { "category": "Modifier", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["Water", "stack"], "attributes": {}, "plantFoodEffect": {"number": 2} },
-    { "category": "Modifier", "baseHP": 300, "cost": 0, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["Water", "stack"], "attributes": {}, "plantFoodEffect": {"number": 2} },
-    { "category": "Modifier", "baseHP": 500, "cost": 0, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["Water", "stack"], "attributes": {}, "plantFoodEffect": {"number": 2} },
-    { "category": "Modifier", "baseHP": 500, "cost": 0, "actionInterval": 0, "rechargeTime": 3, "abilities": ["Modifier"], "tags": ["Water", "stack"], "attributes": {}, "plantFoodEffect": {"number": 2} }
+    { "category": "Modifier", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["Water", "Stack"], "attributes": {}, "plantFoodEffect": {"number": 2} },
+    { "category": "Modifier", "baseHP": 300, "cost": 0, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["Water", "Stack"], "attributes": {}, "plantFoodEffect": {"number": 2} },
+    { "category": "Modifier", "baseHP": 500, "cost": 0, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["Water", "Stack"], "attributes": {}, "plantFoodEffect": {"number": 2} },
+    { "category": "Modifier", "baseHP": 500, "cost": 0, "actionInterval": 0, "rechargeTime": 3, "abilities": ["Modifier"], "tags": ["Water", "Stack"], "attributes": {}, "plantFoodEffect": {"number": 2} }
   ],
 
   "HOT_POTATO": [
