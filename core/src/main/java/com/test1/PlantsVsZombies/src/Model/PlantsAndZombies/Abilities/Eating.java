@@ -78,4 +78,8 @@ public class Eating implements Ability {
     public void setActivated(boolean isActivated) {
         this.isActivated = isActivated;
     }
+
+    public boolean isActivated() {
+        return isActivated;
+    }
 }
