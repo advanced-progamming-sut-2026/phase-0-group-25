@@ -199,4 +199,8 @@ public class Throwing implements Ability {
         }
         return false;
     }
+
+    public boolean isActivated() {
+        return isActivated;
+    }
 }

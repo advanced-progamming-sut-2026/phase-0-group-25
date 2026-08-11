@@ -34,4 +34,8 @@ public class Flying implements Ability {
     public void setActivated(boolean isActivated) {
         this.isActivated = isActivated;
     }
+
+    public boolean isActivated() {
+        return isActivated;
+    }
 }

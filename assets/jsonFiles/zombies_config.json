@@ -1,55 +1,82 @@
 {
-  "DEFAULT": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 100, "armor": [], "abilities": ["moving", "eating"] },
+  "DEFAULT": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 100, "armor": [], "abilities": ["moving", "eating"],
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC_BRICK/ZOMBIE_DARK_BASIC_BRICK.PAM"},
 
-  "CONE_HEAD": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 200, "armor": ["Cone"], "abilities": ["moving", "eating"]},
+  "CONE_HEAD": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 200, "armor": ["Cone"], "abilities": ["moving", "eating"],
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC_BRICK/ZOMBIE_DARK_BASIC_BRICK.PAM"},
 
-  "BUCKET_HEAD": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 400, "armor": ["Bucket"], "abilities": ["moving", "eating"]},
+  "BUCKET_HEAD": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 400, "armor": ["Bucket"], "abilities": ["moving", "eating"],
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC_BRICK/ZOMBIE_DARK_BASIC_BRICK.PAM"},
 
-  "BRICK_HEAD": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185,  "waveCost": 700, "armor": ["Brick"], "abilities": ["moving", "eating"]},
+  "BRICK_HEAD": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185,  "waveCost": 700, "armor": ["Brick"], "abilities": ["moving", "eating"],
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC_BRICK/ZOMBIE_DARK_BASIC_BRICK.PAM"},
 
-  "KNIGHT": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 550, "armor": ["Crown", "Shoulder Armor"], "abilities": ["moving", "eating"]},
+  "KNIGHT": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 550, "armor": ["Crown", "Shoulder Armor"], "abilities": ["moving", "eating"],
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC_BRICK/ZOMBIE_DARK_BASIC_BRICK.PAM"},
 
-  "GARGANTUAR": {"category": "all", "eatdps": 1500, "baseHP":  3600, "velocity": 0.24, "waveCost": 1500, "armor": [], "abilities": ["moving", "fatalDamage"]},
+  "GARGANTUAR": {"category": "all", "eatdps": 1500, "baseHP":  3600, "velocity": 0.24, "waveCost": 1500, "armor": [], "abilities": ["moving", "fatalDamage"],
+    "animation": "768/FULL/ZOMBIE/DARK_GARGANTUAR/DARK_GARGANTUAR.PAM"},
 
-  "IMP": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.22, "waveCost": 100, "armor": [], "abilities": ["moving", "eating"]},
+  "IMP": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.22, "waveCost": 100, "armor": [], "abilities": ["moving", "eating"],
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_IMP_MONK/ZOMBIE_DARK_IMP_MONK.PAM"},
 
-  "RA": {"category": "ancient egypt", "eatdps": 100, "baseHP":  190, "velocity": 0.2, "waveCost": 100, "armor": [], "abilities": ["moving", "eating", "stealingSun"]},
+  "RA": {"category": "ancient egypt", "eatdps": 100, "baseHP":  190, "velocity": 0.2, "waveCost": 100, "armor": [], "abilities": ["moving", "eating", "stealingSun"],
+    "animation": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_RA/ZOMBIE_EGYPT_RA.PAM"},
 
-  "EXPLORER": {"category": "ancient egypt", "eatdps": 100, "baseHP":  250, "velocity": 0.25, "waveCost": 250, "armor": [], "abilities": ["moving", "eating"], "attributes": {"torch":  "on"}},
+  "EXPLORER": {"category": "ancient egypt", "eatdps": 100, "baseHP":  250, "velocity": 0.25, "waveCost": 250, "armor": [], "abilities": ["moving", "eating"], "attributes": {"torch":  "on"},
+    "animation": "768/INITIAL/ZOMBIE/ZOMBIE_EXPLORER/ZOMBIE_EXPLORER.PAM"},
 
-  "TOMB_RAISER": {"category": "ancient egypt", "eatdps": 100, "baseHP":  380, "velocity": 0.185, "waveCost": 300, "armor": [], "abilities": ["moving", "eating", "throwing"]},
+  "TOMB_RAISER": {"category": "ancient egypt", "eatdps": 100, "baseHP":  380, "velocity": 0.185, "waveCost": 300, "armor": [], "abilities": ["moving", "eating", "throwing"],
+    "animation": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_TOMBRAISER/ZOMBIE_EGYPT_TOMBRAISER.PAM"},
 
-  "DODO": {"category": "frostbite caves", "eatdps": 100, "baseHP":  490, "velocity": 0.3, "waveCost": 600, "armor": [], "abilities": ["moving", "eating", "flying"]},
+  "DODO": {"category": "frostbite caves", "eatdps": 100, "baseHP":  490, "velocity": 0.3, "waveCost": 600, "armor": [], "abilities": ["moving", "eating", "flying"],
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_DODORIDER/ZOMBIE_ICEAGE_DODORIDER.PAM"},
 
-  "HUNTER": {"category": "frostbite caves", "eatdps": 100, "baseHP":  700, "velocity": 0.12, "waveCost": 500, "armor": [], "abilities": ["moving", "eating", "throwing"]},
+  "HUNTER": {"category": "frostbite caves", "eatdps": 100, "baseHP":  700, "velocity": 0.12, "waveCost": 500, "armor": [], "abilities": ["moving", "eating", "throwing"],
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_HUNTER/ZOMBIE_ICEAGE_HUNTER.PAM"},
 
-  "TROGLOBITE": {"category": "frostbite caves", "eatdps": 100, "baseHP":  470, "velocity": 0.185, "waveCost": 600, "armor": [], "abilities": ["moving", "fatalDamage"]},
+  "TROGLOBITE": {"category": "frostbite caves", "eatdps": 100, "baseHP":  470, "velocity": 0.185, "waveCost": 600, "armor": [], "abilities": ["moving", "fatalDamage"],
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_TROGLOBITE/ZOMBIE_ICEAGE_TROGLOBITE.PAM"},
 
-  "FISHERMAN": {"category": "big wave beach", "eatdps": 100, "baseHP":  1000, "velocity": 0, "waveCost": 700, "armor": [], "abilities": ["eating", "throwing"]},
+  "FISHERMAN": {"category": "big wave beach", "eatdps": 100, "baseHP":  1000, "velocity": 0, "waveCost": 700, "armor": [], "abilities": ["eating", "throwing"],
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_BEACH_FISHERMAN/ZOMBIE_BEACH_FISHERMAN.PAM"},
 
-  "OCTOPUS": {"category": "big wave beach", "eatdps": 100, "baseHP":  910, "velocity": 0.12, "waveCost": 900, "armor": [], "abilities": ["moving", "eating", "throwing"]},
+  "OCTOPUS": {"category": "big wave beach", "eatdps": 100, "baseHP":  910, "velocity": 0.12, "waveCost": 900, "armor": [], "abilities": ["moving", "eating", "throwing"],
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_BEACH_OCTOPUS/ZOMBIE_BEACH_OCTOPUS.PAM"},
 
-  "SNORKEL": {"category": "big wave beach", "eatdps": 100, "baseHP":  350, "velocity": 0.185, "waveCost": 200, "armor": [], "abilities": ["moving", "eating"], "attributes": {"submarine":  "on"}},
+  "SNORKEL": {"category": "big wave beach", "eatdps": 100, "baseHP":  350, "velocity": 0.185, "waveCost": 200, "armor": [], "abilities": ["moving", "eating"], "attributes": {"submarine":  "on"},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_BEACH_SNORKELER/ZOMBIE_BEACH_SNORKELER.PAM"},
 
-  "JUGGLER": {"category": "dark age", "eatdps": 100, "baseHP":  420, "velocity": 0.2, "waveCost": 450, "armor": [], "abilities": ["moving", "eating"]},
+  "JUGGLER": {"category": "dark age", "eatdps": 100, "baseHP":  420, "velocity": 0.2, "waveCost": 450, "armor": [], "abilities": ["moving", "eating"],
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_JESTER/ZOMBIE_DARK_JESTER.PAM"},
 
-  "WIZARD": {"category": "dark age", "eatdps": 100, "baseHP":  490, "velocity": 0.12, "waveCost": 800, "armor": [], "abilities": ["moving", "eating"]},
+  "WIZARD": {"category": "dark age", "eatdps": 100, "baseHP":  490, "velocity": 0.12, "waveCost": 800, "armor": [], "abilities": ["moving", "eating"],
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_WIZARD/ZOMBIE_DARK_WIZARD.PAM"},
 
-  "KING": {"category": "dark age", "eatdps": 100, "baseHP":  100, "velocity": 0, "waveCost": 750, "armor": [], "abilities": ["throwing"]},
+  "KING": {"category": "dark age", "eatdps": 100, "baseHP":  100, "velocity": 0, "waveCost": 750, "armor": [], "abilities": ["throwing"],
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_KING/ZOMBIE_DARK_KING.PAM"},
 
-  "IMP_DRAGON": {"category": "dark age", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 150, "armor": [], "abilities": ["moving", "eating"]},
+  "IMP_DRAGON": {"category": "dark age", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 150, "armor": [], "abilities": ["moving", "eating"],
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_IMP_DRAGON/ZOMBIE_DARK_IMP_DRAGON.PAM"},
 
-  "ALL_STAR": {"category": "all", "eatdps": 100, "baseHP":  1100, "velocity": 0.16, "waveCost": 1000, "armor": ["Arcade"], "abilities": ["moving", "eating", "fatalDamage"]},
+  "ALL_STAR": {"category": "all", "eatdps": 100, "baseHP":  1100, "velocity": 0.16, "waveCost": 1000, "armor": ["Arcade"], "abilities": ["moving", "eating", "fatalDamage"],
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_MODERN_ALLSTAR/ZOMBIE_MODERN_ALLSTAR.PAM"},
 
-  "ARCADE": {"category": "all", "eatdps": 100, "baseHP":  490, "velocity": 0.19, "waveCost": 600, "armor": [], "abilities": ["moving", "eating", "fatalDamage"]},
+  "ARCADE": {"category": "all", "eatdps": 100, "baseHP":  490, "velocity": 0.19, "waveCost": 600, "armor": [], "abilities": ["moving", "eating", "fatalDamage"],
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_80S_ARCADE/ZOMBIE_80S_ARCADE.PAM"},
 
-  "UMBRELLA": {"category": "all", "eatdps": 100, "baseHP":  350, "velocity": 0.25, "waveCost": 200, "armor": [], "abilities": ["moving", "eating", "repelLobbers"]},
+  "UMBRELLA": {"category": "all", "eatdps": 100, "baseHP":  350, "velocity": 0.25, "waveCost": 200, "armor": [], "abilities": ["moving", "eating", "repelLobbers"],
+    "animation": ""},
 
-  "TURQUOISE": {"category": "all", "eatdps": 100, "baseHP":  250, "velocity": 0.185, "waveCost": 500, "armor": [], "abilities": ["moving", "eating", "stealingSun"]},
+  "TURQUOISE": {"category": "all", "eatdps": 100, "baseHP":  250, "velocity": 0.185, "waveCost": 500, "armor": [], "abilities": ["moving", "eating", "stealingSun"],
+    "animation": ""},
 
-  "PROSPECTOR": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.16, "waveCost": 200, "armor": [], "abilities": ["moving", "eating"], "attributes": {"dynamite":  "on"}},
+  "PROSPECTOR": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.16, "waveCost": 200, "armor": [], "abilities": ["moving", "eating"], "attributes": {"dynamite":  "on"},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_PROSPECTOR/ZOMBIE_PROSPECTOR.PAM"},
 
-  "PIANO": {"category": "all", "eatdps": 4000, "baseHP":  840, "velocity": 0.12, "waveCost": 400, "armor": [], "abilities": ["moving", "fatalDamage"]},
+  "PIANO": {"category": "all", "eatdps": 4000, "baseHP":  840, "velocity": 0.12, "waveCost": 400, "armor": [], "abilities": ["moving", "fatalDamage"],
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_PIANO/ZOMBIE_PIANO.PAM"},
 
-  "NEWSPAPER": {"category": "all", "eatdps": 200, "baseHP":  460, "velocity": 0.22, "waveCost": 700, "armor": ["Newspaper"], "abilities": ["moving", "eating"]}
+  "NEWSPAPER": {"category": "all", "eatdps": 200, "baseHP":  460, "velocity": 0.22, "waveCost": 700, "armor": ["Newspaper"], "abilities": ["moving", "eating"],
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_MODERN_NEWSPAPER/ZOMBIE_MODERN_NEWSPAPER.PAM"}
 }

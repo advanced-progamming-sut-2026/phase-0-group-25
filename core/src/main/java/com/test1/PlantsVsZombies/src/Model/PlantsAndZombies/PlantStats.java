@@ -16,7 +16,8 @@ public class PlantStats {
 
     private Map<String, Object> attributes;
     private Map<String, Object> plantFoodEffect;
-
+    private String animation;
+    private Map<String, String> status;
 
     public String getCategory() {
         return category;
@@ -76,5 +77,13 @@ public class PlantStats {
 
     public double getRechargeTime() {
         return rechargeTime;
+    }
+
+    public String getAnimation() {
+        return animation;
+    }
+
+    public Map<String, String> getStatus() {
+        return status;
     }
 }

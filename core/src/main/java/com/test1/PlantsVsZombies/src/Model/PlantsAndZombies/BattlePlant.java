@@ -9,6 +9,8 @@ import com.test1.PlantsVsZombies.src.Model.Quests.QuestManager;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BattlePlant extends Plant {
     private static int PLANT_FOOD_EFFECT_TIME = 2;
@@ -54,9 +56,8 @@ public class BattlePlant extends Plant {
     @Override
     public void update() {
 
-
         if (this.plantStats.getAttributes().containsKey("life_span")) {
-            int lifespan = (int) this.plantStats.getAttributes().get("life_span");
+            double lifespan = (double) this.plantStats.getAttributes().get("life_span");
             if ((GAME.getTotalTimePassed() - this.plantTime) >= lifespan) {
                 this.setCurrentHP(0);
             }
@@ -72,7 +73,7 @@ public class BattlePlant extends Plant {
         }
 
         if (!this.plantStats.getCategory().equals("Wall-nut") &&
-                !this.plantStats.getCategory().equals("Explosive")) {
+            !this.plantStats.getCategory().equals("Explosive")) {
 
             if (this.isEffected) {
                 for (Ability ability : this.originalAbilities) {
@@ -84,7 +85,7 @@ public class BattlePlant extends Plant {
                 }
             }
 
-            if ((GAME.getTotalTimePassed() - this.lastActionTime) >= this.plantStats.getActionInterval()) {
+            if (isTimeForAction()) {
                 for (Ability ability : this.originalAbilities) {
                     ability.executeAbility(this);
                 }
@@ -100,7 +101,7 @@ public class BattlePlant extends Plant {
             upperPlant = thisTile.getPlants().get(thisTile.getPlants().size() - 1);
         }
         boolean isStack = (upperPlant != null && upperPlant.getPlantStats().getTags().contains("bottomStack")) ||
-                thisTile.getPlants().isEmpty() || this.getPlantStats().getTags().contains("upperStack");
+            thisTile.getPlants().isEmpty() || this.getPlantStats().getTags().contains("upperStack");
         return (sun >= this.plantStats.getCost()) && (this.currentCoolDown <= 0 || !this.activeCooldown) && isStack;
     }
 
@@ -229,6 +230,46 @@ public class BattlePlant extends Plant {
             if (this.plantStats.getCategory().equals(PlantCategory.EXPLOSIVE.name())) {
                 QuestManager.getInstance().notifyEvent(new ExplosiveUsedEvent(this.name));
             }
+        }
+    }
+
+    private boolean isTimeForAction() {
+        return ((GAME.getTotalTimePassed() - this.lastActionTime) >= this.plantStats.getActionInterval());
+    }
+
+    public String getCurrentAnimationName() {
+        Map<String, String> status = this.plantStats.getStatus();
+
+        if (this.plantStats.getTags().contains("wramp_up")) {
+            return getWrampUpPlantsAnimation(status);
+        } else {
+            if (isTimeForAction()) {
+                return status.get("action");
+            }
+            return status.get("idle");
+        }
+    }
+
+    private String getWrampUpPlantsAnimation(Map<String, String> status) {
+        ArrayList<Integer> growthTimeStages = (ArrayList<Integer>) this.plantStats.getAttributes().get("growth_time");
+
+        double differenceTime = GAME.getTotalTimePassed() - this.plantTime;
+
+        if (differenceTime >= growthTimeStages.get(1)) {
+            if (isTimeForAction()) {
+                return status.get("action3");
+            }
+            return status.get("idle3");
+        } else if (differenceTime >= growthTimeStages.get(0)) {
+            if (isTimeForAction()) {
+                return status.get("action2");
+            }
+            return status.get("idle2");
+        } else {
+            if (isTimeForAction()) {
+                return status.get("action1");
+            }
+            return status.get("idle1");
         }
     }
 }

@@ -13,6 +13,7 @@ import com.test1.PlantsVsZombies.src.Model.Quests.QuestManager;
 import com.test1.PlantsVsZombies.src.Model.Sun.Sun;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 
@@ -66,7 +67,7 @@ public class Zombie extends Entity {
         if (zombieStats.getArmors() != null) {
             for (Armor armor : zombieStats.getArmors()) {
                 this.activeArmors.add(new Armor(armor.getType(),
-                        armor.getCurrentHP(), armor.isMetallic()));
+                    armor.getCurrentHP(), armor.isMetallic(), armor.getAnimations()));
             }
         }
 
@@ -99,7 +100,7 @@ public class Zombie extends Entity {
 
         checkLife();
         if ((this.zombieStats.getName().equals("PROSPECTOR")) &&
-                (this.zombieStats.getAttributes().get("dynamite").equals("on"))) {
+            (this.zombieStats.getAttributes().get("dynamite").equals("on"))) {
             if ((GAME.getTotalTimePassed() - this.spawnTime) >= 10) {
                 Dynamite dynamite = new Dynamite(new Position(20, this.position.getY()));
 
@@ -134,19 +135,19 @@ public class Zombie extends Entity {
 
         if (row == 1) {
             this.position = new Position(
-                    this.position.getX(),
-                    this.position.getY() + TILE_X_LENGTH);
+                this.position.getX(),
+                this.position.getY() + TILE_X_LENGTH);
         } else if (row == 5) {
             this.position = new Position(
-                    this.position.getX(),
-                    this.position.getY() - TILE_X_LENGTH);
+                this.position.getX(),
+                this.position.getY() - TILE_X_LENGTH);
         } else {
             int randomIndex = RANDOM.nextInt(2);
             int difference = (randomIndex == 1) ? TILE_X_LENGTH : (-1) * TILE_X_LENGTH;
 
             this.position = new Position(
-                    this.position.getX(),
-                    this.position.getY() + difference);
+                this.position.getX(),
+                this.position.getY() + difference);
         }
     }
 
@@ -186,7 +187,7 @@ public class Zombie extends Entity {
 
             if (projectile.isIcy()) {
                 if ((!this.zombieStats.getName().equals("IMP_DRAGON")) &&
-                        !(this.zombieStats.getCategory().equals(ChapterType.DARK_AGE.getName()))) {
+                    !(this.zombieStats.getCategory().equals(ChapterType.DARK_AGE.getName()))) {
                     freeze();
                 }
             } else if (projectile.isFiring()) {
@@ -399,4 +400,28 @@ public class Zombie extends Entity {
     public ArrayList<Ability> getOriginalAbilities() {
         return originalAbilities;
     }
+
+    public String getCurrentAnimationName() {
+        for (Ability ability : this.originalAbilities) {
+            if ((ability instanceof Moving) && (((Moving) ability).isActivated())) {
+                return "walk";
+            } else if ((ability instanceof Eating) && (((Eating) ability).isActivated())) {
+                return "eat";
+            }
+        }
+        return "idle";
+    }
+
+    public HashMap<String, Boolean> getVisibility() {
+        HashMap<String, Boolean> visibility = new HashMap<>();
+
+        for (Armor armor : this.activeArmors) {
+            String currentArmorStage = armor.getCurrentAnimation();
+            visibility.put(currentArmorStage, true);
+        }
+
+        return visibility;
+    }
+
+
 }

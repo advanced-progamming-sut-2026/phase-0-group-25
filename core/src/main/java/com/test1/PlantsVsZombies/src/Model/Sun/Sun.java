@@ -9,9 +9,15 @@ public class Sun {
     private boolean isCollected = false;
     private boolean isFromSky;
 
+    private final String animationPath = "768/INITIAL/EFFECTS/SUN/SUN.PAM";
+
+    private static double X_DISTANCE = 10;
+    private static double Y_DISTANCE = 10;
+
     public Sun(int numberOfSun, Position position) {
         this.numberOfSun = numberOfSun;
-        this.position = position;
+        this.position = new Position(position.getX() + X_DISTANCE,
+            position.getY() + Y_DISTANCE);
 
         this.isFromSky = false;
     }
@@ -54,6 +60,10 @@ public class Sun {
 
     public void setFromSky(boolean fromSky) {
         isFromSky = fromSky;
+    }
+
+    public String getAnimationPath() {
+        return animationPath;
     }
 }
 
