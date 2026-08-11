@@ -25,6 +25,8 @@ import com.test1.PlantsVsZombies.src.Model.Wave.Wave;
 import java.util.*;
 
 public abstract class GamePlay {
+    public static GamePlay activeInstance;
+
     static int effectedTime = 3;
     static int spawnX = 1800;
     // plants that can appear in the game...
@@ -48,7 +50,7 @@ public abstract class GamePlay {
     protected int numOfPlantFood;
     protected int mySuns;
     protected PlayGround playGround;
-    protected boolean isPaused;
+    public boolean isPaused;
     protected int numOfWaves;
     protected int totalTicksPassed = 0;
     protected int lostPlants = 0;
@@ -64,6 +66,7 @@ public abstract class GamePlay {
         this.level = level;
         this.chapterType = chapterType;
         this.thisUser = thisUser;
+        activeInstance = this;
 
         for (String pName : plants) {
             this.plants.add(PlantFactory.createBattlePlant(pName, getLevelOfPlant(pName)));
@@ -727,5 +730,9 @@ public abstract class GamePlay {
                 }
             }
         }
+    }
+
+    public boolean isPaused() {
+        return isPaused;
     }
 }

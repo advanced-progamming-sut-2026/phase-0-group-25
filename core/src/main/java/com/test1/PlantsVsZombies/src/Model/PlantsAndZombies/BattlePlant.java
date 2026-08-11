@@ -27,7 +27,7 @@ public class BattlePlant extends Plant {
     private int iceTime;
     private double iceHP;
 
-    private GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlay.activeInstance;
 
     public BattlePlant(PlantStats plantStats, String name) {
         this.plantStats = plantStats;

@@ -20,7 +20,7 @@ public class LobbedProjectile extends Projectile {
     private int AoERange;
     private int damage;
     private boolean isFromLobberPlant;
-    private GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlay.activeInstance;
 
     public LobbedProjectile(BattlePlant plant, double startX, double startY, double targetX, double speed,
                             int AoEDamage, int AoERange, int damage) {

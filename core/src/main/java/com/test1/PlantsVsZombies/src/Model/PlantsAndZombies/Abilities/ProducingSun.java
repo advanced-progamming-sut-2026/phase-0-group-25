@@ -9,7 +9,7 @@ import com.test1.PlantsVsZombies.src.Model.Sun.Sun;
 import java.util.List;
 
 public class ProducingSun implements Ability {
-    private GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlay.activeInstance;
 
     private boolean isCollected = false;
     private boolean isProduced = false;

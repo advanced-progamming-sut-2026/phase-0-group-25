@@ -20,7 +20,7 @@ public class Zombie extends Entity {
     private static int FROZEN_TIME = 3;
     private static int TILE_X_LENGTH = 200;
     private static Random RANDOM = new Random();
-    private GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlay.activeInstance;
 
 
     private ZombieStats zombieStats;
@@ -52,7 +52,7 @@ public class Zombie extends Entity {
         this.zombieStats = zombieStats;
         this.name = name;
         this.zombieStats.setName(name);
-        GAME = GamePlayMenu.getGamePlay();
+        GAME = GamePlay.activeInstance;
 
         this.position = position;
         this.currentHP = zombieStats.getBaseHP();
