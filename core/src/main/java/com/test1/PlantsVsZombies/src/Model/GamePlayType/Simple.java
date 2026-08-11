@@ -43,6 +43,9 @@ public class Simple extends GamePlay {
                 }
             }
             this.settedThePlants = true;
+
+            planting(PlantFactory.createBattlePlant("SUNFLOWER", 1,
+                new Position(getRealX(1), getRealY(2))), new Position(1, 2));
         }
 
         if (this.chapterType != ChapterType.DARK_AGE) {

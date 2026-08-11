@@ -239,7 +239,9 @@ public class BattlePlant extends Plant {
 
     public String getCurrentAnimationName() {
         Map<String, String> status = this.plantStats.getStatus();
-
+        if (status == null) {
+            return "idle";
+        }
         if (this.plantStats.getTags().contains("wramp_up")) {
             return getWrampUpPlantsAnimation(status);
         } else {
