@@ -87,4 +87,8 @@ public class StealingSun implements Ability {
     public void setActivated(boolean activated) {
         isActivated = activated;
     }
+
+    public boolean isActivated() {
+        return isActivated;
+    }
 }

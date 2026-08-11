@@ -1,37 +1,59 @@
 {
   "SUNFLOWER": [
-    { "category": "Sun Producer", "baseHP": 300, "cost": 50, "actionInterval": 24, "rechargeTime": 5, "abilities": ["producing sun"], "tags": ["day"], "attributes": {"sun_quantity": 50}, "plantFoodEffect": {"sun_quantity": 150} },
-    { "category": "Sun Producer", "baseHP": 300, "cost": 50, "actionInterval": 22, "rechargeTime": 5, "abilities": ["producing sun"], "tags": ["day"], "attributes": {"sun_quantity": 50}, "plantFoodEffect": {"sun_quantity": 150} },
-    { "category": "Sun Producer", "baseHP": 450, "cost": 50, "actionInterval": 22, "rechargeTime": 5, "abilities": ["producing sun"], "tags": ["day"], "attributes": {"sun_quantity": 50}, "plantFoodEffect": {"sun_quantity": 150} },
-    { "category": "Sun Producer", "baseHP": 450, "cost": 50, "actionInterval": 22, "rechargeTime": 5, "abilities": ["producing sun"], "tags": ["day"], "attributes": {"sun_quantity": 100}, "plantFoodEffect": {"sun_quantity": 150} }
+    { "category": "Sun Producer", "baseHP": 300, "cost": 50, "actionInterval": 24, "rechargeTime": 5, "abilities": ["producing sun"], "tags": ["day"], "attributes": {"sun_quantity": 50}, "plantFoodEffect": {"sun_quantity": 150},
+      "animation": "768/INITIAL/PLANT/SUNFLOWER/SUNFLOWER.PAM", "status": {"idle": "idle", "action": "special"} },
+    { "category": "Sun Producer", "baseHP": 300, "cost": 50, "actionInterval": 22, "rechargeTime": 5, "abilities": ["producing sun"], "tags": ["day"], "attributes": {"sun_quantity": 50}, "plantFoodEffect": {"sun_quantity": 150},
+      "animation": "768/INITIAL/PLANT/SUNFLOWER/SUNFLOWER.PAM", "status": {"idle": "idle", "action": "special"}},
+    { "category": "Sun Producer", "baseHP": 450, "cost": 50, "actionInterval": 22, "rechargeTime": 5, "abilities": ["producing sun"], "tags": ["day"], "attributes": {"sun_quantity": 50}, "plantFoodEffect": {"sun_quantity": 150},
+      "animation": "768/INITIAL/PLANT/SUNFLOWER/SUNFLOWER.PAM", "status": {"idle": "idle", "action": "special"} },
+    { "category": "Sun Producer", "baseHP": 450, "cost": 50, "actionInterval": 22, "rechargeTime": 5, "abilities": ["producing sun"], "tags": ["day"], "attributes": {"sun_quantity": 100}, "plantFoodEffect": {"sun_quantity": 150},
+      "animation": "768/INITIAL/PLANT/SUNFLOWER/SUNFLOWER.PAM", "status": {"idle": "idle", "action": "special"} }
   ],
 
   "TWIN_SUNFLOWER": [
-    { "category": "Sun Producer", "baseHP": 300, "cost": 125, "actionInterval": 24, "rechargeTime": 15, "abilities": ["producing sun"], "tags": ["day"], "attributes": {"sun_quantity": 100}, "plantFoodEffect": {"sun_quantity": 250} },
-    { "category": "Sun Producer", "baseHP": 300, "cost": 125, "actionInterval": 22, "rechargeTime": 15, "abilities": ["producing sun"], "tags": ["day"], "attributes": {"sun_quantity": 100}, "plantFoodEffect": {"sun_quantity": 250} },
-    { "category": "Sun Producer", "baseHP": 450, "cost": 125, "actionInterval": 22, "rechargeTime": 15, "abilities": ["producing sun"], "tags": ["day"], "attributes": {"sun_quantity": 100}, "plantFoodEffect": {"sun_quantity": 250} },
-    { "category": "Sun Producer", "baseHP": 450, "cost": 100, "actionInterval": 22, "rechargeTime": 15, "abilities": ["producing sun"], "tags": ["day"], "attributes": {"sun_quantity": 100}, "plantFoodEffect": {"sun_quantity": 250} }
+    { "category": "Sun Producer", "baseHP": 300, "cost": 125, "actionInterval": 24, "rechargeTime": 15, "abilities": ["producing sun"], "tags": ["day"], "attributes": {"sun_quantity": 100}, "plantFoodEffect": {"sun_quantity": 250},
+      "animation": "768/INITIAL/PLANT/SUNFLOWER_TWIN/SUNFLOWER_TWIN.PAM", "status": {"idle": "idle", "action": "special"}  },
+    { "category": "Sun Producer", "baseHP": 300, "cost": 125, "actionInterval": 22, "rechargeTime": 15, "abilities": ["producing sun"], "tags": ["day"], "attributes": {"sun_quantity": 100}, "plantFoodEffect": {"sun_quantity": 250},
+      "animation": "768/INITIAL/PLANT/SUNFLOWER_TWIN/SUNFLOWER_TWIN.PAM", "status": {"idle": "idle", "action": "special"}  },
+    { "category": "Sun Producer", "baseHP": 450, "cost": 125, "actionInterval": 22, "rechargeTime": 15, "abilities": ["producing sun"], "tags": ["day"], "attributes": {"sun_quantity": 100}, "plantFoodEffect": {"sun_quantity": 250},
+      "animation": "768/INITIAL/PLANT/SUNFLOWER_TWIN/SUNFLOWER_TWIN.PAM", "status": {"idle": "idle", "action": "special"}  },
+    { "category": "Sun Producer", "baseHP": 450, "cost": 100, "actionInterval": 22, "rechargeTime": 15, "abilities": ["producing sun"], "tags": ["day"], "attributes": {"sun_quantity": 100}, "plantFoodEffect": {"sun_quantity": 250},
+      "animation": "768/INITIAL/PLANT/SUNFLOWER_TWIN/SUNFLOWER_TWIN.PAM", "status": {"idle": "idle", "action": "special"}  }
   ],
 
   "SUN_SHROOM": [
-    { "category": "Sun Producer", "baseHP": 300, "cost": 25, "actionInterval": 24, "rechargeTime": 5, "abilities": ["producing sun"], "tags": ["shroom", "wramp-up", "night"], "attributes": {"growth_time": [24, 72], "sun_quantity": [25, 50, 75]}, "plantFoodEffect": {"sun_quantity": 225} },
-    { "category": "Sun Producer", "baseHP": 300, "cost": 25, "actionInterval": 24, "rechargeTime": 5, "abilities": ["producing sun"], "tags": ["shroom", "wramp-up", "night"], "attributes": {"growth_time": [19, 62], "sun_quantity": [25, 50, 75]}, "plantFoodEffect": {"sun_quantity": 225} },
-    { "category": "Sun Producer", "baseHP": 450, "cost": 25, "actionInterval": 24, "rechargeTime": 5, "abilities": ["producing sun"], "tags": ["shroom", "wramp-up", "night"], "attributes": {"growth_time": [19, 62], "sun_quantity": [25, 50, 75]}, "plantFoodEffect": {"sun_quantity": 225} },
-    { "category": "Sun Producer", "baseHP": 450, "cost": 25, "actionInterval": 24, "rechargeTime": 5, "abilities": ["producing sun"], "tags": ["shroom", "wramp-up", "night"], "attributes": {"growth_time": [19, 62], "sun_quantity": [50, 100, 150]}, "plantFoodEffect": {"sun_quantity": 225} }
+    { "category": "Sun Producer", "baseHP": 300, "cost": 25, "actionInterval": 24, "rechargeTime": 5, "abilities": ["producing sun"], "tags": ["shroom", "wramp-up", "night"], "attributes": {"growth_time": [24, 72], "sun_quantity": [25, 50, 75]}, "plantFoodEffect": {"sun_quantity": 225},
+      "animation": "768/FULL/PLANT/SUNSHROOM/SUNSHROOM.PAM", "status": {"idle1":  "idle_stage1", "idle2": "idle_stage2", "idle3": "idle_stage3", "action1": "special_stage1", "action2": "special_stage2", "action3": "special_stage3"} },
+    { "category": "Sun Producer", "baseHP": 300, "cost": 25, "actionInterval": 24, "rechargeTime": 5, "abilities": ["producing sun"], "tags": ["shroom", "wramp-up", "night"], "attributes": {"growth_time": [19, 62], "sun_quantity": [25, 50, 75]}, "plantFoodEffect": {"sun_quantity": 225},
+      "animation": "768/FULL/PLANT/SUNSHROOM/SUNSHROOM.PAM", "status": {"idle1":  "idle_stage1", "idle2": "idle_stage2", "idle3": "idle_stage3", "action1": "special_stage1", "action2": "special_stage2", "action3": "special_stage3"} },
+    { "category": "Sun Producer", "baseHP": 450, "cost": 25, "actionInterval": 24, "rechargeTime": 5, "abilities": ["producing sun"], "tags": ["shroom", "wramp-up", "night"], "attributes": {"growth_time": [19, 62], "sun_quantity": [25, 50, 75]}, "plantFoodEffect": {"sun_quantity": 225},
+      "animation": "768/FULL/PLANT/SUNSHROOM/SUNSHROOM.PAM", "status": {"idle1":  "idle_stage1", "idle2": "idle_stage2", "idle3": "idle_stage3", "action1": "special_stage1", "action2": "special_stage2", "action3": "special_stage3"} },
+    { "category": "Sun Producer", "baseHP": 450, "cost": 25, "actionInterval": 24, "rechargeTime": 5, "abilities": ["producing sun"], "tags": ["shroom", "wramp-up", "night"], "attributes": {"growth_time": [19, 62], "sun_quantity": [50, 100, 150]}, "plantFoodEffect": {"sun_quantity": 225},
+      "animation": "768/FULL/PLANT/SUNSHROOM/SUNSHROOM.PAM", "status": {"idle1":  "idle_stage1", "idle2": "idle_stage2", "idle3": "idle_stage3", "action1": "special_stage1", "action2": "special_stage2", "action3": "special_stage3"}  }
   ],
 
   "PRIMAL_SUNFLOWER": [
-    { "category": "Sun Producer", "baseHP": 300, "cost": 75, "actionInterval": 24, "rechargeTime": 5, "abilities": ["producing sun"], "tags": [], "attributes": {"sun_quantity": 75}, "plantFoodEffect": {"sun_quantity": 225} },
-    { "category": "Sun Producer", "baseHP": 300, "cost": 75, "actionInterval": 22, "rechargeTime": 5, "abilities": ["producing sun"], "tags": [], "attributes": {"sun_quantity": 75}, "plantFoodEffect": {"sun_quantity": 225} },
-    { "category": "Sun Producer", "baseHP": 450, "cost": 75, "actionInterval": 22, "rechargeTime": 5, "abilities": ["producing sun"], "tags": [], "attributes": {"sun_quantity": 75}, "plantFoodEffect": {"sun_quantity": 225} },
-    { "category": "Sun Producer", "baseHP": 450, "cost": 50, "actionInterval": 22, "rechargeTime": 5, "abilities": ["producing sun"], "tags": [], "attributes": {"sun_quantity": 75}, "plantFoodEffect": {"sun_quantity": 225} }
+    { "category": "Sun Producer", "baseHP": 300, "cost": 75, "actionInterval": 24, "rechargeTime": 5, "abilities": ["producing sun"], "tags": [], "attributes": {"sun_quantity": 75}, "plantFoodEffect": {"sun_quantity": 225},
+      "animation": "768/FULL/PLANT/PRIMAL_SUNFLOWER/PRIMAL_SUNFLOWER.PAM", "status": {"idle": "idle", "action": "special"}  },
+    { "category": "Sun Producer", "baseHP": 300, "cost": 75, "actionInterval": 22, "rechargeTime": 5, "abilities": ["producing sun"], "tags": [], "attributes": {"sun_quantity": 75}, "plantFoodEffect": {"sun_quantity": 225},
+      "animation": "768/FULL/PLANT/PRIMAL_SUNFLOWER/PRIMAL_SUNFLOWER.PAM", "status": {"idle": "idle", "action": "special"}  },
+    { "category": "Sun Producer", "baseHP": 450, "cost": 75, "actionInterval": 22, "rechargeTime": 5, "abilities": ["producing sun"], "tags": [], "attributes": {"sun_quantity": 75}, "plantFoodEffect": {"sun_quantity": 225},
+      "animation": "768/FULL/PLANT/PRIMAL_SUNFLOWER/PRIMAL_SUNFLOWER.PAM", "status": {"idle": "idle", "action": "special"}  },
+    { "category": "Sun Producer", "baseHP"
+
+    : 450, "cost": 50, "actionInterval": 22, "rechargeTime": 5, "abilities": ["producing sun"], "tags": [], "attributes": {"sun_quantity": 75}, "plantFoodEffect": {"sun_quantity": 225},
+      "animation": "768/FULL/PLANT/PRIMAL_SUNFLOWER/PRIMAL_SUNFLOWER.PAM", "status": {"idle": "idle", "action": "special"}  }
   ],
 
   "GOLD_BLOOM": [
-    { "category": "Sun Producer", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 75, "abilities": ["producing sun"], "tags": [], "attributes": {"sun_quantity": 375, "life_span": 0}, "plantFoodEffect": {} },
-    { "category": "Sun Producer", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 70, "abilities": ["producing sun"], "tags": [], "attributes": {"sun_quantity": 375, "life_span": 0}, "plantFoodEffect": {} },
-    { "category": "Sun Producer", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 70, "abilities": ["producing sun"], "tags": [], "attributes": {"sun_quantity": 425, "life_span": 0}, "plantFoodEffect": {} },
-    { "category": "Sun Producer", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 70, "abilities": ["producing sun"], "tags": [], "attributes": {"sun_quantity": 425, "life_span": 0}, "plantFoodEffect": {} }
+    { "category": "Sun Producer", "baseHP": 0, "cost": 0, "actionInterval": 1.7, "rechargeTime": 75, "abilities": ["producing sun"], "tags": [], "attributes": {"sun_quantity": 375, "life_span": 4.5}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/GOLDBLOOM/GOLDBLOOM.PAM", "status": {"idle": "idle", "action": "attack"}  },
+    { "category": "Sun Producer", "baseHP": 0, "cost": 0, "actionInterval": 1.7, "rechargeTime": 70, "abilities": ["producing sun"], "tags": [], "attributes": {"sun_quantity": 375, "life_span": 4.5}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/GOLDBLOOM/GOLDBLOOM.PAM", "status": {"idle": "idle", "action": "attack"}  },
+    { "category": "Sun Producer", "baseHP": 0, "cost": 0, "actionInterval": 1.7, "rechargeTime": 70, "abilities": ["producing sun"], "tags": [], "attributes": {"sun_quantity": 425, "life_span": 4.5}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/GOLDBLOOM/GOLDBLOOM.PAM", "status": {"idle": "idle", "action": "attack"}  },
+    { "category": "Sun Producer", "baseHP": 0, "cost": 0, "actionInterval": 1.7, "rechargeTime": 70, "abilities": ["producing sun"], "tags": [], "attributes": {"sun_quantity": 425, "life_span": 4.5}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/GOLDBLOOM/GOLDBLOOM.PAM", "status": {"idle": "idle", "action": "attack"}  }
   ],
 
   "PEASHOOTER": [

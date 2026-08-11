@@ -1,14 +1,21 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Armors;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Armor {
     private String type;
+    private int baseHP;
     private int currentHP;
     private boolean isMetallic;
+    private List<String> animations;
 
-    public Armor(String type, int baseHP, boolean isMetallic) {
+    public Armor(String type, int baseHP, boolean isMetallic, List<String> animations) {
         this.type = type;
+        this.baseHP = baseHP;
         this.currentHP = baseHP;
         this.isMetallic = isMetallic;
+        this.animations = animations;
     }
 
 
@@ -41,6 +48,22 @@ public class Armor {
 
     public boolean isMetallic() {
         return isMetallic;
+    }
+
+    public List<String> getAnimations() {
+        return animations;
+    }
+
+    public String getCurrentAnimation() {
+        float HPRatio = (float) this.currentHP / this.baseHP;
+
+        if (HPRatio >= 0.67) {
+            return this.animations.get(0);
+        } else if (HPRatio >= 0.33) {
+            return this.animations.get(1);
+        } else {
+            return this.animations.get(2);
+        }
     }
 
 

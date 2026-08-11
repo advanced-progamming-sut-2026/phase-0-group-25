@@ -3,6 +3,7 @@ package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Armors.Armor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ZombieStats {
@@ -16,6 +17,7 @@ public class ZombieStats {
 
     private Map<String, Object> attributes;
     private ArrayList<String> abilities;
+    private String animationPath;
 
     public String getName() {
         return name;
@@ -64,4 +66,9 @@ public class ZombieStats {
     public ArrayList<String> getAbilities() {
         return abilities;
     }
+
+    public String getAnimationPath() {
+        return animationPath;
+    }
+
 }
