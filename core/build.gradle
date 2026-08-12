@@ -10,6 +10,10 @@ dependencies {
 
   implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.2'
   implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.2'
+  implementation 'com.github.pizpizi:pvz-skin:v0.1.1'
+  implementation 'com.github.raeleus.TenPatch:tenpatch:5.2.3'
+  implementation 'com.github.pizpizi:libPVZ:v0.1.5' // Replace v0.1.0 with desired release tag or commit hash
+
 
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
