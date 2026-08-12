@@ -155,7 +155,8 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
 
         updateStayLoggedInSelection();
 
-        TextButton loginButton = createStretchedButton("Login", DEFAULT_BUTTON_BG_ASSET_ID, new ClickListener() {
+        TextButton loginButton = new TextButton("Login", skin, "green");
+        loginButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (menuController != null) {
@@ -168,7 +169,8 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
             }
         });
 
-        TextButton forgotPassButton = createStretchedButton("Forgot Password?", FORGET_BUTTON_BG_ASSET_ID, new ClickListener() {
+        TextButton forgotPassButton = new TextButton("Forgot Password?", skin, "brown");
+        forgotPassButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 mainContainer.clearChildren();
@@ -201,7 +203,8 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
         forgetEmailField = new TextField("", skin);
         forgetAnswerField = new TextField("", skin);
 
-        TextButton submitRecoveryButton = createStretchedButton("Submit Recovery", DEFAULT_BUTTON_BG_ASSET_ID, new ClickListener() {
+        TextButton submitRecoveryButton = new TextButton("Submit Recovery", skin, "green_small");
+        submitRecoveryButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (menuController != null) {
@@ -214,7 +217,8 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
             }
         });
 
-        TextButton backToLoginButton = createStretchedButton("Back to Login", FORGET_BUTTON_BG_ASSET_ID, new ClickListener() {
+        TextButton backToLoginButton = new TextButton("Back to Login", skin, "brown");
+        backToLoginButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 mainContainer.clearChildren();
@@ -241,7 +245,8 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
     private void buildBottomBar(Table uiTable) {
         Table bottomTable = new Table();
 
-        TextButton backToSignupButton = createStretchedButton("Back to Signup", FORGET_BUTTON_BG_ASSET_ID, new ClickListener() {
+        TextButton backToSignupButton = new TextButton("Back to Signup", skin, "brown");
+        backToSignupButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 MenuManager.getInstance().changeMenu(MenuType.Signup);
@@ -268,7 +273,8 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
         newPasswordField.setPasswordMode(true);
         newPasswordField.setPasswordCharacter('*');
 
-        TextButton submitNewPasswordButton = createStretchedButton("Set Password", DEFAULT_BUTTON_BG_ASSET_ID, new ClickListener() {
+        TextButton submitNewPasswordButton = new TextButton("Set Password", skin, "green_small");
+        submitNewPasswordButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (menuController != null) {

@@ -154,7 +154,8 @@ public class SignUpMenuScreen extends AbstractScreen implements SignUpMenuView {
         genderContainer.add(maleButton).width(115).padRight(10);
         genderContainer.add(femaleButton).width(115);
 
-        TextButton registerButton = createStretchedButton("Register", DEFAULT_BUTTON_BG_ASSET_ID, new ClickListener() {
+        TextButton registerButton = new TextButton("Register", skin, "green");
+        registerButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (menuController != null) {
@@ -241,7 +242,8 @@ public class SignUpMenuScreen extends AbstractScreen implements SignUpMenuView {
         answerField = new TextField("", skin);
         answerConfirmField = new TextField("", skin);
 
-        TextButton submitQuestionButton = createStretchedButton("Submit Security Question", DEFAULT_BUTTON_BG_ASSET_ID, new ClickListener() {
+        TextButton submitQuestionButton = new TextButton("Submit Security Question", skin, "green_small");
+        submitQuestionButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (menuController != null) {
@@ -272,14 +274,16 @@ public class SignUpMenuScreen extends AbstractScreen implements SignUpMenuView {
     private void buildBottomBar(Table uiTable) {
         Table bottomTable = new Table();
 
-        TextButton loginButton = createStretchedButton("Go to Login", DEFAULT_BUTTON_BG_ASSET_ID, new ClickListener() {
+        TextButton loginButton = new TextButton("Go to Login", skin, "green");
+        loginButton.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 MenuManager.getInstance().changeMenu(MenuType.Login);
             }
         });
 
-        TextButton exitButton = createStretchedButton("Exit", EXIT_BUTTON_BG_ASSET_ID, new ClickListener() {
+        TextButton exitButton = new TextButton("Exit", skin, "brown");
+        exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (menuController != null) {
