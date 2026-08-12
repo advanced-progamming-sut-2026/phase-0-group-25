@@ -5,7 +5,6 @@ import com.test1.PlantsVsZombies.src.Enums.MenuType;
 import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.BaseView;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.LoginMenuView;
-
 import java.util.regex.Matcher;
 
 public class LoginMenu extends Menu {
@@ -18,11 +17,9 @@ public class LoginMenu extends Menu {
         this.loginMenuView = loginMenuView;
     }
 
-
     @Override
     public void handleSpecificCommands(String input) {
         Matcher matcher;
-
         if ((matcher = getMatcher(input, Command.LoginAccount)) != null) {
             String username = matcher.group(1);
             String password = matcher.group(2);
@@ -30,7 +27,6 @@ public class LoginMenu extends Menu {
             loginUser(username, password, stayLoggedIn);
             return;
         }
-
         if ((matcher = getMatcher(input, Command.ForgetPassword)) != null) {
             String username = matcher.group(1);
             String email = matcher.group(2);
@@ -38,62 +34,53 @@ public class LoginMenu extends Menu {
             forgetPassword(username, email, answer);
             return;
         }
-
         if ((matcher = getMatcher(input, Command.SetNewPassword)) != null) {
             String newPassword = matcher.group(1);
             setNewPassword(newPassword);
             return;
         }
-
         getView().showError("Invalid command signature matching this menu context.");
     }
 
-
-    private void loginUser(String username, String password, boolean stayLoggedIn) {
+    public void loginUser(String username, String password, boolean stayLoggedIn) {
         if (awaitingNewPassword) {
             getView().showError("Password update active. Please finalize your new password first.");
             return;
         }
-
         String authError = UsersManager.getInstance().authenticateUser(username, password, stayLoggedIn);
         if (authError != null) {
             getView().showError(authError);
             return;
         }
-
         loginMenuView.showLoginSuccess(UsersManager.getInstance().getLoggedInUser().getNickName());
         MenuManager.getInstance().changeMenu(MenuType.Main);
     }
 
-    private void forgetPassword(String username, String email, String answer) {
+    public void forgetPassword(String username, String email, String answer) {
         if (awaitingNewPassword) {
             getView().showError("Password recovery is already in progress.");
             return;
         }
-
         String error = UsersManager.getInstance().validateForgetPasswordRequest(username, email, answer);
         if (error != null) {
             getView().showError(error);
             return;
         }
-
         this.resettingUsername = username;
         this.awaitingNewPassword = true;
         loginMenuView.showPromptForNewPassword();
     }
 
-    private void setNewPassword(String newPassword) {
+    public void setNewPassword(String newPassword) {
         if (!awaitingNewPassword || resettingUsername == null) {
             getView().showError("Please pass the 'forget password' security query check first.");
             return;
         }
-
         String updateError = UsersManager.getInstance().updateUserPassword(resettingUsername, newPassword);
         if (updateError != null) {
             getView().showError(updateError);
             return;
         }
-
         this.awaitingNewPassword = false;
         this.resettingUsername = null;
         loginMenuView.showPasswordResetSuccess();
