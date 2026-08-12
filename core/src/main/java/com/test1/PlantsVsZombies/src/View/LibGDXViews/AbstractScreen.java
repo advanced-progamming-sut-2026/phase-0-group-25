@@ -8,10 +8,8 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.test1.PlantsVsZombies.Main;
@@ -58,6 +56,28 @@ public abstract class AbstractScreen implements Screen {
         // caller immediately switches to a different Screen (e.g. right
         // after a successful login/sign up).
         UIManager.showToast(message, bgAssetId);
+    }
+    public TextButton createStretchedButton(String text, String bgAssetId, ClickListener listener) {
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
+        style.font = skin.get(Label.LabelStyle.class).font;
+        style.fontColor = Color.BLACK;
+
+        if (bgAssetId != null && !bgAssetId.isEmpty()) {
+            TextureRegion bgRegion = textureBank.region(bgAssetId);
+            if (bgRegion != null) {
+                NinePatch patch = new NinePatch(bgRegion, 15, 15, 15, 15);
+                style.up = new NinePatchDrawable(patch);
+            }
+        }
+
+        TextButton button = new TextButton(text, style);
+        button.getLabel().setColor(Color.BLACK);
+        button.pad(10, 20, 10, 20);
+
+        if (listener != null) {
+            button.addListener(listener);
+        }
+        return button;
     }
 
     @Override

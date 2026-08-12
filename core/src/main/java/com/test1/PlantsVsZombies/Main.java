@@ -20,9 +20,10 @@ public class Main extends Game {
     public void create() {
         instance = this;
         batch = new SpriteBatch();
-
         skin = PvzSkin.get();
-        textureBank = new TextureBank("768", Gdx.files.absolute("Assets"));
+
+        // Fixed: Use internal file handle for runtime relative assets
+        textureBank = new TextureBank("768", Gdx.files.internal("Assets"));
 
         GameDataLoader.loadGameData();
         UIManager.init(this);
@@ -36,8 +37,8 @@ public class Main extends Game {
 
     @Override
     public void render() {
-        super.render(); // renders the current Screen as usual
-        UIManager.renderToasts(Gdx.graphics.getDeltaTime()); // draw toasts on top, survives screen switches
+        super.render();
+        UIManager.renderToasts(Gdx.graphics.getDeltaTime());
     }
 
     @Override
