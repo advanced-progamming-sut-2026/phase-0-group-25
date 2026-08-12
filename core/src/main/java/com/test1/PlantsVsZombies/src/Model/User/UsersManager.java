@@ -13,8 +13,8 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class UsersManager {
-    private static final String FILE_PATH = "assets/jsonFiles/users.json";
-    private static final String STATE_FILE = "assets/jsonFiles/loginstate.json";
+    private static final String FILE_PATH = "jsonFiles/users.json";
+    private static final String STATE_FILE = "jsonFiles/loginstate.json";
     private static final Pattern USERNAME_CHAR_REGEX = Pattern.compile("^[a-zA-Z0-9_]+$");
     private static final Pattern PASSWORD_COMPLEXITY_REGEX = Pattern.compile(
             "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+={}\\[\\]|\\\\:;\"',<>?])\\S{8,}$"
@@ -248,12 +248,12 @@ public class UsersManager {
 
     public String validateForgetPasswordRequest(String username, String email, String answer) {
         if (!userCache.containsKey(username))
-            return "Error: Entered username does not exist in the system.";
+            return "Entered username does not exist in the system.";
         User user = userCache.get(username);
         if (!user.getEmail().equalsIgnoreCase(email))
-            return "Error: Provided email does not match registered user profile.";
+            return "Provided email does not match registered user profile.";
         if (user.getSecurityAnswer() == null || !user.getSecurityAnswer().equalsIgnoreCase(answer))
-            return "Error: Security challenge answer is incorrect.";
+            return "Security challenge answer is incorrect.";
         return null;
     }
 
