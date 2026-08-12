@@ -34,6 +34,18 @@ public class Main extends Game {
         return instance;
     }
 
+    @Override
+    public void render() {
+        super.render(); // renders the current Screen as usual
+        UIManager.renderToasts(Gdx.graphics.getDeltaTime()); // draw toasts on top, survives screen switches
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        UIManager.resizeToasts(width, height);
+    }
+
     public SpriteBatch getBatch() {
         return batch;
     }

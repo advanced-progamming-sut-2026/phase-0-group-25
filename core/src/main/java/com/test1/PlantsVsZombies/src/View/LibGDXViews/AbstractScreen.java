@@ -53,34 +53,11 @@ public abstract class AbstractScreen implements Screen {
     }
 
     protected void showToast(String message, String bgAssetId) {
-        Table popup = new Table();
-        popup.pad(15, 20, 15, 20);
-
-        if (bgAssetId != null && !bgAssetId.isEmpty() && textureBank != null) {
-            TextureRegion region = textureBank.region(bgAssetId);
-            if (region != null) {
-                NinePatch patch = new NinePatch(region, 15, 15, 15, 15);
-                popup.setBackground(new com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable(patch));
-            }
-        }
-
-        Label label = createBlackLabel(message);
-        popup.add(label);
-        popup.pack();
-
-        // Position at the Top-Left of the window
-        float margin = 20f;
-        popup.setPosition(
-            margin,
-            stage.getHeight() - popup.getHeight() - margin
-        );
-
-        stage.addActor(popup);
-        popup.addAction(Actions.sequence(
-            Actions.delay(2.5f),
-            Actions.fadeOut(0.5f),
-            Actions.removeActor()
-        ));
+        // Delegate to UIManager's toast stage, which is not tied to this
+        // Screen's lifecycle -- so the toast still renders even if the
+        // caller immediately switches to a different Screen (e.g. right
+        // after a successful login/sign up).
+        UIManager.showToast(message, bgAssetId);
     }
 
     @Override
