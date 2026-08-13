@@ -28,28 +28,6 @@ public class SignUpMenu extends Menu {
         Gdx.app.exit();
     }
 
-    @Override
-    public void handleSpecificCommands(String input) {
-        Matcher matcher;
-        if ((matcher = getMatcher(input, Command.RegisterAccount)) != null) {
-            String username = matcher.group(1);
-            String password = matcher.group(2);
-            String passwordConfirm = matcher.group(3);
-            String nickname = matcher.group(4);
-            String email = matcher.group(5);
-            String genderStr = matcher.group(6);
-            registerUser(username, password, passwordConfirm, nickname, email, genderStr);
-            return;
-        }
-        if ((matcher = getMatcher(input, Command.PickQuestion)) != null) {
-            int questionId = Integer.parseInt(matcher.group(1));
-            String answer = matcher.group(2);
-            String answerConfirm = matcher.group(3);
-            pickQuestion(questionId, answer, answerConfirm);
-            return;
-        }
-        getView().showError("Invalid command format for this menu state.");
-    }
 
     public void registerUser(String username, String password, String passwordConfirm,
                              String nickname, String email, String genderStr) {
@@ -83,7 +61,7 @@ public class SignUpMenu extends Menu {
         }
         pendingUser.setSecurityQuestion(chosenQuestion);
         pendingUser.setSecurityAnswer(answer);
-        UsersManager.getInstance().addUser(pendingUser);
+        usersManager.addUser(pendingUser);
         pendingUser = null;
         signUpMenuView.showRegistrationSuccess();
         MenuManager.getInstance().changeMenu(MenuType.Login);

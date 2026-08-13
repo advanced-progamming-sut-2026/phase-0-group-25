@@ -270,7 +270,10 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
 
         Label titleLabel = createBlackLabel("SET NEW PASSWORD");
         TextField newPasswordField = new TextField("", skin);
+        TextField confirmPasswordField = new TextField("", skin);
+        confirmPasswordField.setPasswordMode(true);
         newPasswordField.setPasswordMode(true);
+        confirmPasswordField.setPasswordCharacter('*');
         newPasswordField.setPasswordCharacter('*');
 
         TextButton submitNewPasswordButton = new TextButton("Set Password", skin, "green_small");
@@ -278,7 +281,7 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (menuController != null) {
-                    menuController.setNewPassword(newPasswordField.getText().trim());
+                    menuController.setNewPassword(newPasswordField.getText().trim(), confirmPasswordField.getText().trim());
                     modal.remove();
                 }
             }
@@ -287,6 +290,8 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
         modal.add(titleLabel).colspan(2).padBottom(15).row();
         modal.add(createBlackLabel("New Password:")).right().pad(5);
         modal.add(newPasswordField).width(250).pad(5).row();
+        modal.add(createBlackLabel("Confirm Password:")).right().pad(5);
+        modal.add(confirmPasswordField).width(250).pad(5).row();
         modal.add(submitNewPasswordButton).colspan(2).center().padTop(15);
 
         modal.pack();

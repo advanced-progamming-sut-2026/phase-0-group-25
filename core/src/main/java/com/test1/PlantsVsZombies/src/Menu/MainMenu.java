@@ -26,7 +26,6 @@ public class MainMenu extends Menu {
         getView().showError("can only go back with the logout command");
     }
 
-    @Override
     public void handleSpecificCommands(String input) {
         Matcher matcher;
 

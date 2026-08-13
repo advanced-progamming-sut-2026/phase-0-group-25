@@ -16,30 +16,7 @@ public class LoginMenu extends Menu {
         this.loginMenuView = loginMenuView;
     }
 
-    @Override
-    public void handleSpecificCommands(String input) {
-        Matcher matcher;
-        if ((matcher = getMatcher(input, Command.LoginAccount)) != null) {
-            String username = matcher.group(1);
-            String password = matcher.group(2);
-            boolean stayLoggedIn = (matcher.group(3) != null);
-            loginUser(username, password, stayLoggedIn);
-            return;
-        }
-        if ((matcher = getMatcher(input, Command.ForgetPassword)) != null) {
-            String username = matcher.group(1);
-            String email = matcher.group(2);
-            String answer = matcher.group(3);
-            forgetPassword(username, email, answer);
-            return;
-        }
-        if ((matcher = getMatcher(input, Command.SetNewPassword)) != null) {
-            String newPassword = matcher.group(1);
-            setNewPassword(newPassword);
-            return;
-        }
-        getView().showError("Invalid command signature matching this menu context.");
-    }
+
 
     public void loginUser(String username, String password, boolean stayLoggedIn) {
 
@@ -79,10 +56,6 @@ public class LoginMenu extends Menu {
         }
         this.resettingUsername = null;
         loginMenuView.showPasswordResetSuccess();
-    }
-
-    public void setNewPassword(String newPassword) {
-        setNewPassword(newPassword, newPassword);
     }
 
     public void cancelPasswordReset() {

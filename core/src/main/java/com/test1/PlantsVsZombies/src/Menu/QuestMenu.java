@@ -12,7 +12,6 @@ public class QuestMenu extends Menu {
         this.questMenuView = questMenuView;
     }
 
-    @Override
     public void handleSpecificCommands(String input) {
 
     }

@@ -27,7 +27,6 @@ public class TravelLogMenu extends Menu {
         this.travelLogMenuView = travelLogMenuView;
     }
 
-    @Override
     public void handleSpecificCommands(String input) {
         Matcher matcher;
         if ((matcher = getMatcher(input, Command.TravelLogPage)) != null) {
