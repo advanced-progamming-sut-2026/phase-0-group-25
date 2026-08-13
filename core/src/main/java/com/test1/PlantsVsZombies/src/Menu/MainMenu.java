@@ -5,7 +5,6 @@ import com.test1.PlantsVsZombies.src.Enums.MenuType;
 import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.BaseView;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.MainMenuView;
-
 import java.util.regex.Matcher;
 
 public class MainMenu extends Menu {
@@ -26,14 +25,13 @@ public class MainMenu extends Menu {
         getView().showError("can only go back with the logout command");
     }
 
+
     public void handleSpecificCommands(String input) {
         Matcher matcher;
-
         if ((matcher = getMatcher(input, Command.MenuLogout)) != null) {
             logout();
             return;
         }
-
         getView().showError("Invalid command format for this menu state.");
     }
 
@@ -42,7 +40,7 @@ public class MainMenu extends Menu {
         return mainMenuView;
     }
 
-    private void logout() {
+    public void logout() {
         UsersManager.getInstance().logoutCurrentUser();
         MenuManager.getInstance().changeMenu(MenuType.Signup);
     }

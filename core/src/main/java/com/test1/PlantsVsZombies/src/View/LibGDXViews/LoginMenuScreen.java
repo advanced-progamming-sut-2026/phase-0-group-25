@@ -17,8 +17,6 @@ import com.test1.PlantsVsZombies.src.View.ViewInterfaces.LoginMenuView;
 import pvz.skin.BorderedTable;
 
 public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
-    private static final String DEFAULT_BUTTON_BG_ASSET_ID = "IMAGE_UI_GENERIC_GREENBUTTON_DOWN";
-    private static final String FORGET_BUTTON_BG_ASSET_ID = "IMAGE_UI_GENERIC_BROWNBUTTON_DOWN";
     private static final String ERROR_BG_ASSET_ID = "IMAGE_UI_GENERIC_TIMER_RIBBON_RED";
     private static final String SUCCESS_BG_ASSET_ID = "IMAGE_UI_GENERIC_VTB";
 
