@@ -14,7 +14,6 @@ import java.util.regex.Matcher;
 public class SignUpMenu extends Menu {
     private final SignUpMenuView signUpMenuView;
     private final UsersManager usersManager;
-    private boolean awaitingSecurityQuestion = false;
     private User pendingUser;
 
     public SignUpMenu(SignUpMenuView signUpMenuView) {
@@ -54,10 +53,7 @@ public class SignUpMenu extends Menu {
 
     public void registerUser(String username, String password, String passwordConfirm,
                              String nickname, String email, String genderStr) {
-        if (awaitingSecurityQuestion) {
-            getView().showError("Account details already submitted. Please answer the security question.");
-            return;
-        }
+
         String validationError = UsersManager.getInstance().validateRegistration(
             username, password, passwordConfirm, nickname, email, genderStr
         );
@@ -67,18 +63,18 @@ public class SignUpMenu extends Menu {
         }
         GenderType gender = genderStr.equalsIgnoreCase("Male") ? GenderType.Male : GenderType.Female;
         pendingUser = new User(username, nickname, password, email, gender);
-        awaitingSecurityQuestion = true;
         signUpMenuView.showSecurityQuestions();
     }
 
     public void pickQuestion(int questionId, String answer, String answerConfirm) {
-        if (!awaitingSecurityQuestion || pendingUser == null) {
-            getView().showError("Please enter your registration details first using the 'register' command.");
-            return;
-        }
+
         SecurityQuestionType chosenQuestion = SecurityQuestionType.getById(questionId);
         if (chosenQuestion == null) {
             getView().showError("Invalid choice! Please select a valid number from the listed options.");
+            return;
+        }
+        if(answer.equals("")){
+            getView().showError("You must enter an answer.");
             return;
         }
         if (!answer.equals(answerConfirm)) {
@@ -88,7 +84,6 @@ public class SignUpMenu extends Menu {
         pendingUser.setSecurityQuestion(chosenQuestion);
         pendingUser.setSecurityAnswer(answer);
         UsersManager.getInstance().addUser(pendingUser);
-        awaitingSecurityQuestion = false;
         pendingUser = null;
         signUpMenuView.showRegistrationSuccess();
         MenuManager.getInstance().changeMenu(MenuType.Login);

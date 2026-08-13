@@ -155,7 +155,7 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
 
         updateStayLoggedInSelection();
 
-        TextButton loginButton = new TextButton("Login", skin, "green");
+        TextButton loginButton = new TextButton("Login", skin);
         loginButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

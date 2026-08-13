@@ -9,7 +9,6 @@ import java.util.regex.Matcher;
 
 public class LoginMenu extends Menu {
     private final LoginMenuView loginMenuView;
-    private boolean awaitingNewPassword = false;
     private String resettingUsername = null;
 
     public LoginMenu(LoginMenuView loginMenuView) {
@@ -43,10 +42,7 @@ public class LoginMenu extends Menu {
     }
 
     public void loginUser(String username, String password, boolean stayLoggedIn) {
-        if (awaitingNewPassword) {
-            getView().showError("Password update active. Please finalize your new password first.");
-            return;
-        }
+
         String authError = UsersManager.getInstance().authenticateUser(username, password, stayLoggedIn);
         if (authError != null) {
             getView().showError(authError);
@@ -57,23 +53,23 @@ public class LoginMenu extends Menu {
     }
 
     public void forgetPassword(String username, String email, String answer) {
-        if (awaitingNewPassword) {
-            getView().showError("Password recovery is already in progress.");
-            return;
-        }
         String error = UsersManager.getInstance().validateForgetPasswordRequest(username, email, answer);
         if (error != null) {
             getView().showError(error);
             return;
         }
         this.resettingUsername = username;
-        this.awaitingNewPassword = true;
         loginMenuView.showPromptForNewPassword();
     }
 
-    public void setNewPassword(String newPassword) {
-        if (!awaitingNewPassword || resettingUsername == null) {
-            getView().showError("Please pass the 'forget password' security query check first.");
+    public void setNewPassword(String newPassword, String confirmPassword) {
+
+        if (newPassword == null || newPassword.trim().isEmpty()) {
+            getView().showError("Password cannot be empty.");
+            return;
+        }
+        if (!newPassword.equals(confirmPassword)) {
+            getView().showError("Security answer verification does not match original field.");
             return;
         }
         String updateError = UsersManager.getInstance().updateUserPassword(resettingUsername, newPassword);
@@ -81,9 +77,16 @@ public class LoginMenu extends Menu {
             getView().showError(updateError);
             return;
         }
-        this.awaitingNewPassword = false;
         this.resettingUsername = null;
         loginMenuView.showPasswordResetSuccess();
+    }
+
+    public void setNewPassword(String newPassword) {
+        setNewPassword(newPassword, newPassword);
+    }
+
+    public void cancelPasswordReset() {
+        this.resettingUsername = null;
     }
 
     @Override
