@@ -16,6 +16,7 @@ public class User {
     private UserProgress userProgress;
     private SecurityQuestionType securityQuestion;
     private String securityAnswer;
+    private boolean debugMode = false;
 
     public User(String userName, String nickName, String password, String email, GenderType genderType) {
         this.userName = userName;
@@ -62,6 +63,14 @@ public class User {
     public void unlockLevel(int level, ChapterType chapterType) {
         userProgress.unlockLevel(level, chapterType);
         newsManager.addNews(new News("level " + level + " of " + chapterType.getName() + " unlocked!"));
+    }
+
+    public boolean isDebugMode() {
+        return debugMode;
+    }
+
+    public void setDebugMode(boolean debugMode) {
+        this.debugMode = debugMode;
     }
 
     public UserProgress getUserProgress() {

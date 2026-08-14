@@ -1,12 +1,14 @@
 package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.test1.PlantsVsZombies.src.Enums.MenuType;
@@ -22,6 +24,9 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
     private static final String BACKGROUND_ASSET_ID = "IMAGE_MAINMENU_BACKGROUND";
     private static final String LOGO_ASSET_ID = "IMAGE_UI_MAINMENU_PVZ2_LOGO_HORIZONTAL";
     private static final String ERROR_BG_ASSET_ID = "IMAGE_UI_GENERIC_TIMER_RIBBON_RED";
+
+    // --- Top Bar User Badge Asset ID ---
+    private static final String USER_BADGE_BG_ASSET_ID = "IMAGE_UI_IF_BUNDLE_REWARD5_BG";
 
     // --- Bottom Bar Asset IDs ---
     private static final String NEWS_BUTTON_ASSET_ID = "IMAGE_UI_HUD_NEWSBUTTON_BUTTONS_HUD_NEWS_SELECTED_COPY_2";
@@ -52,8 +57,20 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         Table uiTable = new Table();
         uiTable.setFillParent(true);
 
-        // --- Top Bar (Logout Button at Top-Right) ---
+        // --- Top Bar ---
         Table topTable = new Table();
+
+        // Top Left Stack: Currency HUD on top, Username Badge directly below it
+        Table topLeftTable = new Table();
+        topLeftTable.add(createCurrencyHud()).left().row();
+        topLeftTable.add(createUserBadge()).left().padTop(8).row();
+
+        topTable.add(topLeftTable).left().pad(15);
+
+        // Spacer pushing logout to top-right
+        topTable.add().expandX();
+
+        // Top Right: Logout Button
         TextButton logoutButton = new TextButton("Logout", skin, "brown");
         logoutButton.addListener(new ClickListener() {
             @Override
@@ -63,16 +80,13 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
                 }
             }
         });
-
-        topTable.add().expandX(); // Pushes logout button to top-right
-        topTable.add(logoutButton).right().pad(20);
+        topTable.add(logoutButton).right().top().pad(15);
 
         uiTable.add(topTable).fillX().top().row();
 
         // --- Main Container (Logo & Play Button) ---
         Table mainContainer = new Table();
 
-        // Logo Image (falls back to label if texture not found)
         TextureRegion logoRegion = textureBank.region(LOGO_ASSET_ID);
         if (logoRegion != null) {
             Image logoImage = new Image(logoRegion);
@@ -82,7 +96,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
             mainContainer.add(logoLabel).center().padBottom(20).row();
         }
 
-        // Play Button right beneath the logo
         TextButton playButton = new TextButton("Play", skin, "purple");
         playButton.addListener(new ClickListener() {
             @Override
@@ -97,7 +110,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         // --- Bottom Bar ---
         Table bottomTable = new Table();
 
-        // Profile Button (Left of News button)
+        // Profile Button
         TextButton profileButton = new TextButton("Profile", skin, "brown");
         profileButton.addListener(new ClickListener() {
             @Override
@@ -106,14 +119,12 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
             }
         });
 
-        // Add Profile & News buttons on the bottom left
         bottomTable.add(profileButton).left().padLeft(20).padRight(10);
         bottomTable.add(createNewsButtonStack()).left().padRight(20);
 
-        // Spacer pushes left controls to bottom-left and right controls to bottom-right
         bottomTable.add().expandX();
 
-        // Leaderboard Button (Right of Settings button)
+        // Leaderboard Button
         TextButton leaderboardButton = new TextButton("Leaderboard", skin, "brown");
         leaderboardButton.addListener(new ClickListener() {
             @Override
@@ -122,7 +133,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
             }
         });
 
-        // Add Settings & Leaderboard buttons on the bottom right
         bottomTable.add(createSettingsButton()).right().padRight(10);
         bottomTable.add(leaderboardButton).right().padRight(20);
 
@@ -130,6 +140,29 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
 
         screenStack.add(uiTable);
         rootTable.add(screenStack).grow();
+    }
+
+    private Actor createUserBadge() {
+        Table userBadgeTable = new Table();
+
+        String username = "Guest";
+        User user = UsersManager.getInstance().getLoggedInUser();
+        if (user != null && user.getUserName() != null) {
+            username = user.getUserName();
+        }
+
+        TextureRegion badgeBgRegion = textureBank.region(USER_BADGE_BG_ASSET_ID);
+        if (badgeBgRegion != null) {
+            NinePatch patch = new NinePatch(badgeBgRegion, 12, 12, 12, 12);
+            userBadgeTable.setBackground(new NinePatchDrawable(patch));
+        }
+
+        Label userLabel = new Label(username, skin);
+        userLabel.setColor(Color.WHITE);
+        userLabel.setFontScale(1.25f);
+        userBadgeTable.add(userLabel).pad(6, 14, 6, 14);
+
+        return userBadgeTable;
     }
 
     private boolean hasUnreadNews() {
@@ -147,7 +180,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
     private Actor createNewsButtonStack() {
         Stack newsStack = new Stack();
 
-        // News Button Image with Darkened Pressed/Shadow Effect
         TextureRegion newsRegion = textureBank.region(NEWS_BUTTON_ASSET_ID);
         Actor newsActor;
         if (newsRegion != null) {
@@ -178,7 +210,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
 
         newsStack.add(newsActor);
 
-        // Exclamation Mark Overlay on Top-Right (if unread news exists)
         if (hasUnreadNews()) {
             TextureRegion exclRegion = textureBank.region(EXCLAMATION_MARK_ASSET_ID);
             Table overlayTable = new Table();
