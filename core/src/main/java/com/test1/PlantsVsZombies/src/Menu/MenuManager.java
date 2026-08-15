@@ -20,10 +20,27 @@ public class MenuManager {
         menusAndTheirNames.put(MenuType.Collection, new CollectionMenu(new CollectionMenuTerminalView()));
 
         // Game / Chapter Selection Screen
-        ChooseChapterScreen chooseChapterScreen = new ChooseChapterScreen();
-        GameMenu gameMenu = new GameMenu(chooseChapterScreen);
+        // Game / Chapter Selection Screens
+        ChooseChapterScreen chooseChapterScreen =
+            new ChooseChapterScreen();
+
+        GameMenu gameMenu =
+            new GameMenu(chooseChapterScreen);
+
         chooseChapterScreen.setMenuController(gameMenu);
-        menusAndTheirNames.put(MenuType.Game, gameMenu);
+
+// Level selection screen shown after clicking a chapter
+        GameScreen gameLevelScreen =
+            new GameScreen(gameMenu);
+
+        gameMenu.setLevelSelectionView(
+            gameLevelScreen
+        );
+
+        menusAndTheirNames.put(
+            MenuType.Game,
+            gameMenu
+        );
 
         menusAndTheirNames.put(MenuType.GamePlay, new GamePlayMenu(new GamePlayMenuTerminalView()));
         menusAndTheirNames.put(MenuType.GemWallet, new GemWalletMenu(new GemWalletMenuTerminalView()));
