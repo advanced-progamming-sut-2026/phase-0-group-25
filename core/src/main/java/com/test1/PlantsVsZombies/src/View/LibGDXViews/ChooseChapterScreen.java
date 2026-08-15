@@ -29,8 +29,6 @@ public class ChooseChapterScreen extends AbstractScreen implements GameMenuView 
     private static final String FROSTBITE_ISLAND_ASSET_ID = "IMAGE_WORLDMAP_ICEAGE_ANIM3_ANIM3_1307X1318";
     private static final String BEACH_ISLAND_ASSET_ID = "IMAGE_WORLDMAP_ZOMBOSS_NODE_BEACH_ZOMBOSS_NODE_BEACH_905X1096";
 
-    private static final int TOTAL_LEVELS_PER_CHAPTER = 4;
-
     private GameMenu menuController;
 
     public void setMenuController(GameMenu menuController) {
@@ -99,11 +97,13 @@ public class ChooseChapterScreen extends AbstractScreen implements GameMenuView 
         boolean isUnlocked = (user != null && user.getUserProgress() != null
             && user.getUserProgress().getUnlockedChaptersAndLevels().containsKey(chapterType));
 
-        // Calculate completed levels for this chapter
+        // Calculate completed levels for this chapter -- the map now stores
+        // the last COMPLETED level directly (0 = none done yet), so no
+        // "-1" adjustment is needed here anymore.
         int levelsDone = 0;
         if (isUnlocked) {
-            int currentLevel = user.getUserProgress().getUnlockedChaptersAndLevels().getOrDefault(chapterType, 1);
-            levelsDone = Math.min(Math.max(0, currentLevel - 1), TOTAL_LEVELS_PER_CHAPTER);
+            int lastCompletedLevel = user.getUserProgress().getUnlockedChaptersAndLevels().getOrDefault(chapterType, 0);
+            levelsDone = Math.min(Math.max(0, lastCompletedLevel), ChapterType.LEVELS_PER_CHAPTER);
         }
 
         TextureRegion region = textureBank.region(assetId);
@@ -146,7 +146,7 @@ public class ChooseChapterScreen extends AbstractScreen implements GameMenuView 
         container.add(buttonActor).size(260, 320).row();
 
         // 2. Levels Completed Ratio (e.g., "1/4")
-        Label progressLabel = new Label(levelsDone + "/" + TOTAL_LEVELS_PER_CHAPTER, skin);
+        Label progressLabel = new Label(levelsDone + "/" + ChapterType.LEVELS_PER_CHAPTER, skin);
         progressLabel.setColor(isUnlocked ? Color.YELLOW : Color.LIGHT_GRAY);
         container.add(progressLabel).padTop(10).row();
 

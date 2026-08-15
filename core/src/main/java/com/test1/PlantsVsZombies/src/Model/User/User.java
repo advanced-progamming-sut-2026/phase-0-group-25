@@ -60,9 +60,9 @@ public class User {
         }
     }
 
-    public void unlockLevel(int level, ChapterType chapterType) {
-        userProgress.unlockLevel(level, chapterType);
-        newsManager.addNews(new News("level " + level + " of " + chapterType.getName() + " unlocked!"));
+    public void markLevelCompleted(int level, ChapterType chapterType) {
+        userProgress.markLevelCompleted(chapterType, level);
+        newsManager.addNews(new News("level " + level + " of " + chapterType.getName() + " completed!"));
     }
 
     public boolean isDebugMode() {

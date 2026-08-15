@@ -85,13 +85,14 @@ public class GameMenu extends Menu {
             getView().showError("No plants selected! Please select plants in choose plant menu first.");
             return;
         }
-        if (requestedLevel < 1 || requestedLevel > 4) {
-            getView().showError("We only have 4 levels.");
+        if (requestedLevel < 1 || requestedLevel > ChapterType.LEVELS_PER_CHAPTER) {
+            getView().showError("We only have " + ChapterType.LEVELS_PER_CHAPTER + " levels.");
             return;
         }
         ChapterType chapterType = this.chapter.getChapterType();
-        int maxUnlockedLevelForChapter = currentUser.getUserProgress().getUnlockedChaptersAndLevels().getOrDefault(chapterType, 1);
-        if (requestedLevel > maxUnlockedLevelForChapter) {
+        int lastCompletedLevel = currentUser.getUserProgress().getUnlockedChaptersAndLevels().getOrDefault(chapterType, 0);
+        int maxPlayableLevel = Math.min(lastCompletedLevel + 1, ChapterType.LEVELS_PER_CHAPTER);
+        if (requestedLevel > maxPlayableLevel) {
             getView().showError("This level is locked. You must beat level " + (requestedLevel - 1) + " first.");
             return;
         }

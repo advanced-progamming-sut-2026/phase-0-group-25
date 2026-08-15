@@ -135,10 +135,10 @@ public class UserProgressManager {
         save();
     }
 
-    public void unlockLevel(ChapterType chapterType, int level) {
+    public void markLevelCompleted(ChapterType chapterType, int level) {
         User user = getLoggedInUser();
         if (user == null) return;
-        user.unlockLevel(level, chapterType);
+        user.markLevelCompleted(level, chapterType);
         save();
     }
 
@@ -346,13 +346,15 @@ public class UserProgressManager {
         if (user == null) return;
 
         UserProgress progress = user.getUserProgress();
-        int currentUnlockedLevel = progress.getUnlockedChaptersAndLevels()
-                .getOrDefault(chapterType, 1);
+        int lastCompletedLevel = progress.getUnlockedChaptersAndLevels()
+            .getOrDefault(chapterType, 0);
 
-        if (currentLevel >= currentUnlockedLevel) {
-            if (currentLevel < 4) {
-                unlockLevel(chapterType, currentLevel + 1);
-            } else if (currentLevel == 4) {
+        // Only advance progress the first time this level is beaten
+        // (replaying an already-completed level shouldn't regress it).
+        if (currentLevel > lastCompletedLevel) {
+            markLevelCompleted(chapterType, currentLevel);
+
+            if (currentLevel == ChapterType.LEVELS_PER_CHAPTER) {
                 ChapterType nextChapter = getNextChapter(chapterType);
                 if (nextChapter != null) {
                     unlockChapter(nextChapter);
