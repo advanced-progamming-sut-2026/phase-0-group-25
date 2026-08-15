@@ -16,6 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.test1.PlantsVsZombies.Main;
+import com.test1.PlantsVsZombies.src.Enums.MenuType;
+import com.test1.PlantsVsZombies.src.Menu.MenuManager;
 import com.test1.PlantsVsZombies.src.Model.User.User;
 import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import pvz.libpvz.textures.TextureBank;
@@ -32,10 +34,12 @@ public abstract class AbstractScreen implements Screen {
     protected Label coinCountLabel;
     protected Label gemCountLabel;
 
+    // --- Global UI Asset IDs ---
     protected static final String CURRENCY_BOX_BG_ASSET_ID = "IMAGE_UI_GENERIC_BUTTON_GENERIC_LTECURRENCY";
     protected static final String COIN_ICON_ASSET_ID = "IMAGE_UI_THYMED_EVENTS_ECS_CONVRT_COIN";
     protected static final String GEM_ICON_ASSET_ID = "IMAGE_EFFECTS_COIN_DIAMOND_COIN_DIAMOND_141X146";
     protected static final String PLUS_BUTTON_ASSET_ID = "IMAGE_UI_HUD_INGAME_COIN_BUY";
+    protected static final String BACK_BUTTON_ASSET_ID = "IMAGE_UI_ALMANAC_BUTTONS_HUD_BACK_SELECTED"; // TODO: Replace with your back button texture ID
 
     @Override
     public void show() {
@@ -60,6 +64,42 @@ public abstract class AbstractScreen implements Screen {
 
         stage.addActor(mainStack);
         Gdx.input.setInputProcessor(stage);
+    }
+
+    /**
+     * Reusable Back Button for any screen.
+     * Navigates to targetMenu when clicked.
+     */
+    public Actor createBackButton(MenuType targetMenu) {
+        TextureRegion backRegion = textureBank.region(BACK_BUTTON_ASSET_ID);
+        if (backRegion != null) {
+            TextureRegionDrawable backDrawable = new TextureRegionDrawable(backRegion);
+            Button.ButtonStyle style = new Button.ButtonStyle();
+            style.up = backDrawable;
+            style.down = backDrawable.tint(new Color(0.7f, 0.7f, 0.7f, 1f));
+
+            Button backButton = new Button(style);
+            backButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    if (targetMenu != null) {
+                        MenuManager.getInstance().changeMenu(targetMenu);
+                    }
+                }
+            });
+            return backButton;
+        } else {
+            TextButton fallbackBackButton = new TextButton("Back", skin, "brown");
+            fallbackBackButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    if (targetMenu != null) {
+                        MenuManager.getInstance().changeMenu(targetMenu);
+                    }
+                }
+            });
+            return fallbackBackButton;
+        }
     }
 
     protected Label createBlackLabel(String text) {
@@ -239,9 +279,6 @@ public abstract class AbstractScreen implements Screen {
         return badge;
     }
 
-    /**
-     * Refreshes the coin and gem text labels in real-time.
-     */
     public void updateCurrencyHud() {
         User user = UsersManager.getInstance().getLoggedInUser();
         if (user != null && user.getUserProgress() != null) {
