@@ -107,11 +107,7 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
         Table centerBlock = new Table();
 
         if (chapter != null) {
-            Label title = new Label(
-                chapter.getChapterType().getName().toUpperCase(),
-                skin
-            );
-            title.setColor(Color.WHITE);
+            Label title = createLabel(chapter.getChapterType().getName().toUpperCase(), "FBUSV8C5EI_1", Color.WHITE);
             centerBlock.add(title).padBottom(10).row();
 
             Actor chapterIcon = createChapterIcon(chapter.getChapterType());
@@ -329,12 +325,13 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
         // --------------------------------------------------------
         // Number shown below the island, not overlapping it
         // --------------------------------------------------------
-        Label levelNumberLabel = new Label(
+        Label levelNumberLabel = createLabel(
             String.valueOf(level.getLevelNumber()),
-            skin
+            "FBUSV8C5EI_1",
+            isUnlocked ? Color.WHITE : Color.LIGHT_GRAY
         );
-        levelNumberLabel.setColor(isUnlocked ? Color.WHITE : Color.LIGHT_GRAY);
-        levelNumberLabel.setFontScale(1.4f);
+
+//        levelNumberLabel.setFontScale(1.2f);
 
         Table levelContainer = new Table();
         levelContainer.add(levelButton).row();

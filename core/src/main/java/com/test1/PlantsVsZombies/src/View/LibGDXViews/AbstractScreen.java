@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -306,6 +307,20 @@ public abstract class AbstractScreen implements Screen {
                 gemCountLabel.setText(String.valueOf(user.getUserProgress().getGemsCount()));
             }
         }
+    }
+
+    public Label createLabel(
+        String text,
+        String fontName,
+        Color fontColor
+    ) {
+        BitmapFont font = skin.get(fontName, BitmapFont.class);
+
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = font;
+        style.fontColor = fontColor;
+
+        return new Label(text, style);
     }
 
     @Override public void pause() {}
