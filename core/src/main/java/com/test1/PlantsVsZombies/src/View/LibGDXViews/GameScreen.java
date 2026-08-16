@@ -113,7 +113,7 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
             Actor chapterIcon = createChapterIcon(chapter.getChapterType());
             centerBlock.add(chapterIcon)
                 .size(CHAPTER_ICON_WIDTH, CHAPTER_ICON_HEIGHT)
-                .padBottom(20)
+                .padBottom(10)
                 .row();
 
             Table levelsTable = new Table();
