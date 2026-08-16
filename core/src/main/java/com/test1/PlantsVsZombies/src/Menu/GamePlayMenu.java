@@ -1,5 +1,6 @@
 package com.test1.PlantsVsZombies.src.Menu;
 
+import com.badlogic.gdx.Screen;
 import com.test1.PlantsVsZombies.src.Enums.Command;
 import com.test1.PlantsVsZombies.src.Enums.MenuType;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
@@ -8,32 +9,51 @@ import com.test1.PlantsVsZombies.src.Model.MiniGames.VasebreakerGame.VaseBreaker
 import com.test1.PlantsVsZombies.src.Model.MiniGames.WallnutBowlingGame.WalnutBowling;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
+import com.test1.PlantsVsZombies.src.View.LibGDXViews.GamePlayScreen;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.BaseView;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.GamePlayMenuView;
 
 import java.util.regex.Matcher;
 
 public class GamePlayMenu extends Menu {
-    private static GamePlay gamePlay;
+    private GamePlay gamePlay;
     private GamePlayMenuView gamePlayMenuView;
-
 
     public GamePlayMenu() {
         super(MenuType.Game);
     }
 
-    public void setGamePlayMenuView(GamePlayMenuView gamePlayMenuView) {
+    /**
+     * Initializes a new gameplay session, disposes of previous screen resources,
+     * and attaches a fresh GamePlayScreen.
+     */
+    public void startSession(GamePlay gamePlay) {
+        if (this.gamePlayMenuView instanceof Screen) {
+            ((Screen) this.gamePlayMenuView).dispose();
+        }
+        this.gamePlay = gamePlay;
+        this.gamePlayMenuView = new GamePlayScreen(gamePlay);
+    }
+
+    public void startSession(GamePlay gamePlay, GamePlayMenuView gamePlayMenuView) {
+        if (this.gamePlayMenuView instanceof Screen) {
+            ((Screen) this.gamePlayMenuView).dispose();
+        }
+        this.gamePlay = gamePlay;
         this.gamePlayMenuView = gamePlayMenuView;
     }
 
-    public static GamePlay getGamePlay() {
+    public GamePlay getGamePlay() {
         return gamePlay;
     }
 
-    public static void setGamePlay(GamePlay gamePlay) {
-        GamePlayMenu.gamePlay = gamePlay;
+    public void setGamePlay(GamePlay gamePlay) {
+        this.gamePlay = gamePlay;
     }
 
+    public void setGamePlayMenuView(GamePlayMenuView gamePlayMenuView) {
+        this.gamePlayMenuView = gamePlayMenuView;
+    }
 
     private void checkWinCondition() {
         if (gamePlay != null && gamePlay.checkingTheEndOfTheGame()) {
@@ -51,7 +71,6 @@ public class GamePlayMenu extends Menu {
             MenuManager.getInstance().changeMenu(MenuType.Game);
             return;
         }
-
         Matcher matcher;
         if ((matcher = getMatcher(input, Command.AdvanceTime)) != null) {
             String count = matcher.group("count");
@@ -88,7 +107,7 @@ public class GamePlayMenu extends Menu {
             } else {
                 Position thisPosition = new Position(x, y);
                 BattlePlant thisPlant = gamePlay.getPlants().stream()
-                        .filter(plant -> plant.getName().equals(type)).findFirst().orElse(null);
+                    .filter(plant -> plant.getName().equals(type)).findFirst().orElse(null);
                 gamePlay.planting(thisPlant, thisPosition);
             }
         } else if ((matcher = getMatcher(input, Command.PluckPlant)) != null) {
@@ -170,7 +189,6 @@ public class GamePlayMenu extends Menu {
             System.out.println("Unknown command: " + input);
         }
     }
-
 
     @Override
     public BaseView getView() {
