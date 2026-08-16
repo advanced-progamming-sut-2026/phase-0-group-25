@@ -4,11 +4,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
+import com.test1.PlantsVsZombies.src.Enums.ChapterIslandAsset;
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Enums.LevelIslandAsset;
 import com.test1.PlantsVsZombies.src.Enums.MenuType;
@@ -38,6 +38,12 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
     // Layout constants
     // ------------------------------------------------------------
     private static final float DEFAULT_ICON_BUTTON_SIZE = 70f;
+    private static final float CHAPTER_ICON_WIDTH = 260f;
+    private static final float CHAPTER_ICON_HEIGHT = 320f;
+    // Extra invisible space left below the icon+levels block so that,
+    // once centered in the middle section, it visually sits slightly
+    // above dead-center rather than perfectly centered.
+    private static final float CENTER_BLOCK_UPWARD_SHIFT = 60f;
 
     private final GameMenu menuController;
 
@@ -94,35 +100,53 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
             .row();
 
         // --------------------------------------------------------
-        // Chapter title
+        // Center block: chapter icon (top) + level islands (below it)
         // --------------------------------------------------------
         Chapter chapter = menuController.getChapter();
+
+        Table centerBlock = new Table();
+
         if (chapter != null) {
             Label title = new Label(
                 chapter.getChapterType().getName().toUpperCase(),
                 skin
             );
             title.setColor(Color.WHITE);
+            centerBlock.add(title).padBottom(10).row();
 
-            uiTable.add(title)
-                .center()
-                .padTop(10)
+            Actor chapterIcon = createChapterIcon(chapter.getChapterType());
+            centerBlock.add(chapterIcon)
+                .size(CHAPTER_ICON_WIDTH, CHAPTER_ICON_HEIGHT)
+                .padBottom(20)
                 .row();
-        }
 
-        // --------------------------------------------------------
-        // Levels
-        // --------------------------------------------------------
-        Table levelsTable = new Table();
-        levelsTable.defaults().pad(25);
-
-        if (chapter != null) {
+            Table levelsTable = new Table();
+            levelsTable.defaults().pad(25);
             addLevels(levelsTable, chapter);
+            centerBlock.add(levelsTable).row();
         }
 
-        uiTable.add(levelsTable)
+        // Extra bottom padding on the block itself nudges it up within
+        // the centered cell below (see CENTER_BLOCK_UPWARD_SHIFT).
+        centerBlock.padBottom(CENTER_BLOCK_UPWARD_SHIFT);
+
+        // Wrap in a vertical ScrollPane: on smaller/windowed sizes the
+        // icon+levels content can be taller than the space between the
+        // top and bottom bars. Without this, the Table simply overflows
+        // at its natural size and pushes the bottom bar off screen.
+        // With it, the block scrolls internally and the bottom bar
+        // always stays fully visible.
+        ScrollPane.ScrollPaneStyle centerScrollStyle = new ScrollPane.ScrollPaneStyle();
+        centerScrollStyle.background = null;
+
+        ScrollPane centerScrollPane = new ScrollPane(centerBlock, centerScrollStyle);
+        centerScrollPane.setScrollingDisabled(true, false); // vertical scroll only
+        centerScrollPane.setOverscroll(false, false);
+        centerScrollPane.setFadeScrollBars(true);
+
+        uiTable.add(centerScrollPane)
             .expand()
-            .center()
+            .fill()
             .row();
 
         // --------------------------------------------------------
@@ -210,6 +234,30 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
     }
 
     // ============================================================
+    // CHAPTER ICON
+    // ============================================================
+
+    /**
+     * The chapter's big island icon, reused from the same asset as the
+     * Choose Chapter screen (via the shared ChapterIslandAsset enum),
+     * shown decoratively above the level islands here.
+     */
+    private Actor createChapterIcon(ChapterType chapterType) {
+        String assetId = ChapterIslandAsset.getAssetId(chapterType);
+        TextureRegion region = (assetId != null) ? textureBank.region(assetId) : null;
+
+        if (region != null) {
+            Image icon = new Image(region);
+            icon.setScaling(Scaling.fit);
+            return icon;
+        }
+
+        Label fallback = new Label(chapterType.getName().toUpperCase(), skin);
+        fallback.setColor(Color.WHITE);
+        return fallback;
+    }
+
+    // ============================================================
     // LEVEL CREATION
     // ============================================================
 
@@ -279,26 +327,20 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
         });
 
         // --------------------------------------------------------
-        // Number displayed on the island
+        // Number shown below the island, not overlapping it
         // --------------------------------------------------------
         Label levelNumberLabel = new Label(
             String.valueOf(level.getLevelNumber()),
             skin
         );
         levelNumberLabel.setColor(isUnlocked ? Color.WHITE : Color.LIGHT_GRAY);
-        levelNumberLabel.setFontScale(2f);
+        levelNumberLabel.setFontScale(1.4f);
 
-        Stack levelStack = new Stack();
-        levelStack.add(levelButton);
+        Table levelContainer = new Table();
+        levelContainer.add(levelButton).row();
+        levelContainer.add(levelNumberLabel).padTop(8);
 
-        Table numberTable = new Table();
-        numberTable.add(levelNumberLabel)
-            .center()
-            .padBottom(35);
-        numberTable.setTouchable(Touchable.disabled);
-
-        levelStack.add(numberTable);
-        return levelStack;
+        return levelContainer;
     }
 
     private Actor createFallbackLevelButton(Level level, boolean isUnlocked) {

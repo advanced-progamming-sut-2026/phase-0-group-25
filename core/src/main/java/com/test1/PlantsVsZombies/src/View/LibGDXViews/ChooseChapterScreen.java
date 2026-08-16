@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
+import com.test1.PlantsVsZombies.src.Enums.ChapterIslandAsset;
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Enums.MenuType;
 import com.test1.PlantsVsZombies.src.Menu.GameMenu;
@@ -22,12 +23,6 @@ public class ChooseChapterScreen extends AbstractScreen implements GameMenuView 
     private static final String BACKGROUND_ASSET_ID = "IMAGE_MAINMENU_BACKGROUND";
     private static final String ERROR_ASSET_ID = "IMAGE_UI_GENERIC_TIMER_RIBBON_RED";
     private static final String SUCCESS_BG_ASSET_ID = "IMAGE_UI_GENERIC_VTB";
-
-    // --- Island Asset IDs ---
-    private static final String EGYPT_ISLAND_ASSET_ID = "IMAGE_WORLDMAP_EGYPT_ISLAND3";
-    private static final String DARK_AGE_ISLAND_ASSET_ID = "IMAGE_WORLDMAP_ZOMBOSS_NODE_DARK_ZOMBOSS_NODE_DARK_905X1096";
-    private static final String FROSTBITE_ISLAND_ASSET_ID = "IMAGE_WORLDMAP_ICEAGE_ANIM3_ANIM3_1307X1318";
-    private static final String BEACH_ISLAND_ASSET_ID = "IMAGE_WORLDMAP_ZOMBOSS_NODE_BEACH_ZOMBOSS_NODE_BEACH_905X1096";
 
     private GameMenu menuController;
 
@@ -64,10 +59,10 @@ public class ChooseChapterScreen extends AbstractScreen implements GameMenuView 
         Table islandsTable = new Table();
         islandsTable.defaults().pad(20);
 
-        islandsTable.add(createIslandButton(ChapterType.ANCIENT_EGYPT, EGYPT_ISLAND_ASSET_ID));
-        islandsTable.add(createIslandButton(ChapterType.DARK_AGE, DARK_AGE_ISLAND_ASSET_ID));
-        islandsTable.add(createIslandButton(ChapterType.FROSTBITE_CAVES, FROSTBITE_ISLAND_ASSET_ID));
-        islandsTable.add(createIslandButton(ChapterType.BIG_WAVE_BEACH, BEACH_ISLAND_ASSET_ID));
+        islandsTable.add(createIslandButton(ChapterType.ANCIENT_EGYPT));
+        islandsTable.add(createIslandButton(ChapterType.DARK_AGE));
+        islandsTable.add(createIslandButton(ChapterType.FROSTBITE_CAVES));
+        islandsTable.add(createIslandButton(ChapterType.BIG_WAVE_BEACH));
 
         ScrollPane.ScrollPaneStyle scrollStyle = new ScrollPane.ScrollPaneStyle();
         scrollStyle.background = null;
@@ -90,7 +85,8 @@ public class ChooseChapterScreen extends AbstractScreen implements GameMenuView 
         rootTable.add(screenStack).grow();
     }
 
-    private Actor createIslandButton(ChapterType chapterType, String assetId) {
+    private Actor createIslandButton(ChapterType chapterType) {
+        String assetId = ChapterIslandAsset.getAssetId(chapterType);
         Table container = new Table();
 
         User user = UsersManager.getInstance().getLoggedInUser();

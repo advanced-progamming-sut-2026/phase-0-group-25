@@ -31,6 +31,14 @@ public abstract class AbstractScreen implements Screen {
     private Stack modalStack;
     private Stack toastStack;
 
+    // Tracks the last window size we laid out for. Some platforms/backends
+    // don't reliably fire resize() the instant a window un-maximizes or
+    // exits fullscreen (it can lag a frame or more), which leaves the
+    // Stage's viewport stale and the background not matching the window.
+    // Checking every frame is a cheap, reliable safeguard against that.
+    private int lastWidth = -1;
+    private int lastHeight = -1;
+
     protected Label coinCountLabel;
     protected Label gemCountLabel;
 
@@ -137,6 +145,12 @@ public abstract class AbstractScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        int currentWidth = Gdx.graphics.getWidth();
+        int currentHeight = Gdx.graphics.getHeight();
+        if (currentWidth != lastWidth || currentHeight != lastHeight) {
+            resize(currentWidth, currentHeight);
+        }
+
         Gdx.gl.glClearColor(0.15f, 0.15f, 0.2f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -150,6 +164,9 @@ public abstract class AbstractScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
+        lastWidth = width;
+        lastHeight = height;
+
         float baseWidth = 1280f;
         float baseHeight = 720f;
         float scaleX = width / baseWidth;
