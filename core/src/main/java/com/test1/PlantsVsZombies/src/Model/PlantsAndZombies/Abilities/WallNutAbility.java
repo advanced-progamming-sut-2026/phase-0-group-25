@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 
 public class WallNutAbility implements Ability {
-    private GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlay.activeInstance;
 
     @Override
     public void executeAbility(Entity entity) {

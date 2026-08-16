@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class Explosion implements Ability {
     private static Random RANDOM = new Random();
-    private GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlay.activeInstance;
 
     @Override
     public void executeAbility(Entity entity) {

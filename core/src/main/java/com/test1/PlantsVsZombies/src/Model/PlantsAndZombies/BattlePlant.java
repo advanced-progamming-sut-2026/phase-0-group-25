@@ -29,7 +29,7 @@ public class BattlePlant extends Plant {
     private int iceTime;
     private double iceHP;
 
-    private GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlay.activeInstance;
 
     public BattlePlant(PlantStats plantStats, String name) {
         this.plantStats = plantStats;
@@ -262,8 +262,18 @@ public class BattlePlant extends Plant {
     }
 
     public String getCurrentAnimationName() {
-        AnimationDecider decider = new AnimationDecider();
-        return decider.plantDecider(this, (float) GAME.getTotalTimePassed());
+        Map<String, String> status = this.plantStats.getStatus();
+        if (status == null) {
+            return "idle";
+        }
+        if (this.plantStats.getTags().contains("wramp_up")) {
+            return getWrampUpPlantsAnimation(status);
+        } else {
+            if (isTimeForAction()) {
+                return status.get("action");
+            }
+            return status.get("idle");
+        }
     }
 
     public HashMap<String, Boolean> getVisibilities() {

@@ -16,7 +16,7 @@ public class Shooting implements Ability {
     private static int UPPER_LIMIT = 240;
     private static int BOTTOM_LIMIT = 1740;
 
-    private GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlay.activeInstance;
     private BattlePlant plant;
     private int startingPoint;
 
