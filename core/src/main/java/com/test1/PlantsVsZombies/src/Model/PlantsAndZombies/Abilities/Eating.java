@@ -30,8 +30,7 @@ public class Eating implements Ability {
             }
             BattlePlant plant = (BattlePlant) zombie.getRival();
 
-            double plantFinalHP = plant.getCurrentHP() - damageAmount;
-            plant.setCurrentHP(plantFinalHP);
+            plant.takeDamage(damageAmount);
 
 
             if (!plant.isAlive()) {
@@ -39,7 +38,7 @@ public class Eating implements Ability {
                 makeMovingActivated(zombie);
 
                 if (zombie.getZombieStats().getName().equals("SNORKEL") &&
-                        (zombie.getPosition().getX() >= SNORKEL_X_LIMIT)) {
+                    (zombie.getPosition().getX() >= SNORKEL_X_LIMIT)) {
                     zombie.getZombieStats().getAttributes().replace("submarine", "on");
                 }
             }
@@ -58,10 +57,10 @@ public class Eating implements Ability {
 
     private void checkWallnutAndExplosive(Zombie zombie, BattlePlant plant) {
         if ((plant.getPlantStats().getAbilities().contains("wall-nut")) ||
-                (plant.getPlantStats().getAbilities().contains("explosion"))) {
+            (plant.getPlantStats().getAbilities().contains("explosion"))) {
             for (Ability ability : plant.getOriginalAbilities()) {
                 if ((ability instanceof WallNutAbility) ||
-                        (ability instanceof Explosion)) {
+                    (ability instanceof Explosion)) {
                     ability.executeAbility(zombie);
                 }
             }

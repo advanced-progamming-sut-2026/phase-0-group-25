@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
 import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
 
@@ -38,10 +38,14 @@ public class Main extends ApplicationAdapter {
 
     private float zombieX = 700f;
     private final float ZOMBIE_Y = 250f;
-    private final float ZOMBIE_SPEED = 25f; // Pixels per second
+    private final float ZOMBIE_SPEED = 100f; // Pixels per second
 
     private float sunX = 0f;
     private float sunY = 0f;
+
+    private BattlePlant plant;
+    private BattlePlant TALLNUGT;
+    private Zombie zombie;
 
     // PAM Asset paths
     private static final String SUNFLOWER_PAM = "768/INITIAL/PLANT/SUNFLOWER/SUNFLOWER.PAM";
@@ -49,13 +53,19 @@ public class Main extends ApplicationAdapter {
     private static final String ZOMBIE_PAM = "768/FULL/ZOMBIE/ZOMBIE_MODERN_NEWSPAPER/ZOMBIE_MODERN_NEWSPAPER.PAM";
     private static final String SUN_PAM = "768/INITIAL/EFFECTS/SUN/SUN.PAM";
     private static final String PROJECTILE_PAW = "768/INITIAL/EFFECTS/SLINGPEA_PROJECTILE/SLINGPEA_PROJECTILE.PAM";
+    private static final String ZOMBOSS = "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_ZOMBOSS/ZOMBIE_EGYPT_ZOMBOSS.PAM";
 
     Map<String, Boolean> visibilities = new HashMap<>();
 
     @Override
     public void create() {
+        GameDataLoader.loadGameData();
         batch = new SpriteBatch();
         viewport = new ScreenViewport();
+
+        plant = PlantFactory.createBattlePlant("ARMA_MINT", 1);
+        TALLNUGT = PlantFactory.createBattlePlant("EXPLODE_O_NUT", 1);
+        zombie = ZombieFactory.createZombie("BRICK_HEAD");
 
         textureBank = new TextureBank("768", Gdx.files.absolute("assets/Assets"));
         player = new PamPlayer(textureBank, Gdx.files.absolute("assets/Assets"));
@@ -95,12 +105,30 @@ public class Main extends ApplicationAdapter {
         batch.begin();
 
         // Draw Peashooter
-        player.draw(batch, PEASHOOTER_PAM, "attack", stateTime, PEASHOOTER_X, PEASHOOTER_Y, true);
+        System.out.println(stateTime);
 
         // Draw Sunflower (only if alive)
-        if (sunflowerAlive) {
-            player.draw(batch, SUNFLOWER_PAM, "idle", stateTime, SUNFLOWER_X, SUNFLOWER_Y, true);
+        if ((5 <= stateTime) && (stateTime <= 5.5)) {
+            player.draw(batch, PEASHOOTER_PAM, "attack", stateTime, SUNFLOWER_X, SUNFLOWER_Y, true);
+        } else {
+            player.draw(batch, PEASHOOTER_PAM, "idle", stateTime, SUNFLOWER_X, SUNFLOWER_Y, true);
         }
+
+
+        player.draw(batch, plant.getPlantStats().getAnimation(),
+            plant.getCurrentAnimationName(stateTime), stateTime, 400, 700, true);
+
+
+        System.out.println(TALLNUGT.getPlantStats().getAnimation());
+        player.draw(batch, TALLNUGT.getPlantStats().getAnimation(),
+            TALLNUGT.getCurrentAnimationName(stateTime), stateTime, 300,
+            600, true, TALLNUGT.getVisibilities());
+
+
+        player.draw(batch, zombie.getZombieStats().getAnimation(),
+            zombie.getCurrentAnimationName(), stateTime, 350,
+            800, true, zombie.getVisibility());
+
 
         // Draw Sun (once active)
         if (sunActive) {
@@ -117,16 +145,15 @@ public class Main extends ApplicationAdapter {
 
         player.draw(batch, PROJECTILE_PAW, "tier1", stateTime, PROJECTILE_X, PEASHOOTER_Y + 45, true);
 
+        player.draw(batch, ZOMBOSS, "idle", stateTime, zombieX + 400, ZOMBIE_Y + 500, true);
 
         String animation = isEating ? "eat_newspaper" : "walk_newspaper";
 
 
-        System.out.println(stateTime);
-
-        if(stateTime>= 10) {
+        if (stateTime >= 10) {
             visibilities.put("_zombie_newspaper_dmg1", false);
             visibilities.put("_zombie_newspaper_dmg2", false);
-        }else if(stateTime>= 5) {
+        } else if (stateTime >= 5) {
             visibilities.put("_zombie_newspaper", false);
         }
 
