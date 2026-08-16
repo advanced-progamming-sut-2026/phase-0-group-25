@@ -42,7 +42,7 @@ public class MenuManager {
             gameMenu
         );
 
-        menusAndTheirNames.put(MenuType.GamePlay, new GamePlayMenu(new GamePlayMenuTerminalView()));
+        menusAndTheirNames.put(MenuType.GamePlay, new GamePlayMenu());
         menusAndTheirNames.put(MenuType.GemWallet, new GemWalletMenu(new GemWalletMenuTerminalView()));
         menusAndTheirNames.put(MenuType.GreenHouse, new GreenHouseMenu(new GreenHouseMenuTerminalView()));
         menusAndTheirNames.put(MenuType.LeaderBoard, new LeaderBoardMenu(new LeaderBoardMenuTerminalView()));
@@ -111,4 +111,9 @@ public class MenuManager {
     public GameMenu getGameMenu() {
         return (GameMenu) menusAndTheirNames.get(MenuType.Game);
     }
+
+    public GamePlayMenu getGamePlayMenu() {
+        return (GamePlayMenu) menusAndTheirNames.get(MenuType.GamePlay);
+    }
+
 }

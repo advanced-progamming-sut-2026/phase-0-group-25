@@ -15,14 +15,17 @@ import java.util.regex.Matcher;
 
 public class GamePlayMenu extends Menu {
     private static GamePlay gamePlay;
-    private final GamePlayMenuView gamePlayMenuView;
+    private GamePlayMenuView gamePlayMenuView;
 
 
-    public GamePlayMenu(GamePlayMenuView gamePlayMenuView) {
+    public GamePlayMenu() {
         super(MenuType.Game);
         this.gamePlayMenuView = gamePlayMenuView;
     }
 
+    public void setGamePlayMenuView(GamePlayMenuView gamePlayMenuView) {
+        this.gamePlayMenuView = gamePlayMenuView;
+    }
 
     public static GamePlay getGamePlay() {
         return gamePlay;

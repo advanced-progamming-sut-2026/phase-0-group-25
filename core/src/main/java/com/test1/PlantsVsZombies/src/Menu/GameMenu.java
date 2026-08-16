@@ -4,10 +4,12 @@ import com.test1.PlantsVsZombies.src.Enums.*;
 import com.test1.PlantsVsZombies.src.Model.ChaptersAndLevels.Chapter;
 import com.test1.PlantsVsZombies.src.Model.ChaptersAndLevels.ChapterFactory;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
+import com.test1.PlantsVsZombies.src.Model.GamePlayType.Simple;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.GameDataLoader;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.ZombieStats;
 import com.test1.PlantsVsZombies.src.Model.User.User;
 import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
+import com.test1.PlantsVsZombies.src.View.LibGDXViews.GamePlayScreen;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.BaseView;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.GameMenuView;
 
@@ -188,15 +190,15 @@ public class GameMenu extends Menu {
             return;
         }
 
-        if (
-            this.plantsStr == null
-                || this.plantsStr.isEmpty()
-        ) {
-            getView().showError(
-                "No plants selected! Please select plants in choose plant menu first."
-            );
-            return;
-        }
+//        if (
+//            this.plantsStr == null
+//                || this.plantsStr.isEmpty()
+//        ) {
+//            getView().showError(
+//                "No plants selected! Please select plants in choose plant menu first."
+//            );
+//            return;
+//        }
 
         if (
             requestedLevel < 1
@@ -318,6 +320,7 @@ public class GameMenu extends Menu {
         }
 
         GamePlayMenu.setGamePlay(gamePlay);
+        MenuManager.getInstance().getGamePlayMenu().setGamePlayMenuView(new GamePlayScreen(gamePlay));
 
         MenuManager.getInstance()
             .changeMenu(MenuType.GamePlay);

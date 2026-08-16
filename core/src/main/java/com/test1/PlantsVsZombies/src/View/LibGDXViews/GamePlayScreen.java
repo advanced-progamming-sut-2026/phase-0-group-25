@@ -1,4 +1,4 @@
-package com.test1.PlantsVsZombies.src.View;
+package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
@@ -12,24 +12,21 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
+import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.Simple;
 import com.test1.PlantsVsZombies.src.Model.Mower;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 import com.test1.PlantsVsZombies.src.Model.Sun.Sun;
-import com.test1.PlantsVsZombies.src.Model.Tile;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
-import com.badlogic.gdx.Gdx;
+import com.test1.PlantsVsZombies.src.View.ViewInterfaces.GamePlayMenuView;
 import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
 
-public class GamePlayScreen extends ScreenAdapter {
-    private Simple gamePlay;
+public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
+    private GamePlay gamePlay;
     private OrthographicCamera camera;
     private ShapeRenderer shapeRenderer;
     private SpriteBatch batch;
@@ -48,7 +45,11 @@ public class GamePlayScreen extends ScreenAdapter {
     private TextureRegion zombieHeadIcon;
     private TextureRegion progressBarFrame;
 
-    public GamePlayScreen(Simple gamePlay) {
+
+    private static final String ERROR_BG_ASSET_ID = "IMAGE_UI_GENERIC_TIMER_RIBBON_RED";
+
+
+    public GamePlayScreen(GamePlay gamePlay) {
         this.gamePlay = gamePlay;
     }
 
@@ -279,5 +280,15 @@ public class GamePlayScreen extends ScreenAdapter {
             case FROSTBITE_CAVES -> "IMAGE_BACKGROUNDS_ICEAGE_TEXTURE";
             case BIG_WAVE_BEACH -> "IMAGE_BACKGROUNDS_BEACH_TEXTURE";
         };
+    }
+
+    @Override
+    public void showCurrentMenu() {
+
+    }
+
+    @Override
+    public void showError(String errorMessage) {
+        UIManager.showToast(errorMessage, ERROR_BG_ASSET_ID);
     }
 }
