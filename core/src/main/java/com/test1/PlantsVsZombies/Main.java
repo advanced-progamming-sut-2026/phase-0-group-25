@@ -18,11 +18,11 @@ public class Main extends Game {
 
     @Override
     public void create() {
+        GameDataLoader.loadGameData();
         instance = this;
         batch = new SpriteBatch();
         skin = PvzSkin.get();
 
-        // Fixed: Use internal file handle for runtime relative assets
         textureBank = new TextureBank("768", Gdx.files.internal("Assets"));
 
         GameDataLoader.loadGameData();

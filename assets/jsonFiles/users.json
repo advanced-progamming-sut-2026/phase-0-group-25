@@ -134,7 +134,8 @@
       "dailyOfferBoughtToday" : false
     },
     "securityQuestion" : "FIRST_PET",
-    "securityAnswer" : "cat"
+    "securityAnswer" : "cat",
+    "debugMode" : false
   },
   "amirKh" : {
     "userName" : "amirKh",
@@ -217,9 +218,9 @@
       },
       "unlockedZombies" : [ "DEFAULT", "CONE_HEAD", "BUCKET_HEAD", "BRICK_HEAD", "KNIGHT", "GARGANTUAR", "IMP", "RA", "EXPLORER", "TOMB_RAISER", "ALL_STAR", "ARCADE", "UMBRELLA", "TURQUOISE", "PROSPECTOR", "PIANO", "NEWSPAPER" ],
       "unlockedPlantsAndTheirLevels" : {
+        "SUN_SHROOM" : 1,
         "PEASHOOTER" : 1,
-        "SUNFLOWER" : 1,
-        "SUN_SHROOM" : 1
+        "SUNFLOWER" : 1
       },
       "gemsCount" : 99932,
       "coinsCount" : 984450,
@@ -291,7 +292,8 @@
       "dailyOfferBoughtToday" : false
     },
     "securityQuestion" : "FAVORITE_COLOR",
-    "securityAnswer" : "blue"
+    "securityAnswer" : "blue",
+    "debugMode" : false
   },
   "amir4" : {
     "userName" : "amir4",
@@ -337,10 +339,10 @@
     "genderType" : "Male",
     "userProgress" : {
       "unlockedChaptersAndLevels" : {
-        "ANCIENT_EGYPT" : 1,
         "BIG_WAVE_BEACH" : 1,
         "FROSTBITE_CAVES" : 1,
-        "DARK_AGE" : 1
+        "DARK_AGE" : 1,
+        "ANCIENT_EGYPT" : 1
       },
       "unlockedZombies" : [ "DEFAULT" ],
       "unlockedPlantsAndTheirLevels" : {
@@ -397,7 +399,115 @@
       "dailyOfferBoughtToday" : false
     },
     "securityQuestion" : "BORN_CITY",
-    "securityAnswer" : "somewhere"
+    "securityAnswer" : "somewhere",
+    "debugMode" : false
+  },
+  "amirKH2007" : {
+    "userName" : "amirKH2007",
+    "nickName" : "amir",
+    "password" : "1234$AbCd",
+    "email" : "amir@gmail.com",
+    "newsManager" : {
+      "news" : [ {
+        "message" : "chapter ancient egypt unlocked!",
+        "read" : false
+      }, {
+        "message" : "level 1 of ancient egypt unlocked!",
+        "read" : false
+      }, {
+        "message" : "chapter dark age unlocked!",
+        "read" : false
+      }, {
+        "message" : "level 1 of dark age unlocked!",
+        "read" : false
+      }, {
+        "message" : "chapter frostbite caves unlocked!",
+        "read" : false
+      }, {
+        "message" : "level 1 of frostbite caves unlocked!",
+        "read" : false
+      }, {
+        "message" : "chapter big wave beach unlocked!",
+        "read" : false
+      }, {
+        "message" : "level 1 of big wave beach unlocked!",
+        "read" : false
+      }, {
+        "message" : "plant SUNFLOWER unlocked!",
+        "read" : false
+      }, {
+        "message" : "plant PEASHOOTER unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie DEFAULT unlocked!",
+        "read" : false
+      } ]
+    },
+    "genderType" : "Male",
+    "userProgress" : {
+      "unlockedChaptersAndLevels" : {
+        "BIG_WAVE_BEACH" : 0,
+        "FROSTBITE_CAVES" : 0,
+        "DARK_AGE" : 0,
+        "ANCIENT_EGYPT" : 0
+      },
+      "unlockedZombies" : [ "DEFAULT" ],
+      "unlockedPlantsAndTheirLevels" : {
+        "PEASHOOTER" : 1,
+        "SUNFLOWER" : 1
+      },
+      "gemsCount" : 600,
+      "coinsCount" : 9000,
+      "gameDifficulty" : 3,
+      "gamesPlayed" : 0,
+      "questVariables" : {
+        "one_column_less" : "1",
+        "defenseless_row" : "1",
+        "thrifty_farmer" : "5",
+        "chapter_hunter" : "MINI_GAME",
+        "mower_time" : "40",
+        "daily_sun_collector" : "3000",
+        "defenseless_cross" : "3",
+        "professional_killer" : "MELON_PULT"
+      },
+      "miniGameLevels" : {
+        "VASEBREAKER" : 1,
+        "I_ZOMBIE" : 1,
+        "WALNUT_BOWLING" : 1
+      },
+      "questProgress" : {
+        "one_column_less" : 0,
+        "defenseless_row" : 0,
+        "thrifty_farmer" : 0,
+        "speed_demon" : 0,
+        "chapter_hunter" : 0,
+        "mower_time" : 0,
+        "defenseless_cross" : 0,
+        "only_cactus" : 0,
+        "daily_sun_collector" : 0,
+        "master_defense" : 0,
+        "professional_demolisher" : 0,
+        "win_streak" : 0,
+        "cloudy_day" : 0,
+        "professional_killer" : 0
+      },
+      "completedQuestIds" : [ ],
+      "claimedQuestIds" : [ ],
+      "lastDailyReset" : [ 2026, 8, 16 ],
+      "plantFoodCount" : 0,
+      "seedPackets" : { },
+      "dailyOfferPurchaseDate" : null,
+      "miniGamesCompleted" : 0,
+      "dailyQuestsCompleted" : 0,
+      "nonDailyQuestsCompleted" : 0,
+      "unlockedPots" : [ [ true, true, true, true, true ], [ false, false, false, false, false ], [ false, false, false, false, false ], [ false, false, false, false, false ] ],
+      "potPlants" : [ [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ] ],
+      "greenhouseBoosts" : [ ],
+      "dailyOfferBoughtToday" : false
+    },
+    "securityQuestion" : "FAVORITE_COLOR",
+    "securityAnswer" : "blue",
+    "debugMode" : true
   },
   "amir2" : {
     "userName" : "amir2",
@@ -458,7 +568,115 @@
       "dailyOfferBoughtToday" : false
     },
     "securityQuestion" : "FAVORITE_COLOR",
-    "securityAnswer" : "blue"
+    "securityAnswer" : "blue",
+    "debugMode" : false
+  },
+  "amir1385" : {
+    "userName" : "amir1385",
+    "nickName" : "amir",
+    "password" : "1234$AbCd",
+    "email" : "amir85@gmail.com",
+    "newsManager" : {
+      "news" : [ {
+        "message" : "chapter ancient egypt unlocked!",
+        "read" : false
+      }, {
+        "message" : "level 1 of ancient egypt unlocked!",
+        "read" : false
+      }, {
+        "message" : "chapter dark age unlocked!",
+        "read" : false
+      }, {
+        "message" : "level 1 of dark age unlocked!",
+        "read" : false
+      }, {
+        "message" : "chapter frostbite caves unlocked!",
+        "read" : false
+      }, {
+        "message" : "level 1 of frostbite caves unlocked!",
+        "read" : false
+      }, {
+        "message" : "chapter big wave beach unlocked!",
+        "read" : false
+      }, {
+        "message" : "level 1 of big wave beach unlocked!",
+        "read" : false
+      }, {
+        "message" : "plant SUNFLOWER unlocked!",
+        "read" : false
+      }, {
+        "message" : "plant PEASHOOTER unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie DEFAULT unlocked!",
+        "read" : false
+      } ]
+    },
+    "genderType" : "Male",
+    "userProgress" : {
+      "unlockedChaptersAndLevels" : {
+        "BIG_WAVE_BEACH" : 1,
+        "FROSTBITE_CAVES" : 1,
+        "DARK_AGE" : 1,
+        "ANCIENT_EGYPT" : 1
+      },
+      "unlockedZombies" : [ "DEFAULT" ],
+      "unlockedPlantsAndTheirLevels" : {
+        "PEASHOOTER" : 1,
+        "SUNFLOWER" : 1
+      },
+      "gemsCount" : 0,
+      "coinsCount" : 0,
+      "gameDifficulty" : 3,
+      "gamesPlayed" : 0,
+      "questVariables" : {
+        "one_column_less" : "5",
+        "defenseless_row" : "1",
+        "thrifty_farmer" : "1",
+        "chapter_hunter" : "FROSTBITE_CAVES",
+        "mower_time" : "50",
+        "daily_sun_collector" : "5000",
+        "defenseless_cross" : "4",
+        "professional_killer" : "CACTUS"
+      },
+      "miniGameLevels" : {
+        "WALNUT_BOWLING" : 1,
+        "VASEBREAKER" : 1,
+        "I_ZOMBIE" : 1
+      },
+      "questProgress" : {
+        "one_column_less" : 0,
+        "defenseless_row" : 0,
+        "thrifty_farmer" : 0,
+        "speed_demon" : 0,
+        "chapter_hunter" : 0,
+        "mower_time" : 0,
+        "defenseless_cross" : 0,
+        "only_cactus" : 0,
+        "daily_sun_collector" : 0,
+        "master_defense" : 0,
+        "professional_demolisher" : 0,
+        "win_streak" : 0,
+        "cloudy_day" : 0,
+        "professional_killer" : 0
+      },
+      "completedQuestIds" : [ ],
+      "claimedQuestIds" : [ ],
+      "lastDailyReset" : [ 2026, 8, 13 ],
+      "plantFoodCount" : 0,
+      "seedPackets" : { },
+      "dailyOfferPurchaseDate" : null,
+      "miniGamesCompleted" : 0,
+      "dailyQuestsCompleted" : 0,
+      "nonDailyQuestsCompleted" : 0,
+      "unlockedPots" : [ [ true, true, true, true, true ], [ false, false, false, false, false ], [ false, false, false, false, false ], [ false, false, false, false, false ] ],
+      "potPlants" : [ [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ] ],
+      "greenhouseBoosts" : [ ],
+      "dailyOfferBoughtToday" : false
+    },
+    "securityQuestion" : "FAVORITE_COLOR",
+    "securityAnswer" : "blue",
+    "debugMode" : false
   },
   "amir5" : {
     "userName" : "amir5",
@@ -504,10 +722,10 @@
     "genderType" : "Male",
     "userProgress" : {
       "unlockedChaptersAndLevels" : {
-        "ANCIENT_EGYPT" : 1,
         "BIG_WAVE_BEACH" : 1,
         "FROSTBITE_CAVES" : 1,
-        "DARK_AGE" : 1
+        "DARK_AGE" : 1,
+        "ANCIENT_EGYPT" : 1
       },
       "unlockedZombies" : [ "DEFAULT" ],
       "unlockedPlantsAndTheirLevels" : {
@@ -564,6 +782,114 @@
       "dailyOfferBoughtToday" : false
     },
     "securityQuestion" : "FAVORITE_COLOR",
-    "securityAnswer" : "blue"
+    "securityAnswer" : "blue",
+    "debugMode" : false
+  },
+  "amir2007" : {
+    "userName" : "amir2007",
+    "nickName" : "amir",
+    "password" : "1234$AbCd",
+    "email" : "amir@gmail.com",
+    "newsManager" : {
+      "news" : [ {
+        "message" : "chapter ancient egypt unlocked!",
+        "read" : false
+      }, {
+        "message" : "level 1 of ancient egypt unlocked!",
+        "read" : false
+      }, {
+        "message" : "chapter dark age unlocked!",
+        "read" : false
+      }, {
+        "message" : "level 1 of dark age unlocked!",
+        "read" : false
+      }, {
+        "message" : "chapter frostbite caves unlocked!",
+        "read" : false
+      }, {
+        "message" : "level 1 of frostbite caves unlocked!",
+        "read" : false
+      }, {
+        "message" : "chapter big wave beach unlocked!",
+        "read" : false
+      }, {
+        "message" : "level 1 of big wave beach unlocked!",
+        "read" : false
+      }, {
+        "message" : "plant SUNFLOWER unlocked!",
+        "read" : false
+      }, {
+        "message" : "plant PEASHOOTER unlocked!",
+        "read" : false
+      }, {
+        "message" : "zombie DEFAULT unlocked!",
+        "read" : false
+      } ]
+    },
+    "genderType" : "Male",
+    "userProgress" : {
+      "unlockedChaptersAndLevels" : {
+        "BIG_WAVE_BEACH" : 1,
+        "FROSTBITE_CAVES" : 1,
+        "DARK_AGE" : 1,
+        "ANCIENT_EGYPT" : 1
+      },
+      "unlockedZombies" : [ "DEFAULT" ],
+      "unlockedPlantsAndTheirLevels" : {
+        "PEASHOOTER" : 1,
+        "SUNFLOWER" : 1
+      },
+      "gemsCount" : 0,
+      "coinsCount" : 0,
+      "gameDifficulty" : 3,
+      "gamesPlayed" : 0,
+      "questVariables" : {
+        "one_column_less" : "2",
+        "defenseless_row" : "1",
+        "thrifty_farmer" : "4",
+        "chapter_hunter" : "MINI_GAME",
+        "mower_time" : "20",
+        "daily_sun_collector" : "5000",
+        "defenseless_cross" : "5",
+        "professional_killer" : "PEASHOOTER"
+      },
+      "miniGameLevels" : {
+        "WALNUT_BOWLING" : 1,
+        "I_ZOMBIE" : 1,
+        "VASEBREAKER" : 1
+      },
+      "questProgress" : {
+        "one_column_less" : 0,
+        "defenseless_row" : 0,
+        "thrifty_farmer" : 0,
+        "speed_demon" : 0,
+        "chapter_hunter" : 0,
+        "mower_time" : 0,
+        "defenseless_cross" : 0,
+        "only_cactus" : 0,
+        "daily_sun_collector" : 0,
+        "master_defense" : 0,
+        "professional_demolisher" : 0,
+        "win_streak" : 0,
+        "cloudy_day" : 0,
+        "professional_killer" : 0
+      },
+      "completedQuestIds" : [ ],
+      "claimedQuestIds" : [ ],
+      "lastDailyReset" : [ 2026, 8, 14 ],
+      "plantFoodCount" : 0,
+      "seedPackets" : { },
+      "dailyOfferPurchaseDate" : null,
+      "miniGamesCompleted" : 0,
+      "dailyQuestsCompleted" : 0,
+      "nonDailyQuestsCompleted" : 0,
+      "unlockedPots" : [ [ true, true, true, true, true ], [ false, false, false, false, false ], [ false, false, false, false, false ], [ false, false, false, false, false ] ],
+      "potPlants" : [ [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ] ],
+      "greenhouseBoosts" : [ ],
+      "dailyOfferBoughtToday" : false
+    },
+    "securityQuestion" : "BORN_CITY",
+    "securityAnswer" : "somewhere",
+    "debugMode" : false
   }
 }

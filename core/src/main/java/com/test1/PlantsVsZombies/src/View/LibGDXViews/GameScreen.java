@@ -22,9 +22,9 @@ import com.test1.PlantsVsZombies.src.View.ViewInterfaces.GameMenuView;
 
 public class GameScreen extends AbstractScreen implements GameMenuView {
 
-    // ------------------------------------------------------------
-    // Assets
-    // ------------------------------------------------------------
+
+
+
     private static final String BACKGROUND_ASSET_ID = "IMAGE_MAINMENU_BACKGROUND";
     private static final String ERROR_BG_ASSET_ID = "IMAGE_UI_GENERIC_TIMER_RIBBON_RED";
 
@@ -34,15 +34,15 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
     private static final String GREENHOUSE_BUTTON_ASSET_ID =
         "IMAGE_UI_GENERIC_BUTTONS_HUD_ZG_NORMAL";
 
-    // ------------------------------------------------------------
-    // Layout constants
-    // ------------------------------------------------------------
+
+
+
     private static final float DEFAULT_ICON_BUTTON_SIZE = 70f;
     private static final float CHAPTER_ICON_WIDTH = 260f;
     private static final float CHAPTER_ICON_HEIGHT = 320f;
-    // Extra invisible space left below the icon+levels block so that,
-    // once centered in the middle section, it visually sits slightly
-    // above dead-center rather than perfectly centered.
+
+
+
     private static final float CENTER_BLOCK_UPWARD_SHIFT = 60f;
 
     private final GameMenu menuController;
@@ -58,9 +58,9 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
         Stack screenStack = new Stack();
         screenStack.setFillParent(true);
 
-        // --------------------------------------------------------
-        // Background
-        // --------------------------------------------------------
+
+
+
         TextureRegion backgroundRegion = textureBank.region(BACKGROUND_ASSET_ID);
         if (backgroundRegion != null) {
             Image background = new Image(backgroundRegion);
@@ -68,15 +68,15 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
             screenStack.add(background);
         }
 
-        // --------------------------------------------------------
-        // Main UI
-        // --------------------------------------------------------
+
+
+
         Table uiTable = new Table();
         uiTable.setFillParent(true);
 
-        // --------------------------------------------------------
-        // Top bar
-        // --------------------------------------------------------
+
+
+
         Table topBar = new Table();
 
         topBar.add(createCurrencyHud())
@@ -87,7 +87,7 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
         topBar.add()
             .expandX();
 
-        // Back -> Choose Chapter
+
         topBar.add(createBackButton(MenuType.Game))
             .right()
             .size(70, 70)
@@ -99,9 +99,9 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
             .top()
             .row();
 
-        // --------------------------------------------------------
-        // Center block: chapter icon (top) + level islands (below it)
-        // --------------------------------------------------------
+
+
+
         Chapter chapter = menuController.getChapter();
 
         Table centerBlock = new Table();
@@ -122,21 +122,21 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
             centerBlock.add(levelsTable).row();
         }
 
-        // Extra bottom padding on the block itself nudges it up within
-        // the centered cell below (see CENTER_BLOCK_UPWARD_SHIFT).
+
+
         centerBlock.padBottom(CENTER_BLOCK_UPWARD_SHIFT);
 
-        // Wrap in a vertical ScrollPane: on smaller/windowed sizes the
-        // icon+levels content can be taller than the space between the
-        // top and bottom bars. Without this, the Table simply overflows
-        // at its natural size and pushes the bottom bar off screen.
-        // With it, the block scrolls internally and the bottom bar
-        // always stays fully visible.
+
+
+
+
+
+
         ScrollPane.ScrollPaneStyle centerScrollStyle = new ScrollPane.ScrollPaneStyle();
         centerScrollStyle.background = null;
 
         ScrollPane centerScrollPane = new ScrollPane(centerBlock, centerScrollStyle);
-        centerScrollPane.setScrollingDisabled(true, false); // vertical scroll only
+        centerScrollPane.setScrollingDisabled(true, false);
         centerScrollPane.setOverscroll(false, false);
         centerScrollPane.setFadeScrollBars(true);
 
@@ -145,10 +145,10 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
             .fill()
             .row();
 
-        // --------------------------------------------------------
-        // Bottom bar
-        // --------------------------------------------------------
-        // Match the Greenhouse button size directly to the Travel Log texture
+
+
+
+
         TextureRegion travelLogRegion = textureBank.region(TRAVEL_LOG_BUTTON_ASSET_ID);
         float iconBtnWidth = (travelLogRegion != null)
             ? travelLogRegion.getRegionWidth()
@@ -159,7 +159,7 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
 
         Table bottomBar = new Table();
 
-        // --- Bottom-Left: Greenhouse (Asset) + Collection (Text) ---
+
         Actor greenhouseButton = createAssetButton(
             GREENHOUSE_BUTTON_ASSET_ID,
             "Greenhouse",
@@ -186,7 +186,7 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
             .padRight(12);
         leftButtons.add(collectionButton);
 
-        // --- Bottom-Right: Choose Plant (Text) + Travel Log (Asset) ---
+
         TextButton choosePlantButton = new TextButton("Choose Plant", skin, "brown");
         choosePlantButton.pad(8, 16, 8, 16);
         choosePlantButton.addListener(new ClickListener() {
@@ -212,7 +212,7 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
         rightButtons.add(travelLogButton)
             .size(iconBtnWidth, iconBtnHeight);
 
-        // Combine left and right
+
         bottomBar.add(leftButtons).left();
         bottomBar.add().expandX();
         bottomBar.add(rightButtons).right();
@@ -229,15 +229,11 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
         rootTable.add(screenStack).grow();
     }
 
-    // ============================================================
-    // CHAPTER ICON
-    // ============================================================
 
-    /**
-     * The chapter's big island icon, reused from the same asset as the
-     * Choose Chapter screen (via the shared ChapterIslandAsset enum),
-     * shown decoratively above the level islands here.
-     */
+
+
+
+
     private Actor createChapterIcon(ChapterType chapterType) {
         String assetId = ChapterIslandAsset.getAssetId(chapterType);
         TextureRegion region = (assetId != null) ? textureBank.region(assetId) : null;
@@ -253,9 +249,9 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
         return fallback;
     }
 
-    // ============================================================
-    // LEVEL CREATION
-    // ============================================================
+
+
+
 
     private void addLevels(Table levelsTable, Chapter chapter) {
         User user = UsersManager.getInstance().getLoggedInUser();
@@ -322,16 +318,16 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
             }
         });
 
-        // --------------------------------------------------------
-        // Number shown below the island, not overlapping it
-        // --------------------------------------------------------
+
+
+
         Label levelNumberLabel = createLabel(
             String.valueOf(level.getLevelNumber()),
             "FBUSV8C5EI_1",
             isUnlocked ? Color.WHITE : Color.LIGHT_GRAY
         );
 
-//        levelNumberLabel.setFontScale(1.2f);
+
 
         Table levelContainer = new Table();
         levelContainer.add(levelButton).row();
@@ -369,9 +365,9 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
         return fallbackButton;
     }
 
-    // ============================================================
-    // BOTTOM BUTTON HELPERS
-    // ============================================================
+
+
+
 
     private Actor createAssetButton(
         String assetId,
@@ -402,9 +398,9 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
         return fallback;
     }
 
-    // ============================================================
-    // GAME MENU VIEW
-    // ============================================================
+
+
+
 
     @Override
     public void showChapterEnterSuccess(String chapterName) {

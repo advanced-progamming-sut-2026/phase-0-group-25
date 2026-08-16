@@ -25,16 +25,16 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
 
     private LoginMenu menuController;
 
-    // Main Containers
+
     private Table mainContainer;
     private BorderedTable loginTable;
     private BorderedTable forgetPasswordTable;
 
-    // Login Fields
+
     private TextField usernameField;
     private TextField passwordField;
 
-    // Stay Logged In Toggle State
+
     private boolean stayLoggedIn = true;
     private Image checkImage;
     private Image xImage;
@@ -42,7 +42,7 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
     private Cell<Image> xCell;
     private Table stayLoggedInRow;
 
-    // Forgot Password Fields
+
     private TextField forgetUsernameField;
     private TextField forgetEmailField;
     private TextField forgetAnswerField;

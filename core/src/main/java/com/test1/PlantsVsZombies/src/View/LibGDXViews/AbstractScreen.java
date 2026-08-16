@@ -32,23 +32,23 @@ public abstract class AbstractScreen implements Screen {
     private Stack modalStack;
     private Stack toastStack;
 
-    // Tracks the last window size we laid out for. Some platforms/backends
-    // don't reliably fire resize() the instant a window un-maximizes or
-    // exits fullscreen (it can lag a frame or more), which leaves the
-    // Stage's viewport stale and the background not matching the window.
-    // Checking every frame is a cheap, reliable safeguard against that.
+
+
+
+
+
     private int lastWidth = -1;
     private int lastHeight = -1;
 
     protected Label coinCountLabel;
     protected Label gemCountLabel;
 
-    // --- Global UI Asset IDs ---
+
     protected static final String CURRENCY_BOX_BG_ASSET_ID = "IMAGE_UI_GENERIC_BUTTON_GENERIC_LTECURRENCY";
     protected static final String COIN_ICON_ASSET_ID = "IMAGE_UI_THYMED_EVENTS_ECS_CONVRT_COIN";
     protected static final String GEM_ICON_ASSET_ID = "IMAGE_EFFECTS_COIN_DIAMOND_COIN_DIAMOND_141X146";
     protected static final String PLUS_BUTTON_ASSET_ID = "IMAGE_UI_HUD_INGAME_COIN_BUY";
-    protected static final String BACK_BUTTON_ASSET_ID = "IMAGE_UI_ALMANAC_BUTTONS_HUD_BACK_SELECTED"; // TODO: Replace with your back button texture ID
+    protected static final String BACK_BUTTON_ASSET_ID = "IMAGE_UI_ALMANAC_BUTTONS_HUD_BACK_SELECTED";
 
     @Override
     public void show() {
@@ -62,7 +62,7 @@ public abstract class AbstractScreen implements Screen {
         modalStack = new Stack();
         toastStack = new Stack();
 
-        // Allow clicks to pass through empty overlay stacks
+
         modalStack.setTouchable(Touchable.childrenOnly);
         toastStack.setTouchable(Touchable.childrenOnly);
 
@@ -75,10 +75,7 @@ public abstract class AbstractScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
     }
 
-    /**
-     * Reusable Back Button for any screen.
-     * Navigates to targetMenu when clicked.
-     */
+
     public Actor createBackButton(MenuType targetMenu) {
         TextureRegion backRegion = textureBank.region(BACK_BUTTON_ASSET_ID);
         if (backRegion != null) {
@@ -192,7 +189,7 @@ public abstract class AbstractScreen implements Screen {
         int coins = (user != null && user.getUserProgress() != null) ? user.getUserProgress().getCoinsCount() : 0;
         int gems = (user != null && user.getUserProgress() != null) ? user.getUserProgress().getGemsCount() : 0;
 
-        // --- Coins Badge ---
+
         Table coinBadge = buildCurrencyBadge(
             COIN_ICON_ASSET_ID,
             String.valueOf(coins),
@@ -200,7 +197,7 @@ public abstract class AbstractScreen implements Screen {
             debug
         );
 
-        // --- Gems Badge ---
+
         Table gemBadge = buildCurrencyBadge(
             GEM_ICON_ASSET_ID,
             String.valueOf(gems),
@@ -218,7 +215,7 @@ public abstract class AbstractScreen implements Screen {
         Table badge = new Table();
         Stack stack = new Stack();
 
-        // 1. Bottom Layer: Box Background and Number Label
+
         Table boxTable = new Table();
         TextureRegion boxRegion = textureBank.region(CURRENCY_BOX_BG_ASSET_ID);
         if (boxRegion != null) {
@@ -234,15 +231,15 @@ public abstract class AbstractScreen implements Screen {
             gemCountLabel = countLabel;
         }
 
-        // Left padding (28) keeps the number from colliding with the overlapping icon
+
         boxTable.add(countLabel).center().pad(4, 35, 4, isDebug ? 28 : 12).minWidth(60);
         stack.add(boxTable);
 
-        // 2. Top Layer: Icon and Plus Button (Drawn in front of the box)
+
         Table overlayTable = new Table();
         overlayTable.setTouchable(Touchable.childrenOnly);
 
-        // Front Icon on Left Edge
+
         TextureRegion iconRegion = textureBank.region(iconAssetId);
         if (iconRegion != null) {
             Image icon = new Image(iconRegion);
@@ -252,9 +249,9 @@ public abstract class AbstractScreen implements Screen {
             overlayTable.add(fallbackIcon).left().padLeft(-6f);
         }
 
-        overlayTable.add().expandX(); // Spacer
+        overlayTable.add().expandX();
 
-        // Front Plus Button on Right Edge (if debug mode is ON)
+
         if (isDebug) {
             TextureRegion plusRegion = textureBank.region(PLUS_BUTTON_ASSET_ID);
             Actor plusActor;
@@ -266,7 +263,7 @@ public abstract class AbstractScreen implements Screen {
 
                 Button.ButtonStyle style = new Button.ButtonStyle();
                 style.up = plusDrawable;
-                // .tint() copies the minWidth and minHeight from plusDrawable
+
                 style.down = plusDrawable.tint(new Color(0.7f, 0.7f, 0.7f, 1f));
 
                 Button plusBtn = new Button(style);
@@ -293,7 +290,7 @@ public abstract class AbstractScreen implements Screen {
 
         stack.add(overlayTable);
 
-        // Add stack to badge with margin compensation for the overlapping elements
+
         badge.add(stack).padLeft(10f).padRight(isDebug ? 10f : 0f);
         return badge;
     }

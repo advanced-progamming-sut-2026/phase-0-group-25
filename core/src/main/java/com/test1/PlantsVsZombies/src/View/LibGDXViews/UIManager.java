@@ -35,11 +35,7 @@ public class UIManager {
         return null;
     }
 
-    /**
-     * Adds a toast to a Stage that is NOT owned by any individual Screen,
-     * so it keeps rendering even if the current Screen changes right after
-     * this is called (e.g. login/sign up success followed by changeMenu()).
-     */
+
     public static void showToast(String message, String bgAssetId) {
         if (toastStage == null || main == null) return;
 

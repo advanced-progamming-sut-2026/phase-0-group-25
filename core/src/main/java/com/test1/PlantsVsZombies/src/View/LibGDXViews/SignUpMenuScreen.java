@@ -29,25 +29,25 @@ public class SignUpMenuScreen extends AbstractScreen implements SignUpMenuView {
 
     private SignUpMenu menuController;
 
-    // Containers
+
     private Table mainContainer;
     private BorderedTable registrationTable;
     private BorderedTable securityQuestionTable;
 
-    // Registration UI elements
+
     private TextField usernameField;
     private TextField passwordField;
     private TextField passwordConfirmField;
     private TextField nicknameField;
     private TextField emailField;
 
-    // Gender
+
     private String selectedGender = "Male";
     private CheckBox maleCheckBox;
     private CheckBox femaleCheckBox;
     private ButtonGroup<CheckBox> genderGroup;
 
-    // Security Question Selector State
+
     private int selectedQuestionIndex = 0;
 
     private final String[] securityQuestions = new String[]{
@@ -120,9 +120,9 @@ public class SignUpMenuScreen extends AbstractScreen implements SignUpMenuView {
         nicknameField = new TextField("", skin);
         emailField = new TextField("", skin);
 
-        // -------------------------
-        // Gender checkboxes
-        // -------------------------
+
+
+
 
         maleCheckBox = new CheckBox("Male", skin);
         femaleCheckBox = new CheckBox("Female", skin);
@@ -134,10 +134,10 @@ public class SignUpMenuScreen extends AbstractScreen implements SignUpMenuView {
         genderGroup.add(maleCheckBox);
         genderGroup.add(femaleCheckBox);
 
-        // At most one gender can be selected.
+
         genderGroup.setMaxCheckCount(1);
 
-        // We want Male selected initially.
+
         genderGroup.setMinCheckCount(1);
         maleCheckBox.setChecked(true);
 
@@ -159,9 +159,9 @@ public class SignUpMenuScreen extends AbstractScreen implements SignUpMenuView {
         genderContainer.add(maleCheckBox).padRight(15);
         genderContainer.add(femaleCheckBox);
 
-        // -------------------------
-        // Register button
-        // -------------------------
+
+
+
 
         TextButton registerButton =
             new TextButton("Register", skin);

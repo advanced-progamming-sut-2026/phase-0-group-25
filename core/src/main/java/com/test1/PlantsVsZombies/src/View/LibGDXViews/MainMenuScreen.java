@@ -25,13 +25,13 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
     private static final String LOGO_ASSET_ID = "IMAGE_UI_MAINMENU_PVZ2_LOGO_HORIZONTAL";
     private static final String ERROR_BG_ASSET_ID = "IMAGE_UI_GENERIC_TIMER_RIBBON_RED";
 
-    // --- Top Bar User Badge Asset ID ---
+
     private static final String USER_BADGE_BG_ASSET_ID = "IMAGE_UI_IF_BUNDLE_REWARD5_BG";
 
-    // --- Bottom Bar Asset IDs ---
+
     private static final String NEWS_BUTTON_ASSET_ID = "IMAGE_UI_HUD_NEWSBUTTON_BUTTONS_HUD_NEWS_SELECTED_COPY_2";
     private static final String EXCLAMATION_MARK_ASSET_ID = "IMAGE_UI_CLAIM_SMALL";
-    private static final String SETTINGS_BUTTON_ASSET_ID = "IMAGE_UI_HUD_SETTINGSBUTTON_BUTTONS_HUD_SETTINGS_NORMAL"; // TODO: Replace with your exact settings texture ID
+    private static final String SETTINGS_BUTTON_ASSET_ID = "IMAGE_UI_HUD_SETTINGSBUTTON_BUTTONS_HUD_SETTINGS_NORMAL";
 
     private MainMenu menuController;
 
@@ -46,7 +46,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         Stack screenStack = new Stack();
         screenStack.setFillParent(true);
 
-        // Background Image
+
         TextureRegion bgRegion = textureBank.region(BACKGROUND_ASSET_ID);
         if (bgRegion != null) {
             Image bgImage = new Image(bgRegion);
@@ -57,20 +57,20 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         Table uiTable = new Table();
         uiTable.setFillParent(true);
 
-        // --- Top Bar ---
+
         Table topTable = new Table();
 
-        // Top Left Stack: Currency HUD on top, Username Badge directly below it
+
         Table topLeftTable = new Table();
         topLeftTable.add(createCurrencyHud()).left().row();
         topLeftTable.add(createUserBadge()).left().padTop(8).row();
 
         topTable.add(topLeftTable).left().pad(15);
 
-        // Spacer pushing logout to top-right
+
         topTable.add().expandX();
 
-        // Top Right: Logout Button
+
         TextButton logoutButton = new TextButton("Logout", skin, "brown");
         logoutButton.addListener(new ClickListener() {
             @Override
@@ -84,7 +84,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
 
         uiTable.add(topTable).fillX().top().row();
 
-        // --- Main Container (Logo & Play Button) ---
+
         Table mainContainer = new Table();
 
         TextureRegion logoRegion = textureBank.region(LOGO_ASSET_ID);
@@ -107,10 +107,10 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
 
         uiTable.add(mainContainer).expand().center().padBottom(40).row();
 
-        // --- Bottom Bar ---
+
         Table bottomTable = new Table();
 
-        // Profile Button
+
         TextButton profileButton = new TextButton("Profile", skin, "brown");
         profileButton.addListener(new ClickListener() {
             @Override
@@ -124,7 +124,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
 
         bottomTable.add().expandX();
 
-        // Leaderboard Button
+
         TextButton leaderboardButton = new TextButton("Leaderboard", skin, "brown");
         leaderboardButton.addListener(new ClickListener() {
             @Override
