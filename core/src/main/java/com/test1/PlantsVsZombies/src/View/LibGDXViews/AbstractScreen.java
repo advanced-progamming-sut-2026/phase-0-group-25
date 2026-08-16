@@ -226,7 +226,8 @@ public abstract class AbstractScreen implements Screen {
             boxTable.setBackground(new NinePatchDrawable(patch));
         }
 
-        Label countLabel = new Label(initialValue, skin);
+        Label countLabel = createLabel(initialValue, "FBUSV8C5EI_1_outline", Color.WHITE);
+        countLabel.setFontScale(0.5f);
         if (isCoin) {
             coinCountLabel = countLabel;
         } else {

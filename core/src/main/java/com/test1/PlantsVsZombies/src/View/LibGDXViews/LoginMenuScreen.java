@@ -114,7 +114,8 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
         loginTable = new BorderedTable();
         loginTable.pad(30);
 
-        Label titleLabel = createBlackLabel("USER LOGIN");
+        Label titleLabel = createLabel("USER LOGIN", "FBUSV8C5EI_2", Color.BLACK);
+        titleLabel.setFontScale(0.75f);
 
         usernameField = new TextField("", skin);
         passwordField = new TextField("", skin);
@@ -149,7 +150,7 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
         stayLoggedInRow = new Table();
         checkCell = stayLoggedInRow.add(checkImage).padRight(10);
         xCell = stayLoggedInRow.add(xImage).padRight(15);
-        stayLoggedInRow.add(createBlackLabel("Stay Logged In"));
+        stayLoggedInRow.add(createLabel("Stay Logged In", "AVENIRNEXTLTPRO-DEMICN", Color.BLACK));
 
         updateStayLoggedInSelection();
 
@@ -178,10 +179,10 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
 
         loginTable.add(titleLabel).colspan(2).padBottom(20).row();
 
-        loginTable.add(createBlackLabel("Username:")).right().pad(5);
+        loginTable.add(createLabel("Username:", "AVENIRNEXTLTPRO-DEMICN", Color.BLACK)).right().pad(5);
         loginTable.add(usernameField).width(250).pad(5).row();
 
-        loginTable.add(createBlackLabel("Password:")).right().pad(5);
+        loginTable.add(createLabel("Password:", "AVENIRNEXTLTPRO-DEMICN", Color.BLACK)).right().pad(5);
         loginTable.add(passwordField).width(250).pad(5).row();
 
         loginTable.add(stayLoggedInRow).colspan(2).center().pad(10).row();
@@ -195,8 +196,8 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
         forgetPasswordTable = new BorderedTable();
         forgetPasswordTable.pad(30);
 
-        Label titleLabel = createBlackLabel("RECOVER PASSWORD");
-
+        Label titleLabel = createLabel("RECOVER PASSWORD", "FBUSV8C5EI_2", Color.BLACK);
+        titleLabel.setFontScale(0.75f);
         forgetUsernameField = new TextField("", skin);
         forgetEmailField = new TextField("", skin);
         forgetAnswerField = new TextField("", skin);
@@ -226,13 +227,13 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
 
         forgetPasswordTable.add(titleLabel).colspan(2).padBottom(20).row();
 
-        forgetPasswordTable.add(createBlackLabel("Username:")).right().pad(5);
+        forgetPasswordTable.add(createLabel("Username:", "AVENIRNEXTLTPRO-DEMICN", Color.BLACK)).right().pad(5);
         forgetPasswordTable.add(forgetUsernameField).width(280).pad(5).row();
 
-        forgetPasswordTable.add(createBlackLabel("Email:")).right().pad(5);
+        forgetPasswordTable.add(createLabel("Email:", "AVENIRNEXTLTPRO-DEMICN", Color.BLACK)).right().pad(5);
         forgetPasswordTable.add(forgetEmailField).width(280).pad(5).row();
 
-        forgetPasswordTable.add(createBlackLabel("Security Answer:")).right().pad(5);
+        forgetPasswordTable.add(createLabel("Security Answer:", "AVENIRNEXTLTPRO-DEMICN", Color.BLACK)).right().pad(5);
         forgetPasswordTable.add(forgetAnswerField).width(280).pad(5).row();
 
         forgetPasswordTable.add(submitRecoveryButton).colspan(2).center().padTop(15).row();
@@ -266,7 +267,8 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
         BorderedTable modal = new BorderedTable();
         modal.pad(25);
 
-        Label titleLabel = createBlackLabel("SET NEW PASSWORD");
+        Label titleLabel = createLabel("SET NEW PASSWORD", "FBUSV8C5EI_2", Color.BLACK);
+        titleLabel.setFontScale(0.75f);
         TextField newPasswordField = new TextField("", skin);
         TextField confirmPasswordField = new TextField("", skin);
         confirmPasswordField.setPasswordMode(true);
@@ -286,9 +288,9 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
         });
 
         modal.add(titleLabel).colspan(2).padBottom(15).row();
-        modal.add(createBlackLabel("New Password:")).right().pad(5);
+        modal.add(createLabel("New Password:", "AVENIRNEXTLTPRO-DEMICN", Color.BLACK)).right().pad(5);
         modal.add(newPasswordField).width(250).pad(5).row();
-        modal.add(createBlackLabel("Confirm Password:")).right().pad(5);
+        modal.add(createLabel("Confirm Password:", "AVENIRNEXTLTPRO-DEMICN", Color.BLACK)).right().pad(5);
         modal.add(confirmPasswordField).width(250).pad(5).row();
         modal.add(submitNewPasswordButton).colspan(2).center().padTop(15);
 

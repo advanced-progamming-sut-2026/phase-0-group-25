@@ -142,13 +142,11 @@ public class ChooseChapterScreen extends AbstractScreen implements GameMenuView 
         container.add(buttonActor).size(260, 320).row();
 
         // 2. Levels Completed Ratio (e.g., "1/4")
-        Label progressLabel = new Label(levelsDone + "/" + ChapterType.LEVELS_PER_CHAPTER, skin);
-        progressLabel.setColor(isUnlocked ? Color.YELLOW : Color.LIGHT_GRAY);
+        Label progressLabel = createLabel(levelsDone + "/" + ChapterType.LEVELS_PER_CHAPTER, "FBUSV8C5EI_2_outline", isUnlocked ? Color.YELLOW : Color.LIGHT_GRAY);
         container.add(progressLabel).padTop(10).row();
 
         // 3. Chapter Name Label
-        Label nameLabel = new Label(chapterType.getName().toUpperCase(), skin);
-        nameLabel.setColor(isUnlocked ? Color.WHITE : Color.GRAY);
+        Label nameLabel = createLabel(chapterType.getName().toUpperCase(), "FBUSV8C5EI_2_outline", isUnlocked ? Color.WHITE : Color.GRAY);
         container.add(nameLabel).padTop(4);
 
         return container;

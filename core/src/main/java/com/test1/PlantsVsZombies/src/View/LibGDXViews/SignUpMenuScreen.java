@@ -104,7 +104,8 @@ public class SignUpMenuScreen extends AbstractScreen implements SignUpMenuView {
         registrationTable = new BorderedTable();
         registrationTable.pad(30);
 
-        Label titleLabel = createBlackLabel("REGISTER ACCOUNT");
+        Label titleLabel = createLabel("REGISTER ACCOUNT", "FBUSV8C5EI_2", Color.BLACK);
+        titleLabel.setFontScale(0.75f);
 
         usernameField = new TextField("", skin);
 
@@ -186,7 +187,7 @@ public class SignUpMenuScreen extends AbstractScreen implements SignUpMenuView {
             .padBottom(20)
             .row();
 
-        registrationTable.add(createBlackLabel("Username:"))
+        registrationTable.add(createLabel("Username:", "AVENIRNEXTLTPRO-DEMICN", Color.BLACK))
             .right()
             .pad(5);
 
@@ -195,7 +196,7 @@ public class SignUpMenuScreen extends AbstractScreen implements SignUpMenuView {
             .pad(5)
             .row();
 
-        registrationTable.add(createBlackLabel("Password:"))
+        registrationTable.add(createLabel("Password:", "AVENIRNEXTLTPRO-DEMICN", Color.BLACK))
             .right()
             .pad(5);
 
@@ -204,7 +205,7 @@ public class SignUpMenuScreen extends AbstractScreen implements SignUpMenuView {
             .pad(5)
             .row();
 
-        registrationTable.add(createBlackLabel("Confirm Password:"))
+        registrationTable.add(createLabel("Confirm Password:", "AVENIRNEXTLTPRO-DEMICN", Color.BLACK))
             .right()
             .pad(5);
 
@@ -213,7 +214,7 @@ public class SignUpMenuScreen extends AbstractScreen implements SignUpMenuView {
             .pad(5)
             .row();
 
-        registrationTable.add(createBlackLabel("Nickname:"))
+        registrationTable.add(createLabel("Nickname:", "AVENIRNEXTLTPRO-DEMICN", Color.BLACK))
             .right()
             .pad(5);
 
@@ -222,7 +223,7 @@ public class SignUpMenuScreen extends AbstractScreen implements SignUpMenuView {
             .pad(5)
             .row();
 
-        registrationTable.add(createBlackLabel("Email:"))
+        registrationTable.add(createLabel("Email:", "AVENIRNEXTLTPRO-DEMICN", Color.BLACK))
             .right()
             .pad(5);
 
@@ -231,7 +232,7 @@ public class SignUpMenuScreen extends AbstractScreen implements SignUpMenuView {
             .pad(5)
             .row();
 
-        registrationTable.add(createBlackLabel("Gender:"))
+        registrationTable.add(createLabel("Gender:", "AVENIRNEXTLTPRO-DEMICN", Color.BLACK))
             .right()
             .pad(5);
 

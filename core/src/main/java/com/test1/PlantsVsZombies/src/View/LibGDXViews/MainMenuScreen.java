@@ -157,9 +157,8 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
             userBadgeTable.setBackground(new NinePatchDrawable(patch));
         }
 
-        Label userLabel = new Label(username, skin);
-        userLabel.setColor(Color.WHITE);
-        userLabel.setFontScale(1.25f);
+        Label userLabel = createLabel(username, "FBUSV8C5EI_1_outline", Color.WHITE);
+        userLabel.setFontScale(0.75f);
         userBadgeTable.add(userLabel).pad(6, 14, 6, 14);
 
         return userBadgeTable;
