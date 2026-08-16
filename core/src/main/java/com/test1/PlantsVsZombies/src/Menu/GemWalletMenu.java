@@ -25,7 +25,6 @@ public class GemWalletMenu extends Menu {
         gemWalletMenuView.showGemsCount(currentUser.getUserProgress().getGemsCount());
     }
 
-    @Override
     public void handleSpecificCommands(String input) {
 
     }

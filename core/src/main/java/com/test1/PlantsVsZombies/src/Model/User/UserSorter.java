@@ -45,6 +45,6 @@ public class UserSorter {
         for (int level : progress.getUnlockedChaptersAndLevels().values()) {
             levelsCompleted += level;
         }
-        return Math.max(levelsCompleted - 1, 0);
+        return levelsCompleted;
     }
 }

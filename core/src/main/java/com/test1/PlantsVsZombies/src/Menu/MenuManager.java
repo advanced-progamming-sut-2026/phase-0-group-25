@@ -4,11 +4,7 @@ import com.badlogic.gdx.Screen;
 import com.test1.PlantsVsZombies.src.Enums.MenuType;
 import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.View.ConcreteViews.*;
-import com.test1.PlantsVsZombies.src.View.LibGDXViews.LoginMenuScreen;
-import com.test1.PlantsVsZombies.src.View.LibGDXViews.MainMenuScreen;
-import com.test1.PlantsVsZombies.src.View.LibGDXViews.SignUpMenuScreen;
-import com.test1.PlantsVsZombies.src.View.LibGDXViews.UIManager;
-
+import com.test1.PlantsVsZombies.src.View.LibGDXViews.*;
 import java.util.HashMap;
 
 public class MenuManager {
@@ -22,8 +18,30 @@ public class MenuManager {
         // Concrete terminal views for non-refactored menus
         menusAndTheirNames.put(MenuType.CoinWallet, new CoinWalletMenu(new CoinWalletMenuTerminalView()));
         menusAndTheirNames.put(MenuType.Collection, new CollectionMenu(new CollectionMenuTerminalView()));
-        GameMenu gameMenu = new GameMenu(new GameMenuTerminalView());
-        menusAndTheirNames.put(MenuType.Game, gameMenu);
+
+        // Game / Chapter Selection Screen
+        // Game / Chapter Selection Screens
+        ChooseChapterScreen chooseChapterScreen =
+            new ChooseChapterScreen();
+
+        GameMenu gameMenu =
+            new GameMenu(chooseChapterScreen);
+
+        chooseChapterScreen.setMenuController(gameMenu);
+
+// Level selection screen shown after clicking a chapter
+        GameScreen gameLevelScreen =
+            new GameScreen(gameMenu);
+
+        gameMenu.setLevelSelectionView(
+            gameLevelScreen
+        );
+
+        menusAndTheirNames.put(
+            MenuType.Game,
+            gameMenu
+        );
+
         menusAndTheirNames.put(MenuType.GamePlay, new GamePlayMenu(new GamePlayMenuTerminalView()));
         menusAndTheirNames.put(MenuType.GemWallet, new GemWalletMenu(new GemWalletMenuTerminalView()));
         menusAndTheirNames.put(MenuType.GreenHouse, new GreenHouseMenu(new GreenHouseMenuTerminalView()));
@@ -85,7 +103,6 @@ public class MenuManager {
     public void changeMenu(MenuType menuType) {
         this.currentMenu = menusAndTheirNames.get(menuType);
         this.currentMenu.onEnter();
-
         if (this.currentMenu.getView() instanceof Screen) {
             UIManager.changeScreen((Screen) this.currentMenu.getView());
         }

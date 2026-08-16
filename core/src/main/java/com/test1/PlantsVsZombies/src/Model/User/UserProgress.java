@@ -12,8 +12,8 @@ import java.time.LocalDate;
 import java.util.*;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY,
-        getterVisibility = JsonAutoDetect.Visibility.NONE,
-        setterVisibility = JsonAutoDetect.Visibility.NONE)
+    getterVisibility = JsonAutoDetect.Visibility.NONE,
+    setterVisibility = JsonAutoDetect.Visibility.NONE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserProgress {
     private HashMap<ChapterType, Integer> unlockedChaptersAndLevels;
@@ -310,7 +310,7 @@ public class UserProgress {
         for (Integer level : unlockedChaptersAndLevels.values()) {
             total += level;
         }
-        return total - 1;
+        return total;
     }
 
     public int getGemsCount() {
@@ -358,10 +358,16 @@ public class UserProgress {
     }
 
     void unlockChapter(ChapterType chapterType) {
-        unlockedChaptersAndLevels.put(chapterType, 1);
+        unlockedChaptersAndLevels.put(chapterType, 0);
     }
 
-    void unlockLevel(int level, ChapterType chapterType) {
+    /**
+     * Records that the given level of this chapter has been completed.
+     * The stored value is the last COMPLETED level (0 = none completed yet),
+     * not "the next unlocked level" -- so a fully finished chapter with
+     * ChapterType.LEVELS_PER_CHAPTER levels stores exactly LEVELS_PER_CHAPTER.
+     */
+    void markLevelCompleted(ChapterType chapterType, int level) {
         unlockedChaptersAndLevels.put(chapterType, level);
     }
 

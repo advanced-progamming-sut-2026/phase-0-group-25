@@ -68,3 +68,16 @@ subprojects {
 }
 
 eclipse.project.name = 'PlantsVsZombies' + '-parent'
+
+
+project(':core') {
+  dependencies {
+    api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+  }
+}
+
+project(':lwjgl3') {
+  dependencies {
+    implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+  }
+}

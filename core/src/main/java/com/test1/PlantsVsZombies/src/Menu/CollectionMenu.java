@@ -30,7 +30,7 @@ public class CollectionMenu extends Menu {
         this.zombieFactory = zombieFactory;
     }
 
-    @Override
+
     public void handleSpecificCommands(String input) {
         Matcher matcher;
 

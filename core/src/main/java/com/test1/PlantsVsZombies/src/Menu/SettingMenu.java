@@ -23,7 +23,6 @@ public class SettingMenu extends Menu {
         }
     }
 
-    @Override
     public void handleSpecificCommands(String input) {
         Matcher matcher;
 

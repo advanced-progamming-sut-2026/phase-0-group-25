@@ -69,7 +69,6 @@ public class ProfileMenu extends Menu {
         profileMenuView.showInfo(username, nickname, totalLevelsPassed, gemsCount, coinsCount);
     }
 
-    @Override
     public void handleSpecificCommands(String input) {
         Matcher matcher;
 

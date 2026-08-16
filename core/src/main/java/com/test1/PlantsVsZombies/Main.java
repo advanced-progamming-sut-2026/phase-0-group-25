@@ -17,7 +17,13 @@ public class Main extends Game {
 
     @Override
     public void create() {
-        // 1. Load the backend game data (plants and zombies config)
+        GameDataLoader.loadGameData();
+        instance = this;
+        batch = new SpriteBatch();
+        skin = PvzSkin.get();
+
+        textureBank = new TextureBank("768", Gdx.files.internal("Assets"));
+
         GameDataLoader.loadGameData();
 
         // 2. Create dummy data to instantly test the Simple mode gameplay
@@ -50,8 +56,26 @@ public class Main extends Game {
 
     @Override
     public void render() {
-        // This is crucial: it tells libGDX to render whatever screen is currently active
         super.render();
+        UIManager.renderToasts(Gdx.graphics.getDeltaTime());
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        UIManager.resizeToasts(width, height);
+    }
+
+    public SpriteBatch getBatch() {
+        return batch;
+    }
+
+    public Skin getSkin() {
+        return skin;
+    }
+
+    public TextureBank getTextureBank() {
+        return textureBank;
     }
 
     @Override

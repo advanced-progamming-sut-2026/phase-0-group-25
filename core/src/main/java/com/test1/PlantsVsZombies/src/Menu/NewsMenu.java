@@ -18,7 +18,6 @@ public class NewsMenu extends Menu {
     }
 
 
-    @Override
     public void handleSpecificCommands(String input) {
 
         Matcher matcher;

@@ -17,13 +17,13 @@ public class UsersManager {
     private static final String STATE_FILE = "jsonFiles/loginstate.json";
     private static final Pattern USERNAME_CHAR_REGEX = Pattern.compile("^[a-zA-Z0-9_]+$");
     private static final Pattern PASSWORD_COMPLEXITY_REGEX = Pattern.compile(
-            "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+={}\\[\\]|\\\\:;\"',<>?])\\S{8,}$"
+        "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+={}\\[\\]|\\\\:;\"',<>?])\\S{8,}$"
     );
     private static final Pattern EMAIL_USERNAME_REGEX = Pattern.compile(
-            "^[a-zA-Z0-9]$|^[a-zA-Z0-9](?!.*\\.\\.)[a-zA-Z0-9._-]*[a-zA-Z0-9]$"
+        "^[a-zA-Z0-9]$|^[a-zA-Z0-9](?!.*\\.\\.)[a-zA-Z0-9._-]*[a-zA-Z0-9]$"
     );
     private static final Pattern EMAIL_DOMAIN_REGEX = Pattern.compile(
-            "^[a-zA-Z0-9](?:[a-zA-Z0-9.-]*[a-zA-Z0-9])?\\.[a-zA-Z0-9]{2,}$"
+        "^[a-zA-Z0-9](?:[a-zA-Z0-9.-]*[a-zA-Z0-9])?\\.[a-zA-Z0-9]{2,}$"
     );
     private static UsersManager instance;
     private final ObjectMapper mapper = new ObjectMapper();
@@ -157,7 +157,7 @@ public class UsersManager {
             return "Weak password: Spaces are not allowed within password strings.";
         if (!PASSWORD_COMPLEXITY_REGEX.matcher(newPassword).matches())
             return "Weak password: Must be at least 8 characters long and include numbers, " +
-                    "uppercase/lowercase letters, and special characters.";
+                "uppercase/lowercase letters, and special characters.";
         loggedInUser.setPassword(newPassword);
         updateUser();
         return null;
@@ -223,7 +223,7 @@ public class UsersManager {
             return "Weak password: Spaces are not allowed as they break command parsing limits.";
         if (!PASSWORD_COMPLEXITY_REGEX.matcher(password).matches())
             return "Weak password: Must be at least 8 characters and contain lowercase, " +
-                    "uppercase, numeric digits, and special symbols.";
+                "uppercase, numeric digits, and special symbols.";
         if (!password.equals(passwordConfirm))
             return "Password confirmation mismatch: Passwords do not match.";
 
@@ -262,7 +262,7 @@ public class UsersManager {
             return "Weak password: Spaces are not allowed within password strings.";
         if (!PASSWORD_COMPLEXITY_REGEX.matcher(newPassword).matches())
             return "Weak password: Must be at least 8 characters long and include numbers, " +
-                    "uppercase/lowercase letters, and special characters.";
+                "uppercase/lowercase letters, and special characters.";
         User user = userCache.get(username);
         if (user != null) {
             user.setPassword(newPassword);
@@ -307,8 +307,8 @@ public class UsersManager {
         progressManager.unlockChapter(chapterType);
     }
 
-    public void unlockLevel(ChapterType chapterType, int level) {
-        progressManager.unlockLevel(chapterType, level);
+    public void markLevelCompleted(ChapterType chapterType, int level) {
+        progressManager.markLevelCompleted(chapterType, level);
     }
 
     public String purchasePlant(String plantName) {

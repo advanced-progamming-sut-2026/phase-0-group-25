@@ -28,7 +28,6 @@ public class LeaderBoardMenu extends Menu {
         showLeaderBoard();
     }
 
-    @Override
     public void handleSpecificCommands(String input) {
         Matcher matcher;
         if ((matcher = getMatcher(input, Command.SortUsers)) != null) {
