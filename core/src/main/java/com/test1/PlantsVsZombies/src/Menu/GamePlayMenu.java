@@ -16,7 +16,7 @@ import com.test1.PlantsVsZombies.src.View.ViewInterfaces.GamePlayMenuView;
 import java.util.regex.Matcher;
 
 public class GamePlayMenu extends Menu {
-    private GamePlay gamePlay;
+    private static GamePlay gamePlay;
     private GamePlayMenuView gamePlayMenuView;
 
     public GamePlayMenu() {
@@ -31,7 +31,7 @@ public class GamePlayMenu extends Menu {
         if (this.gamePlayMenuView instanceof Screen) {
             ((Screen) this.gamePlayMenuView).dispose();
         }
-        this.gamePlay = gamePlay;
+        GamePlayMenu.gamePlay = gamePlay;
         this.gamePlayMenuView = new GamePlayScreen(gamePlay);
     }
 
@@ -39,16 +39,16 @@ public class GamePlayMenu extends Menu {
         if (this.gamePlayMenuView instanceof Screen) {
             ((Screen) this.gamePlayMenuView).dispose();
         }
-        this.gamePlay = gamePlay;
+        GamePlayMenu.gamePlay = gamePlay;
         this.gamePlayMenuView = gamePlayMenuView;
     }
 
-    public GamePlay getGamePlay() {
+    public static GamePlay getGamePlay() {
         return gamePlay;
     }
 
-    public void setGamePlay(GamePlay gamePlay) {
-        this.gamePlay = gamePlay;
+    public static void setGamePlay(GamePlay gamePlay) {
+        GamePlayMenu.gamePlay = gamePlay;
     }
 
     public void setGamePlayMenuView(GamePlayMenuView gamePlayMenuView) {
@@ -71,6 +71,7 @@ public class GamePlayMenu extends Menu {
             MenuManager.getInstance().changeMenu(MenuType.Game);
             return;
         }
+
         Matcher matcher;
         if ((matcher = getMatcher(input, Command.AdvanceTime)) != null) {
             String count = matcher.group("count");
