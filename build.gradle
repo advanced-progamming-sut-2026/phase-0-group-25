@@ -5,12 +5,12 @@ buildscript {
     mavenLocal()
     google()
     maven { url = 'https://central.sonatype.com/repository/maven-snapshots/' }
+    maven { url = 'https://jitpack.io' }
   }
   dependencies {
-
-
   }
 }
+
 
 allprojects {
   apply plugin: 'eclipse'
@@ -65,6 +65,7 @@ subprojects {
     maven { url = 'https://jitpack.io' }
     maven { url 'https://jitpack.io' }
   }
+
 }
 
 eclipse.project.name = 'PlantsVsZombies' + '-parent'
