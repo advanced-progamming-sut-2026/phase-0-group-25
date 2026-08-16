@@ -1,6 +1,5 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Armors;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Armor {
@@ -64,6 +63,15 @@ public class Armor {
         } else {
             return this.animations.get(2);
         }
+    }
+
+    public static Armor findArmor(String name) {
+        for (ArmorConfig armor : ArmorConfig.values()) {
+            if (armor.getType().equals(name)) {
+                return armor.createArmor();
+            }
+        }
+        return null;
     }
 
 

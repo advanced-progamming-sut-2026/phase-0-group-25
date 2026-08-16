@@ -13,7 +13,7 @@ public class StealingSun implements Ability {
     private static double TURQUOISE_STEAL = 2.5;
     private double stolenSun = 0;
     private boolean isActivated = false;
-    private GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlay.activeInstance;
 
     @Override
     public void executeAbility(Entity entity) {

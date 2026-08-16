@@ -15,11 +15,11 @@ import java.util.Map;
 
 public class GameDataLoader {
     private static final ObjectMapper mapper = JsonMapper.builder()
-            .enable(JsonReadFeature.ALLOW_MISSING_VALUES)
-            .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
-            .configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false)
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-            .build();
+        .enable(JsonReadFeature.ALLOW_MISSING_VALUES)
+        .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
+        .configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false)
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        .build();
     private static Map<String, List<PlantStats>> plantRegistry = new HashMap<>();
     private static Map<String, ZombieStats> zombieRegistry = new HashMap<>();
 
@@ -32,9 +32,9 @@ public class GameDataLoader {
         Map<String, List<PlantStats>> rawData = null;
         try {
             rawData = mapper.readValue(
-                    new File("assets/jsonFiles/plants_config.json"),
-                    new TypeReference<Map<String, List<PlantStats>>>() {
-                    });
+                new File("assets/jsonFiles/plants_config.json"),
+                new TypeReference<Map<String, List<PlantStats>>>() {
+                });
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -60,9 +60,9 @@ public class GameDataLoader {
         Map<String, ZombieStats> rawData = null;
         try {
             rawData = mapper.readValue(
-                    new File("assets/jsonFiles/zombies_config.json"),
-                    new TypeReference<Map<String, ZombieStats>>() {
-                    }
+                new File("assets/jsonFiles/zombies_config.json"),
+                new TypeReference<Map<String, ZombieStats>>() {
+                }
             );
         } catch (IOException e) {
             throw new RuntimeException(e);

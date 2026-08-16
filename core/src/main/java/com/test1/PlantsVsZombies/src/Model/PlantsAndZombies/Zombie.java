@@ -21,7 +21,7 @@ public class Zombie extends Entity {
     private static int FROZEN_TIME = 3;
     private static int TILE_X_LENGTH = 200;
     private static Random RANDOM = new Random();
-    private GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlay.activeInstance;
 
 
     private ZombieStats zombieStats;
@@ -46,6 +46,16 @@ public class Zombie extends Entity {
         this.zombieStats = zombieStats;
         this.name = name;
 
+        this.activeArmors = new ArrayList<>();
+        if (zombieStats.getArmor() != null) {
+            for (String armorName : zombieStats.getArmor()) {
+                Armor armor = Armor.findArmor(armorName);
+                this.activeArmors.add(new Armor(armor.getType(),
+                    armor.getCurrentHP(), armor.isMetallic(), armor.getAnimations()));
+            }
+        }
+
+
         addAbilities();
     }
 
@@ -53,7 +63,7 @@ public class Zombie extends Entity {
         this.zombieStats = zombieStats;
         this.name = name;
         this.zombieStats.setName(name);
-        GAME = GamePlayMenu.getGamePlay();
+        GAME = GamePlay.activeInstance;
 
         this.position = position;
         this.currentHP = zombieStats.getBaseHP();
@@ -64,8 +74,9 @@ public class Zombie extends Entity {
         addAbilities();
 
         this.activeArmors = new ArrayList<>();
-        if (zombieStats.getArmors() != null) {
-            for (Armor armor : zombieStats.getArmors()) {
+        if (zombieStats.getArmor() != null) {
+            for (String armorName : zombieStats.getArmor()) {
+                Armor armor = Armor.findArmor(armorName);
                 this.activeArmors.add(new Armor(armor.getType(),
                     armor.getCurrentHP(), armor.isMetallic(), armor.getAnimations()));
             }
@@ -402,25 +413,13 @@ public class Zombie extends Entity {
     }
 
     public String getCurrentAnimationName() {
-        for (Ability ability : this.originalAbilities) {
-            if ((ability instanceof Moving) && (((Moving) ability).isActivated())) {
-                return "walk";
-            } else if ((ability instanceof Eating) && (((Eating) ability).isActivated())) {
-                return "eat";
-            }
-        }
-        return "idle";
+        AnimationDecider decider = new AnimationDecider();
+        return decider.zombieDecider(this);
     }
 
     public HashMap<String, Boolean> getVisibility() {
-        HashMap<String, Boolean> visibility = new HashMap<>();
-
-        for (Armor armor : this.activeArmors) {
-            String currentArmorStage = armor.getCurrentAnimation();
-            visibility.put(currentArmorStage, true);
-        }
-
-        return visibility;
+        AnimationDecider decider = new AnimationDecider();
+        return decider.zombieVisibilities(this);
     }
 
 

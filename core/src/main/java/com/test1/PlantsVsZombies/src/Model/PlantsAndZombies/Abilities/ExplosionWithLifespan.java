@@ -11,7 +11,7 @@ import com.test1.PlantsVsZombies.src.Model.Tile;
 import java.util.ArrayList;
 
 public class ExplosionWithLifespan implements Ability {
-    private GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlay.activeInstance;
 
     @Override
     public void executeAbility(Entity entity) {

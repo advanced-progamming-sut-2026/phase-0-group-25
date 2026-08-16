@@ -3,13 +3,13 @@ package com.test1.PlantsVsZombies.src.Model.Sun;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
 
 public class Sun {
-    private int numberOfSun;
+    private final int numberOfSun;
     private Position position;
     private double timeToReach;
+    private double targetY;
     private boolean isCollected = false;
     private boolean isFromSky;
-
-    private final String animationPath = "768/INITIAL/EFFECTS/SUN/SUN.PAM";
+    private float fallSpeed = 120f;
 
     private static double X_DISTANCE = 10;
     private static double Y_DISTANCE = 10;
@@ -18,16 +18,22 @@ public class Sun {
         this.numberOfSun = numberOfSun;
         this.position = new Position(position.getX() + X_DISTANCE,
             position.getY() + Y_DISTANCE);
-
+        this.targetY = position.getY();
         this.isFromSky = false;
     }
 
     public Sun(int numberOfSun, Position position, double timeToReach) {
         this.numberOfSun = numberOfSun;
-        this.position = position;
-        this.timeToReach = timeToReach;
-
+        this.position = new Position(position.getX(), 1250);
+        this.targetY = position.getY();
         this.isFromSky = true;
+    }
+
+    public void update(float delta) {
+        if (isFromSky && position.getY() > targetY) {
+            double nextY = Math.max(position.getY() - (fallSpeed * delta), targetY);
+            position.setY(nextY);
+        }
     }
 
     public int getNumberOfSun() {
@@ -63,7 +69,11 @@ public class Sun {
     }
 
     public String getAnimationPath() {
-        return animationPath;
+        if (this instanceof RadioActiveSun) {
+            return "768/FULL/EFFECTS/SUN_BOMB/SUN_BOMB.PAM";
+        } else {
+            return "768/INITIAL/EFFECTS/SUN/SUN.PAM";
+        }
     }
 }
 

@@ -1,9 +1,6 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies;
 
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Armors.Armor;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 public class ZombieStats {
@@ -12,12 +9,12 @@ public class ZombieStats {
     private String category;
     private double eatdps;
     private double velocity;
-    private ArrayList<Armor> armors;
+    private ArrayList<String> armor;
     private int waveCost;
 
     private Map<String, Object> attributes;
     private ArrayList<String> abilities;
-    private String animationPath;
+    private String animation;
 
     public String getName() {
         return name;
@@ -55,8 +52,8 @@ public class ZombieStats {
         return waveCost;
     }
 
-    public ArrayList<Armor> getArmors() {
-        return armors;
+    public ArrayList<String> getArmor() {
+        return armor;
     }
 
     public Map<String, Object> getAttributes() {
@@ -67,8 +64,8 @@ public class ZombieStats {
         return abilities;
     }
 
-    public String getAnimationPath() {
-        return animationPath;
+    public String getAnimation() {
+        return animation;
     }
 
 }

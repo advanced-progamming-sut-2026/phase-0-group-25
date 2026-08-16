@@ -8,7 +8,7 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projecti
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 
 public class RepelLobbers implements Ability {
-    private GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlay.activeInstance;
 
     @Override
     public void executeAbility(Entity entity) {

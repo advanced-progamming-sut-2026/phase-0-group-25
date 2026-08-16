@@ -25,6 +25,9 @@ import com.test1.PlantsVsZombies.src.Model.Wave.Wave;
 import java.util.*;
 
 public abstract class GamePlay {
+    public static GamePlay activeInstance;
+
+    protected float[] killedZombiesCostPerWave = new float[50];
     static int effectedTime = 3;
     static int spawnX = 1800;
     // plants that can appear in the game...
@@ -48,22 +51,24 @@ public abstract class GamePlay {
     protected int numOfPlantFood;
     protected int mySuns;
     protected PlayGround playGround;
-    protected boolean isPaused;
+    public boolean isPaused;
     protected int numOfWaves;
     protected int totalTicksPassed = 0;
     protected int lostPlants = 0;
     protected boolean settedThePlants = false;
     private List<Integer> rowBag = new ArrayList<>();
+    protected double totalTimePassed;
 
 
     public GamePlay(ChapterType chapterType, int level, int difficulty, User thisUser,
                     ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         this.numOfPlantFood = thisUser.getUserProgress().getPlantFoodCount();
-        this.mySuns = 50;
+        this.mySuns = 1050;
         this.isPaused = false;
         this.level = level;
         this.chapterType = chapterType;
         this.thisUser = thisUser;
+        activeInstance = this;
 
         for (String pName : plants) {
             this.plants.add(PlantFactory.createBattlePlant(pName, getLevelOfPlant(pName)));
@@ -89,7 +94,10 @@ public abstract class GamePlay {
 
         if (chapterType == ChapterType.BIG_WAVE_BEACH) {
             for (int y = 1; y < 6; y++) {
-                mowers.add(new Mower(y));
+                float startX = 430f;
+                float startY = getRealY(y) + 15;
+                mowers.add(new Mower(y, startX, startY));
+
                 for (int x = 1; x < 10; x++) {
                     Position newPosition = new Position(x, y);
                     Boolean isArable = (x != 9 && x != 8);
@@ -99,7 +107,10 @@ public abstract class GamePlay {
             }
         } else {
             for (int y = 1; y < 6; y++) {
-                mowers.add(new Mower(y));
+                float startX = 430f;
+                float startY = getRealY(y) + 15;
+                mowers.add(new Mower(y, startX, startY));
+
                 for (int x = 1; x < 10; x++) {
                     Position newPosition = new Position(x, y);
                     Boolean isArable = Math.random() >= 0.06 || (x == 5 && (y == 2 || y == 4));
@@ -594,6 +605,9 @@ public abstract class GamePlay {
             int currentY = (int) zombiePosition.getY();
             Tile currentTile = getTileByPosition(currentX, currentY);
 
+            zombie.setRow(currentY);
+            zombie.setColumn(currentX);
+
             if (zombie.getPosition().getX() <= 20) {
                 zombie.setCurrentHP(0);
                 zombie.setAlive(false);
@@ -661,11 +675,11 @@ public abstract class GamePlay {
     }
 
     public int getRealX(int gridX) {
-        return 120 + ((gridX - 1) * 200);
+        return (int) Math.round(566.1 + ((gridX - 1) * 152.2));
     }
 
     public int getRealY(int gridY) {
-        return 140 + ((gridY - 1) * 200);
+        return 205 + ((gridY - 1) * 150);
     }
 
     public Level getLevelObject() {
@@ -701,7 +715,7 @@ public abstract class GamePlay {
     }
 
     public double getTotalTimePassed() {
-        return (double) totalTicksPassed / 10;
+        return totalTimePassed;
     }
 
     public ArrayList<Projectile> getProjectiles() {
@@ -726,6 +740,108 @@ public abstract class GamePlay {
                     bp.setIceTime(bp.getIceTime() + 1);
                 }
             }
+        }
+    }
+
+    public boolean isPaused() {
+        return isPaused;
+    }
+
+    public boolean tryCollectSunByClick(float clickX, float clickY) {
+        Sun targetSun = null;
+
+        for (Sun sun : activeSuns) {
+            float sx = (float) sun.getPosition().getX() + 40;
+            float sy = (float) sun.getPosition().getY() + 40;
+
+            if (Math.hypot(clickX - sx, clickY - sy) <= 60) {
+                targetSun = sun;
+                break;
+            }
+        }
+
+        if (targetSun == null) return false;
+
+        if (targetSun.isFromSky()) {
+            targetSun.setCollected(true);
+        } else {
+            targetSun.setCollected(true);
+            Position gridPos = Position.getRowAndColumn(targetSun.getPosition());
+            Tile thisTile = getTileByPosition((int) gridPos.getX(), (int) gridPos.getY());
+            if (thisTile != null && !thisTile.getPlants().isEmpty()) {
+                Ability thisAbility = thisTile.getPlants().get(0).getOriginalAbilities().get(0);
+                if (thisAbility instanceof ProducingSun) {
+                    ((ProducingSun) thisAbility).setCollected(false);
+                    ((ProducingSun) thisAbility).setProduced(false);
+                }
+            }
+        }
+
+        if (targetSun instanceof RadioActiveSun && targetSun.getTimeToReach() > 0) {
+            handleRadioActiveExploration((RadioActiveSun) targetSun);
+        } else {
+            addSun(targetSun);
+            QuestManager.getInstance().notifyEvent(new SunCollectedEvent(targetSun.getNumberOfSun()));
+        }
+
+        activeSuns.remove(targetSun);
+        this.mySuns += targetSun.getNumberOfSun();
+        return true;
+    }
+
+    public ArrayList<Mower> getMowers() {
+        return mowers;
+    }
+
+    public void setTotalTimePassed(double totalTimePassed) {
+        this.totalTimePassed = totalTimePassed;
+    }
+
+    public float getProgressPercentage() {
+        if (allWaves.isEmpty()) return 1.0f;
+
+        int total = allWaves.size();
+        int started = 0;
+        for (Wave w : allWaves) {
+            if (w.getStarted()) started++;
+        }
+
+        if (started == 0) return 0f;
+
+        // پیشروی پایه‌ی نوار بر اساس موج‌های رد شده
+        float baseProgress = (float) (started - 1) / total;
+
+        // محاسبه کل Cost موج فعلی
+        double difficultyMultiplier = 1 + (thisUser.getUserProgress().getGameDifficulty() / 10.0);
+        float currentWaveTotalCost;
+        if (started == total) {
+            currentWaveTotalCost = (float) ((calculateCost(chapterType, level, total) + 500) * difficultyMultiplier);
+        } else {
+            currentWaveTotalCost = (float) (calculateCost(chapterType, level, started) * difficultyMultiplier);
+        }
+
+        // گرفتن مجموع کاست زامبی‌های کشته‌شده‌ی همین موج
+        float killedCost = killedZombiesCostPerWave[started];
+
+        // درصد پیشرفت این موج بر اساس مرگ زامبی‌ها
+        float depletion = killedCost / currentWaveTotalCost;
+
+        float fraction;
+        if (started < total) {
+            // چون موج بعدی در 75% شروع می‌شود، نوار تا پرچم بعدی در این نقطه پر می‌شود
+            fraction = depletion / 0.75f;
+        } else {
+            fraction = depletion; // موج آخر باید 100% پر شود
+        }
+
+        if (fraction > 1.0f) fraction = 1.0f;
+
+        return Math.min(baseProgress + (fraction * (1.0f / total)), 1.0f);
+    }
+
+    public void addKilledZombieCost(int waveNum, float cost) {
+        if (waveNum >= 0 && waveNum < killedZombiesCostPerWave.length) {
+            killedZombiesCostPerWave[waveNum] += cost;
         }
     }
 }

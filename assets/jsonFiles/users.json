@@ -555,7 +555,7 @@
       "questProgress" : { },
       "completedQuestIds" : [ ],
       "claimedQuestIds" : [ ],
-      "lastDailyReset" : [ 2026, 7, 31 ],
+      "lastDailyReset" : null,
       "plantFoodCount" : 0,
       "seedPackets" : { },
       "dailyOfferPurchaseDate" : null,

@@ -24,7 +24,7 @@ public class Projectile {
     private int range;
     private int knockback;
     private boolean isHypnotizer;
-    private GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlay.activeInstance;
 
     public Projectile() {
 

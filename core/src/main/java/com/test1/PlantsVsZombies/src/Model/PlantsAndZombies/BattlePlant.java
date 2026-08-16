@@ -29,7 +29,7 @@ public class BattlePlant extends Plant {
     private int iceTime;
     private double iceHP;
 
-    private GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlay.activeInstance;
 
     public BattlePlant(PlantStats plantStats, String name) {
         this.plantStats = plantStats;
@@ -233,13 +233,39 @@ public class BattlePlant extends Plant {
         }
     }
 
-    private boolean isTimeForAction() {
+    public double getLastActionTime() {
+        return lastActionTime;
+    }
+
+    public boolean isTimeForAction() {
         return ((GAME.getTotalTimePassed() - this.lastActionTime) >= this.plantStats.getActionInterval());
+    }
+
+    public void takeDamage(double damage) {
+        double armorHP = (double) this.plantStats.getAttributes().getOrDefault("armorHP", 0);
+        if (armorHP > 0) {
+            double finalArmorHP = armorHP - damage;
+            if (finalArmorHP < 0) {
+                finalArmorHP = 0;
+            }
+            this.plantStats.getAttributes().put("armorHP", finalArmorHP);
+
+            return;
+        }
+
+        this.currentHP -= damage;
+    }
+
+    public String getCurrentAnimationName(float stateTime) {
+        AnimationDecider decider = new AnimationDecider();
+        return decider.plantDecider(this, stateTime);
     }
 
     public String getCurrentAnimationName() {
         Map<String, String> status = this.plantStats.getStatus();
-
+        if (status == null) {
+            return "idle";
+        }
         if (this.plantStats.getTags().contains("wramp_up")) {
             return getWrampUpPlantsAnimation(status);
         } else {
@@ -250,26 +276,9 @@ public class BattlePlant extends Plant {
         }
     }
 
-    private String getWrampUpPlantsAnimation(Map<String, String> status) {
-        ArrayList<Integer> growthTimeStages = (ArrayList<Integer>) this.plantStats.getAttributes().get("growth_time");
-
-        double differenceTime = GAME.getTotalTimePassed() - this.plantTime;
-
-        if (differenceTime >= growthTimeStages.get(1)) {
-            if (isTimeForAction()) {
-                return status.get("action3");
-            }
-            return status.get("idle3");
-        } else if (differenceTime >= growthTimeStages.get(0)) {
-            if (isTimeForAction()) {
-                return status.get("action2");
-            }
-            return status.get("idle2");
-        } else {
-            if (isTimeForAction()) {
-                return status.get("action1");
-            }
-            return status.get("idle1");
-        }
+    public HashMap<String, Boolean> getVisibilities() {
+        AnimationDecider decider = new AnimationDecider();
+        return decider.plantVisibilities(this);
     }
+
 }
