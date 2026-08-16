@@ -199,22 +199,6 @@ public class VaseBreaker extends GamePlay {
             }
         }
 
-        int x = 20;
-        for (Zombie zombie : gameZombies) {
-            int yOfz = (int) zombie.getPosition().getY();
-            int xOfz = (int) zombie.getPosition().getX();
-            Mower thisMower = mowers.stream().filter(m -> getRealY(m.getY()) == yOfz).findFirst().get();
-
-            if (xOfz <= x) {
-                if (!thisMower.isUsed()) {
-                    System.out.println("The lawn mower in the row " + (int) (thisMower.getY()) + " is triggered and killed these zombies:");
-                    thisMower.killZombies(this);
-                } else {
-                    System.out.println("The zombie ate your brain; LOSER!!!");
-                    this.isPaused = true;
-                }
-            }
-        }
 
         z = gameZombies.iterator();
         while (z.hasNext()) {

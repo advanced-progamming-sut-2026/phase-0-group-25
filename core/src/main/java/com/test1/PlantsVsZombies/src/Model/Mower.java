@@ -6,38 +6,60 @@ import com.test1.PlantsVsZombies.src.Model.Quests.Events.MowerTriggeredEvent;
 import com.test1.PlantsVsZombies.src.Model.Quests.QuestManager;
 
 public class Mower {
-    private int y;
-    private int x = 20;
-    private boolean isUsed = false;
+    private int row;
+    private float x;
+    private float y;
+    private boolean isActivated = false;
+    private boolean isDone = false;
+    private float speed = 750f;
+    private String currentAnimState = "idle";
+    private final String animationPath = "768/INITIAL/MOWERS/MOWER_TUTORIAL/MOWER_TUTORIAL.PAM";
 
-    public Mower(int y) {
-        this.y = y;
+    public Mower(int row, float startX, float startY) {
+        this.row = row;
+        this.x = startX;
+        this.y = startY;
     }
 
-    public void killZombies(GamePlay thisGame) {
-        isUsed = true;
-        int countKilledZonbies = 0;
+    public void trigger() {
+        if (!isActivated && !isDone) {
+            this.isActivated = true;
+            this.currentAnimState = "transition";
+        }
+    }
+
+    public void update(float delta, GamePlay thisGame) {
+        if (!isActivated || isDone) return;
+
+        x += speed * delta;
+
+        int killedCount = 0;
         for (Zombie z : thisGame.getGameZombies()) {
-            if (z.getPosition().getY() == thisGame.getRealY(y)) {
-                System.out.println(z.getName());
-                countKilledZonbies++;
-                z.setAlive(false);
+            if (z.isAlive() && z.getRow() == this.row) {
+                if (Math.abs(z.getPosition().getX() - this.x) <= 60 || z.getPosition().getX() < this.x) {
+                    z.takeDamage(2000);
+                    z.setAlive(false);
+                    killedCount++;
+                }
             }
         }
-        if (countKilledZonbies > 0) {
-            QuestManager.getInstance().notifyEvent(new MowerTriggeredEvent(countKilledZonbies));
+
+        if (killedCount > 0) {
+            QuestManager.getInstance().notifyEvent(new MowerTriggeredEvent(killedCount));
+        }
+
+        if (x > 1950) {
+            isDone = true;
+            isActivated = false;
         }
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public boolean isUsed() {
-        return isUsed;
-    }
+    public float getX() { return x; }
+    public float getY() { return y; }
+    public int getRow() { return row; }
+    public boolean isActivated() { return isActivated; }
+    public boolean isDone() { return isDone; }
+    public boolean isUsed() { return isActivated || isDone; }
+    public String getCurrentAnimState() { return currentAnimState; }
+    public String getAnimationPath() { return animationPath; }
 }

@@ -45,7 +45,11 @@ public class Simple extends GamePlay {
             this.settedThePlants = true;
 
             planting(PlantFactory.createBattlePlant("SUNFLOWER", 1,
-                new Position(getRealX(1), getRealY(2))), new Position(1, 2));
+                new Position(1, 2)), new Position(2, 2));
+            planting(PlantFactory.createBattlePlant("SUNFLOWER", 1,
+                new Position(1, 2)), new Position(7, 5));
+            planting(PlantFactory.createBattlePlant("SUNFLOWER", 1,
+                new Position(1, 2)), new Position(5, 1));
         }
 
         if (this.chapterType != ChapterType.DARK_AGE) {
@@ -84,6 +88,8 @@ public class Simple extends GamePlay {
                 Position zPos = Position.getRowAndColumn(zombie.getPosition());
                 System.out.printf("Zombie of type %s is dead at (%d, %d)\n",
                         zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
+
+                addKilledZombieCost(zombie.getWaveNum(), zombie.getCost());
                 z.remove();
             } else {
                 zombie.update();
@@ -147,17 +153,24 @@ public class Simple extends GamePlay {
         }
 
         // Checking if the end of the game (Losing) + Activate Mowers :
-        int x = 20;
         for (Zombie zombie : gameZombies) {
-            int yOfz = (int) zombie.getPosition().getY();
-            int xOfz = (int) zombie.getPosition().getX();
-            Mower thisMower = mowers.stream().filter(m -> getRealY(m.getY()) == yOfz).findFirst().get();
+            if (!zombie.isAlive()) continue;
 
-            if (xOfz <= x) {
-                if (!thisMower.isUsed()) {
-                    System.out.println("The lawn mower in the row " + (int) (thisMower.getY()) + " is triggered and killed these zombies:");
-                    thisMower.killZombies(this);
-                } else {
+            int zRow = zombie.getRow();
+            float zX = (float) zombie.getPosition().getX();
+
+            Mower currentMower = mowers.stream()
+                .filter(m -> m.getRow() == zRow)
+                .findFirst()
+                .orElse(null);
+
+            if (currentMower != null) {
+                if (!currentMower.isUsed()) {
+                    if (zX <= currentMower.getX() + 40) {
+                        System.out.println("Lawn mower triggered in row: " + zRow);
+                        currentMower.trigger();
+                    }
+                } else if (currentMower.isDone() && zX <= 490) {
                     System.out.println("The zombie ate your brain; LOSER!!!");
                     this.isPaused = true;
                 }
