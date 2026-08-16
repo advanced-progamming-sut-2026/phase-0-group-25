@@ -20,7 +20,6 @@ public class GamePlayMenu extends Menu {
 
     public GamePlayMenu() {
         super(MenuType.Game);
-        this.gamePlayMenuView = gamePlayMenuView;
     }
 
     public void setGamePlayMenuView(GamePlayMenuView gamePlayMenuView) {
