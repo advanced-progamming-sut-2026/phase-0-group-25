@@ -6,8 +6,8 @@ import java.util.List;
 public enum ArmorConfig {
     CONE("Cone", 370, false,
         List.of("zombie_armor_cone_norm",
-        "zombie_armor_cone_damage_01",
-        "zombie_armor_cone_damage_02")),
+            "zombie_armor_cone_damage_01",
+            "zombie_armor_cone_damage_02")),
     BUCKET("Bucket", 1100, true,
         List.of("zombie_armor_bucket_norm",
             "zombie_armor_bucket_damage_01",
@@ -47,5 +47,9 @@ public enum ArmorConfig {
 
     public Armor createArmor() {
         return new Armor(this.type, this.baseHP, this.isMetallic, this.animations);
+    }
+
+    public String getType() {
+        return type;
     }
 }

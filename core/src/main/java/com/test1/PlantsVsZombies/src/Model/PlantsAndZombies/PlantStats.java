@@ -18,6 +18,7 @@ public class PlantStats {
     private Map<String, Object> plantFoodEffect;
     private String animation;
     private Map<String, String> status;
+    private float trigger;
 
     public String getCategory() {
         return category;
@@ -85,5 +86,9 @@ public class PlantStats {
 
     public Map<String, String> getStatus() {
         return status;
+    }
+
+    public float getTrigger() {
+        return trigger;
     }
 }
