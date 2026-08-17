@@ -33,6 +33,7 @@ import com.test1.PlantsVsZombies.src.Model.User.UserProgressManager;
 import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.CollectionMenuView;
 import pvz.libpvz.pam.PamPlayer;
+import pvz.skin.BorderedTable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -234,10 +235,15 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
         cardButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (unlocked) {
-                    openPlantDetailDialog(type);
-                } else {
-                    openBuyDialog(type);
+
+                if(type == PlantType.MARIGOLD)
+                    showError("Marigold is only available in greenhouse.");
+                else{
+                    if (unlocked) {
+                        openPlantDetailDialog(type);
+                    } else {
+                        openBuyDialog(type);
+                    }
                 }
             }
         });
@@ -376,7 +382,7 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
             }
 
             case FAMILY: {
-                if (filterFamilies.isEmpty()) return true;
+                if (filterFamilies.isEmpty()) return false;
                 int levelForLookup = unlocked ? Math.max(progress.getUnlockedPlantsAndTheirLevels().get(type), 1) : 1;
                 PlantCategory category = resolveCategory(type, levelForLookup);
                 return category != null && filterFamilies.contains(category);
@@ -400,18 +406,15 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
             BattlePlant plant = PlantFactory.createBattlePlant(type.getName(), level);
             PlantStats stats = (plant != null) ? plant.getPlantStats() : null;
             if (stats == null || stats.getCategory() == null) return null;
-            return PlantCategory.valueOf(stats.getCategory());
+            return PlantCategory.findCategoryByString(stats.getCategory());
         } catch (Exception e) {
             return null;
         }
     }
 
     private void openFilterDialog() {
-        Table box = new Table();
-        TextureRegion bg = textureBank.region(DETAIL_BOX_BG_ASSET_ID);
-        if (bg != null) {
-            box.setBackground(new NinePatchDrawable(new NinePatch(bg, 24, 24, 24, 24)));
-        }
+        Table box = new BorderedTable();
+
         box.pad(24);
 
         Label title = createBlackLabel("Filter Plants");
@@ -544,11 +547,7 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
     // ============================================================
 
     private void openBuyDialog(PlantType type) {
-        Table box = new Table();
-        TextureRegion bg = textureBank.region(DETAIL_BOX_BG_ASSET_ID);
-        if (bg != null) {
-            box.setBackground(new NinePatchDrawable(new NinePatch(bg, 20, 20, 20, 20)));
-        }
+        Table box = new BorderedTable();
         box.pad(30);
 
         Label title = createBlackLabel(formatPlantName(type));
@@ -595,7 +594,6 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
     // ============================================================
     // DETAIL DIALOGS
     // ============================================================
-
     private void openPlantDetailDialog(PlantType type) {
         User user = UsersManager.getInstance().getLoggedInUser();
         UserProgress progress = (user != null) ? user.getUserProgress() : null;
@@ -610,15 +608,12 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
             // Missing JSON data for this plant/level -- fall back to "unavailable" below.
         }
 
-        Table box = new Table();
-        TextureRegion bg = textureBank.region(DETAIL_BOX_BG_ASSET_ID);
-        if (bg != null) {
-            box.setBackground(new NinePatchDrawable(new NinePatch(bg, 24, 24, 24, 24)));
-        }
-        box.pad(24);
+        Table box = new BorderedTable();
+
+        box.pad(50);
 
         Table leftCell = new Table();
-        leftCell.add(createAnimationActor(type.getIdleAnimationPath())).size(220, 220);
+        leftCell.add(createAnimationActor(type.getIdleAnimationPath(), type.getStateName())).size(220, 220);
 
         Table rightCell = new Table();
         rightCell.top().left();
@@ -631,46 +626,56 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
             .left().padBottom(4).row();
 
         if (stats != null) {
-            rightCell.add(createBlackLabel("Family: " + formatCategory(stats.getCategory()))).left().padBottom(4).row();
-            rightCell.add(createBlackLabel("Sun Cost: " + stats.getCost())).left().padBottom(4).row();
-            rightCell.add(createBlackLabel("Health: " + stats.getBaseHP())).left().padBottom(4).row();
+            rightCell.add(createBlackLabel("Family: " + formatCategory(stats.getCategory())))
+                .left().padBottom(4).row();
+            rightCell.add(createBlackLabel("Sun Cost: " + stats.getCost()))
+                .left().padBottom(4).row();
+            rightCell.add(createBlackLabel("Health: " + stats.getBaseHP()))
+                .left().padBottom(4).row();
+
             if (stats.getTags() != null && !stats.getTags().isEmpty()) {
                 rightCell.add(createBlackLabel("Tags: " + String.join(", ", stats.getTags())))
                     .left().padBottom(4).row();
             }
         } else {
-            rightCell.add(createBlackLabel("Details unavailable.")).left().padBottom(4).row();
+            rightCell.add(createBlackLabel("Details unavailable."))
+                .left().padBottom(4).row();
         }
 
-        if (unlocked) {
-            int maxLevel = UserProgressManager.getMaxPlantLevel();
-            if (level < maxLevel) {
-                int requiredCoins = UserProgressManager.getRequiredCoinsForUpgrade(level);
-                int requiredSeeds = UserProgressManager.getRequiredSeedPacketsForUpgrade(level);
-                int ownedSeeds = progress.getSeedPackets().getOrDefault(type, 0);
+        rightCell.add(createBlackLabel(
+            unlocked && level < UserProgressManager.getMaxPlantLevel()
+                ? "Upgrade: " + UserProgressManager.getRequiredCoinsForUpgrade(level)
+                + " coins, "
+                + progress.getSeedPackets().getOrDefault(type, 0)
+                + "/"
+                + UserProgressManager.getRequiredSeedPacketsForUpgrade(level)
+                + " seed packets"
+                : (unlocked ? "Max level reached." : "")
+        )).left().padBottom(10).row();
 
-                rightCell.add(createBlackLabel(
-                    "Upgrade: " + requiredCoins + " coins, " + ownedSeeds + "/" + requiredSeeds + " seed packets"
-                )).left().padBottom(10).row();
 
-                TextButton upgradeButton = createSkinButton("Upgrade", "green", new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        String error = menuController.upgradePlant(type.getName());
-                        closeModal();
-                        if (error != null) {
-                            showError(error);
-                        } else {
-                            showToast(formatPlantName(type) + " upgraded!", SUCCESS_BG_ASSET_ID);
-                            updateCurrencyHud();
-                            refreshGrid();
-                        }
+        Table buttonTable = new Table();
+
+        if (unlocked && level < UserProgressManager.getMaxPlantLevel()) {
+            TextButton upgradeButton = createSkinButton("Upgrade", "green", new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    String error = menuController.upgradePlant(type.getName());
+                    closeModal();
+
+                    if (error != null) {
+                        showError(error);
+                    } else {
+                        showToast(formatPlantName(type) + " upgraded!", SUCCESS_BG_ASSET_ID);
+                        updateCurrencyHud();
+                        refreshGrid();
                     }
-                });
-                rightCell.add(upgradeButton).left().row();
-            } else {
-                rightCell.add(createBlackLabel("Max level reached.")).left().padBottom(10).row();
-            }
+                }
+            });
+
+            buttonTable.add(upgradeButton)
+                .left()
+                .padRight(2);
         }
 
         TextButton closeButton = createSkinButton("Close", "brown", new ClickListener() {
@@ -679,11 +684,18 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
                 closeModal();
             }
         });
-        rightCell.add(closeButton).left().padTop(6);
+
+        buttonTable.add(closeButton)
+            .left();
+
+        rightCell.add(buttonTable)
+            .left()
+            .padTop(6);
 
         Table content = new Table();
         content.add(leftCell).top().padRight(24);
         content.add(rightCell).top();
+
         box.add(content);
 
         showModal(box);
@@ -698,15 +710,12 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
             // Missing JSON data for this zombie -- fall back to "unavailable" below.
         }
 
-        Table box = new Table();
-        TextureRegion bg = textureBank.region(DETAIL_BOX_BG_ASSET_ID);
-        if (bg != null) {
-            box.setBackground(new NinePatchDrawable(new NinePatch(bg, 24, 24, 24, 24)));
-        }
-        box.pad(24);
+        Table box = new BorderedTable();
+
+        box.pad(50);
 
         Table leftCell = new Table();
-        leftCell.add(createAnimationActor(type.getIdleAnimationPath())).size(220, 220);
+        leftCell.add(createAnimationActor(type.getIdleAnimationPath(), type.getStateName())).size(220, 220);
 
         Table rightCell = new Table();
         rightCell.top().left();
@@ -743,8 +752,8 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
     // IDLE ANIMATION (PamPlayer)
     // ============================================================
 
-    private Actor createAnimationActor(String animationPath) {
-        return new PamAnimationActor(Main.getInstance().getPamPlayer(), animationPath, "idle");
+    private Actor createAnimationActor(String animationPath, String stateName) {
+        return new PamAnimationActor(Main.getInstance().getPamPlayer(), animationPath, stateName);
     }
 
     /**
