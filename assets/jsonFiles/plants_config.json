@@ -272,38 +272,58 @@
   ],
 
   "BONK_CHOY": [
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 0.25, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": [], "attributes": {"damage":  15, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 25} },
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 0.25, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": [], "attributes": {"damage":  20, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 30} },
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 0.23, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": [], "attributes": {"damage":  20, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 30} },
-    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 0.23, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": [], "attributes": {"damage":  20, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 30} }
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 0.25, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": [], "attributes": {"damage":  15, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 25},
+      "animation": "768/INITIAL/PLANT/BONKCHOY/BONKCHOY.PAM", "status": {"idle": "idle", "action": "attack3", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 0.25, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": [], "attributes": {"damage":  20, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 30},
+      "animation": "768/INITIAL/PLANT/BONKCHOY/BONKCHOY.PAM", "status": {"idle": "idle", "action": "attack3", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 0.23, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": [], "attributes": {"damage":  20, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 30},
+      "animation": "768/INITIAL/PLANT/BONKCHOY/BONKCHOY.PAM", "status": {"idle": "idle", "action": "attack3", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 0.23, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": [], "attributes": {"damage":  20, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 30},
+      "animation": "768/INITIAL/PLANT/BONKCHOY/BONKCHOY.PAM", "status": {"idle": "idle", "action": "attack3", "plantfood": "plantfood"} }
   ],
 
   "PHAT_BEET": [
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE"], "attributes": {"damage":  15, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 40} },
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE"], "attributes": {"damage":  25, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 50} },
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 1.8, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE"], "attributes": {"damage":  25, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 50} },
-    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 1.8, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE"], "attributes": {"damage":  25, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 50} }
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE"], "attributes": {"damage":  15, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 40},
+      "animation": "768/FULL/PLANT/PHATBEETS/PHATBEETS.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE"], "attributes": {"damage":  25, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 50},
+      "animation": "768/FULL/PLANT/PHATBEETS/PHATBEETS.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 1.8, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE"], "attributes": {"damage":  25, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 50},
+      "animation": "768/FULL/PLANT/PHATBEETS/PHATBEETS.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 1.8, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE"], "attributes": {"damage":  25, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 50},
+      "animation": "768/FULL/PLANT/PHATBEETS/PHATBEETS.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood"} }
   ],
 
   "CHOMPER": [
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 40, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["insta-kill"], "attributes": {"digest_time": 40}, "plantFoodEffect": {"number": 3} },
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 38, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["insta-kill"], "attributes": {"digest_time": 38}, "plantFoodEffect": {"number": 3} },
-    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 38, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["insta-kill"], "attributes": {"digest_time": 38}, "plantFoodEffect": {"number": 3} },
-    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 35, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["insta-kill"], "attributes": {"digest_time": 35}, "plantFoodEffect": {"number": 3} }
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 40, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["insta-kill"], "attributes": {"digest_time": 40}, "plantFoodEffect": {"number": 3},
+      "animation": "768/INITIAL/PLANT/CHOMPER/CHOMPER.PAM", "status": {"idle": "idle", "action": "bite", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 38, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["insta-kill"], "attributes": {"digest_time": 38}, "plantFoodEffect": {"number": 3},
+      "animation": "768/INITIAL/PLANT/CHOMPER/CHOMPER.PAM", "status": {"idle": "idle", "action": "bite", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 38, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["insta-kill"], "attributes": {"digest_time": 38}, "plantFoodEffect": {"number": 3},
+      "animation": "768/INITIAL/PLANT/CHOMPER/CHOMPER.PAM", "status": {"idle": "idle", "action": "bite", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 35, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["insta-kill"], "attributes": {"digest_time": 35}, "plantFoodEffect": {"number": 3},
+      "animation": "768/INITIAL/PLANT/CHOMPER/CHOMPER.PAM", "status": {"idle": "idle", "action": "bite", "plantfood": "plantfood"} }
   ],
 
   "WASABI_WHIP": [
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["fire"], "attributes": {"damage":  40, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 50} },
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["fire"], "attributes": {"damage":  50, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 60} },
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["fire"], "attributes": {"damage":  50, "front_range": 2, "back_range": 2}, "plantFoodEffect": {"range": 1,"damage": 60} },
-    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["fire"], "attributes": {"damage":  50, "front_range": 2, "back_range": 2}, "plantFoodEffect": {"range": 1,"damage": 60} }
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["fire"], "attributes": {"damage":  40, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 50},
+      "animation": "768/INITIAL/PLANT/WASABIWHIP/WASABIWHIP.PAM", "status": {"idle": "idle", "action": "attack3", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["fire"], "attributes": {"damage":  50, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 60},
+      "animation": "768/INITIAL/PLANT/WASABIWHIP/WASABIWHIP.PAM", "status": {"idle": "idle", "action": "attack3", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["fire"], "attributes": {"damage":  50, "front_range": 2, "back_range": 2}, "plantFoodEffect": {"range": 1,"damage": 60},
+      "animation": "768/INITIAL/PLANT/WASABIWHIP/WASABIWHIP.PAM", "status": {"idle": "idle", "action": "attack3", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["fire"], "attributes": {"damage":  50, "front_range": 2, "back_range": 2}, "plantFoodEffect": {"range": 1,"damage": 60},
+      "animation": "768/INITIAL/PLANT/WASABIWHIP/WASABIWHIP.PAM", "status": {"idle": "idle", "action": "attack3", "plantfood": "plantfood"} }
   ],
 
   "KIWIBEAST": [
-    { "category": "Melee", "baseHP": 300, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [15, 30, 45], "range": 1}, "plantFoodEffect": {} },
-    { "category": "Melee", "baseHP": 500, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [15, 30, 45], "range": 1}, "plantFoodEffect": {} },
-    { "category": "Melee", "baseHP": 500, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [30, 45, 60], "range": 1}, "plantFoodEffect": {} },
-    { "category": "Melee", "baseHP": 500, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [30, 45, 60], "range": 1}, "plantFoodEffect": {} }
+    { "category": "Melee", "baseHP": 300, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [15, 30, 45], "range": 1}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/KIWIBEAST/KIWIBEAST.PAM", "status": {"idle1":  "idle_stage1_", "idle2": "idle_stage2_", "idle3": "idle_stage3_", "action1": "attack_stage1", "action2": "attack_stage2", "action3": "attack_stage3", "plantfood":  "plantfood_stage3"} },
+    { "category": "Melee", "baseHP": 500, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [15, 30, 45], "range": 1}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/KIWIBEAST/KIWIBEAST.PAM", "status": {"idle1":  "idle_stage1_", "idle2": "idle_stage2_", "idle3": "idle_stage3_", "action1": "attack_stage1", "action2": "attack_stage2", "action3": "attack_stage3", "plantfood":  "plantfood_stage3"} },
+    { "category": "Melee", "baseHP": 500, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [30, 45, 60], "range": 1}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/KIWIBEAST/KIWIBEAST.PAM", "status": {"idle1":  "idle_stage1_", "idle2": "idle_stage2_", "idle3": "idle_stage3_", "action1": "attack_stage1", "action2": "attack_stage2", "action3": "attack_stage3", "plantfood":  "plantfood_stage3"} },
+    { "category": "Melee", "baseHP": 500, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [30, 45, 60], "range": 1}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/KIWIBEAST/KIWIBEAST.PAM", "status": {"idle1":  "idle_stage1_", "idle2": "idle_stage2_", "idle3": "idle_stage3_", "action1": "attack_stage1", "action2": "attack_stage2", "action3": "attack_stage3", "plantfood":  "plantfood_stage3"} }
   ],
 
   "WALL_NUT": [
@@ -395,10 +415,14 @@
   ],
 
   "TORCHWOOD": [
-    { "category": "Modifier", "baseHP": 300, "cost": 175, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["fire"], "attributes": {}, "plantFoodEffect": {"damageMultiplier": 3} },
-    { "category": "Modifier", "baseHP": 600, "cost": 175, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["fire"], "attributes": {}, "plantFoodEffect": {"damageMultiplier": 3} },
-    { "category": "Modifier", "baseHP": 600, "cost": 175, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["fire", "AoE"], "attributes": {"damage": 30, "range": 1}, "plantFoodEffect": {"damageMultiplier": 3} },
-    { "category": "Modifier", "baseHP": 600, "cost": 150, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["fire", "AoE"], "attributes": {"damage": 30, "range": 1}, "plantFoodEffect": {"damageMultiplier": 3} }
+    { "category": "Modifier", "baseHP": 300, "cost": 175, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["fire"], "attributes": {}, "plantFoodEffect": {"damageMultiplier": 3},
+      "animation": "768/INITIAL/PLANT/TORCHWOOD/TORCHWOOD.PAM", "status": {"idle": "idle", "explosion": "explosion", "plantfood": "plantfood"}},
+    { "category": "Modifier", "baseHP": 600, "cost": 175, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["fire"], "attributes": {}, "plantFoodEffect": {"damageMultiplier": 3},
+      "animation": "768/INITIAL/PLANT/TORCHWOOD/TORCHWOOD.PAM", "status": {"idle": "idle", "explosion": "explosion", "plantfood": "plantfood"}},
+    { "category": "Modifier", "baseHP": 600, "cost": 175, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["fire", "AoE"], "attributes": {"damage": 30, "range": 1}, "plantFoodEffect": {"damageMultiplier": 3},
+      "animation": "768/INITIAL/PLANT/TORCHWOOD/TORCHWOOD.PAM", "status": {"idle": "idle", "explosion": "explosion", "plantfood": "plantfood"}},
+    { "category": "Modifier", "baseHP": 600, "cost": 150, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["fire", "AoE"], "attributes": {"damage": 30, "range": 1}, "plantFoodEffect": {"damageMultiplier": 3},
+      "animation": "768/INITIAL/PLANT/TORCHWOOD/TORCHWOOD.PAM", "status": {"idle": "idle", "explosion": "explosion", "plantfood": "plantfood"}}
   ],
 
   "MAGNET_SHROOM": [
@@ -409,10 +433,14 @@
   ],
 
   "HYPNO_SHROOM": [
-    { "category": "Modifier", "baseHP": 300, "cost": 125, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.0,"Damage_Buff": 1.0}, "plantFoodEffect": {} },
-    { "category": "Modifier", "baseHP": 300, "cost": 100, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.0,"Damage_Buff": 1.0}, "plantFoodEffect": {} },
-    { "category": "Modifier", "baseHP": 300, "cost": 100, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.1,"Damage_Buff": 1.0}, "plantFoodEffect": {} },
-    { "category": "Modifier", "baseHP": 300, "cost": 100, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.1,"Damage_Buff": 1.2}, "plantFoodEffect": {} }
+    { "category": "Modifier", "baseHP": 300, "cost": 125, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.0,"Damage_Buff": 1.0}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/HYPNOSHROOM/HYPNOSHROOM.PAM", "status": {"idle": "idle", "plantfood": "plantfood"}},
+    { "category": "Modifier", "baseHP": 300, "cost": 100, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.0,"Damage_Buff": 1.0}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/HYPNOSHROOM/HYPNOSHROOM.PAM", "status": {"idle": "idle", "plantfood": "plantfood"} },
+    { "category": "Modifier", "baseHP": 300, "cost": 100, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.1,"Damage_Buff": 1.0}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/HYPNOSHROOM/HYPNOSHROOM.PAM", "status": {"idle": "idle", "plantfood": "plantfood"}},
+    { "category": "Modifier", "baseHP": 300, "cost": 100, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.1,"Damage_Buff": 1.2}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/HYPNOSHROOM/HYPNOSHROOM.PAM", "status": {"idle": "idle", "plantfood": "plantfood"}}
   ],
 
   "CAT_TAIL": [
@@ -423,10 +451,14 @@
   ],
 
   "IMITATER": [
-    { "category": "Modifier", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 0, "abilities": [], "tags": [], "attributes": {} },
-    { "category": "Modifier", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 0, "abilities": [], "tags": [], "attributes": {} },
-    { "category": "Modifier", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 0, "abilities": [], "tags": [], "attributes": {} },
-    { "category": "Modifier", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 0, "abilities": [], "tags": [], "attributes": {} }
+    { "category": "Modifier", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 0, "abilities": [], "tags": [], "attributes": {},
+      "animation": "768/INITIAL/PLANT/IMITATER/IMITATER.PAM", "status": {"idle": "idle"}},
+    { "category": "Modifier", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 0, "abilities": [], "tags": [], "attributes": {},
+      "animation": "768/INITIAL/PLANT/IMITATER/IMITATER.PAM", "status": {"idle": "idle"} },
+    { "category": "Modifier", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 0, "abilities": [], "tags": [], "attributes": {},
+      "animation": "768/INITIAL/PLANT/IMITATER/IMITATER.PAM", "status": {"idle": "idle"} },
+    { "category": "Modifier", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 0, "abilities": [], "tags": [], "attributes": {},
+      "animation": "768/INITIAL/PLANT/IMITATER/IMITATER.PAM", "status": {"idle": "idle"} }
   ],
 
   "ICE_SHROOM": [
@@ -437,10 +469,14 @@
   ],
 
   "LILY_PAD": [
-    { "category": "Modifier", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["Water", "bottomStack"], "attributes": {}, "plantFoodEffect": {"number": 2} },
-    { "category": "Modifier", "baseHP": 300, "cost": 0, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["Water", "bottomStack"], "attributes": {}, "plantFoodEffect": {"number": 2} },
-    { "category": "Modifier", "baseHP": 500, "cost": 0, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["Water", "bottomStack"], "attributes": {}, "plantFoodEffect": {"number": 2} },
-    { "category": "Modifier", "baseHP": 500, "cost": 0, "actionInterval": 0, "rechargeTime": 3, "abilities": ["Modifier"], "tags": ["Water", "bottomStack"], "attributes": {}, "plantFoodEffect": {"number": 2} }
+    { "category": "Modifier", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["Water", "bottomStack"], "attributes": {}, "plantFoodEffect": {"number": 2},
+      "animation": "768/FULL/PLANT/LILYPAD/LILYPAD.PAM", "status": {"idle": "idle2", "plantfood": "plantfood"}},
+    { "category": "Modifier", "baseHP": 300, "cost": 0, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["Water", "bottomStack"], "attributes": {}, "plantFoodEffect": {"number": 2},
+      "animation": "768/FULL/PLANT/LILYPAD/LILYPAD.PAM", "status": {"idle": "idle2", "plantfood": "plantfood"}},
+    { "category": "Modifier", "baseHP": 500, "cost": 0, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["Water", "bottomStack"], "attributes": {}, "plantFoodEffect": {"number": 2},
+      "animation": "768/FULL/PLANT/LILYPAD/LILYPAD.PAM", "status": {"idle": "idle2", "plantfood": "plantfood"}},
+    { "category": "Modifier", "baseHP": 500, "cost": 0, "actionInterval": 0, "rechargeTime": 3, "abilities": ["Modifier"], "tags": ["Water", "bottomStack"], "attributes": {}, "plantFoodEffect": {"number": 2},
+      "animation": "768/FULL/PLANT/LILYPAD/LILYPAD.PAM", "status": {"idle": "idle2", "plantfood": "plantfood"}}
   ],
 
   "HOT_POTATO": [
