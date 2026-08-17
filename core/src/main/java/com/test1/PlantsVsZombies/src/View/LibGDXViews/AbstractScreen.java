@@ -31,6 +31,7 @@ public abstract class AbstractScreen implements Screen {
     private Stack mainStack;
     private Stack modalStack;
     private Stack toastStack;
+    private com.badlogic.gdx.graphics.Texture modalScrimTexture;
 
 
 
@@ -114,6 +115,45 @@ public abstract class AbstractScreen implements Screen {
         return label;
     }
 
+    /**
+     * Shows content as a modal box: a dimmed scrim behind it (clicking the
+     * scrim, i.e. anywhere outside the content, dismisses it) with the
+     * content centered on top. Uses the modalStack layer that already
+     * sits above the screen's own content and below toasts.
+     * Replaces any modal currently showing.
+     */
+    protected void showModal(Actor content) {
+        modalStack.clearChildren();
+
+        if (modalScrimTexture == null) {
+            com.badlogic.gdx.graphics.Pixmap pixmap =
+                new com.badlogic.gdx.graphics.Pixmap(1, 1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
+            pixmap.setColor(0f, 0f, 0f, 0.6f);
+            pixmap.fill();
+            modalScrimTexture = new com.badlogic.gdx.graphics.Texture(pixmap);
+            pixmap.dispose();
+        }
+
+        Image scrim = new Image(new TextureRegionDrawable(new TextureRegion(modalScrimTexture)));
+        scrim.setFillParent(true);
+        scrim.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                closeModal();
+            }
+        });
+        modalStack.addActor(scrim);
+
+        Table centerWrapper = new Table();
+        centerWrapper.setFillParent(true);
+        centerWrapper.add(content);
+        modalStack.addActor(centerWrapper);
+    }
+
+    protected void closeModal() {
+        modalStack.clearChildren();
+    }
+
     protected void showToast(String message, String bgAssetId) {
         UIManager.showToast(message, bgAssetId);
     }
@@ -133,6 +173,21 @@ public abstract class AbstractScreen implements Screen {
 
         TextButton button = new TextButton(text, style);
         button.getLabel().setColor(Color.BLACK);
+        button.pad(10, 20, 10, 20);
+
+        if (listener != null) {
+            button.addListener(listener);
+        }
+        return button;
+    }
+
+    /**
+     * Builds a button using one of the skin's own registered TextButton
+     * styles (e.g. "default", "brown", "purple", "green", "green_small")
+     * instead of a NinePatch region looked up from textureBank.
+     */
+    public TextButton createSkinButton(String text, String skinStyleName, ClickListener listener) {
+        TextButton button = new TextButton(text, skin, skinStyleName);
         button.pad(10, 20, 10, 20);
 
         if (listener != null) {
@@ -329,6 +384,9 @@ public abstract class AbstractScreen implements Screen {
     public void dispose() {
         if (stage != null) {
             stage.dispose();
+        }
+        if (modalScrimTexture != null) {
+            modalScrimTexture.dispose();
         }
     }
 }

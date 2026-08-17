@@ -15,6 +15,32 @@ public class UserProgressManager {
     private static UserProgressManager instance;
     private static int maxLevel = 4;
 
+    public static int getPlantPurchaseCost() {
+        return PLANT_PURCHASE_COST;
+    }
+
+    public static int getMaxPlantLevel() {
+        return maxLevel;
+    }
+
+    /**
+     * Coins required to upgrade a plant FROM currentLevel to currentLevel+1.
+     * Shared by upgradePlant() (enforcement) and the Collection screen
+     * (display), so the two can't drift apart.
+     */
+    public static int getRequiredCoinsForUpgrade(int currentLevel) {
+        return currentLevel * 1000;
+    }
+
+    /**
+     * Seed packets required to upgrade a plant FROM currentLevel to
+     * currentLevel+1. Shared by upgradePlant() (enforcement) and the
+     * Collection screen (display).
+     */
+    public static int getRequiredSeedPacketsForUpgrade(int currentLevel) {
+        return currentLevel * 5;
+    }
+
     private UserProgressManager() {
     }
 
@@ -176,8 +202,8 @@ public class UserProgressManager {
         if (currentLevel == maxLevel)
             return "already at max level.";
 
-        int requiredCoins = currentLevel * 1000;
-        int requiredSeedPackets = currentLevel * 5;
+        int requiredCoins = getRequiredCoinsForUpgrade(currentLevel);
+        int requiredSeedPackets = getRequiredSeedPacketsForUpgrade(currentLevel);
 
         if (progress.getCoinsCount() < requiredCoins)
             return "Insufficient coins. Need " + requiredCoins + ".";

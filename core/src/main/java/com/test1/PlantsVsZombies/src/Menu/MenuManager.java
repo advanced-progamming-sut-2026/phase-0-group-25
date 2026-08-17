@@ -17,7 +17,11 @@ public class MenuManager {
 
         // Concrete terminal views for non-refactored menus
         menusAndTheirNames.put(MenuType.CoinWallet, new CoinWalletMenu(new CoinWalletMenuTerminalView()));
-        menusAndTheirNames.put(MenuType.Collection, new CollectionMenu(new CollectionMenuTerminalView()));
+
+        CollectionMenuScreen collectionMenuScreen = new CollectionMenuScreen();
+        CollectionMenu collectionMenu = new CollectionMenu(collectionMenuScreen);
+        collectionMenuScreen.setMenuController(collectionMenu);
+        menusAndTheirNames.put(MenuType.Collection, collectionMenu);
 
         // Game / Chapter Selection Screen
         // Game / Chapter Selection Screens

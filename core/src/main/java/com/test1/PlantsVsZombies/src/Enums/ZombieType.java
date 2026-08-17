@@ -30,9 +30,24 @@ public enum ZombieType {
     NEWSPAPER("NEWSPAPER");
 
     private final String name;
+    private final String iconAssetId;
+    private final String idleAnimationPath;
 
+    /**
+     * Default constructor: derives the collection-screen icon asset id and
+     * the idle-animation PAM path from the zombie's name using the same
+     * convention shown in your PamPlayer sample
+     * ("768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM").
+     * Use the 3-arg constructor on individual entries to override.
+     */
     ZombieType(String name) {
+        this(name, "IMAGE_REWARD_ICON_" + name, "768/INITIAL/ZOMBIE/" + name + "/" + name + ".PAM");
+    }
+
+    ZombieType(String name, String iconAssetId, String idleAnimationPath) {
         this.name = name;
+        this.iconAssetId = iconAssetId;
+        this.idleAnimationPath = idleAnimationPath;
     }
 
     public static ZombieType fromName(String name) {
@@ -46,5 +61,13 @@ public enum ZombieType {
 
     public String getName() {
         return name;
+    }
+
+    public String getIconAssetId() {
+        return iconAssetId;
+    }
+
+    public String getIdleAnimationPath() {
+        return idleAnimationPath;
     }
 }

@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.test1.PlantsVsZombies.src.Menu.MenuManager;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.GameDataLoader;
 import com.test1.PlantsVsZombies.src.View.LibGDXViews.UIManager;
+import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
 import pvz.skin.PvzSkin;
 
@@ -15,6 +16,7 @@ public class Main extends Game {
     private SpriteBatch batch;
     private Skin skin;
     private TextureBank textureBank;
+    private PamPlayer pamPlayer;
 
     @Override
     public void create() {
@@ -24,6 +26,7 @@ public class Main extends Game {
         skin = PvzSkin.get();
 
         textureBank = new TextureBank("768", Gdx.files.internal("Assets"));
+        pamPlayer = new PamPlayer(textureBank, Gdx.files.internal("Assets"));
 
         GameDataLoader.loadGameData();
         UIManager.init(this);
@@ -57,6 +60,10 @@ public class Main extends Game {
 
     public TextureBank getTextureBank() {
         return textureBank;
+    }
+
+    public PamPlayer getPamPlayer() {
+        return pamPlayer;
     }
 
     @Override

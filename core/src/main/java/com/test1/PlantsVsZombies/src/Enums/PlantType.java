@@ -1,7 +1,7 @@
 package com.test1.PlantsVsZombies.src.Enums;
 
 public enum PlantType {
-    SUNFLOWER("SUNFLOWER"),
+    SUNFLOWER("SUNFLOWER", "IMAGE_UI_SUNFLOWER", "768/INITIAL/PLANT/SUNFLOWER/SUNFLOWER.PAM"),
     TWIN_SUNFLOWER("TWIN_SUNFLOWER"),
     SUN_SHROOM("SUN_SHROOM"),
     PRIMAL_SUNFLOWER("PRIMAL_SUNFLOWER"),
@@ -73,9 +73,24 @@ public enum PlantType {
     MARIGOLD("MARIGOLD");
 
     private final String name;
+    private final String iconAssetId;
+    private final String idleAnimationPath;
 
+    /**
+     * Default constructor: derives the collection-screen icon asset id and
+     * the idle-animation PAM path from the plant's name using a consistent
+     * convention. If your real TextureBank keys or PAM paths for a specific
+     * plant don't follow this pattern, use the 3-arg constructor on that
+     * one entry to override it explicitly.
+     */
     PlantType(String name) {
+        this(name, "IMAGE_REWARD_ICON_" + name, "768/INITIAL/PLANT/" + name + "/" + name + ".PAM");
+    }
+
+    PlantType(String name, String iconAssetId, String idleAnimationPath) {
         this.name = name;
+        this.iconAssetId = iconAssetId;
+        this.idleAnimationPath = idleAnimationPath;
     }
 
     public static PlantType fromName(String name) {
@@ -89,5 +104,21 @@ public enum PlantType {
 
     public String getName() {
         return name;
+    }
+
+    /**
+     * Asset id for the thumbnail shown in the Collection screen grid.
+     * See constructor javadoc re: placeholder convention.
+     */
+    public String getIconAssetId() {
+        return iconAssetId;
+    }
+
+    /**
+     * PAM animation path for the idle animation shown in the plant's
+     * detail box on the Collection screen.
+     */
+    public String getIdleAnimationPath() {
+        return idleAnimationPath;
     }
 }
