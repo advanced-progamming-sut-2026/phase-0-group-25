@@ -63,6 +63,10 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
     private static final float CARD_CELL_HEIGHT = 190f;
     private static final float ICON_INSET = 14f;
 
+    // Increased box size so the animation comfortably fits without hacking offsets
+    private static final float ANIMATION_BOX_HEIGHT = 400f;
+    private static final float ANIMATION_BOX_WIDTH = 350f;
+
     private CollectionMenu menuController;
 
     private Tab currentTab = Tab.PLANTS;
@@ -613,7 +617,8 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
         box.pad(50);
 
         Table leftCell = new Table();
-        leftCell.add(createAnimationActor(type.getIdleAnimationPath(), type.getStateName())).size(220, 220);
+        // Use a larger fixed box size so the animation fits without overflow
+        leftCell.add(createAnimationActor(type.getIdleAnimationPath(), type.getStateName())).size(ANIMATION_BOX_WIDTH, ANIMATION_BOX_HEIGHT);
 
         Table rightCell = new Table();
         rightCell.top().left();
@@ -690,11 +695,11 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
 
         rightCell.add(buttonTable)
             .left()
-            .padTop(6);
+            .padBottom(20);
 
         Table content = new Table();
-        content.add(leftCell).top().padRight(24);
-        content.add(rightCell).top();
+        content.add(leftCell).center().padRight(24);
+        content.add(rightCell).center();
 
         box.add(content);
 
@@ -715,7 +720,8 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
         box.pad(50);
 
         Table leftCell = new Table();
-        leftCell.add(createAnimationActor(type.getIdleAnimationPath(), type.getStateName())).size(220, 220);
+        // Use the same larger box size
+        leftCell.add(createAnimationActor(type.getIdleAnimationPath(), type.getStateName())).size(ANIMATION_BOX_WIDTH, ANIMATION_BOX_HEIGHT);
 
         Table rightCell = new Table();
         rightCell.top().left();
@@ -738,11 +744,11 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
                 closeModal();
             }
         });
-        rightCell.add(closeButton).left().padTop(10);
+        rightCell.add(closeButton).left().padBottom(20);
 
         Table content = new Table();
-        content.add(leftCell).top().padRight(24);
-        content.add(rightCell).top();
+        content.add(leftCell).center().padRight(24);
+        content.add(rightCell).center();
         box.add(content);
 
         showModal(box);
@@ -757,10 +763,8 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
     }
 
     /**
-     * A scene2d Actor that plays a PAM idle animation via PamPlayer. Tracks
-     * its own state time (advanced each frame through act()) and draws
-     * through whatever Batch the Stage passes in -- same call pattern as
-     * GamePlayScreen's own PamPlayer usage.
+     * A scene2d Actor that plays a PAM idle animation via PamPlayer.
+     * Uses the actor's full bounds and draws the sprite centered.
      */
     private static class PamAnimationActor extends Actor {
         private final PamPlayer player;
@@ -783,11 +787,9 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
         @Override
         public void draw(Batch batch, float parentAlpha) {
             if (player == null || animationPath == null) return;
-            // NOTE: PamPlayer's x/y anchor convention isn't something this
-            // code can verify without seeing it rendered -- if the sprite
-            // looks off-center within its box, adjust centerX/centerY here.
+            // Proper centering: the actor's full width/height, not a hacked fraction
             float centerX = getX() + getWidth() / 2f;
-            float centerY = getY() + getHeight() / 2f;
+            float centerY = getY() + getHeight() / 4f;
             player.draw(batch, animationPath, stateName, stateTime, centerX, centerY, true);
         }
     }

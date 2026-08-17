@@ -110,7 +110,7 @@ public abstract class AbstractScreen implements Screen {
     }
 
     protected Label createBlackLabel(String text) {
-        Label label = new Label(text, skin);
+        Label label = createLabel(text, "FBUSV8C5EI_2", Color.BLACK);
         label.setColor(Color.BLACK);
         return label;
     }
