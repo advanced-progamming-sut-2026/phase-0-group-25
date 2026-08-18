@@ -277,6 +277,21 @@ public class BattlePlant extends Plant {
         return decider.plantDecider(this, (float) GAME.getTotalTimePassed());
     }
 
+    public String getAnimationPath() {
+        if (this.plantStats.getAbilities().contains("explosionWithLifeSpan")) {
+            double difference = GAME.getTotalTimePassed() - this.plantTime;
+            double attackTime = (double) this.plantStats.getAttributes().get("attackTime");
+
+            if (difference >= attackTime) {
+                return (String) this.plantStats.getAttributes().get("explosionAnimation");
+            }
+
+            return this.plantStats.getAnimation();
+        }
+
+        return this.plantStats.getAnimation();
+    }
+
     public HashMap<String, Boolean> getVisibilities() {
         AnimationDecider decider = new AnimationDecider();
         return decider.plantVisibilities(this);
@@ -301,6 +316,10 @@ public class BattlePlant extends Plant {
 
         if (this.plantStats.getCategory().equals("Melee")) {
             checkMelee();
+        }
+
+        if (this.name.equals(PlantType.SQUASH.getName())) {
+            checkSquash();
         }
     }
 
@@ -330,6 +349,27 @@ public class BattlePlant extends Plant {
             } else {
                 this.status = "idle";
             }
+        }
+    }
+
+    private void checkSquash() {
+        ArrayList<Zombie> zombiesInRange = new ArrayList<>();
+        for (int i = 0; i <= 1; i++) {
+            Tile tile = GAME.getTileByPosition(this.column, this.row);
+            if (tile == null) {
+                continue;
+            }
+            for (Zombie zombie : tile.getZombies()) {
+                if (this.position.distance(zombie.position) <= 50f) {
+                    zombiesInRange.add(zombie);
+                }
+            }
+        }
+
+        if (!zombiesInRange.isEmpty()) {
+            this.status = "action";
+        } else {
+            this.status = "idle";
         }
     }
 }

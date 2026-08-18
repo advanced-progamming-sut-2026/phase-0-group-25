@@ -145,7 +145,23 @@ public class Homing implements Ability {
         }
     }
 
+    private boolean isNotArmored(BattlePlant plant) {
+        if (plant.getPlantStats().getTags().contains("charge")) {
+            int armTime = (int) plant.getPlantStats().getAttributes().get("armTime");
+            if ((GAME.getTotalTimePassed() - plant.getPlantTime()) < armTime) {
+                return true;
+            }
+            return false;
+        }
+
+        return false;
+    }
+
     private void runAbility(BattlePlant plant, ArrayList<String> plantTags) {
+        if (isNotArmored(plant)) {
+            return;
+        }
+
         if (plantTags.contains("random-direction")) {
             Zombie target = findRandomZombie();
             if (target == null) {
@@ -155,9 +171,9 @@ public class Homing implements Ability {
             int damage = (int) plant.getPlantStats().getAttributes().get("damage");
             Position velocity = findVelocity(plant.getPosition(), target.getPosition());
             LobbedProjectile lobbedProjectile = new LobbedProjectile(plant,
-                    plant.getPosition().getX(), plant.getPosition().getY(),
-                    target.getPosition().getX(), target.getPosition().getY(),
-                    1, 0, 0, damage);
+                plant.getPosition().getX(), plant.getPosition().getY(),
+                target.getPosition().getX(), target.getPosition().getY(),
+                1, 0, 0, damage);
             if (plantTags.contains("hypnotize")) {
                 lobbedProjectile.setHypnotizer(true);
             }
@@ -172,9 +188,9 @@ public class Homing implements Ability {
             int damage = (int) plant.getPlantStats().getAttributes().get("damage");
             Position velocity = findVelocity(plant.getPosition(), target.getPosition());
             LobbedProjectile lobbedProjectile = new LobbedProjectile(plant,
-                    plant.getPosition().getX(), plant.getPosition().getY(),
-                    target.getPosition().getX(), target.getPosition().getY(),
-                    1, 0, 0, damage);
+                plant.getPosition().getX(), plant.getPosition().getY(),
+                target.getPosition().getX(), target.getPosition().getY(),
+                1, 0, 0, damage);
 
             GAME.getProjectiles().add(lobbedProjectile);
 
@@ -186,7 +202,7 @@ public class Homing implements Ability {
             int damage = (int) plant.getPlantStats().getAttributes().get("damage");
             Position velocity = findVelocity(plant.getPosition(), target.getPosition());
             Projectile projectile = new Projectile(plant, velocity.getX(), velocity.getY(),
-                    plant.getPosition(), damage, 1);
+                plant.getPosition(), damage, 1);
 
             GAME.getProjectiles().add(projectile);
         } else if (plantTags.contains("disarmament")) {
