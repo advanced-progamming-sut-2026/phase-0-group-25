@@ -17,7 +17,11 @@ public class MenuManager {
 
         // Concrete terminal views for non-refactored menus
         menusAndTheirNames.put(MenuType.CoinWallet, new CoinWalletMenu(new CoinWalletMenuTerminalView()));
-        menusAndTheirNames.put(MenuType.Collection, new CollectionMenu(new CollectionMenuTerminalView()));
+
+        CollectionMenuScreen collectionMenuScreen = new CollectionMenuScreen();
+        CollectionMenu collectionMenu = new CollectionMenu(collectionMenuScreen);
+        collectionMenuScreen.setMenuController(collectionMenu);
+        menusAndTheirNames.put(MenuType.Collection, collectionMenu);
 
         // Game / Chapter Selection Screen
         // Game / Chapter Selection Screens
@@ -69,11 +73,14 @@ public class MenuManager {
         menusAndTheirNames.put(MenuType.Shop, new ShopMenu(new ShopMenuTerminalView()));
         menusAndTheirNames.put(MenuType.TravelLog, new TravelLogMenu(new TravelLogMenuTerminalView()));
         menusAndTheirNames.put(MenuType.Network, new NetworkMenu(new NetworkMenuTerminalView()));
-        menusAndTheirNames.put(MenuType.ChoosePlant, new ChoosePlantMenu(
-            new ChoosePlantMenuTerminalView(),
-            gameMenu.getPlantsStr(),
-            gameMenu.getBoostedPlants()
-        ));
+        ChoosePlantScreen choosePlantScreen = new ChoosePlantScreen();
+        ChoosePlantMenu choosePlantMenu = new ChoosePlantMenu(
+            choosePlantScreen,
+            gameMenu.getPlantsStr()
+        );
+        choosePlantScreen.setMenuController(choosePlantMenu);
+        choosePlantScreen.setGameMenu(gameMenu);
+        menusAndTheirNames.put(MenuType.ChoosePlant, choosePlantMenu);
 
         UsersManager usersManager = UsersManager.getInstance();
         if (usersManager.checkAndLoadStayLoggedIn()) {

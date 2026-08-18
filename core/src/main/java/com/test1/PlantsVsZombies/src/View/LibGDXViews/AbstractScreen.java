@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -13,14 +16,22 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.test1.PlantsVsZombies.Main;
 import com.test1.PlantsVsZombies.src.Enums.MenuType;
+import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Menu.MenuManager;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.PlantFactory;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.PlantStats;
 import com.test1.PlantsVsZombies.src.Model.User.User;
+import com.test1.PlantsVsZombies.src.Model.User.UserProgressManager;
 import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
+import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
 
 public abstract class AbstractScreen implements Screen {
@@ -31,6 +42,8 @@ public abstract class AbstractScreen implements Screen {
     private Stack mainStack;
     private Stack modalStack;
     private Stack toastStack;
+    private com.badlogic.gdx.graphics.Texture modalScrimTexture;
+    private Texture fallbackBoxTexture;
 
 
 
@@ -109,9 +122,48 @@ public abstract class AbstractScreen implements Screen {
     }
 
     protected Label createBlackLabel(String text) {
-        Label label = new Label(text, skin);
+        Label label = createLabel(text, "FBUSV8C5EI_2", Color.BLACK);
         label.setColor(Color.BLACK);
         return label;
+    }
+
+    /**
+     * Shows content as a modal box: a dimmed scrim behind it (clicking the
+     * scrim, i.e. anywhere outside the content, dismisses it) with the
+     * content centered on top. Uses the modalStack layer that already
+     * sits above the screen's own content and below toasts.
+     * Replaces any modal currently showing.
+     */
+    protected void showModal(Actor content) {
+        modalStack.clearChildren();
+
+        if (modalScrimTexture == null) {
+            com.badlogic.gdx.graphics.Pixmap pixmap =
+                new com.badlogic.gdx.graphics.Pixmap(1, 1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
+            pixmap.setColor(0f, 0f, 0f, 0.6f);
+            pixmap.fill();
+            modalScrimTexture = new com.badlogic.gdx.graphics.Texture(pixmap);
+            pixmap.dispose();
+        }
+
+        Image scrim = new Image(new TextureRegionDrawable(new TextureRegion(modalScrimTexture)));
+        scrim.setFillParent(true);
+        scrim.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                closeModal();
+            }
+        });
+        modalStack.addActor(scrim);
+
+        Table centerWrapper = new Table();
+        centerWrapper.setFillParent(true);
+        centerWrapper.add(content);
+        modalStack.addActor(centerWrapper);
+    }
+
+    protected void closeModal() {
+        modalStack.clearChildren();
     }
 
     protected void showToast(String message, String bgAssetId) {
@@ -133,6 +185,21 @@ public abstract class AbstractScreen implements Screen {
 
         TextButton button = new TextButton(text, style);
         button.getLabel().setColor(Color.BLACK);
+        button.pad(10, 20, 10, 20);
+
+        if (listener != null) {
+            button.addListener(listener);
+        }
+        return button;
+    }
+
+    /**
+     * Builds a button using one of the skin's own registered TextButton
+     * styles (e.g. "default", "brown", "purple", "green", "green_small")
+     * instead of a NinePatch region looked up from textureBank.
+     */
+    public TextButton createSkinButton(String text, String skinStyleName, ClickListener listener) {
+        TextButton button = new TextButton(text, skin, skinStyleName);
         button.pad(10, 20, 10, 20);
 
         if (listener != null) {
@@ -307,6 +374,190 @@ public abstract class AbstractScreen implements Screen {
         }
     }
 
+    // ============================================================
+    // SHARED PLANT/ZOMBIE CARD BUILDING
+    // (used by CollectionMenuScreen and ChoosePlantScreen)
+    // ============================================================
+
+    protected Drawable getFallbackBoxDrawable() {
+        if (fallbackBoxTexture == null) {
+            Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+            pixmap.setColor(0.28f, 0.22f, 0.15f, 0.9f);
+            pixmap.fill();
+            fallbackBoxTexture = new Texture(pixmap);
+            pixmap.dispose();
+        }
+        return new TextureRegionDrawable(new TextureRegion(fallbackBoxTexture));
+    }
+
+    /**
+     * The reusable "icon inside a box" button: a Button styled with
+     * boxAssetId as its background (falling back to a plain colored box
+     * if the asset doesn't resolve), with iconAssetId layered on top
+     * (optionally tinted dark for "locked"). Returns the Stack so callers
+     * can layer their own extra decorations (badges, labels) on top of it.
+     *
+     * @param boxSize   size (both dimensions) of the box/icon square.
+     * @param iconInset padding between the box edges and the icon.
+     */
+    protected Stack buildIconBoxButton(
+        String boxAssetId,
+        String iconAssetId,
+        float boxSize,
+        float iconInset,
+        boolean tintIconDark,
+        ClickListener clickListener
+    ) {
+        TextureRegion boxRegion = (boxAssetId != null) ? textureBank.region(boxAssetId) : null;
+        Button.ButtonStyle style = new Button.ButtonStyle();
+        if (boxRegion != null) {
+            TextureRegionDrawable boxDrawable = new TextureRegionDrawable(boxRegion);
+            style.up = boxDrawable;
+            style.down = boxDrawable.tint(new Color(0.75f, 0.75f, 0.75f, 1f));
+        } else {
+            Drawable fallback = getFallbackBoxDrawable();
+            style.up = fallback;
+            style.down = fallback;
+        }
+
+        Button cardButton = new Button(style);
+        if (clickListener != null) {
+            cardButton.addListener(clickListener);
+        }
+
+        Stack contentStack = new Stack();
+        contentStack.add(cardButton);
+
+        if (iconAssetId != null) {
+            TextureRegion iconRegion = textureBank.region(iconAssetId);
+            if (iconRegion != null) {
+                Image icon = new Image(iconRegion);
+                icon.setScaling(Scaling.fit);
+                if (tintIconDark) {
+                    icon.setColor(0.25f, 0.25f, 0.25f, 1f);
+                }
+                Table iconInsetTable = new Table();
+                iconInsetTable.setTouchable(Touchable.disabled);
+                iconInsetTable.add(icon).size(boxSize - iconInset * 2).pad(iconInset);
+                contentStack.add(iconInsetTable);
+            }
+        }
+
+        return contentStack;
+    }
+
+    /**
+     * Small pill-style badge (plant level, sun cost, etc.) meant to sit in
+     * a corner of a card via Stack + Table alignment. Not touchable, so it
+     * never blocks clicks meant for the card button beneath it.
+     */
+    protected Table buildCornerBadge(String text, float fontScale) {
+        Table badgeInner = new Table();
+        TextureRegion badgeBg = textureBank.region(CURRENCY_BOX_BG_ASSET_ID);
+        if (badgeBg != null) {
+            badgeInner.setBackground(new NinePatchDrawable(new NinePatch(badgeBg, 8, 8, 8, 8)));
+        }
+        Label label = createLabel(text, "FBUSV8C5EI_1_outline", Color.WHITE);
+        label.setFontScale(fontScale);
+        badgeInner.add(label).pad(2, 6, 2, 6);
+        return badgeInner;
+    }
+
+    /**
+     * Turns SOME_ENUM_NAME into "Some Enum Name". Used for plant/zombie
+     * names and PlantCategory values alike.
+     */
+    protected String formatEnumName(String rawName) {
+        if (rawName == null) return "Unknown";
+        String[] parts = rawName.split("_");
+        StringBuilder sb = new StringBuilder();
+        for (String part : parts) {
+            if (part.isEmpty()) continue;
+            sb.append(Character.toUpperCase(part.charAt(0)))
+                .append(part.substring(1).toLowerCase())
+                .append(" ");
+        }
+        return sb.toString().trim();
+    }
+
+    /**
+     * The name/level/family/cost/health/tags info block shown in a plant's
+     * detail dialog. Fetches PlantStats itself (gracefully handling
+     * missing JSON data), so callers don't need their own PlantFactory
+     * try/catch. Callers append their own button rows onto the returned
+     * Table afterward (upgrade/boost/add-to-selection/close differ per screen).
+     */
+    protected Table buildPlantStatsBlock(PlantType type, int level) {
+        Table block = new Table();
+        block.top().left();
+
+        PlantStats stats = null;
+        try {
+            BattlePlant battlePlant = PlantFactory.createBattlePlant(type.getName(), Math.max(level, 1));
+            if (battlePlant != null) stats = battlePlant.getPlantStats();
+        } catch (Exception ignored) {
+            // Missing JSON data for this plant/level -- fall back to "unavailable" below.
+        }
+
+        Label nameLabel = createBlackLabel(formatEnumName(type.getName()));
+        nameLabel.setFontScale(1.15f);
+        block.add(nameLabel).left().padBottom(8).row();
+
+        block.add(createBlackLabel("Level: " + level + " / " + UserProgressManager.getMaxPlantLevel()))
+            .left().padBottom(4).row();
+
+        if (stats != null) {
+            block.add(createBlackLabel("Family: " + formatEnumName(stats.getCategory()))).left().padBottom(4).row();
+            block.add(createBlackLabel("Sun Cost: " + stats.getCost())).left().padBottom(4).row();
+            block.add(createBlackLabel("Health: " + stats.getBaseHP())).left().padBottom(4).row();
+            if (stats.getTags() != null && !stats.getTags().isEmpty()) {
+                block.add(createBlackLabel("Tags: " + String.join(", ", stats.getTags())))
+                    .left().padBottom(4).row();
+            }
+        } else {
+            block.add(createBlackLabel("Details unavailable.")).left().padBottom(4).row();
+        }
+
+        return block;
+    }
+
+    /**
+     * Builds a scene2d Actor that plays a PAM animation via PamPlayer.
+     * Tracks its own state time (advanced each frame through act()) and
+     * draws through whatever Batch the Stage passes in -- same call
+     * pattern as GamePlayScreen's own PamPlayer usage.
+     */
+    protected Actor createAnimationActor(String animationPath, String stateName) {
+        return new PamAnimationActor(Main.getInstance().getPamPlayer(), animationPath, stateName);
+    }
+
+    private static class PamAnimationActor extends Actor {
+        private final PamPlayer player;
+        private final String animationPath;
+        private final String stateName;
+        private float stateTime = 0f;
+
+        PamAnimationActor(PamPlayer player, String animationPath, String stateName) {
+            this.player = player;
+            this.animationPath = animationPath;
+            this.stateName = stateName;
+        }
+
+        @Override
+        public void act(float delta) {
+            super.act(delta);
+            stateTime += delta;
+        }
+
+        @Override
+        public void draw(Batch batch, float parentAlpha) {
+            if (player == null || animationPath == null) return;
+            float centerX = getX() + getWidth() / 2f;
+            float centerY = getY() + getHeight() / 4f;
+            player.draw(batch, animationPath, stateName, stateTime, centerX, centerY, true);
+        }
+    }
+
     public Label createLabel(
         String text,
         String fontName,
@@ -329,6 +580,12 @@ public abstract class AbstractScreen implements Screen {
     public void dispose() {
         if (stage != null) {
             stage.dispose();
+        }
+        if (modalScrimTexture != null) {
+            modalScrimTexture.dispose();
+        }
+        if (fallbackBoxTexture != null) {
+            fallbackBoxTexture.dispose();
         }
     }
 }
