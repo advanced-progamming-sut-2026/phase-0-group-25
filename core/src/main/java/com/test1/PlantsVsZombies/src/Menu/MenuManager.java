@@ -73,11 +73,14 @@ public class MenuManager {
         menusAndTheirNames.put(MenuType.Shop, new ShopMenu(new ShopMenuTerminalView()));
         menusAndTheirNames.put(MenuType.TravelLog, new TravelLogMenu(new TravelLogMenuTerminalView()));
         menusAndTheirNames.put(MenuType.Network, new NetworkMenu(new NetworkMenuTerminalView()));
-        menusAndTheirNames.put(MenuType.ChoosePlant, new ChoosePlantMenu(
-            new ChoosePlantMenuTerminalView(),
-            gameMenu.getPlantsStr(),
-            gameMenu.getBoostedPlants()
-        ));
+        ChoosePlantScreen choosePlantScreen = new ChoosePlantScreen();
+        ChoosePlantMenu choosePlantMenu = new ChoosePlantMenu(
+            choosePlantScreen,
+            gameMenu.getPlantsStr()
+        );
+        choosePlantScreen.setMenuController(choosePlantMenu);
+        choosePlantScreen.setGameMenu(gameMenu);
+        menusAndTheirNames.put(MenuType.ChoosePlant, choosePlantMenu);
 
         UsersManager usersManager = UsersManager.getInstance();
         if (usersManager.checkAndLoadStayLoggedIn()) {

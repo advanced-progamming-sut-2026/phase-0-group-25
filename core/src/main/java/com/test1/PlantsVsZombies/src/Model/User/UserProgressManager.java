@@ -5,8 +5,10 @@ import com.test1.PlantsVsZombies.src.Model.Greenhouse.GreenhousePlant;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 public class UserProgressManager {
@@ -269,6 +271,24 @@ public class UserProgressManager {
         if (user == null) return;
         user.getUserProgress().consumeGreenhouseBoost(plant);
         save();
+    }
+
+    /**
+     * Takes a snapshot of the currently stored greenhouse/choose-plant
+     * boosts and clears the persisted list in one step. Called exactly
+     * once, right when a level actually starts (GameMenu.startGame) --
+     * the returned snapshot is what gets handed to that GamePlay session,
+     * so boosts don't leak into whatever the user does afterward, and
+     * don't get lost if they never place the boosted plant.
+     */
+    public Set<PlantType> takeAndClearGreenhouseBoosts() {
+        User user = getLoggedInUser();
+        if (user == null) return new HashSet<>();
+        Set<PlantType> liveBoosts = user.getUserProgress().getGreenhouseBoosts();
+        Set<PlantType> snapshot = new HashSet<>(liveBoosts);
+        liveBoosts.clear();
+        save();
+        return snapshot;
     }
 
     public void acceleratePlant(int x, int y) {

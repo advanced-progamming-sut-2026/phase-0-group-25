@@ -347,6 +347,10 @@ public class UsersManager {
         progressManager.consumeGreenhouseBoost(plant);
     }
 
+    public Set<PlantType> takeAndClearGreenhouseBoosts() {
+        return progressManager.takeAndClearGreenhouseBoosts();
+    }
+
     public void acceleratePlant(int x, int y) {
         progressManager.acceleratePlant(x, y);
     }

@@ -51,7 +51,6 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
     private static final String SUCCESS_BG_ASSET_ID = "IMAGE_UI_GENERIC_VTB";
     private static final String DETAIL_BOX_BG_ASSET_ID = "IMAGE_UI_DIALOG_ASSET_DIALOGBORDER_LUNAR_NEW_YEAR";
 
-    // TODO: these two are placeholders -- point them at your real box
     // background assets. Everything falls back to a plain colored box
     // (see getFallbackBoxDrawable) if the region doesn't resolve, so
     // nothing breaks in the meantime, it just won't look final.
@@ -355,7 +354,7 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
         return card;
     }
 
-    private Drawable getFallbackBoxDrawable() {
+    public Drawable getFallbackBoxDrawable() {
         if (fallbackBoxTexture == null) {
             Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
             pixmap.setColor(0.28f, 0.22f, 0.15f, 0.9f);
@@ -758,7 +757,7 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
     // IDLE ANIMATION (PamPlayer)
     // ============================================================
 
-    private Actor createAnimationActor(String animationPath, String stateName) {
+    public Actor createAnimationActor(String animationPath, String stateName) {
         return new PamAnimationActor(Main.getInstance().getPamPlayer(), animationPath, stateName);
     }
 
