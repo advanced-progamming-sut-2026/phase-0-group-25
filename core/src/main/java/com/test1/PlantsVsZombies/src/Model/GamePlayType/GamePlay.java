@@ -808,10 +808,10 @@ public abstract class GamePlay {
 
         if (started == 0) return 0f;
 
-        // پیشروی پایه‌ی نوار بر اساس موج‌های رد شده
+
         float baseProgress = (float) (started - 1) / total;
 
-        // محاسبه کل Cost موج فعلی
+
         double difficultyMultiplier = 1 + (thisUser.getUserProgress().getGameDifficulty() / 10.0);
         float currentWaveTotalCost;
         if (started == total) {
@@ -820,18 +820,18 @@ public abstract class GamePlay {
             currentWaveTotalCost = (float) (calculateCost(chapterType, level, started) * difficultyMultiplier);
         }
 
-        // گرفتن مجموع کاست زامبی‌های کشته‌شده‌ی همین موج
+
         float killedCost = killedZombiesCostPerWave[started];
 
-        // درصد پیشرفت این موج بر اساس مرگ زامبی‌ها
+
         float depletion = killedCost / currentWaveTotalCost;
 
         float fraction;
         if (started < total) {
-            // چون موج بعدی در 75% شروع می‌شود، نوار تا پرچم بعدی در این نقطه پر می‌شود
+
             fraction = depletion / 0.75f;
         } else {
-            fraction = depletion; // موج آخر باید 100% پر شود
+            fraction = depletion;
         }
 
         if (fraction > 1.0f) fraction = 1.0f;

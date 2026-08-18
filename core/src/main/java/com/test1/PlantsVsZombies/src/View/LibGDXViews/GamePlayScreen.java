@@ -126,26 +126,19 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             mower.update(delta, gamePlay);
         }
 
-
         shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-
-        shapeRenderer.setColor(Color.RED);
-        for (Zombie zombie : gamePlay.getGameZombies()) {
-            if (zombie.isAlive()) {
-                float px = (float) zombie.getPosition().getX();
-                float py = (float) zombie.getPosition().getY();
-                shapeRenderer.rect(px - 20, py - 20, 40, 40);
-            }
-        }
-
-        shapeRenderer.end();
-
-
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
+        for (Zombie z : gamePlay.getGameZombies()) {
+            if (z.isAlive() && z.getZombieStats().getAnimation() != null) {
+                float drawX = (float) z.getPosition().getX();
+                float drawY = (float) z.getPosition().getY();
 
+                player.draw(batch, z.getZombieStats().getAnimation(), z.getCurrentAnimationName(),
+                    stateTime, drawX, drawY, true);
+            }
+        }
 
         for (BattlePlant p : gamePlay.getGamePlants()) {
             if (p.isAlive() && p.getPosition() != null && p.getPlantStats().getAnimation() != null) {
@@ -203,23 +196,15 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
 
         batch.end();
 
-
         int totalWaves = gamePlay.calculateWaves(gamePlay.getChapterType(), gamePlay.getLevel());
         float progress = gamePlay.getProgressPercentage();
-
-
         float barWidth = 450f;
         float barHeight = 45f;
-
-
         float barLeftX = (1920f - barWidth) / 2f;
         float barRightX = barLeftX + barWidth;
         float barY = 1130f;
-
-
         float headX = barRightX - (barWidth * progress);
         float greenWidth = barRightX - headX;
-
 
         Gdx.gl.glEnable(Gdx.gl.GL_BLEND);
         shapeRenderer.setProjectionMatrix(camera.combined);

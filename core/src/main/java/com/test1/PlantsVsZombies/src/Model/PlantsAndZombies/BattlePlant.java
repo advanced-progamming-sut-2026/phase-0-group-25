@@ -32,7 +32,7 @@ public class BattlePlant extends Plant {
 
     private String status = "idle";
 
-    private GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlay.activeInstance;
 
     public BattlePlant(PlantStats plantStats, String name) {
         this.plantStats = plantStats;

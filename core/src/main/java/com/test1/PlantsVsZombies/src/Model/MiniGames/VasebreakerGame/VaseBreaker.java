@@ -19,7 +19,6 @@ public class VaseBreaker extends GamePlay {
     private final MiniGameType miniGameType = MiniGameType.VASEBREAKER;  // identify this game
     private boolean isSeted = false;
     private ArrayList<Jar> jars = new ArrayList<>();
-    private ArrayList<DroppedSeedPacket> droppedSeedPackets = new ArrayList<>();
     private ArrayList<BattlePlant> inventory = new ArrayList<>();
 
     public VaseBreaker(ChapterType chapterType, int level, int difficulty, User thisUser,
@@ -63,12 +62,9 @@ public class VaseBreaker extends GamePlay {
             }
         }
 
-        if (targetJar == null) {
-            System.out.println("No unbroken jar found at position (" + x + ", " + y + ")!");
-            return;
-        }
+        if (targetJar == null) return;
 
-        targetJar.setBroken(true);
+        targetJar.setBroken(true); // کوزه درجا از بین می‌رود
         System.out.printf("Jar at (%d, %d) broken!\n", x, y);
 
         Entity content = targetJar.getContent();
@@ -76,33 +72,12 @@ public class VaseBreaker extends GamePlay {
             Zombie z = (Zombie) content;
             z.setPosition(new Position(getRealX(x), getRealY(y)));
             gameZombies.add(z);
-            System.out.printf("A %s emerged from the jar at (%d, %d)!\n", z.getName(), x, y);
+            System.out.printf("A %s emerged from the jar!\n", z.getName());
         } else if (content instanceof BattlePlant) {
             BattlePlant plant = (BattlePlant) content;
-
-            droppedSeedPackets.add(
-                    new DroppedSeedPacket(plant, new Position(getRealX(x), getRealY(y)), 100));
-            System.out.printf("A Seed Packet for %s dropped on ground at (%d, %d)!\n", plant.getName(), x, y);
-        } else {
-            System.out.println("The jar was empty!");
-        }
-    }
-
-    public void collectSeedPacket(int x, int y) {
-        DroppedSeedPacket targetPacket = null;
-        for (DroppedSeedPacket sp : droppedSeedPackets) {
-            if ((int) sp.getPosition().getX() == getRealX(x) && (int) sp.getPosition().getY() == getRealY(y)) {
-                targetPacket = sp;
-                break;
-            }
-        }
-
-        if (targetPacket != null) {
-            inventory.add(targetPacket.getPlant());
-            droppedSeedPackets.remove(targetPacket);
-            System.out.printf("Collected %s Seed Packet!\n", targetPacket.getPlant().getName());
-        } else {
-            System.out.println("No Seed Packet found on the ground at this position.");
+            // گیاه مستقیماً و بدون افتادن روی زمین، به موجودی (inventory) اضافه می‌شود
+            inventory.add(plant);
+            System.out.printf("Plant %s directly added to your inventory!\n", plant.getName());
         }
     }
 
@@ -188,18 +163,6 @@ public class VaseBreaker extends GamePlay {
             }
         }
 
-        Iterator<DroppedSeedPacket> spIter = droppedSeedPackets.iterator();
-        while (spIter.hasNext()) {
-            DroppedSeedPacket sp = spIter.next();
-            sp.update();
-            if (sp.isExpired()) {
-                System.out.printf("Seed Packet for %s at (%d, %d) disappeared!\n",
-                        sp.getPlant().getName(), (int) sp.getPosition().getX(), (int) sp.getPosition().getY());
-                spIter.remove();
-            }
-        }
-
-
         z = gameZombies.iterator();
         while (z.hasNext()) {
             Zombie zombie = z.next();
@@ -241,9 +204,5 @@ public class VaseBreaker extends GamePlay {
 
     public ArrayList<BattlePlant> getInventory() {
         return inventory;
-    }
-
-    public ArrayList<DroppedSeedPacket> getDroppedSeedPackets() {
-        return droppedSeedPackets;
     }
 }

@@ -45,11 +45,18 @@ public class Simple extends GamePlay {
             this.settedThePlants = true;
 
             planting(PlantFactory.createBattlePlant("SUNFLOWER", 1,
-                new Position(1, 2)), new Position(2, 2));
+                new Position(2, 2)), new Position(2, 2));
             planting(PlantFactory.createBattlePlant("SUNFLOWER", 1,
-                new Position(1, 2)), new Position(7, 5));
+                new Position(7, 5)), new Position(7, 5));
             planting(PlantFactory.createBattlePlant("SUNFLOWER", 1,
-                new Position(1, 2)), new Position(5, 1));
+                new Position(5, 1)), new Position(5, 1));
+            planting(PlantFactory.createBattlePlant("BONK_CHOY", 1,
+                new Position(1, 1)), new Position(1, 1));
+            planting(PlantFactory.createBattlePlant("PRIMAL_SUNFLOWER", 1,
+                new Position(1, 3)), new Position(1, 3));
+            planting(PlantFactory.createBattlePlant("SUN_SHROOM", 1,
+                new Position(1, 2)), new Position(1, 2));
+
         }
 
         if (this.chapterType != ChapterType.DARK_AGE) {

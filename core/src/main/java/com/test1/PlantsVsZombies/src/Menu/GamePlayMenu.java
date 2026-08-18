@@ -131,14 +131,6 @@ public class GamePlayMenu extends Menu {
             } else {
                 System.out.println("This command is only available in the Vasebreaker mini-game!");
             }
-        } else if ((matcher = getMatcher(input, Command.CollectSeedPacket)) != null) {
-            int x = Integer.parseInt(matcher.group("x"));
-            int y = Integer.parseInt(matcher.group("y"));
-            if (gamePlay instanceof VaseBreaker) {
-                ((VaseBreaker) gamePlay).collectSeedPacket(x, y);
-            } else {
-                System.out.println("This command is only available in the Vasebreaker mini-game!");
-            }
         } else if ((matcher = getMatcher(input, Command.PlantFromInventory)) != null) {
             int index = Integer.parseInt(matcher.group("index"));
             int x = Integer.parseInt(matcher.group("x"));
