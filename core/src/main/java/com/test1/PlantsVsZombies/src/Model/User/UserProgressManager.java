@@ -5,8 +5,10 @@ import com.test1.PlantsVsZombies.src.Model.Greenhouse.GreenhousePlant;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 public class UserProgressManager {
@@ -14,6 +16,32 @@ public class UserProgressManager {
     private static final int PLANT_PURCHASE_COST = 2000;
     private static UserProgressManager instance;
     private static int maxLevel = 4;
+
+    public static int getPlantPurchaseCost() {
+        return PLANT_PURCHASE_COST;
+    }
+
+    public static int getMaxPlantLevel() {
+        return maxLevel;
+    }
+
+    /**
+     * Coins required to upgrade a plant FROM currentLevel to currentLevel+1.
+     * Shared by upgradePlant() (enforcement) and the Collection screen
+     * (display), so the two can't drift apart.
+     */
+    public static int getRequiredCoinsForUpgrade(int currentLevel) {
+        return currentLevel * 1000;
+    }
+
+    /**
+     * Seed packets required to upgrade a plant FROM currentLevel to
+     * currentLevel+1. Shared by upgradePlant() (enforcement) and the
+     * Collection screen (display).
+     */
+    public static int getRequiredSeedPacketsForUpgrade(int currentLevel) {
+        return currentLevel * 5;
+    }
 
     private UserProgressManager() {
     }
@@ -176,8 +204,8 @@ public class UserProgressManager {
         if (currentLevel == maxLevel)
             return "already at max level.";
 
-        int requiredCoins = currentLevel * 1000;
-        int requiredSeedPackets = currentLevel * 5;
+        int requiredCoins = getRequiredCoinsForUpgrade(currentLevel);
+        int requiredSeedPackets = getRequiredSeedPacketsForUpgrade(currentLevel);
 
         if (progress.getCoinsCount() < requiredCoins)
             return "Insufficient coins. Need " + requiredCoins + ".";
@@ -243,6 +271,24 @@ public class UserProgressManager {
         if (user == null) return;
         user.getUserProgress().consumeGreenhouseBoost(plant);
         save();
+    }
+
+    /**
+     * Takes a snapshot of the currently stored greenhouse/choose-plant
+     * boosts and clears the persisted list in one step. Called exactly
+     * once, right when a level actually starts (GameMenu.startGame) --
+     * the returned snapshot is what gets handed to that GamePlay session,
+     * so boosts don't leak into whatever the user does afterward, and
+     * don't get lost if they never place the boosted plant.
+     */
+    public Set<PlantType> takeAndClearGreenhouseBoosts() {
+        User user = getLoggedInUser();
+        if (user == null) return new HashSet<>();
+        Set<PlantType> liveBoosts = user.getUserProgress().getGreenhouseBoosts();
+        Set<PlantType> snapshot = new HashSet<>(liveBoosts);
+        liveBoosts.clear();
+        save();
+        return snapshot;
     }
 
     public void acceleratePlant(int x, int y) {
