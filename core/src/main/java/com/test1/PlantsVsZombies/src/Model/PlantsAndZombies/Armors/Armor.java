@@ -57,7 +57,7 @@ public class Armor {
         float HPRatio = (float) this.currentHP / this.baseHP;
 
         if (HPRatio >= 0.67) {
-            return this.animations.get(0);
+            return this.animations.get(2);
         } else if (HPRatio >= 0.33) {
             return this.animations.get(1);
         } else {

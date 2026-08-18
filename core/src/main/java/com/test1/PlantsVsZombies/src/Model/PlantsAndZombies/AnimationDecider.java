@@ -7,6 +7,7 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities.Eating;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities.Moving;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Armors.Armor;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,8 +17,19 @@ public class AnimationDecider {
 
     public String plantDecider(BattlePlant plant, float stateTime) {
         Map<String, String> status = plant.getPlantStats().getStatus();
+        if (plant.isEffected()) {
+            return status.get("plantfood");
+        }
 
-        if (plant.getPlantStats().getCategory().equals(PlantCategory.MINT.name())) {
+        if (plant.getPlantStats().getTags().contains("wramp_up")) {
+            return getWrampUpPlantsAnimation(plant, status, stateTime);
+        }
+
+        if (plant.getPlantStats().getTags().contains("charge")) {
+            return getChargePlantsAnimation(plant, status, stateTime);
+        }
+
+        if (plant.getPlantStats().getAbilities().contains("mint")) {
             return getMintAnimation(plant, stateTime);
         }
 
@@ -25,8 +37,23 @@ public class AnimationDecider {
             return getWallNutAnimation(plant);
         }
 
-        if (plant.getPlantStats().getTags().contains("wramp_up")) {
-            return getWrampUpPlantsAnimation(plant, status, stateTime);
+        if (plant.getPlantStats().getCategory().equals("Modifier")) {
+            return getModifierAnimation(plant);
+        }
+
+        if (plant.getPlantStats().getCategory().equals("Melee")) {
+            return getMeleeAnimation(plant);
+        }
+
+        if (plant.getPlantStats().getCategory().equals("Sun Producer")) {
+            return getSunProducerAnimation(plant);
+        }
+
+        if (plant.getPlantStats().getCategory().equals("Homing")) {
+            return getHomingAnimation(plant);
+        }
+        if (plant.getPlantStats().getCategory().equals("Explosive")) {
+            return getExplosiveAnimation(plant, stateTime);
         } else {
             if (isTimeForAction(plant, stateTime)) {
                 return status.get("action");
@@ -76,23 +103,26 @@ public class AnimationDecider {
         ArrayList<Integer> growthTimeStages = (ArrayList<Integer>) plant.getPlantStats().getAttributes().get("growth_time");
 
         double differenceTime = plant.getPlantTime();
+        String stage = "";
 
         if (differenceTime >= growthTimeStages.get(1)) {
-            if (isTimeForAction(plant, stateTime)) {
-                return status.get("action3");
-            }
-            return status.get("idle3");
+            stage += "3";
         } else if (differenceTime >= growthTimeStages.get(0)) {
-            if (isTimeForAction(plant, stateTime)) {
-                return status.get("action2");
-            }
-            return status.get("idle2");
+            stage += "2";
         } else {
-            if (isTimeForAction(plant, stateTime)) {
-                return status.get("action1");
-            }
-            return status.get("idle1");
+            stage += "1";
         }
+
+        return status.get(plant.getStatus() + stage);
+    }
+
+    private String getChargePlantsAnimation(BattlePlant plant, Map<String, String> status, float stateTime) {
+        int armTime = (int) plant.getPlantStats().getAttributes().get("armTime");
+        if ((stateTime - plant.getPlantTime()) < armTime) {
+            return status.get("disarmed");
+        }
+
+        return status.get("armed");
     }
 
     private boolean isTimeForAction(BattlePlant plant, float stateTime) {
@@ -213,6 +243,53 @@ public class AnimationDecider {
         }
 
         return visibilities;
+    }
+
+    private String getMeleeAnimation(BattlePlant plant) {
+        return plant.getPlantStats().getStatus().get(plant.getStatus());
+    }
+
+    private String getSunProducerAnimation(BattlePlant plant) {
+        return plant.getPlantStats().getStatus().get(plant.getStatus());
+    }
+
+    private String getModifierAnimation(BattlePlant plant) {
+        Map<String, String> status = plant.getPlantStats().getStatus();
+
+        return status.get("idle");
+    }
+
+    private String getHomingAnimation(BattlePlant plant) {
+        Map<String, String> status = plant.getPlantStats().getStatus();
+
+        return status.get("idle");
+    }
+
+    private String getExplosiveAnimation(BattlePlant plant, float stateTime) {
+        if (plant.getPlantStats().getAbilities().contains("explosionWithLifeSpan")) {
+            return handleExplosionLifeSpan(plant, stateTime);
+        }
+        if (plant.getName().equals(PlantType.SQUASH.getName())) {
+            return getSquashAnimation(plant);
+        }
+
+        return "idle";
+    }
+
+    private String handleExplosionLifeSpan(BattlePlant plant, float stateTime) {
+        double attackTime = (double) plant.getPlantStats().getAttributes().get("attackTime");
+        Map<String, String> status = plant.getPlantStats().getStatus();
+
+        double timeDifference = stateTime - plant.getPlantTime();
+        if (timeDifference >= attackTime) {
+            return status.get("explosion");
+        } else {
+            return status.get("attack");
+        }
+    }
+
+    private String getSquashAnimation(BattlePlant plant) {
+        return plant.getPlantStats().getStatus().get(plant.getStatus());
     }
 
     private void checkArmorVisibility(BattlePlant plant, HashMap<String, Boolean> visibilities) {

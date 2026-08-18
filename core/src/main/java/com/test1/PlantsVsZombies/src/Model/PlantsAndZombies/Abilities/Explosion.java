@@ -1,5 +1,6 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 
+import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
@@ -35,22 +36,26 @@ public class Explosion implements Ability {
         if (tags.contains("Water")) {
             int number = (int) plant.getPlantStats().getAttributes().get("number");
             handleWaterPlant(attacker, plant, number);
-            return;
         }
 
         if (tags.contains("AoE")) {
             AoEDamage(plant, plant.getRow(), plant.getColumn());
-            return;
         }
 
-        int damage = (int) plant.getPlantStats().getAttributes().get("damage");
-        attacker.takeDamage(plant, damage);
+        if (!plant.getName().equals(PlantType.SQUASH.getName()) &&
+            !plant.getName().equals(PlantType.TANGLE_KELP.getName())) {
+            plant.setCurrentHP(0);
+        }
 
+        if (plant.getPlantStats().getAttributes().containsKey("damage")) {
+            int damage = (int) plant.getPlantStats().getAttributes().get("damage");
+            attacker.takeDamage(plant, damage);
+        }
 
     }
 
     private boolean isNotArmored(BattlePlant plant) {
-        if (plant.getPlantStats().getTags().contains("Trap")) {
+        if (plant.getPlantStats().getTags().contains("charge")) {
             int armTime = (int) plant.getPlantStats().getAttributes().get("armTime");
             if ((GAME.getTotalTimePassed() - plant.getPlantTime()) < armTime) {
                 return true;

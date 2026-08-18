@@ -111,17 +111,25 @@
   ],
 
   "CAULIPOWER": [
-    { "category": "Homing", "baseHP": 300, "cost": 250, "actionInterval": 12, "rechargeTime": 15, "abilities": ["homing"], "tags": ["magic", "charge", "hypnotize", "random-direction"], "attributes": {}, "plantFoodEffect": {"number":  3} },
-    { "category": "Homing", "baseHP": 300, "cost": 250, "actionInterval": 12, "rechargeTime": 13, "abilities": ["homing"], "tags": ["magic", "charge", "hypnotize", "random-direction"], "attributes": {}, "plantFoodEffect": {"number":  3} },
-    { "category": "Homing", "baseHP": 450, "cost": 250, "actionInterval": 12, "rechargeTime": 13, "abilities": ["homing"], "tags": ["magic", "charge", "hypnotize", "random-direction"], "attributes": {}, "plantFoodEffect": {"number":  3} },
-    { "category": "Homing", "baseHP": 450, "cost": 200, "actionInterval": 12, "rechargeTime": 13, "abilities": ["homing"], "tags": ["magic", "charge", "hypnotize", "random-direction"], "attributes": {}, "plantFoodEffect": {"number":  3} }
+    { "category": "Homing", "baseHP": 300, "cost": 250, "actionInterval": 12, "rechargeTime": 15, "abilities": ["homing"], "tags": ["magic", "charge", "hypnotize", "random-direction"], "attributes": {"armTime": 5}, "plantFoodEffect": {"number":  3},
+      "animation": "768/INITIAL/PLANT/CAULIPOWER/CAULIPOWER.PAM", "status": {"disarmed": "idle1_1", "armed": "idle4_1", "plantfood": "plantfood_loop"}},
+    { "category": "Homing", "baseHP": 300, "cost": 250, "actionInterval": 12, "rechargeTime": 13, "abilities": ["homing"], "tags": ["magic", "charge", "hypnotize", "random-direction"], "attributes": {"armTime": 5}, "plantFoodEffect": {"number":  3},
+      "animation": "768/INITIAL/PLANT/CAULIPOWER/CAULIPOWER.PAM", "status": {"disarmed": "idle1_1", "armed": "idle4_1", "plantfood": "plantfood_loop"} },
+    { "category": "Homing", "baseHP": 450, "cost": 250, "actionInterval": 12, "rechargeTime": 13, "abilities": ["homing"], "tags": ["magic", "charge", "hypnotize", "random-direction"], "attributes": {"armTime": 5}, "plantFoodEffect": {"number":  3},
+      "animation": "768/INITIAL/PLANT/CAULIPOWER/CAULIPOWER.PAM", "status": {"disarmed": "idle1_1", "armed": "idle4_1", "plantfood": "plantfood_loop"} },
+    { "category": "Homing", "baseHP": 450, "cost": 200, "actionInterval": 12, "rechargeTime": 13, "abilities": ["homing"], "tags": ["magic", "charge", "hypnotize", "random-direction"], "attributes": {"armTime": 5}, "plantFoodEffect": {"number":  3},
+      "animation": "768/INITIAL/PLANT/CAULIPOWER/CAULIPOWER.PAM", "status": {"disarmed": "idle1_1", "armed": "idle4_1", "plantfood": "plantfood_loop"} }
   ],
 
   "ELECTRIC_BLUEBERRY": [
-    { "category": "Homing", "baseHP": 300, "cost": 150, "actionInterval": 12, "rechargeTime": 15, "abilities": ["homing"], "tags": ["charge", "random-direction"], "attributes": {"damage":  5000}, "plantFoodEffect": {"number":  3} },
-    { "category": "Homing", "baseHP": 300, "cost": 150, "actionInterval": 12, "rechargeTime": 13, "abilities": ["homing"], "tags": ["charge", "random-direction"], "attributes": {"damage":  5000}, "plantFoodEffect": {"number":  3} },
-    { "category": "Homing", "baseHP": 300, "cost": 150, "actionInterval": 12, "rechargeTime": 13, "abilities": ["homing"], "tags": ["charge", "healthiest"], "attributes": {"damage":  5000}, "plantFoodEffect": {"number":  3} },
-    { "category": "Homing", "baseHP": 300, "cost": 125, "actionInterval": 12, "rechargeTime": 13, "abilities": ["homing"], "tags": ["charge", "healthiest"], "attributes": {"damage":  5000}, "plantFoodEffect": {"number":  3} }
+    { "category": "Homing", "baseHP": 300, "cost": 150, "actionInterval": 12, "rechargeTime": 15, "abilities": ["homing"], "tags": ["charge", "random-direction"], "attributes": {"armTime": 5, "damage":  5000}, "plantFoodEffect": {"number":  3},
+      "animation": "768/INITIAL/PLANT/ELECTRICBLUEBERRY/ELECTRICBLUEBERRY.PAM", "status": {"disarmed": "idle1_1", "armed": "idle4_1", "plantfood": "plantfood"} },
+    { "category": "Homing", "baseHP": 300, "cost": 150, "actionInterval": 12, "rechargeTime": 13, "abilities": ["homing"], "tags": ["charge", "random-direction"], "attributes": {"armTime": 5, "damage":  5000}, "plantFoodEffect": {"number":  3},
+      "animation": "768/INITIAL/PLANT/ELECTRICBLUEBERRY/ELECTRICBLUEBERRY.PAM", "status": {"disarmed": "idle1_1", "armed": "idle4_1", "plantfood": "plantfood"} },
+    { "category": "Homing", "baseHP": 300, "cost": 150, "actionInterval": 12, "rechargeTime": 13, "abilities": ["homing"], "tags": ["charge", "healthiest"], "attributes": {"armTime": 5, "damage":  5000}, "plantFoodEffect": {"number":  3},
+      "animation": "768/INITIAL/PLANT/ELECTRICBLUEBERRY/ELECTRICBLUEBERRY.PAM", "status": {"disarmed": "idle1_1", "armed": "idle4_1", "plantfood": "plantfood"} },
+    { "category": "Homing", "baseHP": 300, "cost": 125, "actionInterval": 12, "rechargeTime": 13, "abilities": ["homing"], "tags": ["charge", "healthiest"], "attributes": {"armTime": 5, "damage":  5000}, "plantFoodEffect": {"number":  3},
+      "animation": "768/INITIAL/PLANT/ELECTRICBLUEBERRY/ELECTRICBLUEBERRY.PAM", "status": {"disarmed": "idle1_1", "armed": "idle4_1", "plantfood": "plantfood"} }
   ],
 
   "CACTUS": [
@@ -216,94 +224,157 @@
   ],
 
   "POTATO_MINE": [
-    { "category": "Explosive", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 25, "abilities": ["explosion"], "tags": ["Trap", "charge"], "attributes": {"armTime": 15, "damage": 1800}, "plantFoodEffect": {"number": 2} },
-    { "category": "Explosive", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 25, "abilities": ["explosion"], "tags": ["Trap", "charge"], "attributes": {"armTime": 12, "damage": 1800}, "plantFoodEffect": {"number": 2} },
-    { "category": "Explosive", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 20, "abilities": ["explosion"], "tags": ["Trap", "charge"], "attributes": {"armTime": 12, "damage": 1800}, "plantFoodEffect": {"number": 2} },
-    { "category": "Explosive", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 20, "abilities": ["explosion"], "tags": ["Trap", "charge"], "attributes": {"armTime": 12, "damage": 2400}, "plantFoodEffect": {"number": 2} }
+    { "category": "Explosive", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 25, "abilities": ["explosion"], "tags": ["Trap", "charge"], "attributes": {"armTime": 15, "damage": 1800}, "plantFoodEffect": {"number": 2},
+      "animation": "768/INITIAL/PLANT/POTATOMINE/POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "plantfood": "plantfood"} },
+    { "category": "Explosive", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 25, "abilities": ["explosion"], "tags": ["Trap", "charge"], "attributes": {"armTime": 12, "damage": 1800}, "plantFoodEffect": {"number": 2},
+      "animation": "768/INITIAL/PLANT/POTATOMINE/POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "plantfood": "plantfood"} },
+    { "category": "Explosive", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 20, "abilities": ["explosion"], "tags": ["Trap", "charge"], "attributes": {"armTime": 12, "damage": 1800}, "plantFoodEffect": {"number": 2},
+      "animation": "768/INITIAL/PLANT/POTATOMINE/POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "plantfood": "plantfood"} },
+    { "category": "Explosive", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 20, "abilities": ["explosion"], "tags": ["Trap", "charge"], "attributes": {"armTime": 12, "damage": 2400}, "plantFoodEffect": {"number": 2},
+      "animation": "768/INITIAL/PLANT/POTATOMINE/POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "plantfood": "plantfood"} }
   ],
 
   "PRIMAL_POTATO_MINE": [
-    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 5, "abilities": ["explosion"], "tags": ["Trap", "charge", "AoE"], "attributes": {"armTime": 5, "damage": 2400, "range": 1}, "plantFoodEffect": {"number": 2} },
-    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 5, "abilities": ["explosion"], "tags": ["Trap", "charge", "AoE"], "attributes": {"armTime": 4, "damage": 2400, "range": 1}, "plantFoodEffect": {"number": 2} },
-    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 2, "abilities": ["explosion"], "tags": ["Trap", "charge", "AoE"], "attributes": {"armTime": 4, "damage": 2400, "range": 1}, "plantFoodEffect": {"number": 2} },
-    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 2, "abilities": ["explosion"], "tags": ["Trap", "charge", "AoE"], "attributes": {"armTime": 4, "damage": 2800, "range": 1}, "plantFoodEffect": {"number": 2} }
+    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 5, "abilities": ["explosion"], "tags": ["Trap", "charge", "AoE"], "attributes": {"armTime": 5, "damage": 2400, "range": 1}, "plantFoodEffect": {"number": 2},
+      "animation": "768/FULL/PLANT/PRIMAL_POTATOMINE/PRIMAL_POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "plantfood": "plantfood"} },
+    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 5, "abilities": ["explosion"], "tags": ["Trap", "charge", "AoE"], "attributes": {"armTime": 4, "damage": 2400, "range": 1}, "plantFoodEffect": {"number": 2},
+      "animation": "768/FULL/PLANT/PRIMAL_POTATOMINE/PRIMAL_POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "plantfood": "plantfood"} },
+    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 2, "abilities": ["explosion"], "tags": ["Trap", "charge", "AoE"], "attributes": {"armTime": 4, "damage": 2400, "range": 1}, "plantFoodEffect": {"number": 2},
+      "animation": "768/FULL/PLANT/PRIMAL_POTATOMINE/PRIMAL_POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "plantfood": "plantfood"} },
+    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 2, "abilities": ["explosion"], "tags": ["Trap", "charge", "AoE"], "attributes": {"armTime": 4, "damage": 2800, "range": 1}, "plantFoodEffect": {"number": 2},
+      "animation": "768/FULL/PLANT/PRIMAL_POTATOMINE/PRIMAL_POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "plantfood": "plantfood"} }
   ],
 
   "CHERRY_BOMB": [
-    { "category": "Explosive", "baseHP": 0, "cost": 150, "actionInterval": 0, "rechargeTime": 35, "abilities": ["explosionWithLifeSpan"], "tags": ["AoE"], "attributes": {"life-span": 0, "damage": 1800, "range": 1}, "plantFoodEffect": {} },
-    { "category": "Explosive", "baseHP": 0, "cost": 150, "actionInterval": 0, "rechargeTime": 30, "abilities": ["explosionWithLifeSpan"], "tags": ["AoE"], "attributes": {"life-span": 0, "damage": 1800, "range": 1}, "plantFoodEffect": {} },
-    { "category": "Explosive", "baseHP": 0, "cost": 150, "actionInterval": 0, "rechargeTime": 30, "abilities": ["explosionWithLifeSpan"], "tags": ["AoE"], "attributes": {"life-span": 0, "damage": 2400, "range": 1}, "plantFoodEffect": {} },
-    { "category": "Explosive", "baseHP": 0, "cost": 125, "actionInterval": 0, "rechargeTime": 30, "abilities": ["explosionWithLifeSpan"], "tags": ["AoE"], "attributes": {"life-span": 0, "damage": 2400, "range": 1}, "plantFoodEffect": {} }
+    { "category": "Explosive", "baseHP": 0, "cost": 150, "actionInterval": 1.11, "rechargeTime": 35, "abilities": ["explosionWithLifeSpan"], "tags": ["AoE"], "attributes": {"attackTime": 0.70, "life-span": 2.20, "damage": 1800, "range": 1, "explosionAnimation": "768/FULL/EFFECTS/CHERRYBOMB_EXPLOSION_TOP/CHERRYBOMB_EXPLOSION_TOP.PAM"}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/CHERRYBOMB/CHERRYBOMB.PAM", "status": {"action": "attack", "explosion": "explosion"} },
+    { "category": "Explosive", "baseHP": 0, "cost": 150, "actionInterval": 1.11, "rechargeTime": 30, "abilities": ["explosionWithLifeSpan"], "tags": ["AoE"], "attributes": {"attackTime": 0.70, "life-span": 2.20, "damage": 1800, "range": 1, "explosionAnimation": "768/FULL/EFFECTS/CHERRYBOMB_EXPLOSION_TOP/CHERRYBOMB_EXPLOSION_TOP.PAM"}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/CHERRYBOMB/CHERRYBOMB.PAM", "status": {"action": "attack", "explosion": "explosion"} },
+    { "category": "Explosive", "baseHP": 0, "cost": 150, "actionInterval": 1.11, "rechargeTime": 30, "abilities": ["explosionWithLifeSpan"], "tags": ["AoE"], "attributes": {"attackTime": 0.70, "life-span": 2.20, "damage": 2400, "range": 1, "explosionAnimation": "768/FULL/EFFECTS/CHERRYBOMB_EXPLOSION_TOP/CHERRYBOMB_EXPLOSION_TOP.PAM"}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/CHERRYBOMB/CHERRYBOMB.PAM", "status": {"action": "attack", "explosion": "explosion"} },
+    { "category": "Explosive", "baseHP": 0, "cost": 125, "actionInterval": 1.11, "rechargeTime": 30, "abilities": ["explosionWithLifeSpan"], "tags": ["AoE"], "attributes": {"attackTime": 0.70, "life-span": 2.20, "damage": 2400, "range": 1, "explosionAnimation": "768/FULL/EFFECTS/CHERRYBOMB_EXPLOSION_TOP/CHERRYBOMB_EXPLOSION_TOP.PAM"}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/CHERRYBOMB/CHERRYBOMB.PAM", "status": {"action": "attack", "explosion": "explosion"} }
   ],
 
   "SQUASH": [
-    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 20, "abilities": ["explosion"], "tags": ["Trap"], "attributes": {"damage": 1800}, "plantFoodEffect": {"number": 2} },
-    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 17, "abilities": ["explosion"], "tags": ["Trap"], "attributes": {"damage": 1800}, "plantFoodEffect": {"number": 2} },
-    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 17, "abilities": ["explosion"], "tags": ["Trap"], "attributes": {"damage": 2400}, "plantFoodEffect": {"number": 2} },
-    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 17, "abilities": ["explosion"], "tags": ["Trap"], "attributes": {"damage": 4800}, "plantFoodEffect": {"number": 2} }
+    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 20, "abilities": ["explosion"], "tags": ["Trap"], "attributes": {"damage": 1800}, "plantFoodEffect": {"number": 2},
+      "animation": "768/INITIAL/PLANT/SQUASH/SQUASH.PAM", "status": {"idle": "idle", "action": "jump_down_right", "plantfood": "plantfood_jump_down_right"} },
+    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 17, "abilities": ["explosion"], "tags": ["Trap"], "attributes": {"damage": 1800}, "plantFoodEffect": {"number": 2},
+      "animation": "768/INITIAL/PLANT/SQUASH/SQUASH.PAM", "status": {"idle": "idle", "action": "jump_down_right", "plantfood": "plantfood_jump_down_right"} },
+    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 17, "abilities": ["explosion"], "tags": ["Trap"], "attributes": {"damage": 2400}, "plantFoodEffect": {"number": 2},
+      "animation": "768/INITIAL/PLANT/SQUASH/SQUASH.PAM", "status": {"idle": "idle", "action": "jump_down_right", "plantfood": "plantfood_jump_down_right"} },
+    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 17, "abilities": ["explosion"], "tags": ["Trap"], "attributes": {"damage": 4800}, "plantFoodEffect": {"number": 2},
+      "animation": "768/INITIAL/PLANT/SQUASH/SQUASH.PAM", "status": {"idle": "idle", "action": "jump_down_right", "plantfood": "plantfood_jump_down_right"} }
+  ],
+
+  "GRAPESHOT": [
+    { "category": "Explosive", "baseHP": 0, "cost": 150, "actionInterval": 0.68, "rechargeTime": 35, "abilities": ["explosionWithLifeSpan"], "tags": ["AoE", "shoot"], "attributes": {"bounce": 1, "attackTime": 1.67, "life-span": 2.57, "damage": 1800, "range": 1, "explosionAnimation": "768/INITIAL/EFFECTS/GRAPESHOT_HIT/GRAPESHOT_HIT.PAM"}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/GRAPESHOT/GRAPESHOT.PAM", "status": {"action": "attack", "explosion": "animation"} },
+    { "category": "Explosive", "baseHP": 0, "cost": 150, "actionInterval": 0.68, "rechargeTime": 35, "abilities": ["explosionWithLifeSpan"], "tags": ["AoE", "shoot"], "attributes": {"bounce": 1, "attackTime": 1.67, "life-span": 2.57, "damage": 2400, "range": 1, "explosionAnimation": "768/INITIAL/EFFECTS/GRAPESHOT_HIT/GRAPESHOT_HIT.PAM"}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/GRAPESHOT/GRAPESHOT.PAM", "status": {"action": "attack", "explosion": "animation"} },
+    { "category": "Explosive", "baseHP": 0, "cost": 150, "actionInterval": 0.68, "rechargeTime": 35, "abilities": ["explosionWithLifeSpan"], "tags": ["AoE", "shoot"], "attributes": {"bounce": 2, "attackTime": 1.67, "life-span": 2.57, "damage": 2400, "range": 1, "explosionAnimation": "768/INITIAL/EFFECTS/GRAPESHOT_HIT/GRAPESHOT_HIT.PAM"}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/GRAPESHOT/GRAPESHOT.PAM", "status": {"action": "attack", "explosion": "animation"} },
+    { "category": "Explosive", "baseHP": 0, "cost": 150, "actionInterval": 0.68, "rechargeTime": 35, "abilities": ["explosionWithLifeSpan"], "tags": ["AoE", "shoot"], "attributes": {"bounce": 2, "attackTime": 1.67, "life-span": 2.57, "damage": 2400, "range": 1, "explosionAnimation": "768/INITIAL/EFFECTS/GRAPESHOT_HIT/GRAPESHOT_HIT.PAM"}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/GRAPESHOT/GRAPESHOT.PAM", "status": {"action": "attack", "explosion": "animation"} }
   ],
 
   "JALAPENO": [
-    { "category": "Explosive", "baseHP": 0, "cost": 125, "actionInterval": 0, "rechargeTime": 35, "abilities": ["explosionWithLifeSpan"], "tags": ["fire"], "attributes": {"life-span": 0, "damage": 1800}, "plantFoodEffect": {} },
-    { "category": "Explosive", "baseHP": 0, "cost": 125, "actionInterval": 0, "rechargeTime": 30, "abilities": ["explosionWithLifeSpan"], "tags": ["fire"], "attributes": {"life-span": 0, "damage": 1800}, "plantFoodEffect": {} },
-    { "category": "Explosive", "baseHP": 0, "cost": 125, "actionInterval": 0, "rechargeTime": 30, "abilities": ["explosionWithLifeSpan"], "tags": ["fire"], "attributes": {"life-span": 0, "damage": 2400}, "plantFoodEffect": {} },
-    { "category": "Explosive", "baseHP": 0, "cost": 100, "actionInterval": 0, "rechargeTime": 30, "abilities": ["explosionWithLifeSpan"], "tags": ["fire"], "attributes": {"life-span": 0, "damage": 2400}, "plantFoodEffect": {} }
+    { "category": "Explosive", "baseHP": 0, "cost": 125, "actionInterval": 0.68, "rechargeTime": 35, "abilities": ["explosionWithLifeSpan"], "tags": ["fire"], "attributes": {"attackTime": 0.67, "life-span": 1.34, "damage": 1800, "explosionAnimation": "768/INITIAL/EFFECTS/JALAPENO_FIRE/JALAPENO_FIRE.PAM"}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/JALAPENO/JALAPENO.PAM", "status": {"action": "attack", "explosion": "idle"} },
+    { "category": "Explosive", "baseHP": 0, "cost": 125, "actionInterval": 0.68, "rechargeTime": 30, "abilities": ["explosionWithLifeSpan"], "tags": ["fire"], "attributes": {"attackTime": 0.67, "life-span": 1.34, "damage": 1800, "explosionAnimation": "768/INITIAL/EFFECTS/JALAPENO_FIRE/JALAPENO_FIRE.PAM"}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/JALAPENO/JALAPENO.PAM", "status": {"action": "attack", "explosion": "idle"} },
+    { "category": "Explosive", "baseHP": 0, "cost": 125, "actionInterval": 0.68, "rechargeTime": 30, "abilities": ["explosionWithLifeSpan"], "tags": ["fire"], "attributes": {"attackTime": 0.67, "life-span": 1.34, "damage": 2400, "explosionAnimation": "768/INITIAL/EFFECTS/JALAPENO_FIRE/JALAPENO_FIRE.PAM"}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/JALAPENO/JALAPENO.PAM", "status": {"action": "attack", "explosion": "idle"} },
+    { "category": "Explosive", "baseHP": 0, "cost": 100, "actionInterval": 0.68, "rechargeTime": 30, "abilities": ["explosionWithLifeSpan"], "tags": ["fire"], "attributes": {"attackTime": 0.67, "life-span": 1.34, "explosionAnimation": "768/INITIAL/EFFECTS/JALAPENO_FIRE/JALAPENO_FIRE.PAM"}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/JALAPENO/JALAPENO.PAM", "status": {"action": "attack", "explosion": "idle"} }
   ],
 
   "DOOM_SHROOM": [
-    { "category": "Explosive", "baseHP": 0, "cost": 125, "actionInterval": 0, "rechargeTime": 15, "abilities": ["explosionWithLifeSpan"], "tags": ["shroom"], "attributes": {"life-span": 0, "damage": 1800}, "plantFoodEffect": {} },
-    { "category": "Explosive", "baseHP": 0, "cost": 125, "actionInterval": 0, "rechargeTime": 10, "abilities": ["explosionWithLifeSpan"], "tags": ["shroom"], "attributes": {"life-span": 0, "damage": 1800}, "plantFoodEffect": {} },
-    { "category": "Explosive", "baseHP": 0, "cost": 125, "actionInterval": 0, "rechargeTime": 10, "abilities": ["explosionWithLifeSpan"], "tags": ["shroom"], "attributes": {"life-span": 0, "damage": 2600}, "plantFoodEffect": {} },
-    { "category": "Explosive", "baseHP": 0, "cost": 75, "actionInterval": 0, "rechargeTime": 10, "abilities": ["explosionWithLifeSpan"], "tags": ["shroom"], "attributes": {"life-span": 0, "damage": 2600}, "plantFoodEffect": {} }
+    { "category": "Explosive", "baseHP": 0, "cost": 125, "actionInterval": 1.55, "rechargeTime": 15, "abilities": ["explosionWithLifeSpan"], "tags": ["shroom"], "attributes": {"attackTime": 1.00, "life-span": 3.00, "damage": 1800, "explosionAnimation": "768/FULL/PLANT/DOOMSHROOM/DOOMSHROOM.PAM"}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/DOOMSHROOM/DOOMSHROOM.PAM", "status": {"action": "stage1_spawn", "explosion": "stage1_explode"} },
+    { "category": "Explosive", "baseHP": 0, "cost": 125, "actionInterval": 1.55, "rechargeTime": 10, "abilities": ["explosionWithLifeSpan"], "tags": ["shroom"], "attributes": {"attackTime": 1.00, "life-span": 3.00, "damage": 1800, "explosionAnimation": "768/FULL/PLANT/DOOMSHROOM/DOOMSHROOM.PAM"}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/DOOMSHROOM/DOOMSHROOM.PAM", "status": {"action": "stage1_spawn", "explosion": "stage1_explode"} },
+    { "category": "Explosive", "baseHP": 0, "cost": 125, "actionInterval": 1.55, "rechargeTime": 10, "abilities": ["explosionWithLifeSpan"], "tags": ["shroom"], "attributes": {"attackTime": 1.00, "life-span": 3.00, "damage": 2600, "explosionAnimation": "768/FULL/PLANT/DOOMSHROOM/DOOMSHROOM.PAM"}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/DOOMSHROOM/DOOMSHROOM.PAM", "status": {"action": "stage1_spawn", "explosion": "stage1_explode"} },
+    { "category": "Explosive", "baseHP": 0, "cost": 75, "actionInterval": 1.55, "rechargeTime": 10, "abilities": ["explosionWithLifeSpan"], "tags": ["shroom"], "attributes": {"attackTime": 1.00, "life-span": 3.00, "damage": 2600, "explosionAnimation": "768/FULL/PLANT/DOOMSHROOM/DOOMSHROOM.PAM"}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/DOOMSHROOM/DOOMSHROOM.PAM", "status": {"action": "stage1_spawn", "explosion": "stage1_explode"} }
   ],
 
   "TANGLE_KELP": [
-    { "category": "Explosive", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 15, "abilities": ["explosion"], "tags": ["Trap", "Water"], "attributes": {"number": 1}, "plantFoodEffect": {"number": 3} },
-    { "category": "Explosive", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 10, "abilities": ["explosion"], "tags": ["Trap", "Water"], "attributes": {"number": 1}, "plantFoodEffect": {"number": 3} },
-    { "category": "Explosive", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 10, "abilities": ["explosion"], "tags": ["Trap", "Water"], "attributes": {"number": 2}, "plantFoodEffect": {"number": 3} },
-    { "category": "Explosive", "baseHP": 300, "cost": 0, "actionInterval": 0, "rechargeTime": 10, "abilities": ["explosion"], "tags": ["Trap", "Water"], "attributes": {"number": 2}, "plantFoodEffect": {"number": 3} }
+    { "category": "Explosive", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 15, "abilities": ["explosion"], "tags": ["Trap", "Water"], "attributes": {"number": 1}, "plantFoodEffect": {"number": 3},
+      "animation": "768/FULL/PLANT/TANGLEKELP/TANGLEKELP.PAM", "status": {"idle": "idle", "plantfood": "plantfood"} },
+    { "category": "Explosive", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 10, "abilities": ["explosion"], "tags": ["Trap", "Water"], "attributes": {"number": 1}, "plantFoodEffect": {"number": 3},
+      "animation": "768/FULL/PLANT/TANGLEKELP/TANGLEKELP.PAM", "status": {"idle": "idle", "plantfood": "plantfood"} },
+    { "category": "Explosive", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 10, "abilities": ["explosion"], "tags": ["Trap", "Water"], "attributes": {"number": 2}, "plantFoodEffect": {"number": 3},
+      "animation": "768/FULL/PLANT/TANGLEKELP/TANGLEKELP.PAM", "status": {"idle": "idle", "plantfood": "plantfood"} },
+    { "category": "Explosive", "baseHP": 300, "cost": 0, "actionInterval": 0, "rechargeTime": 10, "abilities": ["explosion"], "tags": ["Trap", "Water"], "attributes": {"number": 2}, "plantFoodEffect": {"number": 3},
+      "animation": "768/FULL/PLANT/TANGLEKELP/TANGLEKELP.PAM", "status": {"idle": "idle", "plantfood": "plantfood"} }
   ],
 
   "ICEBERG_LETTUCE": [
-    { "category": "Explosive", "baseHP": 300, "cost": 0, "actionInterval": 0, "rechargeTime": 20, "abilities": ["explosion"], "tags": ["Trap", "Ice"], "attributes": {"freezeTime": 2}, "plantFoodEffect": {} },
-    { "category": "Explosive", "baseHP": 300, "cost": 0, "actionInterval": 0, "rechargeTime": 18, "abilities": ["explosion"], "tags": ["Trap", "Ice"], "attributes": {"freezeTime": 2}, "plantFoodEffect": {} },
-    { "category": "Explosive", "baseHP": 300, "cost": 0, "actionInterval": 0, "rechargeTime": 18, "abilities": ["explosion"], "tags": ["Trap", "Ice"], "attributes": {"freezeTime": 4}, "plantFoodEffect": {} },
-    { "category": "Explosive", "baseHP": 300, "cost": 0, "actionInterval": 0, "rechargeTime": 18, "abilities": ["explosion"], "tags": ["Trap", "Ice"], "attributes": {"freezeTime": 4}, "plantFoodEffect": {} }
+    { "category": "Explosive", "baseHP": 300, "cost": 0, "actionInterval": 0, "rechargeTime": 20, "abilities": ["explosion"], "tags": ["Trap", "Ice"], "attributes": {"freezeTime": 2}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/ICEBURG/ICEBURG.PAM", "status": {"idle": "idle", "plantfood": "plantfood"} },
+    { "category": "Explosive", "baseHP": 300, "cost": 0, "actionInterval": 0, "rechargeTime": 18, "abilities": ["explosion"], "tags": ["Trap", "Ice"], "attributes": {"freezeTime": 2}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/ICEBURG/ICEBURG.PAM", "status": {"idle": "idle", "plantfood": "plantfood"} },
+    { "category": "Explosive", "baseHP": 300, "cost": 0, "actionInterval": 0, "rechargeTime": 18, "abilities": ["explosion"], "tags": ["Trap", "Ice"], "attributes": {"freezeTime": 4}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/ICEBURG/ICEBURG.PAM", "status": {"idle": "idle", "plantfood": "plantfood"} },
+    { "category": "Explosive", "baseHP": 300, "cost": 0, "actionInterval": 0, "rechargeTime": 18, "abilities": ["explosion"], "tags": ["Trap", "Ice"], "attributes": {"freezeTime": 4}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/ICEBURG/ICEBURG.PAM", "status": {"idle": "idle", "plantfood": "plantfood"} }
   ],
 
   "BONK_CHOY": [
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 0.25, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": [], "attributes": {"damage":  15, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 25} },
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 0.25, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": [], "attributes": {"damage":  20, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 30} },
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 0.23, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": [], "attributes": {"damage":  20, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 30} },
-    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 0.23, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": [], "attributes": {"damage":  20, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 30} }
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 0.25, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": [], "attributes": {"damage":  15, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 25},
+      "animation": "768/INITIAL/PLANT/BONKCHOY/BONKCHOY.PAM", "status": {"idle": "idle", "action": "attack3", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 0.25, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": [], "attributes": {"damage":  20, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 30},
+      "animation": "768/INITIAL/PLANT/BONKCHOY/BONKCHOY.PAM", "status": {"idle": "idle", "action": "attack3", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 0.23, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": [], "attributes": {"damage":  20, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 30},
+      "animation": "768/INITIAL/PLANT/BONKCHOY/BONKCHOY.PAM", "status": {"idle": "idle", "action": "attack3", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 0.23, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": [], "attributes": {"damage":  20, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 30},
+      "animation": "768/INITIAL/PLANT/BONKCHOY/BONKCHOY.PAM", "status": {"idle": "idle", "action": "attack3", "plantfood": "plantfood"} }
   ],
 
   "PHAT_BEET": [
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE"], "attributes": {"damage":  15, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 40} },
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE"], "attributes": {"damage":  25, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 50} },
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 1.8, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE"], "attributes": {"damage":  25, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 50} },
-    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 1.8, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE"], "attributes": {"damage":  25, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 50} }
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE"], "attributes": {"damage":  15, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 40},
+      "animation": "768/FULL/PLANT/PHATBEETS/PHATBEETS.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE"], "attributes": {"damage":  25, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 50},
+      "animation": "768/FULL/PLANT/PHATBEETS/PHATBEETS.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 1.8, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE"], "attributes": {"damage":  25, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 50},
+      "animation": "768/FULL/PLANT/PHATBEETS/PHATBEETS.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 1.8, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE"], "attributes": {"damage":  25, "range": 1}, "plantFoodEffect": {"range": 1,"damage": 50},
+      "animation": "768/FULL/PLANT/PHATBEETS/PHATBEETS.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood"} }
   ],
 
   "CHOMPER": [
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 40, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["insta-kill"], "attributes": {"digest_time": 40}, "plantFoodEffect": {"number": 3} },
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 38, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["insta-kill"], "attributes": {"digest_time": 38}, "plantFoodEffect": {"number": 3} },
-    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 38, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["insta-kill"], "attributes": {"digest_time": 38}, "plantFoodEffect": {"number": 3} },
-    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 35, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["insta-kill"], "attributes": {"digest_time": 35}, "plantFoodEffect": {"number": 3} }
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 40, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["insta-kill"], "attributes": {"digest_time": 40}, "plantFoodEffect": {"number": 3},
+      "animation": "768/INITIAL/PLANT/CHOMPER/CHOMPER.PAM", "status": {"idle": "idle", "action": "bite", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 38, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["insta-kill"], "attributes": {"digest_time": 38}, "plantFoodEffect": {"number": 3},
+      "animation": "768/INITIAL/PLANT/CHOMPER/CHOMPER.PAM", "status": {"idle": "idle", "action": "bite", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 38, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["insta-kill"], "attributes": {"digest_time": 38}, "plantFoodEffect": {"number": 3},
+      "animation": "768/INITIAL/PLANT/CHOMPER/CHOMPER.PAM", "status": {"idle": "idle", "action": "bite", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 35, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["insta-kill"], "attributes": {"digest_time": 35}, "plantFoodEffect": {"number": 3},
+      "animation": "768/INITIAL/PLANT/CHOMPER/CHOMPER.PAM", "status": {"idle": "idle", "action": "bite", "plantfood": "plantfood"} }
   ],
 
   "WASABI_WHIP": [
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["fire"], "attributes": {"damage":  40, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 50} },
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["fire"], "attributes": {"damage":  50, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 60} },
-    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["fire"], "attributes": {"damage":  50, "front_range": 2, "back_range": 2}, "plantFoodEffect": {"range": 1,"damage": 60} },
-    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["fire"], "attributes": {"damage":  50, "front_range": 2, "back_range": 2}, "plantFoodEffect": {"range": 1,"damage": 60} }
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["fire"], "attributes": {"damage":  40, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 50},
+      "animation": "768/INITIAL/PLANT/WASABIWHIP/WASABIWHIP.PAM", "status": {"idle": "idle", "action": "attack3", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["fire"], "attributes": {"damage":  50, "front_range": 1, "back_range": 1}, "plantFoodEffect": {"range": 1,"damage": 60},
+      "animation": "768/INITIAL/PLANT/WASABIWHIP/WASABIWHIP.PAM", "status": {"idle": "idle", "action": "attack3", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 300, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["fire"], "attributes": {"damage":  50, "front_range": 2, "back_range": 2}, "plantFoodEffect": {"range": 1,"damage": 60},
+      "animation": "768/INITIAL/PLANT/WASABIWHIP/WASABIWHIP.PAM", "status": {"idle": "idle", "action": "attack3", "plantfood": "plantfood"} },
+    { "category": "Melee", "baseHP": 500, "cost": 150, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["fire"], "attributes": {"damage":  50, "front_range": 2, "back_range": 2}, "plantFoodEffect": {"range": 1,"damage": 60},
+      "animation": "768/INITIAL/PLANT/WASABIWHIP/WASABIWHIP.PAM", "status": {"idle": "idle", "action": "attack3", "plantfood": "plantfood"} }
   ],
 
   "KIWIBEAST": [
-    { "category": "Melee", "baseHP": 300, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [15, 30, 45], "range": 1}, "plantFoodEffect": {} },
-    { "category": "Melee", "baseHP": 500, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [15, 30, 45], "range": 1}, "plantFoodEffect": {} },
-    { "category": "Melee", "baseHP": 500, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [30, 45, 60], "range": 1}, "plantFoodEffect": {} },
-    { "category": "Melee", "baseHP": 500, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [30, 45, 60], "range": 1}, "plantFoodEffect": {} }
+    { "category": "Melee", "baseHP": 300, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [15, 30, 45], "range": 1}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/KIWIBEAST/KIWIBEAST.PAM", "status": {"idle1":  "idle_stage1_", "idle2": "idle_stage2_", "idle3": "idle_stage3_", "action1": "attack_stage1", "action2": "attack_stage2", "action3": "attack_stage3", "plantfood":  "plantfood_stage3"} },
+    { "category": "Melee", "baseHP": 500, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [15, 30, 45], "range": 1}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/KIWIBEAST/KIWIBEAST.PAM", "status": {"idle1":  "idle_stage1_", "idle2": "idle_stage2_", "idle3": "idle_stage3_", "action1": "attack_stage1", "action2": "attack_stage2", "action3": "attack_stage3", "plantfood":  "plantfood_stage3"} },
+    { "category": "Melee", "baseHP": 500, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [30, 45, 60], "range": 1}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/KIWIBEAST/KIWIBEAST.PAM", "status": {"idle1":  "idle_stage1_", "idle2": "idle_stage2_", "idle3": "idle_stage3_", "action1": "attack_stage1", "action2": "attack_stage2", "action3": "attack_stage3", "plantfood":  "plantfood_stage3"} },
+    { "category": "Melee", "baseHP": 500, "cost": 175, "actionInterval": 2, "rechargeTime": 5, "abilities": ["meleeAttacking"], "tags": ["AoE", "wramp-up"], "attributes": {"growth_time": [24, 72], "damage_quantity": [30, 45, 60], "range": 1}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/KIWIBEAST/KIWIBEAST.PAM", "status": {"idle1":  "idle_stage1_", "idle2": "idle_stage2_", "idle3": "idle_stage3_", "action1": "attack_stage1", "action2": "attack_stage2", "action3": "attack_stage3", "plantfood":  "plantfood_stage3"} }
   ],
 
   "WALL_NUT": [
@@ -341,13 +412,13 @@
 
   "GARLIC": [
     { "category": "Wall-nut", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["move-zombies"], "attributes": {"move":  1}, "plantFoodEffect": {},
-      "animation": "768/FULL/PLANT/ENDURIAN/ENDURIAN.PAM", "status": {"idle": "idle", "damage1": "idle2_damage", "damage2": "idle2_damage2", "damage3": "idle2_damage2"} },
+      "animation": "768/FULL/PLANT/GARLIC/GARLIC.PAM", "status": {"idle": "idle", "damage1": "idle2_damage", "damage2": "idle2_damage2", "damage3": "idle2_damage2"} },
     { "category": "Wall-nut", "baseHP": 450, "cost": 50, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["move-zombies"], "attributes": {"move":  1}, "plantFoodEffect": {},
-      "animation": "768/FULL/PLANT/ENDURIAN/ENDURIAN.PAM", "status": {"idle": "idle", "damage1": "idle2_damage", "damage2": "idle2_damage2", "damage3": "idle2_damage2"} },
+      "animation": "768/FULL/PLANT/GARLIC/GARLIC.PAM", "status": {"idle": "idle", "damage1": "idle2_damage", "damage2": "idle2_damage2", "damage3": "idle2_damage2"} },
     { "category": "Wall-nut", "baseHP": 450, "cost": 50, "actionInterval": 0, "rechargeTime": 17, "abilities": ["wall-nut"], "tags": ["move-zombies"], "attributes": {"move":  1}, "plantFoodEffect": {},
-      "animation": "768/FULL/PLANT/ENDURIAN/ENDURIAN.PAM", "status": {"idle": "idle", "damage1": "idle2_damage", "damage2": "idle2_damage2", "damage3": "idle2_damage2"} },
+      "animation": "768/FULL/PLANT/GARLIC/GARLIC.PAM", "status": {"idle": "idle", "damage1": "idle2_damage", "damage2": "idle2_damage2", "damage3": "idle2_damage2"} },
     { "category": "Wall-nut", "baseHP": 700, "cost": 50, "actionInterval": 0, "rechargeTime": 17, "abilities": ["wall-nut"], "tags": ["move-zombies"], "attributes": {"move":  1}, "plantFoodEffect": {},
-      "animation": "768/FULL/PLANT/ENDURIAN/ENDURIAN.PAM", "status": {"idle": "idle", "damage1": "idle2_damage", "damage2": "idle2_damage2", "damage3": "idle2_damage2"}}
+      "animation": "768/FULL/PLANT/GARLIC/GARLIC.PAM", "status": {"idle": "idle", "damage1": "idle2_damage", "damage2": "idle2_damage2", "damage3": "idle2_damage2"}}
   ],
 
   "SWEET_POTATO": [
@@ -395,66 +466,102 @@
   ],
 
   "TORCHWOOD": [
-    { "category": "Modifier", "baseHP": 300, "cost": 175, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["fire"], "attributes": {}, "plantFoodEffect": {"damageMultiplier": 3} },
-    { "category": "Modifier", "baseHP": 600, "cost": 175, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["fire"], "attributes": {}, "plantFoodEffect": {"damageMultiplier": 3} },
-    { "category": "Modifier", "baseHP": 600, "cost": 175, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["fire", "AoE"], "attributes": {"damage": 30, "range": 1}, "plantFoodEffect": {"damageMultiplier": 3} },
-    { "category": "Modifier", "baseHP": 600, "cost": 150, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["fire", "AoE"], "attributes": {"damage": 30, "range": 1}, "plantFoodEffect": {"damageMultiplier": 3} }
+    { "category": "Modifier", "baseHP": 300, "cost": 175, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["fire"], "attributes": {}, "plantFoodEffect": {"damageMultiplier": 3},
+      "animation": "768/INITIAL/PLANT/TORCHWOOD/TORCHWOOD.PAM", "status": {"idle": "idle", "explosion": "explosion", "plantfood": "plantfood"}},
+    { "category": "Modifier", "baseHP": 600, "cost": 175, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["fire"], "attributes": {}, "plantFoodEffect": {"damageMultiplier": 3},
+      "animation": "768/INITIAL/PLANT/TORCHWOOD/TORCHWOOD.PAM", "status": {"idle": "idle", "explosion": "explosion", "plantfood": "plantfood"}},
+    { "category": "Modifier", "baseHP": 600, "cost": 175, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["fire", "AoE"], "attributes": {"damage": 30, "range": 1}, "plantFoodEffect": {"damageMultiplier": 3},
+      "animation": "768/INITIAL/PLANT/TORCHWOOD/TORCHWOOD.PAM", "status": {"idle": "idle", "explosion": "explosion", "plantfood": "plantfood"}},
+    { "category": "Modifier", "baseHP": 600, "cost": 150, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["fire", "AoE"], "attributes": {"damage": 30, "range": 1}, "plantFoodEffect": {"damageMultiplier": 3},
+      "animation": "768/INITIAL/PLANT/TORCHWOOD/TORCHWOOD.PAM", "status": {"idle": "idle", "explosion": "explosion", "plantfood": "plantfood"}}
   ],
 
   "MAGNET_SHROOM": [
-    { "category": "Homing", "baseHP": 300, "cost": 100, "actionInterval": 10, "rechargeTime": 15, "abilities": ["homing"], "tags": ["shroom", "magic", "disarmament"], "attributes": {"front-range": 1}, "plantFoodEffect": {} },
-    { "category": "Homing", "baseHP": 300, "cost": 100, "actionInterval": 10, "rechargeTime": 15, "abilities": ["homing"], "tags": ["shroom", "magic", "disarmament"], "attributes": {"front-range": 2}, "plantFoodEffect": {} },
-    { "category": "Homing", "baseHP": 300, "cost": 100, "actionInterval": 10, "rechargeTime": 10, "abilities": ["homing"], "tags": ["shroom", "magic", "disarmament"], "attributes": {"front-range": 2}, "plantFoodEffect": {} },
-    { "category": "Homing", "baseHP": 500, "cost": 100, "actionInterval": 10, "rechargeTime": 10, "abilities": ["homing"], "tags": ["shroom", "magic", "disarmament"], "attributes": {"front-range": 2}, "plantFoodEffect": {} }
+    { "category": "Homing", "baseHP": 300, "cost": 100, "actionInterval": 10, "rechargeTime": 15, "abilities": ["homing"], "tags": ["shroom", "magic", "disarmament"], "attributes": {"front-range": 1}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/MAGNETSHROOM/MAGNETSHROOM.PAM", "status": {"idle": "idle3", "plantfood": "plantfood_collection"} },
+    { "category": "Homing", "baseHP": 300, "cost": 100, "actionInterval": 10, "rechargeTime": 15, "abilities": ["homing"], "tags": ["shroom", "magic", "disarmament"], "attributes": {"front-range": 2}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/MAGNETSHROOM/MAGNETSHROOM.PAM", "status": {"idle": "idle3", "plantfood": "plantfood_collection"} },
+    { "category": "Homing", "baseHP": 300, "cost": 100, "actionInterval": 10, "rechargeTime": 10, "abilities": ["homing"], "tags": ["shroom", "magic", "disarmament"], "attributes": {"front-range": 2}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/MAGNETSHROOM/MAGNETSHROOM.PAM", "status": {"idle": "idle3", "plantfood": "plantfood_collection"} },
+    { "category": "Homing", "baseHP": 500, "cost": 100, "actionInterval": 10, "rechargeTime": 10, "abilities": ["homing"], "tags": ["shroom", "magic", "disarmament"], "attributes": {"front-range": 2}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/MAGNETSHROOM/MAGNETSHROOM.PAM", "status": {"idle": "idle3", "plantfood": "plantfood_collection"} }
   ],
 
   "HYPNO_SHROOM": [
-    { "category": "Modifier", "baseHP": 300, "cost": 125, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.0,"Damage_Buff": 1.0}, "plantFoodEffect": {} },
-    { "category": "Modifier", "baseHP": 300, "cost": 100, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.0,"Damage_Buff": 1.0}, "plantFoodEffect": {} },
-    { "category": "Modifier", "baseHP": 300, "cost": 100, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.1,"Damage_Buff": 1.0}, "plantFoodEffect": {} },
-    { "category": "Modifier", "baseHP": 300, "cost": 100, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.1,"Damage_Buff": 1.2}, "plantFoodEffect": {} }
+    { "category": "Modifier", "baseHP": 300, "cost": 125, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.0,"Damage_Buff": 1.0}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/HYPNOSHROOM/HYPNOSHROOM.PAM", "status": {"idle": "idle", "plantfood": "plantfood"}},
+    { "category": "Modifier", "baseHP": 300, "cost": 100, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.0,"Damage_Buff": 1.0}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/HYPNOSHROOM/HYPNOSHROOM.PAM", "status": {"idle": "idle", "plantfood": "plantfood"} },
+    { "category": "Modifier", "baseHP": 300, "cost": 100, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.1,"Damage_Buff": 1.0}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/HYPNOSHROOM/HYPNOSHROOM.PAM", "status": {"idle": "idle", "plantfood": "plantfood"}},
+    { "category": "Modifier", "baseHP": 300, "cost": 100, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.1,"Damage_Buff": 1.2}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/HYPNOSHROOM/HYPNOSHROOM.PAM", "status": {"idle": "idle", "plantfood": "plantfood"}}
   ],
 
   "CAT_TAIL": [
-    { "category": "Homing", "baseHP": 300, "cost": 175, "actionInterval": 1.5, "rechargeTime": 20, "abilities": ["homing"], "tags": ["directed"], "attributes": {"damage": 15}, "plantFoodEffect": {} },
-    { "category": "Homing", "baseHP": 300, "cost": 175, "actionInterval": 1.5, "rechargeTime": 20, "abilities": ["homing"], "tags": ["directed"], "attributes": {"damage": 25}, "plantFoodEffect": {} },
-    { "category": "Homing", "baseHP": 500, "cost": 175, "actionInterval": 1.5, "rechargeTime": 20, "abilities": ["homing"], "tags": ["directed"], "attributes": {"damage": 25}, "plantFoodEffect": {} },
-    { "category": "Homing", "baseHP": 500, "cost": 150, "actionInterval": 1.5, "rechargeTime": 20, "abilities": ["homing"], "tags": ["directed"], "attributes": {"damage": 25}, "plantFoodEffect": {} }
+    { "category": "Homing", "baseHP": 300, "cost": 175, "actionInterval": 1.5, "rechargeTime": 20, "abilities": ["homing"], "tags": ["directed"], "attributes": {"damage": 15}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/HOMINGTHISTLE/HOMINGTHISTLE.PAM", "status": {"idle": "idle2", "plantfood": "plantfood_loop"} },
+    { "category": "Homing", "baseHP": 300, "cost": 175, "actionInterval": 1.5, "rechargeTime": 20, "abilities": ["homing"], "tags": ["directed"], "attributes": {"damage": 25}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/HOMINGTHISTLE/HOMINGTHISTLE.PAM", "status": {"idle": "idle2", "plantfood": "plantfood_loop"} },
+    { "category": "Homing", "baseHP": 500, "cost": 175, "actionInterval": 1.5, "rechargeTime": 20, "abilities": ["homing"], "tags": ["directed"], "attributes": {"damage": 25}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/HOMINGTHISTLE/HOMINGTHISTLE.PAM", "status": {"idle": "idle2", "plantfood": "plantfood_loop"} },
+    { "category": "Homing", "baseHP": 500, "cost": 150, "actionInterval": 1.5, "rechargeTime": 20, "abilities": ["homing"], "tags": ["directed"], "attributes": {"damage": 25}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/HOMINGTHISTLE/HOMINGTHISTLE.PAM", "status": {"idle": "idle2", "plantfood": "plantfood_loop"} }
   ],
 
   "IMITATER": [
-    { "category": "Modifier", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 0, "abilities": [], "tags": [], "attributes": {} },
-    { "category": "Modifier", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 0, "abilities": [], "tags": [], "attributes": {} },
-    { "category": "Modifier", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 0, "abilities": [], "tags": [], "attributes": {} },
-    { "category": "Modifier", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 0, "abilities": [], "tags": [], "attributes": {} }
+    { "category": "Modifier", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 0, "abilities": [], "tags": [], "attributes": {},
+      "animation": "768/INITIAL/PLANT/IMITATER/IMITATER.PAM", "status": {"idle": "idle"}},
+    { "category": "Modifier", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 0, "abilities": [], "tags": [], "attributes": {},
+      "animation": "768/INITIAL/PLANT/IMITATER/IMITATER.PAM", "status": {"idle": "idle"} },
+    { "category": "Modifier", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 0, "abilities": [], "tags": [], "attributes": {},
+      "animation": "768/INITIAL/PLANT/IMITATER/IMITATER.PAM", "status": {"idle": "idle"} },
+    { "category": "Modifier", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 0, "abilities": [], "tags": [], "attributes": {},
+      "animation": "768/INITIAL/PLANT/IMITATER/IMITATER.PAM", "status": {"idle": "idle"} }
   ],
 
   "ICE_SHROOM": [
-    { "category": "Explosive", "baseHP": 0, "cost": 75, "actionInterval": 0, "rechargeTime": 50, "abilities": ["explosionWithLifeSpan"], "tags": ["Ice", "shroom"], "attributes": {"life-span": 0, "freezeTime": 2, "damage": 0}, "plantFoodEffect": {} },
-    { "category": "Explosive", "baseHP": 0, "cost": 75, "actionInterval": 0, "rechargeTime": 50, "abilities": ["explosionWithLifeSpan"], "tags": ["Ice", "shroom"], "attributes": {"life-span": 0, "freezeTime": 4, "damage": 0}, "plantFoodEffect": {} },
-    { "category": "Explosive", "baseHP": 0, "cost": 75, "actionInterval": 0, "rechargeTime": 45, "abilities": ["explosionWithLifeSpan"], "tags": ["Ice", "shroom"], "attributes": {"life-span": 0, "freezeTime": 4, "damage": 0}, "plantFoodEffect": {} },
-    { "category": "Explosive", "baseHP": 0, "cost": 75, "actionInterval": 0, "rechargeTime": 45, "abilities": ["explosionWithLifeSpan"], "tags": ["Ice", "shroom"], "attributes": {"life-span": 0, "freezeTime": 4, "damage": 50}, "plantFoodEffect": {} }
-  ],
+    { "category": "Explosive", "baseHP": 0, "cost": 75, "actionInterval": 1.67, "rechargeTime": 50, "abilities": ["explosionWithLifeSpan"], "tags": ["Ice", "shroom"], "attributes": {"attackTime": 1.67, "life-span": 2.80, "freezeTime": 2, "damage": 0, "explosionAnimation": "768/FULL/EFFECTS/ICESHROOM_FX/ICESHROOM_FX.PAM"}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/ICESHROOM/ICESHROOM.PAM", "status": {"action": "plantfood", "explosion": "animation"} },
+    { "category": "Explosive", "baseHP": 0, "cost": 75, "actionInterval": 1.67, "rechargeTime": 50, "abilities": ["explosionWithLifeSpan"], "tags": ["Ice", "shroom"], "attributes": {"attackTime": 1.67, "life-span": 2.80, "freezeTime": 4, "damage": 0, "explosionAnimation": "768/FULL/EFFECTS/ICESHROOM_FX/ICESHROOM_FX.PAM"}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/ICESHROOM/ICESHROOM.PAM", "status": {"action": "plantfood", "explosion": "animation"} },
+    { "category": "Explosive", "baseHP": 0, "cost": 75, "actionInterval": 1.67, "rechargeTime": 45, "abilities": ["explosionWithLifeSpan"], "tags": ["Ice", "shroom"], "attributes": {"attackTime": 1.67, "life-span": 2.80, "freezeTime": 4, "damage": 0, "explosionAnimation": "768/FULL/EFFECTS/ICESHROOM_FX/ICESHROOM_FX.PAM"}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/ICESHROOM/ICESHROOM.PAM", "status": {"action": "plantfood", "explosion": "animation"} },
+    { "category": "Explosive", "baseHP": 0, "cost": 75, "actionInterval": 1.67, "rechargeTime": 45, "abilities": ["explosionWithLifeSpan"], "tags": ["Ice", "shroom"], "attributes": {"attackTime": 1.67, "life-span": 2.80, "freezeTime": 4, "damage": 50, "explosionAnimation": "768/FULL/EFFECTS/ICESHROOM_FX/ICESHROOM_FX.PAM"}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/ICESHROOM/ICESHROOM.PAM", "status": {"action": "plantfood", "explosion": "animation"} }
+    ],
 
   "LILY_PAD": [
-    { "category": "Modifier", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["Water", "bottomStack"], "attributes": {}, "plantFoodEffect": {"number": 2} },
-    { "category": "Modifier", "baseHP": 300, "cost": 0, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["Water", "bottomStack"], "attributes": {}, "plantFoodEffect": {"number": 2} },
-    { "category": "Modifier", "baseHP": 500, "cost": 0, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["Water", "bottomStack"], "attributes": {}, "plantFoodEffect": {"number": 2} },
-    { "category": "Modifier", "baseHP": 500, "cost": 0, "actionInterval": 0, "rechargeTime": 3, "abilities": ["Modifier"], "tags": ["Water", "bottomStack"], "attributes": {}, "plantFoodEffect": {"number": 2} }
+    { "category": "Modifier", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["Water", "bottomStack"], "attributes": {}, "plantFoodEffect": {"number": 2},
+      "animation": "768/FULL/PLANT/LILYPAD/LILYPAD.PAM", "status": {"idle": "idle2", "plantfood": "plantfood"}},
+    { "category": "Modifier", "baseHP": 300, "cost": 0, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["Water", "bottomStack"], "attributes": {}, "plantFoodEffect": {"number": 2},
+      "animation": "768/FULL/PLANT/LILYPAD/LILYPAD.PAM", "status": {"idle": "idle2", "plantfood": "plantfood"}},
+    { "category": "Modifier", "baseHP": 500, "cost": 0, "actionInterval": 0, "rechargeTime": 5, "abilities": ["Modifier"], "tags": ["Water", "bottomStack"], "attributes": {}, "plantFoodEffect": {"number": 2},
+      "animation": "768/FULL/PLANT/LILYPAD/LILYPAD.PAM", "status": {"idle": "idle2", "plantfood": "plantfood"}},
+    { "category": "Modifier", "baseHP": 500, "cost": 0, "actionInterval": 0, "rechargeTime": 3, "abilities": ["Modifier"], "tags": ["Water", "bottomStack"], "attributes": {}, "plantFoodEffect": {"number": 2},
+      "animation": "768/FULL/PLANT/LILYPAD/LILYPAD.PAM", "status": {"idle": "idle2", "plantfood": "plantfood"}}
   ],
 
   "HOT_POTATO": [
-    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 5, "abilities": ["explosion"], "tags": ["fire", "insta-kill"], "attributes": {"life-span": 0}, "plantFoodEffect": {} },
-    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 3, "abilities": ["explosion"], "tags": ["fire", "insta-kill"], "attributes": {"life-span": 0}, "plantFoodEffect": {} },
-    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 3, "abilities": ["explosion"], "tags": ["fire", "insta-kill"], "attributes": {"life-span": 0, "range": 1}, "plantFoodEffect": {} },
-    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 3, "abilities": ["explosion"], "tags": ["fire", "insta-kill"], "attributes": {"life-span": 0, "range": 1, "damage": 15}, "plantFoodEffect": {} }
+    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 2.67, "rechargeTime": 5, "abilities": ["explosionWithLifeSpan"], "tags": ["fire", "insta-kill"], "attributes": {"attackTime": 2.67, "life-span": 4.34, "explosionAnimation": "768/FULL/EFFECTS/HOTPOTATO_ICEBLOCK_PUDDLE/HOTPOTATO_ICEBLOCK_PUDDLE.PAM"}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/HOTPOTATO/HOTPOTATO.PAM", "status": {"action": "attack", "explosion": "animation"} },
+    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 2.67, "rechargeTime": 3, "abilities": ["explosionWithLifeSpan"], "tags": ["fire", "insta-kill"], "attributes": {"attackTime": 2.67, "life-span": 4.34, "explosionAnimation": "768/FULL/EFFECTS/HOTPOTATO_ICEBLOCK_PUDDLE/HOTPOTATO_ICEBLOCK_PUDDLE.PAM"}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/HOTPOTATO/HOTPOTATO.PAM", "status": {"action": "attack", "explosion": "animation"} },
+    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 2.67, "rechargeTime": 3, "abilities": ["explosionWithLifeSpan"], "tags": ["fire", "insta-kill"], "attributes": {"attackTime": 2.67, "life-span": 4.34, "range": 1, "explosionAnimation": "768/FULL/EFFECTS/HOTPOTATO_ICEBLOCK_PUDDLE/HOTPOTATO_ICEBLOCK_PUDDLE.PAM"}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/HOTPOTATO/HOTPOTATO.PAM", "status": {"action": "attack", "explosion": "animation"} },
+    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 2.67, "rechargeTime": 3, "abilities": ["explosionWithLifeSpan"], "tags": ["fire", "insta-kill"], "attributes": {"attackTime": 2.67, "life-span": 4.34, "range": 1, "damage": 15, "explosionAnimation": "768/FULL/EFFECTS/HOTPOTATO_ICEBLOCK_PUDDLE/HOTPOTATO_ICEBLOCK_PUDDLE.PAM"}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/HOTPOTATO/HOTPOTATO.PAM", "status": {"action": "attack", "explosion": "animation"} }
   ],
 
   "GRAVE_BUSTER": [
-    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 10, "abilities": ["explosion"], "tags": ["insta-kill"], "attributes": {"life-span": 0}, "plantFoodEffect": {} },
-    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 10, "abilities": ["explosion"], "tags": ["insta-kill"], "attributes": {"life-span": 0}, "plantFoodEffect": {} },
-    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 8, "abilities": ["explosion"], "tags": ["insta-kill"], "attributes": {"life-span": 0}, "plantFoodEffect": {} },
-    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 8, "abilities": ["explosion"], "tags": ["insta-kill"], "attributes": {"life-span": 0, "damage": 15}, "plantFoodEffect": {} }
+    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 1.10, "rechargeTime": 10, "abilities": ["explosionWithLifeSpan"], "tags": ["insta-kill"], "attributes": {"attackTime": 1.00, "life-span": 2.17, "explosionAnimation": "768/INITIAL/EFFECTS/GRAVEBUSTER_EXPLOSION_POTATOMINE/GRAVEBUSTER_EXPLOSION_POTATOMINE.PAM"}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/GRAVEBUSTER/GRAVEBUSTER.PAM", "status": {"action": "attack", "explosion": "animation"} },
+    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 1.10, "rechargeTime": 10, "abilities": ["explosionWithLifeSpan"], "tags": ["insta-kill"], "attributes": {"attackTime": 1.00, "life-span": 2.17, "explosionAnimation": "768/INITIAL/EFFECTS/GRAVEBUSTER_EXPLOSION_POTATOMINE/GRAVEBUSTER_EXPLOSION_POTATOMINE.PAM"}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/GRAVEBUSTER/GRAVEBUSTER.PAM", "status": {"action": "attack", "explosion": "animation"} },
+    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 1.10, "rechargeTime": 8, "abilities": ["explosionWithLifeSpan"], "tags": ["insta-kill"], "attributes": {"attackTime": 1.00, "life-span": 2.17, "explosionAnimation": "768/INITIAL/EFFECTS/GRAVEBUSTER_EXPLOSION_POTATOMINE/GRAVEBUSTER_EXPLOSION_POTATOMINE.PAM"}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/GRAVEBUSTER/GRAVEBUSTER.PAM", "status": {"action": "attack", "explosion": "animation"} },
+    { "category": "Explosive", "baseHP": 0, "cost": 0, "actionInterval": 1.10, "rechargeTime": 8, "abilities": ["explosionWithLifeSpan"], "tags": ["insta-kill"], "attributes": {"attackTime": 1.00, "life-span": 2.17, "damage": 15, "explosionAnimation": "768/INITIAL/EFFECTS/GRAVEBUSTER_EXPLOSION_POTATOMINE/GRAVEBUSTER_EXPLOSION_POTATOMINE.PAM"}, "plantFoodEffect": {},
+      "animation": "768/INITIAL/PLANT/GRAVEBUSTER/GRAVEBUSTER.PAM", "status": {"action": "attack", "explosion": "animation"} }
   ],
 
   "ENLIGHTEN_MINT": [
