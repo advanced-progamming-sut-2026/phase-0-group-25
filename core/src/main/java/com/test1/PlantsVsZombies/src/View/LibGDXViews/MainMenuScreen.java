@@ -18,6 +18,7 @@ import com.test1.PlantsVsZombies.src.Model.News.News;
 import com.test1.PlantsVsZombies.src.Model.User.User;
 import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.MainMenuView;
+import pvz.skin.BorderedTable;
 
 public class MainMenuScreen extends AbstractScreen implements MainMenuView {
 
@@ -25,15 +26,14 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
     private static final String LOGO_ASSET_ID = "IMAGE_UI_MAINMENU_PVZ2_LOGO_HORIZONTAL";
     private static final String ERROR_BG_ASSET_ID = "IMAGE_UI_GENERIC_TIMER_RIBBON_RED";
 
-
     private static final String USER_BADGE_BG_ASSET_ID = "IMAGE_UI_IF_BUNDLE_REWARD5_BG";
-
 
     private static final String NEWS_BUTTON_ASSET_ID = "IMAGE_UI_HUD_NEWSBUTTON_BUTTONS_HUD_NEWS_SELECTED_COPY_2";
     private static final String EXCLAMATION_MARK_ASSET_ID = "IMAGE_UI_CLAIM_SMALL";
     private static final String SETTINGS_BUTTON_ASSET_ID = "IMAGE_UI_HUD_SETTINGSBUTTON_BUTTONS_HUD_SETTINGS_NORMAL";
 
     private MainMenu menuController;
+    private Table topLeftTable;  // field to refresh
 
     public void setMenuController(MainMenu menuController) {
         this.menuController = menuController;
@@ -46,7 +46,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         Stack screenStack = new Stack();
         screenStack.setFillParent(true);
 
-
         TextureRegion bgRegion = textureBank.region(BACKGROUND_ASSET_ID);
         if (bgRegion != null) {
             Image bgImage = new Image(bgRegion);
@@ -57,19 +56,13 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         Table uiTable = new Table();
         uiTable.setFillParent(true);
 
-
         Table topTable = new Table();
 
-
-        Table topLeftTable = new Table();
-        topLeftTable.add(createCurrencyHud()).left().row();
-        topLeftTable.add(createUserBadge()).left().padTop(8).row();
+        // Create the left part that we'll refresh later
+        topLeftTable = createTopLeftTable();
 
         topTable.add(topLeftTable).left().pad(15);
-
-
         topTable.add().expandX();
-
 
         TextButton logoutButton = new TextButton("Logout", skin, "brown");
         logoutButton.addListener(new ClickListener() {
@@ -83,7 +76,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         topTable.add(logoutButton).right().top().pad(15);
 
         uiTable.add(topTable).fillX().top().row();
-
 
         Table mainContainer = new Table();
 
@@ -107,9 +99,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
 
         uiTable.add(mainContainer).expand().center().padBottom(40).row();
 
-
         Table bottomTable = new Table();
-
 
         TextButton profileButton = new TextButton("Profile", skin, "brown");
         profileButton.addListener(new ClickListener() {
@@ -123,7 +113,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         bottomTable.add(createNewsButtonStack()).left().padRight(20);
 
         bottomTable.add().expandX();
-
 
         TextButton leaderboardButton = new TextButton("Leaderboard", skin, "brown");
         leaderboardButton.addListener(new ClickListener() {
@@ -140,6 +129,23 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
 
         screenStack.add(uiTable);
         rootTable.add(screenStack).grow();
+    }
+
+    private Table createTopLeftTable() {
+        Table table = new Table();
+        table.add(createCurrencyHud()).left().row();
+        table.add(createUserBadge()).left().padTop(8).row();
+        return table;
+    }
+
+    // Refresh the top-left part (currency HUD + user badge) to reflect debug mode changes
+    private void refreshTopBar() {
+        if (topLeftTable != null) {
+            topLeftTable.clearChildren();
+            topLeftTable.add(createCurrencyHud()).left().row();
+            topLeftTable.add(createUserBadge()).left().padTop(8).row();
+            topLeftTable.invalidateHierarchy();
+        }
     }
 
     private Actor createUserBadge() {
@@ -240,7 +246,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
             settingsButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    MenuManager.getInstance().changeMenu(MenuType.Setting);
+                    showSettingsDialog();
                 }
             });
             return settingsButton;
@@ -249,11 +255,170 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
             fallbackSettings.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    MenuManager.getInstance().changeMenu(MenuType.Setting);
+                    showSettingsDialog();
                 }
             });
             return fallbackSettings;
         }
+    }
+
+    // ================================================================
+    // SETTINGS MODAL
+    // ================================================================
+
+    private void showSettingsDialog() {
+        BorderedTable box = new BorderedTable();
+        box.pad(30);
+
+        UsersManager um = UsersManager.getInstance();
+        User loggedUser = um.getLoggedInUser();
+        if (loggedUser == null) {
+            showError("No user logged in.");
+            return;
+        }
+
+        // ---- Title ----
+        Label title = createBlackLabel("SETTINGS");
+        title.setFontScale(0.8f);
+        box.add(title).colspan(2).center().padBottom(20).row();
+
+        // ---- 1. Difficulty ----
+        box.add(createBlackLabel("Difficulty:")).left().padRight(20).row();
+        Table difficultyRow = new Table();
+        ButtonGroup<CheckBox> diffGroup = new ButtonGroup<>();
+        diffGroup.setMinCheckCount(1);
+        diffGroup.setMaxCheckCount(1);
+
+        int currentDiff = loggedUser.getUserProgress().getGameDifficulty();
+        for (int i = 1; i <= 5; i++) {
+            CheckBox cb = new CheckBox(" " + i, skin);
+            cb.getLabel().setColor(Color.BLACK);
+            if (i == currentDiff) cb.setChecked(true);
+            diffGroup.add(cb);
+            difficultyRow.add(cb).padRight(10);
+        }
+        box.add(difficultyRow).left().padBottom(15).row();
+
+        // ---- 2. Speed ----
+        box.add(createBlackLabel("Game Speed:")).left().padRight(20).row();
+        Table speedRow = new Table();
+        ButtonGroup<CheckBox> speedGroup = new ButtonGroup<>();
+        speedGroup.setMinCheckCount(1);
+        speedGroup.setMaxCheckCount(1);
+
+        int currentSpeed = loggedUser.getUserProgress().getGameSpeed();
+        for (int i = 1; i <= 3; i++) {
+            CheckBox cb = new CheckBox(" " + i, skin);
+            cb.getLabel().setColor(Color.BLACK);
+            if (i == currentSpeed) cb.setChecked(true);
+            speedGroup.add(cb);
+            speedRow.add(cb).padRight(10);
+        }
+        box.add(speedRow).left().padBottom(15).row();
+
+        // ---- 3. Show Tile Grid ----
+        box.add(createBlackLabel("Show Tile Grid:")).left().padRight(20).row();
+        Table gridRow = new Table();
+        ButtonGroup<CheckBox> gridGroup = new ButtonGroup<>();
+        gridGroup.setMinCheckCount(1);
+        gridGroup.setMaxCheckCount(1);
+
+        boolean currentGrid = loggedUser.getUserProgress().isShowTileGrid();
+        CheckBox gridOn = new CheckBox(" On", skin);
+        gridOn.getLabel().setColor(Color.BLACK);
+        CheckBox gridOff = new CheckBox(" Off", skin);
+        gridOff.getLabel().setColor(Color.BLACK);
+
+        if (currentGrid) gridOn.setChecked(true);
+        else gridOff.setChecked(true);
+
+        gridGroup.add(gridOn, gridOff);
+        gridRow.add(gridOn).padRight(10);
+        gridRow.add(gridOff).padRight(10);
+        box.add(gridRow).left().padBottom(15).row();
+
+        // ---- 4. Debug Mode ----
+        box.add(createBlackLabel("Debug Mode:")).left().padRight(20).row();
+        Table debugRow = new Table();
+        ButtonGroup<CheckBox> debugGroup = new ButtonGroup<>();
+        debugGroup.setMinCheckCount(1);
+        debugGroup.setMaxCheckCount(1);
+
+        boolean currentDebug = loggedUser.isDebugMode();
+        CheckBox debugOn = new CheckBox(" On", skin);
+        debugOn.getLabel().setColor(Color.BLACK);
+        CheckBox debugOff = new CheckBox(" Off", skin);
+        debugOff.getLabel().setColor(Color.BLACK);
+
+        if (currentDebug) debugOn.setChecked(true);
+        else debugOff.setChecked(true);
+
+        debugGroup.add(debugOn, debugOff);
+        debugRow.add(debugOn).padRight(10);
+        debugRow.add(debugOff).padRight(10);
+        box.add(debugRow).left().padBottom(25).row();
+
+        // ---- Buttons: OK / Cancel ----
+        Table buttonRow = new Table();
+        TextButton okButton = createSkinButton("OK", "green", new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Save all settings
+                // Difficulty
+                int diff = 1;
+                for (CheckBox cb : diffGroup.getButtons()) {
+                    if (cb.isChecked()) {
+                        String text = cb.getText().toString().trim();
+                        diff = Integer.parseInt(text);
+                        break;
+                    }
+                }
+                um.changeDifficulty(String.valueOf(diff));
+
+                // Speed
+                int speed = 1;
+                for (CheckBox cb : speedGroup.getButtons()) {
+                    if (cb.isChecked()) {
+                        String text = cb.getText().toString().trim();
+                        speed = Integer.parseInt(text);
+                        break;
+                    }
+                }
+                um.setGameSpeed(speed);
+
+                // Grid
+                um.setShowTileGrid(gridOn.isChecked());
+
+                // Debug
+                um.setDebugMode(debugOn.isChecked());
+
+                // Refresh the top bar to show/hide plus buttons immediately
+                refreshTopBar();
+
+                closeModal();
+                showToast("Settings saved", "IMAGE_UI_GENERIC_VTB");
+            }
+        });
+
+        TextButton cancelButton = createSkinButton("Cancel", "brown", new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                closeModal();
+            }
+        });
+
+        buttonRow.add(okButton).padRight(10);
+        buttonRow.add(cancelButton);
+        box.add(buttonRow).colspan(2).center();
+
+        ScrollPane scrollPane = new ScrollPane(box);
+        scrollPane.setScrollingDisabled(true, false);
+        scrollPane.setFadeScrollBars(true);
+
+        Table wrapper = new Table();
+        wrapper.add(scrollPane).size(450, 500);
+
+        showModal(wrapper);
     }
 
     @Override

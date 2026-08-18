@@ -57,7 +57,7 @@ public abstract class AbstractScreen implements Screen {
     protected Label gemCountLabel;
 
 
-    protected static final String CURRENCY_BOX_BG_ASSET_ID = "IMAGE_UI_GENERIC_BUTTON_GENERIC_LTECURRENCY";
+    protected static final String CURRENCY_BOX_BG_ASSET_ID = "IMAGE_UI_HUD_INGAME_BACKGROUND_3SLICE";
     protected static final String COIN_ICON_ASSET_ID = "IMAGE_UI_THYMED_EVENTS_ECS_CONVRT_COIN";
     protected static final String GEM_ICON_ASSET_ID = "IMAGE_EFFECTS_COIN_DIAMOND_COIN_DIAMOND_141X146";
     protected static final String PLUS_BUTTON_ASSET_ID = "IMAGE_UI_HUD_INGAME_COIN_BUY";

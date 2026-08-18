@@ -41,6 +41,7 @@ public class UsersManager {
         return instance;
     }
 
+    // ----- Existing methods (unchanged) -----
     public void setQuestVariablesForCurrentUser(Map<String, String> variables) {
         progressManager.setQuestVariablesForCurrentUser(variables);
     }
@@ -197,7 +198,6 @@ public class UsersManager {
         loggedInUser.setUserName(newUsername);
         userCache.put(newUsername, loggedInUser);
         writeUsers();
-
 
         File stateFile = new File(STATE_FILE);
         if (stateFile.exists()) {
@@ -400,7 +400,6 @@ public class UsersManager {
         progressManager.handleLevelWin(chapterType, currentLevel, plantRewards);
     }
 
-
     public ArrayList<String> getUnreadNews() {
         if (loggedInUser == null) return new ArrayList<>();
         ArrayList<String> news = loggedInUser.getNewsManager().extractUnreadNews();
@@ -415,7 +414,6 @@ public class UsersManager {
         return news;
     }
 
-
     public String changeDifficulty(String difficultyLevel) {
         if (loggedInUser == null) return "No logged in user.";
         int difficulty;
@@ -429,5 +427,43 @@ public class UsersManager {
         loggedInUser.getUserProgress().setGameDifficulty(difficulty);
         updateUser();
         return null;
+    }
+
+    // ----- NEW methods for settings -----
+    public String setGameSpeed(int speed) {
+        if (loggedInUser == null) return "No logged in user.";
+        if (speed < 1 || speed > 3) return "Speed must be 1, 2, or 3.";
+        loggedInUser.getUserProgress().setGameSpeed(speed);
+        updateUser();
+        return null;
+    }
+
+    public int getGameSpeed() {
+        if (loggedInUser == null) return 1;
+        return loggedInUser.getUserProgress().getGameSpeed();
+    }
+
+    public String setShowTileGrid(boolean show) {
+        if (loggedInUser == null) return "No logged in user.";
+        loggedInUser.getUserProgress().setShowTileGrid(show);
+        updateUser();
+        return null;
+    }
+
+    public boolean isShowTileGrid() {
+        if (loggedInUser == null) return false;
+        return loggedInUser.getUserProgress().isShowTileGrid();
+    }
+
+    // Debug mode is already handled via User.isDebugMode()
+    public void setDebugMode(boolean debug) {
+        if (loggedInUser != null) {
+            loggedInUser.setDebugMode(debug);
+            updateUser();
+        }
+    }
+
+    public boolean isDebugMode() {
+        return loggedInUser != null && loggedInUser.isDebugMode();
     }
 }

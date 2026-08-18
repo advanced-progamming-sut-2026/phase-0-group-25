@@ -417,14 +417,20 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
                     }
                 }
             });
-            buttonTable.add(upgradeButton).padRight(6);
+            buttonTable.add(upgradeButton).padRight(6).padBottom(7);
         }
 
         TextButton boostButton;
         if (boosted) {
             boostButton = createSkinButton("Boosted", "purple", null);
+            boostButton.addListener(new ClickListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    showError("This plant is already boosted.");
+                }
+            });
         } else {
-            boostButton = createSkinButton("Boost (2 gems)", "green", new ClickListener() {
+            boostButton = createSkinButton("Boost", "purple", new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     String error = menuController.boostPlant(type.getName());
@@ -440,7 +446,7 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
                 }
             });
         }
-        buttonTable.add(boostButton).padRight(6);
+        buttonTable.add(boostButton).padRight(6).padBottom(7).row();
 
         TextButton addButton;
         if (alreadySelected) {

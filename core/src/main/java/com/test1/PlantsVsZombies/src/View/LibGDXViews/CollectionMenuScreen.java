@@ -268,21 +268,12 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
         }
 
         if (unlocked) {
-            Table levelBadge = new Table();
-            levelBadge.setTouchable(Touchable.disabled);
-            levelBadge.top().right();
-
-            Table badgeInner = new Table();
-            TextureRegion badgeBg = textureBank.region(CURRENCY_BOX_BG_ASSET_ID);
-            if (badgeBg != null) {
-                badgeInner.setBackground(new NinePatchDrawable(new NinePatch(badgeBg, 8, 8, 8, 8)));
-            }
-            Label levelLabel = createLabel("Lv" + level, "FBUSV8C5EI_1_outline", Color.WHITE);
-            levelLabel.setFontScale(0.55f);
-            badgeInner.add(levelLabel).pad(2, 6, 2, 6);
-
-            levelBadge.add(badgeInner).pad(2);
-            contentStack.add(levelBadge);
+            Table badgeWrapper = new Table();
+            badgeWrapper.setTouchable(Touchable.disabled);
+            badgeWrapper.top().right();
+            // Use the shared method – same as choose‑plant screen
+            badgeWrapper.add(buildCornerBadge("Lv" + level, 0.45f)).pad(2);
+            contentStack.add(badgeWrapper);
         }
 
         Table card = new Table();
