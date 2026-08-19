@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.test1.PlantsVsZombies.src.Enums.MenuType;
 import com.test1.PlantsVsZombies.src.Menu.MainMenu;
@@ -19,6 +20,8 @@ import com.test1.PlantsVsZombies.src.Model.User.User;
 import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.MainMenuView;
 import pvz.skin.BorderedTable;
+
+import java.util.ArrayList;
 
 public class MainMenuScreen extends AbstractScreen implements MainMenuView {
 
@@ -33,7 +36,11 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
     private static final String SETTINGS_BUTTON_ASSET_ID = "IMAGE_UI_HUD_SETTINGSBUTTON_BUTTONS_HUD_SETTINGS_NORMAL";
 
     private MainMenu menuController;
-    private Table topLeftTable;  // field to refresh
+    private Table topLeftTable;
+    private Table bottomTable;
+
+    // Store unread messages snapshot before marking them read
+    private ArrayList<String> unreadMessages = new ArrayList<>();
 
     public void setMenuController(MainMenu menuController) {
         this.menuController = menuController;
@@ -58,7 +65,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
 
         Table topTable = new Table();
 
-        // Create the left part that we'll refresh later
         topLeftTable = createTopLeftTable();
 
         topTable.add(topLeftTable).left().pad(15);
@@ -99,7 +105,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
 
         uiTable.add(mainContainer).expand().center().padBottom(40).row();
 
-        Table bottomTable = new Table();
+        bottomTable = new Table();
 
         TextButton profileButton = new TextButton("Profile", skin, "brown");
         profileButton.addListener(new ClickListener() {
@@ -131,6 +137,10 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         rootTable.add(screenStack).grow();
     }
 
+    // ============================================================
+    // TOP BAR
+    // ============================================================
+
     private Table createTopLeftTable() {
         Table table = new Table();
         table.add(createCurrencyHud()).left().row();
@@ -138,7 +148,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         return table;
     }
 
-    // Refresh the top-left part (currency HUD + user badge) to reflect debug mode changes
     private void refreshTopBar() {
         if (topLeftTable != null) {
             topLeftTable.clearChildren();
@@ -170,6 +179,10 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         return userBadgeTable;
     }
 
+    // ============================================================
+    // NEWS BUTTON WITH EXCLAMATION MARK
+    // ============================================================
+
     private boolean hasUnreadNews() {
         User user = UsersManager.getInstance().getLoggedInUser();
         if (user != null && user.getNewsManager() != null && user.getNewsManager().getNews() != null) {
@@ -198,7 +211,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
             newsButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    MenuManager.getInstance().changeMenu(MenuType.News);
+                    showNewsDialog();
                 }
             });
             newsActor = newsButton;
@@ -207,7 +220,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
             fallbackNewsButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    MenuManager.getInstance().changeMenu(MenuType.News);
+                    showNewsDialog();
                 }
             });
             newsActor = fallbackNewsButton;
@@ -215,23 +228,53 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
 
         newsStack.add(newsActor);
 
+        // Overlay for exclamation mark (only if unread news exist)
+        Table exclamationOverlay = new Table();
         if (hasUnreadNews()) {
             TextureRegion exclRegion = textureBank.region(EXCLAMATION_MARK_ASSET_ID);
-            Table overlayTable = new Table();
             if (exclRegion != null) {
                 Image exclImage = new Image(exclRegion);
                 exclImage.setTouchable(Touchable.disabled);
-                overlayTable.add(exclImage).size(24, 24).top().right().expand();
+                exclamationOverlay.add(exclImage).size(24, 24).top().right().expand();
             } else {
                 Label exclLabel = new Label("!", skin);
                 exclLabel.setColor(Color.RED);
-                overlayTable.add(exclLabel).top().right().expand().padTop(-5).padRight(-5);
+                exclamationOverlay.add(exclLabel).top().right().expand().padTop(-5).padRight(-5);
             }
-            newsStack.add(overlayTable);
         }
+        newsStack.add(exclamationOverlay);
 
         return newsStack;
     }
+
+    private void refreshNewsButton() {
+        if (bottomTable == null) return;
+        bottomTable.clearChildren();
+        TextButton profileButton = new TextButton("Profile", skin, "brown");
+        profileButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                MenuManager.getInstance().changeMenu(MenuType.Profile);
+            }
+        });
+        bottomTable.add(profileButton).left().padLeft(20).padRight(10);
+        bottomTable.add(createNewsButtonStack()).left().padRight(20);
+        bottomTable.add().expandX();
+        TextButton leaderboardButton = new TextButton("Leaderboard", skin, "brown");
+        leaderboardButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                MenuManager.getInstance().changeMenu(MenuType.LeaderBoard);
+            }
+        });
+        bottomTable.add(createSettingsButton()).right().padRight(10);
+        bottomTable.add(leaderboardButton).right().padRight(20);
+        bottomTable.invalidateHierarchy();
+    }
+
+    // ============================================================
+    // SETTINGS BUTTON
+    // ============================================================
 
     private Actor createSettingsButton() {
         TextureRegion settingsRegion = textureBank.region(SETTINGS_BUTTON_ASSET_ID);
@@ -277,12 +320,10 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
             return;
         }
 
-        // ---- Title ----
         Label title = createBlackLabel("SETTINGS");
         title.setFontScale(0.8f);
         box.add(title).colspan(2).center().padBottom(20).row();
 
-        // ---- 1. Difficulty ----
         box.add(createBlackLabel("Difficulty:")).left().padRight(20).row();
         Table difficultyRow = new Table();
         ButtonGroup<CheckBox> diffGroup = new ButtonGroup<>();
@@ -299,7 +340,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         }
         box.add(difficultyRow).left().padBottom(15).row();
 
-        // ---- 2. Speed ----
         box.add(createBlackLabel("Game Speed:")).left().padRight(20).row();
         Table speedRow = new Table();
         ButtonGroup<CheckBox> speedGroup = new ButtonGroup<>();
@@ -316,7 +356,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         }
         box.add(speedRow).left().padBottom(15).row();
 
-        // ---- 3. Show Tile Grid ----
         box.add(createBlackLabel("Show Tile Grid:")).left().padRight(20).row();
         Table gridRow = new Table();
         ButtonGroup<CheckBox> gridGroup = new ButtonGroup<>();
@@ -337,7 +376,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         gridRow.add(gridOff).padRight(10);
         box.add(gridRow).left().padBottom(15).row();
 
-        // ---- 4. Debug Mode ----
         box.add(createBlackLabel("Debug Mode:")).left().padRight(20).row();
         Table debugRow = new Table();
         ButtonGroup<CheckBox> debugGroup = new ButtonGroup<>();
@@ -358,43 +396,32 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         debugRow.add(debugOff).padRight(10);
         box.add(debugRow).left().padBottom(25).row();
 
-        // ---- Buttons: OK / Cancel ----
         Table buttonRow = new Table();
         TextButton okButton = createSkinButton("OK", "green", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Save all settings
-                // Difficulty
                 int diff = 1;
                 for (CheckBox cb : diffGroup.getButtons()) {
                     if (cb.isChecked()) {
-                        String text = cb.getText().toString().trim();
-                        diff = Integer.parseInt(text);
+                        diff = Integer.parseInt(cb.getText().toString().trim());
                         break;
                     }
                 }
                 um.changeDifficulty(String.valueOf(diff));
 
-                // Speed
                 int speed = 1;
                 for (CheckBox cb : speedGroup.getButtons()) {
                     if (cb.isChecked()) {
-                        String text = cb.getText().toString().trim();
-                        speed = Integer.parseInt(text);
+                        speed = Integer.parseInt(cb.getText().toString().trim());
                         break;
                     }
                 }
                 um.setGameSpeed(speed);
 
-                // Grid
                 um.setShowTileGrid(gridOn.isChecked());
-
-                // Debug
                 um.setDebugMode(debugOn.isChecked());
 
-                // Refresh the top bar to show/hide plus buttons immediately
                 refreshTopBar();
-
                 closeModal();
                 showToast("Settings saved", "IMAGE_UI_GENERIC_VTB");
             }
@@ -417,9 +444,123 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
 
         Table wrapper = new Table();
         wrapper.add(scrollPane).size(450, 500);
-
         showModal(wrapper);
     }
+
+    // ================================================================
+    // NEWS MODAL – CORRECT UNREAD SNAPSHOT + CENTERED TEXT
+    // ================================================================
+
+    private boolean showUnread = true;   // default: show unread news
+
+    private void showNewsDialog() {
+        // 1. Take a snapshot of unread messages BEFORE marking them read
+        User user = UsersManager.getInstance().getLoggedInUser();
+        unreadMessages.clear();
+        if (user != null && user.getNewsManager() != null) {
+            for (News n : user.getNewsManager().getNews()) {
+                if (!n.isRead()) {
+                    unreadMessages.add(n.getMessage());
+                }
+            }
+        }
+
+        // 2. Mark all unread as read (this updates the user and removes exclamation)
+        UsersManager.getInstance().getUnreadNews();
+        refreshNewsButton();
+
+        // 3. Build the modal
+        BorderedTable box = new BorderedTable();
+        box.pad(20);
+
+        Label title = createBlackLabel("NEWS");
+        title.setFontScale(0.8f);
+        box.add(title).center().padBottom(15).row();
+
+        Table newsTable = new Table();
+        newsTable.top().left(); // we'll center the content via cell alignment
+        populateNewsTable(newsTable, showUnread);
+
+        ScrollPane scrollPane = new ScrollPane(newsTable);
+        scrollPane.setScrollingDisabled(true, false);
+        scrollPane.setFadeScrollBars(true);
+        scrollPane.setOverscroll(false, false);
+        box.add(scrollPane).size(500, 300).padBottom(15).row();
+
+        // Toggle button – text depends on current state
+        TextButton toggleButton = new TextButton(showUnread ? "Show all news" : "Show unread news", skin, "green_small");
+        toggleButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                showUnread = !showUnread;
+                toggleButton.setText(showUnread ? "Show all news" : "Show unread news");
+                newsTable.clearChildren();
+                populateNewsTable(newsTable, showUnread);
+                newsTable.invalidateHierarchy();
+            }
+        });
+
+        TextButton closeButton = new TextButton("Close", skin, "brown");
+        closeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                closeModal();
+            }
+        });
+
+        Table buttonRow = new Table();
+        buttonRow.add(toggleButton).padRight(10);
+        buttonRow.add(closeButton);
+        box.add(buttonRow).center();
+
+        Table wrapper = new Table();
+        wrapper.add(box);
+        showModal(wrapper);
+    }
+
+    private void populateNewsTable(Table newsTable, boolean unreadOnly) {
+        User user = UsersManager.getInstance().getLoggedInUser();
+        if (user == null || user.getNewsManager() == null) {
+            Label noNews = createLabel("No news available.", "FBUSV8C5EI_1", Color.GRAY);
+            noNews.setFontScale(0.6f);
+            newsTable.add(noNews).center().pad(10);
+            return;
+        }
+
+        // The list of messages to display:
+        // If unreadOnly, use the snapshot we took; otherwise, use all messages.
+        ArrayList<String> messagesToShow = new ArrayList<>();
+        if (unreadOnly) {
+            messagesToShow.addAll(unreadMessages);
+        } else {
+            for (News n : user.getNewsManager().getNews()) {
+                messagesToShow.add(n.getMessage());
+            }
+        }
+
+        if (messagesToShow.isEmpty()) {
+            String text = unreadOnly ? "No unread news" : "No news";
+            Label noNews = createLabel(text, "FBUSV8C5EI_1", Color.GRAY);
+            noNews.setFontScale(0.6f);
+            newsTable.add(noNews).center().pad(10);
+            return;
+        }
+
+        // Set a uniform width for the labels to force wrapping, and center them.
+        float labelWidth = 460f;
+        for (String msg : messagesToShow) {
+            Label label = createLabel(msg, "FBUSV8C5EI_1", Color.BLACK);
+            label.setWrap(true);
+            label.setFontScale(0.5f);
+            label.setAlignment(Align.center);  // center text within the label
+            // Add with center alignment so the label itself is centered in the table cell
+            newsTable.add(label).center().pad(4, 6, 4, 6).width(labelWidth).row();
+        }
+    }
+
+    // ================================================================
+    // BaseView methods
+    // ================================================================
 
     @Override
     public void showError(String error) {
