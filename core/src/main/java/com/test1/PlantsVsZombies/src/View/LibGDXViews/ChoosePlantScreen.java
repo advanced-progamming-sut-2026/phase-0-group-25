@@ -33,17 +33,8 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
     private static final String ERROR_BG_ASSET_ID = "IMAGE_UI_GENERIC_TIMER_RIBBON_RED";
     private static final String SUCCESS_BG_ASSET_ID = "IMAGE_UI_GENERIC_VTB";
 
-    // Same box CollectionMenuScreen uses for plant cards, for visual consistency.
-    // TODO: verify against your real TextureBank atlas keys.
     private static final String PLANT_ICON_BOX_ASSET_ID = "IMAGE_UI_PACKETS_SELECTED_PREMIUM";
-    // TODO: placeholder -- point this at your real "boosted" box variant.
-    // Falls back to the normal box (not the plain-color fallback) if this
-    // particular id doesn't resolve, so a missing boosted-box asset never
-    // makes a boosted plant look worse than an un-boosted one.
     private static final String BOOSTED_PLANT_ICON_BOX_ASSET_ID = "IMAGE_UI_PACKETS_BOOST";
-
-    // Pulled from GamePlayScreen's own working usage, so this one is
-    // likely already correct rather than a guess.
     private static final String SUN_ICON_ASSET_ID = "IMAGE_UI_SEASONS_UNCOMPRESSED_PVZ2_SEASONS_UIASSET_ICON_SUN";
 
     private static final float CARD_SIZE = 130f;
@@ -85,34 +76,33 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
         uiTable.setFillParent(true);
 
         // --------------------------------------------------------
-        // Top bar: currency + back
+        // Top bar: currency (far left) + back (far right)
         // --------------------------------------------------------
         Table topBar = new Table();
-        topBar.add(createCurrencyHud()).left().padLeft(15).padTop(15);
-        topBar.add().expandX();
-        topBar.add(createBackButton(MenuType.Game)).right().size(70, 70).padRight(15).padTop(15);
-        uiTable.add(topBar).fillX().top().row();
+        topBar.add(createCurrencyHud()).left().top().padLeft(15).padTop(15);
+        topBar.add().expandX().fillX();
+        topBar.add(createBackButton(MenuType.Game)).right().top().size(70, 70).padRight(15).padTop(15);
+        uiTable.add(topBar).expandX().fillX().top().row();
 
         // --------------------------------------------------------
-        // 8 selected-plant slots, 2 rows of 4. Clicking a filled slot
-        // deselects that plant.
+        // 8 selected-plant slots, 2 rows of 4.
         // --------------------------------------------------------
         topSlotsContainer = new Table();
         uiTable.add(topSlotsContainer).padTop(10).row();
 
         // --------------------------------------------------------
-        // Plant grid (reuses the same box/icon/badge building blocks
-        // CollectionMenuScreen uses, via AbstractScreen)
+        // Plant grid
         // --------------------------------------------------------
         gridContainer = new Table();
         gridContainer.top().left();
 
-        ScrollPane gridScrollPane = new ScrollPane(gridContainer);
+        ScrollPane gridScrollPane = new ScrollPane(gridContainer, skin);
         gridScrollPane.setScrollingDisabled(true, false);
-        gridScrollPane.setFadeScrollBars(true);
+        gridScrollPane.setFadeScrollBars(false);
+        gridScrollPane.setScrollBarPositions(false, true);
         gridScrollPane.setOverscroll(false, false);
 
-        uiTable.add(gridScrollPane).expand().fill().pad(10, 20, 10, 20).row();
+        uiTable.add(gridScrollPane).expandY().fillY().pad(10, 0, 10, 0).row();
 
         // --------------------------------------------------------
         // Bottom bar: Let's Rock
@@ -177,7 +167,6 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
                     }
                 );
             } else {
-                // Empty slot: box only, no icon, not clickable.
                 slot = buildIconBoxButton(PLANT_ICON_BOX_ASSET_ID, null, CARD_SIZE, ICON_INSET, false, null);
             }
 
@@ -239,8 +228,6 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
         );
 
         if (unlocked) {
-            // Top-right corner cluster: level badge (smaller than
-            // Collection's, to make room) + sun cost + sun icon beside it.
             Table corner = new Table();
             corner.setTouchable(Touchable.disabled);
             corner.top().right();
@@ -372,8 +359,6 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
         leftCell.add(createAnimationActor(type.getIdleAnimationPath(), type.getStateName()))
             .size(ANIMATION_BOX_WIDTH, ANIMATION_BOX_HEIGHT);
 
-        // Shared name/level/family/cost/health/tags block (same one
-        // CollectionMenuScreen's detail dialog uses).
         Table rightCell = buildPlantStatsBlock(type, level);
 
         if (level < maxLevel) {
@@ -492,10 +477,6 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
     // ============================================================
     // ChoosePlantMenuView / BaseView
     // ============================================================
-    // Same rationale as CollectionMenuScreen: this screen reads
-    // UsersManager/UserProgress state directly and drives its own
-    // dialogs/refreshes rather than being pushed to by these callbacks.
-    // They exist to satisfy ChoosePlantMenuView for the terminal flow.
 
     @Override
     public void showAllPlants(List<String> plantNames) {}
