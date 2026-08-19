@@ -109,30 +109,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         uiTable.add(mainContainer).expand().center().padBottom(40).row();
 
         bottomTable = new Table();
-
-        TextButton profileButton = new TextButton("Profile", skin, "brown");
-        profileButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                showProfileDialog();
-            }
-        });
-
-        bottomTable.add(profileButton).left().padLeft(20).padRight(10);
-        bottomTable.add(createNewsButtonStack()).left().padRight(20);
-
-        bottomTable.add().expandX();
-
-        TextButton leaderboardButton = new TextButton("Leaderboard", skin, "brown");
-        leaderboardButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                MenuManager.getInstance().changeMenu(MenuType.LeaderBoard);
-            }
-        });
-
-        bottomTable.add(createSettingsButton()).right().padRight(10);
-        bottomTable.add(leaderboardButton).right().padRight(20);
+        rebuildBottomTable();
 
         uiTable.add(bottomTable).fillX().bottom().padBottom(20);
 
@@ -183,7 +160,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
     }
 
     // ============================================================
-    // NEWS BUTTON WITH EXCLAMATION MARK
+    // BOTTOM BAR & NEWS BUTTON
     // ============================================================
 
     private boolean hasUnreadNews() {
@@ -231,7 +208,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
 
         newsStack.add(newsActor);
 
-        // Overlay for exclamation mark (only if unread news exist)
         Table exclamationOverlay = new Table();
         if (hasUnreadNews()) {
             TextureRegion exclRegion = textureBank.region(EXCLAMATION_MARK_ASSET_ID);
@@ -250,9 +226,10 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         return newsStack;
     }
 
-    private void refreshNewsButton() {
+    private void rebuildBottomTable() {
         if (bottomTable == null) return;
         bottomTable.clearChildren();
+
         TextButton profileButton = new TextButton("Profile", skin, "brown");
         profileButton.addListener(new ClickListener() {
             @Override
@@ -260,19 +237,26 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
                 showProfileDialog();
             }
         });
+
         bottomTable.add(profileButton).left().padLeft(20).padRight(10);
         bottomTable.add(createNewsButtonStack()).left().padRight(20);
         bottomTable.add().expandX();
+
         TextButton leaderboardButton = new TextButton("Leaderboard", skin, "brown");
         leaderboardButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                MenuManager.getInstance().changeMenu(MenuType.LeaderBoard);
+                openLeaderBoardDialog();
             }
         });
+
         bottomTable.add(createSettingsButton()).right().padRight(10);
         bottomTable.add(leaderboardButton).right().padRight(20);
         bottomTable.invalidateHierarchy();
+    }
+
+    private void refreshNewsButton() {
+        rebuildBottomTable();
     }
 
     // ============================================================
@@ -309,7 +293,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
     }
 
     // ================================================================
-    // SETTINGS MODAL – WITH SLIDERS FOR DIFFICULTY AND SPEED
+    // SETTINGS MODAL
     // ================================================================
 
     private void showSettingsDialog() {
@@ -326,7 +310,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         Label title = createLabel("SETTINGS", "FBUSV8C5EI_2", Color.BLACK);
         box.add(title).colspan(2).center().padBottom(20).row();
 
-        // ----- Difficulty slider (1-5) -----
+        // Difficulty slider (1-5)
         box.add(createBlackLabel("Difficulty:")).left().padRight(20).row();
         Table diffRow = new Table();
         Slider diffSlider = new Slider(1, 5, 1, false, skin, "default-horizontal");
@@ -342,7 +326,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         diffRow.add(diffValueLabel).width(30);
         box.add(diffRow).left().padBottom(15).row();
 
-        // ----- Speed slider (1-3) -----
+        // Speed slider (1-3)
         box.add(createBlackLabel("Game Speed:")).left().padRight(20).row();
         Table speedRow = new Table();
         Slider speedSlider = new Slider(1, 3, 1, false, skin, "default-horizontal");
@@ -358,7 +342,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         speedRow.add(speedValueLabel).width(30);
         box.add(speedRow).left().padBottom(15).row();
 
-        // ----- Show Tile Grid: On/Off checkboxes -----
+        // Show Tile Grid
         box.add(createBlackLabel("Show Tile Grid:")).left().padRight(20).row();
         Table gridRow = new Table();
         ButtonGroup<CheckBox> gridGroup = new ButtonGroup<>();
@@ -379,7 +363,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         gridRow.add(gridOff).padRight(10);
         box.add(gridRow).left().padBottom(15).row();
 
-        // ----- Debug Mode: On/Off checkboxes -----
+        // Debug Mode
         box.add(createBlackLabel("Debug Mode:")).left().padRight(20).row();
         Table debugRow = new Table();
         ButtonGroup<CheckBox> debugGroup = new ButtonGroup<>();
@@ -400,19 +384,17 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         debugRow.add(debugOff).padRight(10);
         box.add(debugRow).left().padBottom(25).row();
 
-        // ---- Buttons: OK / Cancel ----
+        // Buttons: OK / Cancel
         Table buttonRow = new Table();
         TextButton okButton = createSkinButton("OK", "green", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Save difficulty and speed from sliders
                 int diff = (int) diffSlider.getValue();
                 um.changeDifficulty(String.valueOf(diff));
 
                 int speed = (int) speedSlider.getValue();
                 um.setGameSpeed(speed);
 
-                // Save grid and debug from checkboxes
                 um.setShowTileGrid(gridOn.isChecked());
                 um.setDebugMode(debugOn.isChecked());
 
@@ -443,23 +425,23 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
     }
 
     // ================================================================
-    // NEWS MODAL – UNREAD SNAPSHOT + CENTERED TEXT
+    // NEWS MODAL
     // ================================================================
 
-    private boolean showUnread = true;   // default: show unread news
+    private boolean showUnread = true;
 
     private void showNewsDialog() {
-        // 1. Take a snapshot of unread messages BEFORE marking them read
         User user = UsersManager.getInstance().getLoggedInUser();
         unreadMessages.clear();
         if (user != null) {
-            unreadMessages = UsersManager.getInstance().getUnreadNews();
+            var unread = UsersManager.getInstance().getUnreadNews();
+            if (unread != null) {
+                unreadMessages.addAll(unread);
+            }
         }
 
-        // 2. Mark all unread as read (this updates the user and removes exclamation)
         refreshNewsButton();
 
-        // 3. Build the modal
         BorderedTable box = new BorderedTable();
         box.pad(20);
 
@@ -468,17 +450,21 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         box.add(title).center().padBottom(15).row();
 
         Table newsTable = new Table();
-        newsTable.setBackground(skin.getDrawable("image_ui_mainmenu_mm_settings_tab_10"));
         newsTable.top().left();
         populateNewsTable(newsTable, showUnread);
 
-        ScrollPane scrollPane = new ScrollPane(newsTable);
+        ScrollPane scrollPane = new ScrollPane(newsTable, skin);
         scrollPane.setScrollingDisabled(true, false);
-        scrollPane.setFadeScrollBars(true);
+        scrollPane.setFadeScrollBars(false);
         scrollPane.setOverscroll(false, false);
-        box.add(scrollPane).size(500, 300).padBottom(15).row();
 
-        // Toggle button – text depends on current state
+        Table newsContainer = new Table();
+        newsContainer.setBackground(skin.getDrawable("image_ui_powerups_powerup_cost_10"));
+        newsContainer.pad(8, 12, 8, 12);
+        newsContainer.add(scrollPane).grow();
+
+        box.add(newsContainer).size(500, 300).padBottom(15).row();
+
         TextButton toggleButton = new TextButton(showUnread ? "Show all news" : "Show unread news", skin, "green_small");
         toggleButton.addListener(new ClickListener() {
             @Override
@@ -518,8 +504,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
             return;
         }
 
-        // The list of messages to display:
-        // If unreadOnly, use the snapshot we took; otherwise, use all messages.
         ArrayList<String> messagesToShow;
         if (unreadOnly) {
             messagesToShow = new ArrayList<>(unreadMessages);
@@ -540,7 +524,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
             return;
         }
 
-        // Set a uniform width for the labels to force wrapping, and center them.
         float labelWidth = 460f;
         for (String msg : messagesToShow) {
             Label label = createLabel(msg, "FBUSV8C5EI_1", Color.BLACK);
@@ -565,7 +548,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
 
         UserProgress progress = loggedUser.getUserProgress();
 
-        // Compute total levels passed
         int totalLevels = 0;
         for (Integer level : progress.getUnlockedChaptersAndLevels().values()) {
             totalLevels += level;
@@ -575,10 +557,8 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         box.pad(30);
 
         Label title = createLabel("PROFILE", "FBUSV8C5EI_2", Color.BLACK);
-//        title.setFontScale(0f);
         box.add(title).colspan(3).center().padBottom(20).row();
 
-        // ---- Username ----
         box.add(createBlackLabel("Username:")).left().padRight(10);
         Label usernameLabel = createBlackLabel(loggedUser.getUserName());
         box.add(usernameLabel).left().expandX();
@@ -590,7 +570,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         });
         box.add(editUsernameBtn).right().padLeft(10).padBottom(20).row();
 
-        // ---- Nickname ----
         box.add(createBlackLabel("Nickname:")).left().padRight(10);
         Label nicknameLabel = createBlackLabel(loggedUser.getNickName());
         box.add(nicknameLabel).left().expandX();
@@ -602,7 +581,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         });
         box.add(editNicknameBtn).right().padLeft(10).padBottom(20).row();
 
-        // ---- Total Levels Passed ----
         box.add(createBlackLabel("Total Levels Passed:")).left().padRight(10);
         box.add(createBlackLabel(String.valueOf(totalLevels))).left().padLeft(10).padBottom(20).row();
 
@@ -612,15 +590,9 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         box.add(createBlackLabel("Coins:")).left().padRight(10);
         box.add(createBlackLabel(String.valueOf(loggedUser.getUserProgress().getCoinsCount()))).left().padLeft(10).padBottom(20).row();
 
-
-        // ---- Games Played ----
         box.add(createBlackLabel("Games Played:")).left().padRight(10);
         box.add(createBlackLabel(String.valueOf(progress.getGamesPlayed()))).left().padLeft(10).padBottom(20).row();
 
-        // ---- Coins & Gems are shown in the HUD, but we can show them again if desired ----
-        // (already displayed in top bar)
-
-        // ---- Change Password Button (bottom) ----
         TextButton changePasswordBtn = createSkinButton("Change Password", "green_small", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -629,7 +601,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         });
         box.add(changePasswordBtn).colspan(3).center().padTop(15).row();
 
-        // ---- Close Button ----
         TextButton closeBtn = createSkinButton("Close", "brown", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -641,7 +612,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         showModal(box);
     }
 
-    // ---- Edit Username Sub-dialog ----
     private void showEditUsernameDialog(Label targetLabel) {
         BorderedTable subBox = new BorderedTable();
         subBox.pad(25);
@@ -666,13 +636,9 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
                     showError(error);
                 } else {
                     showToast("Username changed successfully!", "IMAGE_UI_GENERIC_VTB");
-                    // Update the label in the parent dialog
                     targetLabel.setText(newUsername);
-                    // Refresh the top bar to update the badge
                     refreshTopBar();
-                    // Close sub-dialog
-                    closeModal(); // closes the sub-dialog (currently top modal)
-                    // Reopen the profile dialog with updated info
+                    closeModal();
                     showProfileDialog();
                 }
             }
@@ -694,7 +660,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         showModal(subBox);
     }
 
-    // ---- Edit Nickname Sub-dialog ----
     private void showEditNicknameDialog(Label targetLabel) {
         BorderedTable subBox = new BorderedTable();
         subBox.pad(25);
@@ -743,7 +708,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         showModal(subBox);
     }
 
-    // ---- Change Password Sub-dialog ----
     private void showChangePasswordDialog() {
         BorderedTable subBox = new BorderedTable();
         subBox.pad(25);
@@ -775,14 +739,13 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
                 String oldPw = oldPasswordField.getText();
                 String newPw = newPasswordField.getText();
                 String confirmPw = confirmPasswordField.getText();
-                // Validate using UsersManager
                 String error = UsersManager.getInstance().validateAndChangePassword(newPw, confirmPw, oldPw);
                 if (error != null) {
                     showError(error);
                 } else {
                     showToast("Password changed successfully!", "IMAGE_UI_GENERIC_VTB");
-                    closeModal(); // close sub-dialog
-                    showProfileDialog(); // re-open profile to reflect changes (though nothing displayed changes)
+                    closeModal();
+                    showProfileDialog();
                 }
             }
         });
@@ -801,6 +764,16 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         subBox.add(buttonRow).colspan(2).center();
 
         showModal(subBox);
+    }
+
+    private void openLeaderBoardDialog() {
+        LeaderBoardDialog dialog = new LeaderBoardDialog(skin, new Runnable() {
+            @Override
+            public void run() {
+                closeModal();
+            }
+        });
+        showModal(dialog);
     }
 
     // ================================================================
