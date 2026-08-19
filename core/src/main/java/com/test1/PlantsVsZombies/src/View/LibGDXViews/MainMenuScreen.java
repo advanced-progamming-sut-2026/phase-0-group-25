@@ -13,11 +13,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
+import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Enums.MenuType;
 import com.test1.PlantsVsZombies.src.Menu.MainMenu;
 import com.test1.PlantsVsZombies.src.Menu.MenuManager;
 import com.test1.PlantsVsZombies.src.Model.News.News;
 import com.test1.PlantsVsZombies.src.Model.User.User;
+import com.test1.PlantsVsZombies.src.Model.User.UserProgress;
 import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.MainMenuView;
 import pvz.skin.BorderedTable;
@@ -112,7 +114,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         profileButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                MenuManager.getInstance().changeMenu(MenuType.Profile);
+                showProfileDialog();
             }
         });
 
@@ -255,7 +257,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         profileButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                MenuManager.getInstance().changeMenu(MenuType.Profile);
+                showProfileDialog();
             }
         });
         bottomTable.add(profileButton).left().padLeft(20).padRight(10);
@@ -436,7 +438,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         scrollPane.setFadeScrollBars(true);
 
         Table wrapper = new Table();
-        wrapper.add(scrollPane).size(480, 500); // slightly wider for sliders
+        wrapper.add(scrollPane).size(480, 500);
         showModal(wrapper);
     }
 
@@ -547,6 +549,255 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
             label.setAlignment(Align.center);
             newsTable.add(label).center().pad(4, 6, 4, 6).width(labelWidth).row();
         }
+    }
+
+    // ================================================================
+    // PROFILE MODAL
+    // ================================================================
+
+    private void showProfileDialog() {
+        UsersManager um = UsersManager.getInstance();
+        User loggedUser = um.getLoggedInUser();
+        if (loggedUser == null) {
+            showError("No user logged in.");
+            return;
+        }
+
+        UserProgress progress = loggedUser.getUserProgress();
+
+        // Compute total levels passed
+        int totalLevels = 0;
+        for (Integer level : progress.getUnlockedChaptersAndLevels().values()) {
+            totalLevels += level;
+        }
+
+        BorderedTable box = new BorderedTable();
+        box.pad(30);
+
+        Label title = createLabel("PROFILE", "FBUSV8C5EI_2", Color.BLACK);
+//        title.setFontScale(0f);
+        box.add(title).colspan(3).center().padBottom(20).row();
+
+        // ---- Username ----
+        box.add(createBlackLabel("Username:")).left().padRight(10);
+        Label usernameLabel = createBlackLabel(loggedUser.getUserName());
+        box.add(usernameLabel).left().expandX();
+        TextButton editUsernameBtn = createSkinButton("Edit", "green_small", new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                showEditUsernameDialog(usernameLabel);
+            }
+        });
+        box.add(editUsernameBtn).right().padLeft(10).row();
+
+        // ---- Nickname ----
+        box.add(createBlackLabel("Nickname:")).left().padRight(10);
+        Label nicknameLabel = createBlackLabel(loggedUser.getNickName());
+        box.add(nicknameLabel).left().expandX();
+        TextButton editNicknameBtn = createSkinButton("Edit", "green_small", new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                showEditNicknameDialog(nicknameLabel);
+            }
+        });
+        box.add(editNicknameBtn).right().padLeft(10).row();
+
+        // ---- Total Levels Passed ----
+        box.add(createBlackLabel("Total Levels Passed:")).left().padRight(10).colspan(2);
+        box.add(createBlackLabel(String.valueOf(totalLevels))).left().padLeft(10).row();
+
+        box.add(createBlackLabel("Gems:")).left().padRight(10).colspan(2);
+        box.add(createBlackLabel(String.valueOf(loggedUser.getUserProgress().getGemsCount()))).left().padLeft(10).row();
+
+        box.add(createBlackLabel("Coins:")).left().padRight(10).colspan(2);
+        box.add(createBlackLabel(String.valueOf(loggedUser.getUserProgress().getCoinsCount()))).left().padLeft(10).row();
+
+
+        // ---- Games Played ----
+        box.add(createBlackLabel("Games Played:")).left().padRight(10).colspan(2);
+        box.add(createBlackLabel(String.valueOf(progress.getGamesPlayed()))).left().padLeft(10).row();
+
+        // ---- Coins & Gems are shown in the HUD, but we can show them again if desired ----
+        // (already displayed in top bar)
+
+        // ---- Change Password Button (bottom) ----
+        TextButton changePasswordBtn = createSkinButton("Change Password", "green_small", new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                showChangePasswordDialog();
+            }
+        });
+        box.add(changePasswordBtn).colspan(3).center().padTop(15).row();
+
+        // ---- Close Button ----
+        TextButton closeBtn = createSkinButton("Close", "brown", new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                closeModal();
+            }
+        });
+        box.add(closeBtn).colspan(3).center().padTop(10);
+
+        showModal(box);
+    }
+
+    // ---- Edit Username Sub-dialog ----
+    private void showEditUsernameDialog(Label targetLabel) {
+        BorderedTable subBox = new BorderedTable();
+        subBox.pad(25);
+
+        Label title = createBlackLabel("Change Username");
+        subBox.add(title).colspan(2).center().padBottom(15).row();
+
+        subBox.add(createBlackLabel("New Username:")).right().padRight(10);
+        TextField newUsernameField = new TextField("", skin);
+        subBox.add(newUsernameField).width(200).padBottom(15).row();
+
+        TextButton okBtn = createSkinButton("OK", "green", new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                String newUsername = newUsernameField.getText().trim();
+                if (newUsername.isEmpty()) {
+                    showError("Username cannot be empty.");
+                    return;
+                }
+                String error = UsersManager.getInstance().validateAndChangeUsername(newUsername);
+                if (error != null) {
+                    showError(error);
+                } else {
+                    showToast("Username changed successfully!", "IMAGE_UI_GENERIC_VTB");
+                    // Update the label in the parent dialog
+                    targetLabel.setText(newUsername);
+                    // Refresh the top bar to update the badge
+                    refreshTopBar();
+                    // Close sub-dialog
+                    closeModal(); // closes the sub-dialog (currently top modal)
+                    // Reopen the profile dialog with updated info
+                    showProfileDialog();
+                }
+            }
+        });
+
+        TextButton cancelBtn = createSkinButton("Cancel", "brown", new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                closeModal();
+            }
+        });
+
+        Table buttonRow = new Table();
+        buttonRow.add(okBtn).padRight(10);
+        buttonRow.add(cancelBtn);
+        subBox.add(buttonRow).colspan(2).center();
+
+        showModal(subBox);
+    }
+
+    // ---- Edit Nickname Sub-dialog ----
+    private void showEditNicknameDialog(Label targetLabel) {
+        BorderedTable subBox = new BorderedTable();
+        subBox.pad(25);
+
+        Label title = createBlackLabel("Change Nickname");
+        subBox.add(title).colspan(2).center().padBottom(15).row();
+
+        subBox.add(createBlackLabel("New Nickname:")).right().padRight(10);
+        TextField newNicknameField = new TextField("", skin);
+        subBox.add(newNicknameField).width(200).padBottom(15).row();
+
+        TextButton okBtn = createSkinButton("OK", "green", new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                String newNickname = newNicknameField.getText().trim();
+                if (newNickname.isEmpty()) {
+                    showError("Nickname cannot be empty.");
+                    return;
+                }
+                String error = UsersManager.getInstance().validateAndChangeNickname(newNickname);
+                if (error != null) {
+                    showError(error);
+                } else {
+                    showToast("Nickname changed successfully!", "IMAGE_UI_GENERIC_VTB");
+                    targetLabel.setText(newNickname);
+                    refreshTopBar();
+                    closeModal();
+                    showProfileDialog();
+                }
+            }
+        });
+
+        TextButton cancelBtn = createSkinButton("Cancel", "brown", new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                closeModal();
+            }
+        });
+
+        Table buttonRow = new Table();
+        buttonRow.add(okBtn).padRight(10);
+        buttonRow.add(cancelBtn);
+        subBox.add(buttonRow).colspan(2).center();
+
+        showModal(subBox);
+    }
+
+    // ---- Change Password Sub-dialog ----
+    private void showChangePasswordDialog() {
+        BorderedTable subBox = new BorderedTable();
+        subBox.pad(25);
+
+        Label title = createBlackLabel("Change Password");
+        subBox.add(title).colspan(2).center().padBottom(15).row();
+
+        subBox.add(createBlackLabel("Old Password:")).right().padRight(10);
+        TextField oldPasswordField = new TextField("", skin);
+        oldPasswordField.setPasswordMode(true);
+        oldPasswordField.setPasswordCharacter('*');
+        subBox.add(oldPasswordField).width(200).padBottom(10).row();
+
+        subBox.add(createBlackLabel("New Password:")).right().padRight(10);
+        TextField newPasswordField = new TextField("", skin);
+        newPasswordField.setPasswordMode(true);
+        newPasswordField.setPasswordCharacter('*');
+        subBox.add(newPasswordField).width(200).padBottom(10).row();
+
+        subBox.add(createBlackLabel("Confirm Password:")).right().padRight(10);
+        TextField confirmPasswordField = new TextField("", skin);
+        confirmPasswordField.setPasswordMode(true);
+        confirmPasswordField.setPasswordCharacter('*');
+        subBox.add(confirmPasswordField).width(200).padBottom(20).row();
+
+        TextButton okBtn = createSkinButton("OK", "green", new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                String oldPw = oldPasswordField.getText();
+                String newPw = newPasswordField.getText();
+                String confirmPw = confirmPasswordField.getText();
+                // Validate using UsersManager
+                String error = UsersManager.getInstance().validateAndChangePassword(newPw, confirmPw, oldPw);
+                if (error != null) {
+                    showError(error);
+                } else {
+                    showToast("Password changed successfully!", "IMAGE_UI_GENERIC_VTB");
+                    closeModal(); // close sub-dialog
+                    showProfileDialog(); // re-open profile to reflect changes (though nothing displayed changes)
+                }
+            }
+        });
+
+        TextButton cancelBtn = createSkinButton("Cancel", "brown", new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                closeModal();
+            }
+        });
+
+        Table buttonRow = new Table();
+        buttonRow.add(okBtn).padRight(10);
+        buttonRow.add(cancelBtn);
+        subBox.add(buttonRow).colspan(2).center();
+
+        showModal(subBox);
     }
 
     // ================================================================
