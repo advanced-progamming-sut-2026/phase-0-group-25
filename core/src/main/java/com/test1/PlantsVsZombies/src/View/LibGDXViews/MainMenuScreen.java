@@ -588,7 +588,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
                 showEditUsernameDialog(usernameLabel);
             }
         });
-        box.add(editUsernameBtn).right().padLeft(10).row();
+        box.add(editUsernameBtn).right().padLeft(10).padBottom(20).row();
 
         // ---- Nickname ----
         box.add(createBlackLabel("Nickname:")).left().padRight(10);
@@ -600,22 +600,22 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
                 showEditNicknameDialog(nicknameLabel);
             }
         });
-        box.add(editNicknameBtn).right().padLeft(10).row();
+        box.add(editNicknameBtn).right().padLeft(10).padBottom(20).row();
 
         // ---- Total Levels Passed ----
-        box.add(createBlackLabel("Total Levels Passed:")).left().padRight(10).colspan(2);
-        box.add(createBlackLabel(String.valueOf(totalLevels))).left().padLeft(10).row();
+        box.add(createBlackLabel("Total Levels Passed:")).left().padRight(10);
+        box.add(createBlackLabel(String.valueOf(totalLevels))).left().padLeft(10).padBottom(20).row();
 
-        box.add(createBlackLabel("Gems:")).left().padRight(10).colspan(2);
-        box.add(createBlackLabel(String.valueOf(loggedUser.getUserProgress().getGemsCount()))).left().padLeft(10).row();
+        box.add(createBlackLabel("Gems:")).left().padRight(10);
+        box.add(createBlackLabel(String.valueOf(loggedUser.getUserProgress().getGemsCount()))).left().padLeft(10).padBottom(20).row();
 
-        box.add(createBlackLabel("Coins:")).left().padRight(10).colspan(2);
-        box.add(createBlackLabel(String.valueOf(loggedUser.getUserProgress().getCoinsCount()))).left().padLeft(10).row();
+        box.add(createBlackLabel("Coins:")).left().padRight(10);
+        box.add(createBlackLabel(String.valueOf(loggedUser.getUserProgress().getCoinsCount()))).left().padLeft(10).padBottom(20).row();
 
 
         // ---- Games Played ----
-        box.add(createBlackLabel("Games Played:")).left().padRight(10).colspan(2);
-        box.add(createBlackLabel(String.valueOf(progress.getGamesPlayed()))).left().padLeft(10).row();
+        box.add(createBlackLabel("Games Played:")).left().padRight(10);
+        box.add(createBlackLabel(String.valueOf(progress.getGamesPlayed()))).left().padLeft(10).padBottom(20).row();
 
         // ---- Coins & Gems are shown in the HUD, but we can show them again if desired ----
         // (already displayed in top bar)
@@ -682,6 +682,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 closeModal();
+                showProfileDialog();
             }
         });
 
@@ -730,6 +731,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 closeModal();
+                showProfileDialog();
             }
         });
 
@@ -789,6 +791,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 closeModal();
+                showProfileDialog();
             }
         });
 
