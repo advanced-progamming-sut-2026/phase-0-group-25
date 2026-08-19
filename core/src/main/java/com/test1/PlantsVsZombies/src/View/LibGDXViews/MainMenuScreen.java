@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -306,7 +307,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
     }
 
     // ================================================================
-    // SETTINGS MODAL
+    // SETTINGS MODAL – WITH SLIDERS FOR DIFFICULTY AND SPEED
     // ================================================================
 
     private void showSettingsDialog() {
@@ -323,38 +324,39 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         Label title = createLabel("SETTINGS", "FBUSV8C5EI_2", Color.BLACK);
         box.add(title).colspan(2).center().padBottom(20).row();
 
+        // ----- Difficulty slider (1-5) -----
         box.add(createBlackLabel("Difficulty:")).left().padRight(20).row();
-        Table difficultyRow = new Table();
-        ButtonGroup<CheckBox> diffGroup = new ButtonGroup<>();
-        diffGroup.setMinCheckCount(1);
-        diffGroup.setMaxCheckCount(1);
+        Table diffRow = new Table();
+        Slider diffSlider = new Slider(1, 5, 1, false, skin, "default-horizontal");
+        diffSlider.setValue(loggedUser.getUserProgress().getGameDifficulty());
+        Label diffValueLabel = createBlackLabel(String.valueOf((int) diffSlider.getValue()));
+        diffSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                diffValueLabel.setText(String.valueOf((int) diffSlider.getValue()));
+            }
+        });
+        diffRow.add(diffSlider).width(200).padRight(10);
+        diffRow.add(diffValueLabel).width(30);
+        box.add(diffRow).left().padBottom(15).row();
 
-        int currentDiff = loggedUser.getUserProgress().getGameDifficulty();
-        for (int i = 1; i <= 5; i++) {
-            CheckBox cb = new CheckBox(" " + i, skin);
-            cb.getLabel().setColor(Color.BLACK);
-            if (i == currentDiff) cb.setChecked(true);
-            diffGroup.add(cb);
-            difficultyRow.add(cb).padRight(10);
-        }
-        box.add(difficultyRow).left().padBottom(15).row();
-
+        // ----- Speed slider (1-3) -----
         box.add(createBlackLabel("Game Speed:")).left().padRight(20).row();
         Table speedRow = new Table();
-        ButtonGroup<CheckBox> speedGroup = new ButtonGroup<>();
-        speedGroup.setMinCheckCount(1);
-        speedGroup.setMaxCheckCount(1);
-
-        int currentSpeed = loggedUser.getUserProgress().getGameSpeed();
-        for (int i = 1; i <= 3; i++) {
-            CheckBox cb = new CheckBox(" " + i, skin);
-            cb.getLabel().setColor(Color.BLACK);
-            if (i == currentSpeed) cb.setChecked(true);
-            speedGroup.add(cb);
-            speedRow.add(cb).padRight(10);
-        }
+        Slider speedSlider = new Slider(1, 3, 1, false, skin, "default-horizontal");
+        speedSlider.setValue(loggedUser.getUserProgress().getGameSpeed());
+        Label speedValueLabel = createBlackLabel(String.valueOf((int) speedSlider.getValue()));
+        speedSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                speedValueLabel.setText(String.valueOf((int) speedSlider.getValue()));
+            }
+        });
+        speedRow.add(speedSlider).width(200).padRight(10);
+        speedRow.add(speedValueLabel).width(30);
         box.add(speedRow).left().padBottom(15).row();
 
+        // ----- Show Tile Grid: On/Off checkboxes -----
         box.add(createBlackLabel("Show Tile Grid:")).left().padRight(20).row();
         Table gridRow = new Table();
         ButtonGroup<CheckBox> gridGroup = new ButtonGroup<>();
@@ -375,6 +377,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         gridRow.add(gridOff).padRight(10);
         box.add(gridRow).left().padBottom(15).row();
 
+        // ----- Debug Mode: On/Off checkboxes -----
         box.add(createBlackLabel("Debug Mode:")).left().padRight(20).row();
         Table debugRow = new Table();
         ButtonGroup<CheckBox> debugGroup = new ButtonGroup<>();
@@ -395,28 +398,19 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         debugRow.add(debugOff).padRight(10);
         box.add(debugRow).left().padBottom(25).row();
 
+        // ---- Buttons: OK / Cancel ----
         Table buttonRow = new Table();
         TextButton okButton = createSkinButton("OK", "green", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                int diff = 1;
-                for (CheckBox cb : diffGroup.getButtons()) {
-                    if (cb.isChecked()) {
-                        diff = Integer.parseInt(cb.getText().toString().trim());
-                        break;
-                    }
-                }
+                // Save difficulty and speed from sliders
+                int diff = (int) diffSlider.getValue();
                 um.changeDifficulty(String.valueOf(diff));
 
-                int speed = 1;
-                for (CheckBox cb : speedGroup.getButtons()) {
-                    if (cb.isChecked()) {
-                        speed = Integer.parseInt(cb.getText().toString().trim());
-                        break;
-                    }
-                }
+                int speed = (int) speedSlider.getValue();
                 um.setGameSpeed(speed);
 
+                // Save grid and debug from checkboxes
                 um.setShowTileGrid(gridOn.isChecked());
                 um.setDebugMode(debugOn.isChecked());
 
@@ -442,12 +436,12 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         scrollPane.setFadeScrollBars(true);
 
         Table wrapper = new Table();
-        wrapper.add(scrollPane).size(450, 500);
+        wrapper.add(scrollPane).size(480, 500); // slightly wider for sliders
         showModal(wrapper);
     }
 
     // ================================================================
-    // NEWS MODAL – CORRECT UNREAD SNAPSHOT + CENTERED TEXT
+    // NEWS MODAL – UNREAD SNAPSHOT + CENTERED TEXT
     // ================================================================
 
     private boolean showUnread = true;   // default: show unread news
@@ -461,7 +455,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         }
 
         // 2. Mark all unread as read (this updates the user and removes exclamation)
-//        UsersManager.getInstance().getUnreadNews();
         refreshNewsButton();
 
         // 3. Build the modal
@@ -474,7 +467,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
 
         Table newsTable = new Table();
         newsTable.setBackground(skin.getDrawable("image_ui_mainmenu_mm_settings_tab_10"));
-        newsTable.top().left(); // we'll center the content via cell alignment
+        newsTable.top().left();
         populateNewsTable(newsTable, showUnread);
 
         ScrollPane scrollPane = new ScrollPane(newsTable);
@@ -513,6 +506,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         wrapper.add(box);
         showModal(wrapper);
     }
+
     private void populateNewsTable(Table newsTable, boolean unreadOnly) {
         User user = UsersManager.getInstance().getLoggedInUser();
         if (user == null || user.getNewsManager() == null) {
@@ -530,6 +524,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         } else {
             messagesToShow = UsersManager.getInstance().getAllNews();
         }
+        messagesToShow = new ArrayList<>(messagesToShow.reversed());
 
         if (messagesToShow.isEmpty()) {
             String text = unreadOnly ? "No unread news" : "No news";
@@ -549,8 +544,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
             Label label = createLabel(msg, "FBUSV8C5EI_1", Color.BLACK);
             label.setWrap(true);
             label.setFontScale(0.5f);
-            label.setAlignment(Align.center);  // center text within the label
-            // Add with center alignment so the label itself is centered in the table cell
+            label.setAlignment(Align.center);
             newsTable.add(label).center().pad(4, 6, 4, 6).width(labelWidth).row();
         }
     }
