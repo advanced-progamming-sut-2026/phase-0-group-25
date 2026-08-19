@@ -320,7 +320,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
             return;
         }
 
-        Label title = createBlackLabel("SETTINGS");
+        Label title = createLabel("SETTINGS", "FBUSV8C5EI_2", Color.BLACK);
         title.setFontScale(0.8f);
         box.add(title).colspan(2).center().padBottom(20).row();
 
@@ -457,27 +457,24 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         // 1. Take a snapshot of unread messages BEFORE marking them read
         User user = UsersManager.getInstance().getLoggedInUser();
         unreadMessages.clear();
-        if (user != null && user.getNewsManager() != null) {
-            for (News n : user.getNewsManager().getNews()) {
-                if (!n.isRead()) {
-                    unreadMessages.add(n.getMessage());
-                }
-            }
+        if (user != null) {
+            unreadMessages = UsersManager.getInstance().getUnreadNews();
         }
 
         // 2. Mark all unread as read (this updates the user and removes exclamation)
-        UsersManager.getInstance().getUnreadNews();
+//        UsersManager.getInstance().getUnreadNews();
         refreshNewsButton();
 
         // 3. Build the modal
         BorderedTable box = new BorderedTable();
         box.pad(20);
 
-        Label title = createBlackLabel("NEWS");
+        Label title = createLabel("NEWS", "FBUSV8C5EI_2", Color.BLACK);
         title.setFontScale(0.8f);
         box.add(title).center().padBottom(15).row();
 
         Table newsTable = new Table();
+        newsTable.setBackground(skin.getDrawable("image_ui_mainmenu_mm_settings_tab_10"));
         newsTable.top().left(); // we'll center the content via cell alignment
         populateNewsTable(newsTable, showUnread);
 
@@ -517,32 +514,33 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         wrapper.add(box);
         showModal(wrapper);
     }
-
     private void populateNewsTable(Table newsTable, boolean unreadOnly) {
         User user = UsersManager.getInstance().getLoggedInUser();
         if (user == null || user.getNewsManager() == null) {
             Label noNews = createLabel("No news available.", "FBUSV8C5EI_1", Color.GRAY);
             noNews.setFontScale(0.6f);
-            newsTable.add(noNews).center().pad(10);
+            newsTable.add(noNews).expandX().center().pad(10);
             return;
         }
 
         // The list of messages to display:
         // If unreadOnly, use the snapshot we took; otherwise, use all messages.
-        ArrayList<String> messagesToShow = new ArrayList<>();
+        ArrayList<String> messagesToShow;
         if (unreadOnly) {
-            messagesToShow.addAll(unreadMessages);
+            messagesToShow = new ArrayList<>(unreadMessages);
         } else {
-            for (News n : user.getNewsManager().getNews()) {
-                messagesToShow.add(n.getMessage());
-            }
+            messagesToShow = UsersManager.getInstance().getAllNews();
         }
 
         if (messagesToShow.isEmpty()) {
             String text = unreadOnly ? "No unread news" : "No news";
             Label noNews = createLabel(text, "FBUSV8C5EI_1", Color.GRAY);
             noNews.setFontScale(0.6f);
-            newsTable.add(noNews).center().pad(10);
+            newsTable.add(noNews)
+                .expandX()
+                .top()
+                .center()
+                .pad(10);
             return;
         }
 
