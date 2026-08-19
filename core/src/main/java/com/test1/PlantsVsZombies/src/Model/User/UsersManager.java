@@ -148,7 +148,7 @@ public class UsersManager {
         return null;
     }
 
-    public String validateAndChangePassword(String newPassword, String oldPassword) {
+    public String validateAndChangePassword(String newPassword, String newPasswordConfirmed, String oldPassword) {
         if (loggedInUser == null) return "No logged in user.";
         if (!loggedInUser.getPassword().equals(oldPassword))
             return "Invalid password: Old password does not match.";
@@ -156,6 +156,8 @@ public class UsersManager {
             return "you are already using this password.";
         if (newPassword.contains(" "))
             return "Weak password: Spaces are not allowed within password strings.";
+        if(!newPassword.equals(newPasswordConfirmed))
+            return "Password and its confirmation do not match.";
         if (!PASSWORD_COMPLEXITY_REGEX.matcher(newPassword).matches())
             return "Weak password: Must be at least 8 characters long and include numbers, " +
                 "uppercase/lowercase letters, and special characters.";
@@ -398,6 +400,10 @@ public class UsersManager {
     public void handleLevelWin(ChapterType chapterType, int currentLevel,
                                ArrayList<PlantType> plantRewards) {
         progressManager.handleLevelWin(chapterType, currentLevel, plantRewards);
+    }
+
+    public void addGamesPlayed(){
+        progressManager.addGamesPlayed();
     }
 
     public ArrayList<String> getUnreadNews() {

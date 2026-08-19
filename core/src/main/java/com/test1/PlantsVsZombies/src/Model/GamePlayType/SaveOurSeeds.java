@@ -10,6 +10,7 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.ZombieFactory;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 import com.test1.PlantsVsZombies.src.Model.User.User;
+import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.Model.Wave.FinalWave;
 import com.test1.PlantsVsZombies.src.Model.Wave.Wave;
 
@@ -141,6 +142,7 @@ public class SaveOurSeeds extends GamePlay {
         if (!canSaved()) {
             System.out.println("You couldn't save your important plant!!");
             System.out.println("The zombie ate your brain; LOSER!!!");
+            UsersManager.getInstance().addGamesPlayed();
             this.isPaused = true;
         }
 

@@ -44,8 +44,8 @@ public class ProfileMenu extends Menu {
         profileMenuView.showEmailChangeSuccess();
     }
 
-    private void changePassword(String newPassword, String oldPassword) {
-        String error = UsersManager.getInstance().validateAndChangePassword(newPassword, oldPassword);
+    private void changePassword(String newPassword, String newPasswordConfirmed, String oldPassword) {
+        String error = UsersManager.getInstance().validateAndChangePassword(newPassword, newPasswordConfirmed,oldPassword);
         if (error != null) {
             getView().showError(error);
             return;
@@ -69,38 +69,7 @@ public class ProfileMenu extends Menu {
         profileMenuView.showInfo(username, nickname, totalLevelsPassed, gemsCount, coinsCount);
     }
 
-    public void handleSpecificCommands(String input) {
-        Matcher matcher;
 
-        if ((matcher = getMatcher(input, Command.ChangeUsername)) != null) {
-            changeUsername(matcher.group(1));
-            return;
-        }
-
-        if ((matcher = getMatcher(input, Command.ChangeNickname)) != null) {
-            changeNickname(matcher.group(1));
-            return;
-        }
-
-        if ((matcher = getMatcher(input, Command.ChangeEmail)) != null) {
-            changeEmail(matcher.group(1));
-            return;
-        }
-
-        if ((matcher = getMatcher(input, Command.ChangePassword)) != null) {
-            String newPassword = matcher.group(1);
-            String oldPassword = matcher.group(2);
-            changePassword(newPassword, oldPassword);
-            return;
-        }
-
-        if ((matcher = getMatcher(input, Command.ShowProfileInfo)) != null) {
-            showProfileInfo();
-            return;
-        }
-
-        getView().showError("Invalid command format for this menu state.");
-    }
 
     @Override
     public BaseView getView() {

@@ -237,8 +237,8 @@ public class UserProgress {
     public int getGamesPlayed() {
         return gamesPlayed;
     }
-    void setGamesPlayed(int gamesPlayed) {
-        this.gamesPlayed = gamesPlayed;
+    void addGamesPlayed() {
+        this.gamesPlayed++;
     }
     public ArrayList<ZombieType> getUnlockedZombies() {
         return unlockedZombies;

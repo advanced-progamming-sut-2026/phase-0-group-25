@@ -412,7 +412,12 @@ public class UserProgressManager {
             for (PlantType pt : plantRewards) unlockPlant(pt);
         }
 
-        progress.setGamesPlayed(progress.getGamesPlayed() + 1);
+        progress.addGamesPlayed();
+        save();
+    }
+
+    public void addGamesPlayed(){
+        getLoggedInUser().getUserProgress().addGamesPlayed();
         save();
     }
 

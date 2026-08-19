@@ -7,6 +7,7 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Dynamite
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 import com.test1.PlantsVsZombies.src.Model.User.User;
+import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.Model.Wave.FinalWave;
 import com.test1.PlantsVsZombies.src.Model.Wave.Wave;
 
@@ -172,6 +173,7 @@ public class Simple extends GamePlay {
                     }
                 } else if (currentMower.isDone() && zX <= 490) {
                     System.out.println("The zombie ate your brain; LOSER!!!");
+                    UsersManager.getInstance().addGamesPlayed();
                     this.isPaused = true;
                 }
             }
