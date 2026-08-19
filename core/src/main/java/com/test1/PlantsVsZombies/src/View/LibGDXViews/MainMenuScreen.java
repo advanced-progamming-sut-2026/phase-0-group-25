@@ -321,7 +321,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         }
 
         Label title = createLabel("SETTINGS", "FBUSV8C5EI_2", Color.BLACK);
-        title.setFontScale(0.8f);
         box.add(title).colspan(2).center().padBottom(20).row();
 
         box.add(createBlackLabel("Difficulty:")).left().padRight(20).row();
