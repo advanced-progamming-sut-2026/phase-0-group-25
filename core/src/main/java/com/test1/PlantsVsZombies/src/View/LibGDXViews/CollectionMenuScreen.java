@@ -207,7 +207,7 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
         Stack contentStack = buildIconBoxButton(
             PLANT_ICON_BOX_ASSET_ID,
             type.getIconAssetId(),
-            4f,
+            5.5f,
             !unlocked,
             new ClickListener() {
                 @Override
