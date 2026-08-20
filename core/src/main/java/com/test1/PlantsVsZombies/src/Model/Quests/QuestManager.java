@@ -128,7 +128,7 @@ public class QuestManager {
 
         LocalDate today = LocalDate.now();
         if (currentUser.getUserProgress().getLastDailyReset() == null ||
-                !currentUser.getUserProgress().getLastDailyReset().equals(today)) {
+            !currentUser.getUserProgress().getLastDailyReset().equals(today)) {
             resetDailyQuests();
             UsersManager.getInstance().setLastDailyResetForCurrentUser(today);
         }
@@ -149,12 +149,6 @@ public class QuestManager {
     }
 
     private void onQuestCompleted(Quest quest) {
-        UsersManager um = UsersManager.getInstance();
-        if (quest.getCategory() == QuestCategory.DAILY) {
-            um.incrementDailyQuestsCompleted();
-        } else {
-            um.incrementNonDailyQuestsCompleted();
-        }
         News news = new News("Quest completed: " + quest.getName() + "! Claim your rewards in Travel Log.");
         currentUser.getNewsManager().addNews(news);
         quest.setCompleted(true);
@@ -208,6 +202,12 @@ public class QuestManager {
                 q.setClaimed(true);
                 applyReward(q.getReward());
 
+                UsersManager um = UsersManager.getInstance();
+                if (q.getCategory() == QuestCategory.DAILY) {
+                    um.incrementDailyQuestsCompleted();
+                } else {
+                    um.incrementNonDailyQuestsCompleted();
+                }
 
                 if (!q.isDailyReset()) {
                     q.randomizeVariable();
@@ -223,27 +223,27 @@ public class QuestManager {
 
     public List<Quest> getActiveQuests() {
         List<Quest> activeQuests = allQuests.stream()
-                .filter(q -> !q.isCompleted() && !q.isClaimed())
-                .sorted(Comparator.comparing(Quest::getPriority))
-                .collect(Collectors.toList());
+            .filter(q -> !q.isCompleted() && !q.isClaimed())
+            .sorted(Comparator.comparing(Quest::getPriority))
+            .collect(Collectors.toList());
         Collections.reverse(activeQuests);
         return activeQuests;
     }
 
     public List<Quest> getCompletedQuests() {
         List<Quest> completedQuests = allQuests.stream()
-                .filter(q -> q.isCompleted() && !q.isClaimed())
-                .sorted(Comparator.comparing(Quest::getPriority))
-                .collect(Collectors.toList());
+            .filter(q -> q.isCompleted() && !q.isClaimed())
+            .sorted(Comparator.comparing(Quest::getPriority))
+            .collect(Collectors.toList());
         Collections.reverse(completedQuests);
         return completedQuests;
     }
 
     public List<Quest> getQuestsByPage(QuestPage page) {
         List<Quest> pageQuests = allQuests.stream()
-                .filter(q -> q.getPage() == page)
-                .sorted(Comparator.comparing(Quest::getPriority))
-                .collect(Collectors.toList());
+            .filter(q -> q.getPage() == page)
+            .sorted(Comparator.comparing(Quest::getPriority))
+            .collect(Collectors.toList());
         Collections.reverse(pageQuests);
         return pageQuests;
     }

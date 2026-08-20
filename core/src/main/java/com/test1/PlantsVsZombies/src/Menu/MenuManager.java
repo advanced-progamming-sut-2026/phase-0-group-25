@@ -76,7 +76,10 @@ public class MenuManager {
         menusAndTheirNames.put(MenuType.Quest, new QuestMenu(new QuestMenuTerminalView()));
         menusAndTheirNames.put(MenuType.Setting, new SettingMenu(new SettingMenuTerminalView()));
         menusAndTheirNames.put(MenuType.Shop, new ShopMenu(new ShopMenuTerminalView()));
-        menusAndTheirNames.put(MenuType.TravelLog, new TravelLogMenu(new TravelLogMenuTerminalView()));
+        TravelLogScreen travelLogScreen = new TravelLogScreen();
+        TravelLogMenu travelLogMenu = new TravelLogMenu(travelLogScreen);
+        travelLogScreen.setMenuController(travelLogMenu);
+        menusAndTheirNames.put(MenuType.TravelLog, travelLogMenu);
         menusAndTheirNames.put(MenuType.Network, new NetworkMenu(new NetworkMenuTerminalView()));
         ChoosePlantScreen choosePlantScreen = new ChoosePlantScreen();
         ChoosePlantMenu choosePlantMenu = new ChoosePlantMenu(
