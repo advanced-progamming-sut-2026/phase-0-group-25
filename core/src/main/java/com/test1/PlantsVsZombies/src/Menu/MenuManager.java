@@ -48,8 +48,13 @@ public class MenuManager {
 
         menusAndTheirNames.put(MenuType.GamePlay, new GamePlayMenu());
         menusAndTheirNames.put(MenuType.GemWallet, new GemWalletMenu(new GemWalletMenuTerminalView()));
-        menusAndTheirNames.put(MenuType.GreenHouse, new GreenHouseMenu(new GreenHouseMenuTerminalView()));
         menusAndTheirNames.put(MenuType.LeaderBoard, new LeaderBoardMenu(new LeaderBoardMenuTerminalView()));
+
+        GreenHouseScreen greenHouseScreen = new GreenHouseScreen();
+        GreenHouseMenu greenHouseMenu = new GreenHouseMenu(greenHouseScreen);
+        greenHouseScreen.setMenuController(greenHouseMenu);
+        menusAndTheirNames.put(MenuType.GreenHouse, greenHouseMenu);
+
 
         SignUpMenuScreen signUpMenuScreen = new SignUpMenuScreen();
         SignUpMenu signUpMenu = new SignUpMenu(signUpMenuScreen);

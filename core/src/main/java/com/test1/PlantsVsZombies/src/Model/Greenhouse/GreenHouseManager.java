@@ -1,3 +1,4 @@
+// file: core/src/main/java/com/test1/PlantsVsZombies/src/Model/Greenhouse/GreenHouseManager.java
 package com.test1.PlantsVsZombies.src.Model.Greenhouse;
 
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
@@ -8,8 +9,10 @@ import java.util.Random;
 import java.util.Set;
 
 public class GreenHouseManager {
+
     private static GreenHouseManager instance;
     private final UsersManager usersManager;
+    private static final int UNLOCK_POT_COST = 50; // Gems cost to unlock a pot
 
     private GreenHouseManager() {
         usersManager = UsersManager.getInstance();
@@ -22,14 +25,12 @@ public class GreenHouseManager {
         return instance;
     }
 
-
     private String getUserError() {
         if (usersManager.getLoggedInUser() == null) {
             return "No logged in user.";
         }
         return null;
     }
-
 
     public String getGreenhouseStatus() {
         String error = getUserError();
@@ -41,9 +42,10 @@ public class GreenHouseManager {
 
         StringBuilder sb = new StringBuilder();
         sb.append("=== Greenhouse ===\n");
-        sb.append("(Rows 1-4, Columns 1-5)\n");
-        for (int y = 0; y < 4; y++) {
-            for (int x = 0; x < 5; x++) {
+        sb.append("(Rows 1-3, Columns 1-4)\n");
+
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 4; x++) {
                 if (!unlocked[y][x]) {
                     sb.append("[LOCKED] ");
                     continue;
@@ -56,7 +58,7 @@ public class GreenHouseManager {
                 } else {
                     double rem = plant.getRemainingHours();
                     sb.append("[").append(plant.getType().getName())
-                            .append(" ").append(String.format("%.1f", rem)).append("h] ");
+                        .append(" ").append(String.format("%.1f", rem)).append("h] ");
                 }
             }
             sb.append("\n");
@@ -64,13 +66,36 @@ public class GreenHouseManager {
         return sb.toString();
     }
 
+    public String unlockPot(int x, int y) {
+        String error = getUserError();
+        if (error != null) return error;
+
+        if (x < 1 || x > 4 || y < 1 || y > 3) {
+            return "Invalid coordinates. Use x=1-4, y=1-3.";
+        }
+
+        UserProgress progress = usersManager.getLoggedInUser().getUserProgress();
+        boolean[][] unlocked = progress.getUnlockedPots();
+
+        if (unlocked[y - 1][x - 1]) {
+            return "Pot is already unlocked.";
+        }
+
+        String gemError = usersManager.subtractGems(UNLOCK_POT_COST);
+        if (gemError != null) {
+            return "Not enough gems. You need " + UNLOCK_POT_COST + " gems to unlock this pot.";
+        }
+
+        unlocked[y - 1][x - 1] = true;
+        return null; // Success
+    }
 
     public String plantPot(int x, int y) {
         String error = getUserError();
         if (error != null) return error;
 
-        if (x < 1 || x > 5 || y < 1 || y > 4) {
-            return "Invalid coordinates. Use x=1-5, y=1-4.";
+        if (x < 1 || x > 4 || y < 1 || y > 3) {
+            return "Invalid coordinates. Use x=1-4, y=1-3.";
         }
 
         UserProgress progress = usersManager.getLoggedInUser().getUserProgress();
@@ -80,12 +105,14 @@ public class GreenHouseManager {
         if (!unlocked[y - 1][x - 1]) {
             return "Pot is locked.";
         }
+
         if (plants[y - 1][x - 1] != null) {
             return "Pot is occupied.";
         }
 
         Random rand = new Random();
         PlantType chosen;
+
         if (rand.nextBoolean()) {
             chosen = PlantType.MARIGOLD;
         } else {
@@ -99,16 +126,16 @@ public class GreenHouseManager {
 
         double growthHours = (chosen == PlantType.MARIGOLD) ? 2 : 8;
         GreenhousePlant plant = new GreenhousePlant(chosen, growthHours);
+
         usersManager.plantInPot(x, y, plant);
         return "Planted " + chosen.getName() + " in pot (" + x + "," + y + ").";
     }
-
 
     public String collectPot(int x, int y) {
         String error = getUserError();
         if (error != null) return error;
 
-        if (x < 1 || x > 5 || y < 1 || y > 4) {
+        if (x < 1 || x > 4 || y < 1 || y > 3) {
             return "Invalid coordinates.";
         }
 
@@ -138,12 +165,11 @@ public class GreenHouseManager {
         }
     }
 
-
     public String growPot(int x, int y) {
         String error = getUserError();
         if (error != null) return error;
 
-        if (x < 1 || x > 5 || y < 1 || y > 4) {
+        if (x < 1 || x > 4 || y < 1 || y > 3) {
             return "Invalid coordinates.";
         }
 
