@@ -14,6 +14,7 @@ public class CloudyDayQuest extends Quest {
 
     public CloudyDayQuest(String id, QuestCategory category, QuestPriority priority, boolean dailyReset, QuestPage page) {
         super(id, category, priority, dailyReset, page);
+        setIcon("IMAGE_UI_QUESTS_QUESTICONS_PLANT");
         this.name = "Cloudy Day";
         this.description = "Win a level using exactly 3 sun-producing plants.";
         this.reward = new Reward(RewardType.GEMS, 10);
