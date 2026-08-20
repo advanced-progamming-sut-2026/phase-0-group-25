@@ -1,3 +1,4 @@
+// file: core/src/main/java/com/test1/PlantsVsZombies/src/View/LibGDXViews/AbstractScreen.java
 package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 
 import com.badlogic.gdx.Gdx;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.test1.PlantsVsZombies.Main;
@@ -42,20 +44,14 @@ public abstract class AbstractScreen implements Screen {
     private Stack mainStack;
     private Stack modalStack;
     private Stack toastStack;
-    private com.badlogic.gdx.graphics.Texture modalScrimTexture;
+    private Texture modalScrimTexture;
     private Texture fallbackBoxTexture;
-
-
-
-
-
 
     private int lastWidth = -1;
     private int lastHeight = -1;
 
     protected Label coinCountLabel;
     protected Label gemCountLabel;
-
 
     protected static final String CURRENCY_BOX_BG_ASSET_ID = "IMAGE_UI_HUD_INGAME_BACKGROUND_3SLICE";
     protected static final String COIN_ICON_ASSET_ID = "IMAGE_UI_THYMED_EVENTS_ECS_CONVRT_COIN";
@@ -75,7 +71,6 @@ public abstract class AbstractScreen implements Screen {
         modalStack = new Stack();
         toastStack = new Stack();
 
-
         modalStack.setTouchable(Touchable.childrenOnly);
         toastStack.setTouchable(Touchable.childrenOnly);
 
@@ -87,7 +82,6 @@ public abstract class AbstractScreen implements Screen {
         stage.addActor(mainStack);
         Gdx.input.setInputProcessor(stage);
     }
-
 
     public Actor createBackButton(MenuType targetMenu) {
         TextureRegion backRegion = textureBank.region(BACK_BUTTON_ASSET_ID);
@@ -127,22 +121,14 @@ public abstract class AbstractScreen implements Screen {
         return label;
     }
 
-    /**
-     * Shows content as a modal box: a dimmed scrim behind it (clicking the
-     * scrim, i.e. anywhere outside the content, dismisses it) with the
-     * content centered on top. Uses the modalStack layer that already
-     * sits above the screen's own content and below toasts.
-     * Replaces any modal currently showing.
-     */
     protected void showModal(Actor content) {
         modalStack.clearChildren();
 
         if (modalScrimTexture == null) {
-            com.badlogic.gdx.graphics.Pixmap pixmap =
-                new com.badlogic.gdx.graphics.Pixmap(1, 1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
+            Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
             pixmap.setColor(0f, 0f, 0f, 0.6f);
             pixmap.fill();
-            modalScrimTexture = new com.badlogic.gdx.graphics.Texture(pixmap);
+            modalScrimTexture = new Texture(pixmap);
             pixmap.dispose();
         }
 
@@ -193,11 +179,6 @@ public abstract class AbstractScreen implements Screen {
         return button;
     }
 
-    /**
-     * Builds a button using one of the skin's own registered TextButton
-     * styles (e.g. "default", "brown", "purple", "green", "green_small")
-     * instead of a NinePatch region looked up from textureBank.
-     */
     public TextButton createSkinButton(String text, String skinStyleName, ClickListener listener) {
         TextButton button = new TextButton(text, skin, skinStyleName);
         button.pad(10, 20, 10, 20);
@@ -256,21 +237,8 @@ public abstract class AbstractScreen implements Screen {
         int coins = (user != null && user.getUserProgress() != null) ? user.getUserProgress().getCoinsCount() : 0;
         int gems = (user != null && user.getUserProgress() != null) ? user.getUserProgress().getGemsCount() : 0;
 
-
-        Table coinBadge = buildCurrencyBadge(
-            COIN_ICON_ASSET_ID,
-            String.valueOf(coins),
-            true,
-            debug
-        );
-
-
-        Table gemBadge = buildCurrencyBadge(
-            GEM_ICON_ASSET_ID,
-            String.valueOf(gems),
-            false,
-            debug
-        );
+        Table coinBadge = buildCurrencyBadge(COIN_ICON_ASSET_ID, String.valueOf(coins), true, debug);
+        Table gemBadge = buildCurrencyBadge(GEM_ICON_ASSET_ID, String.valueOf(gems), false, debug);
 
         hudTable.add(coinBadge).left().padRight(12);
         hudTable.add(gemBadge).left();
@@ -281,7 +249,6 @@ public abstract class AbstractScreen implements Screen {
     private Table buildCurrencyBadge(String iconAssetId, String initialValue, boolean isCoin, boolean isDebug) {
         Table badge = new Table();
         Stack stack = new Stack();
-
 
         Table boxTable = new Table();
         TextureRegion boxRegion = textureBank.region(CURRENCY_BOX_BG_ASSET_ID);
@@ -298,14 +265,11 @@ public abstract class AbstractScreen implements Screen {
             gemCountLabel = countLabel;
         }
 
-
         boxTable.add(countLabel).center().pad(4, 35, 4, isDebug ? 28 : 12).minWidth(60);
         stack.add(boxTable);
 
-
         Table overlayTable = new Table();
         overlayTable.setTouchable(Touchable.childrenOnly);
-
 
         TextureRegion iconRegion = textureBank.region(iconAssetId);
         if (iconRegion != null) {
@@ -318,19 +282,14 @@ public abstract class AbstractScreen implements Screen {
 
         overlayTable.add().expandX();
 
-
         if (isDebug) {
             TextureRegion plusRegion = textureBank.region(PLUS_BUTTON_ASSET_ID);
             Actor plusActor;
 
             if (plusRegion != null) {
                 TextureRegionDrawable plusDrawable = new TextureRegionDrawable(plusRegion);
-
-
-
                 Button.ButtonStyle style = new Button.ButtonStyle();
                 style.up = plusDrawable;
-
                 style.down = plusDrawable.tint(new Color(0.7f, 0.7f, 0.7f, 1f));
 
                 Button plusBtn = new Button(style);
@@ -356,8 +315,6 @@ public abstract class AbstractScreen implements Screen {
         }
 
         stack.add(overlayTable);
-
-
         badge.add(stack).padLeft(10f).padRight(isDebug ? 10f : 0f);
         return badge;
     }
@@ -376,12 +333,11 @@ public abstract class AbstractScreen implements Screen {
 
     // ============================================================
     // SHARED PLANT/ZOMBIE CARD BUILDING
-    // (used by CollectionMenuScreen and ChoosePlantScreen)
     // ============================================================
 
     protected Drawable getFallbackBoxDrawable() {
         if (fallbackBoxTexture == null) {
-            Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+            Pixmap pixmap = new Pixmap(110, 140, Pixmap.Format.RGBA8888);
             pixmap.setColor(0.28f, 0.22f, 0.15f, 0.9f);
             pixmap.fill();
             fallbackBoxTexture = new Texture(pixmap);
@@ -391,24 +347,16 @@ public abstract class AbstractScreen implements Screen {
     }
 
     /**
-     * The reusable "icon inside a box" button: a Button styled with
-     * boxAssetId as its background (falling back to a plain colored box
-     * if the asset doesn't resolve), with iconAssetId layered on top
-     * (optionally tinted dark for "locked"). Returns the Stack so callers
-     * can layer their own extra decorations (badges, labels) on top of it.
-     *
-     * @param boxSize   size (both dimensions) of the box/icon square.
-     * @param iconInset padding between the box edges and the icon.
+     * Builds an icon inside a box button at natural 1:1 scale with customizable left padding.
      */
     protected Stack buildIconBoxButton(
         String boxAssetId,
         String iconAssetId,
-        float boxSize,
-        float iconInset,
+        float iconPadLeft,
         boolean tintIconDark,
         ClickListener clickListener
     ) {
-        TextureRegion boxRegion = (boxAssetId != null) ? textureBank.region(boxAssetId) : null;
+        TextureRegion boxRegion = (boxAssetId != null && textureBank != null) ? textureBank.region(boxAssetId) : null;
         Button.ButtonStyle style = new Button.ButtonStyle();
         if (boxRegion != null) {
             TextureRegionDrawable boxDrawable = new TextureRegionDrawable(boxRegion);
@@ -428,45 +376,63 @@ public abstract class AbstractScreen implements Screen {
         Stack contentStack = new Stack();
         contentStack.add(cardButton);
 
-        if (iconAssetId != null) {
+        if (iconAssetId != null && textureBank != null) {
             TextureRegion iconRegion = textureBank.region(iconAssetId);
             if (iconRegion != null) {
                 Image icon = new Image(iconRegion);
-                icon.setScaling(Scaling.fit);
+                icon.setScaling(Scaling.none);
+                icon.setAlign(Align.left);
                 if (tintIconDark) {
                     icon.setColor(0.25f, 0.25f, 0.25f, 1f);
                 }
-                Table iconInsetTable = new Table();
-                iconInsetTable.setTouchable(Touchable.disabled);
-                iconInsetTable.add(icon).size(boxSize - iconInset * 2).pad(iconInset);
-                contentStack.add(iconInsetTable);
+                Table iconTable = new Table();
+                iconTable.setTouchable(Touchable.disabled);
+                iconTable.left();
+                iconTable.add(icon).left().padLeft(iconPadLeft);
+                contentStack.add(iconTable);
             }
         }
 
         return contentStack;
     }
 
-    /**
-     * Small pill-style badge (plant level, sun cost, etc.) meant to sit in
-     * a corner of a card via Stack + Table alignment. Not touchable, so it
-     * never blocks clicks meant for the card button beneath it.
-     */
+    protected Stack buildIconBoxButton(
+        String boxAssetId,
+        String iconAssetId,
+        boolean tintIconDark,
+        ClickListener clickListener
+    ) {
+        return buildIconBoxButton(boxAssetId, iconAssetId, 4f, tintIconDark, clickListener);
+    }
+
+    protected Stack buildIconBoxButton(
+        String boxAssetId,
+        String iconAssetId,
+        float boxSize,
+        float iconInset,
+        boolean tintIconDark,
+        ClickListener clickListener
+    ) {
+        return buildIconBoxButton(boxAssetId, iconAssetId, 4f, tintIconDark, clickListener);
+    }
+
     protected Table buildCornerBadge(String text, float fontScale) {
         Table badgeInner = new Table();
         TextureRegion badgeBg = textureBank.region(CURRENCY_BOX_BG_ASSET_ID);
         if (badgeBg != null) {
-            badgeInner.setBackground(new NinePatchDrawable(new NinePatch(badgeBg, 8, 8, 8, 8)));
+            NinePatchDrawable patchDrawable = new NinePatchDrawable(new NinePatch(badgeBg, 4, 4, 4, 4));
+            patchDrawable.setMinWidth(0);
+            patchDrawable.setMinHeight(0);
+            badgeInner.setBackground(patchDrawable);
         }
         Label label = createLabel(text, "FBUSV8C5EI_1_outline", Color.WHITE);
         label.setFontScale(fontScale);
-        badgeInner.add(label).pad(2, 6, 2, 6);
+        badgeInner.add(label).padLeft(3).padRight(3);
+        badgeInner.pad(1, 2, 1, 2);
+        badgeInner.pack();
         return badgeInner;
     }
 
-    /**
-     * Turns SOME_ENUM_NAME into "Some Enum Name". Used for plant/zombie
-     * names and PlantCategory values alike.
-     */
     protected String formatEnumName(String rawName) {
         if (rawName == null) return "Unknown";
         String[] parts = rawName.split("_");
@@ -480,13 +446,6 @@ public abstract class AbstractScreen implements Screen {
         return sb.toString().trim();
     }
 
-    /**
-     * The name/level/family/cost/health/tags info block shown in a plant's
-     * detail dialog. Fetches PlantStats itself (gracefully handling
-     * missing JSON data), so callers don't need their own PlantFactory
-     * try/catch. Callers append their own button rows onto the returned
-     * Table afterward (upgrade/boost/add-to-selection/close differ per screen).
-     */
     protected Table buildPlantStatsBlock(PlantType type, int level) {
         Table block = new Table();
         block.top().left();
@@ -495,9 +454,7 @@ public abstract class AbstractScreen implements Screen {
         try {
             BattlePlant battlePlant = PlantFactory.createBattlePlant(type.getName(), Math.max(level, 1));
             if (battlePlant != null) stats = battlePlant.getPlantStats();
-        } catch (Exception ignored) {
-            // Missing JSON data for this plant/level -- fall back to "unavailable" below.
-        }
+        } catch (Exception ignored) {}
 
         Label nameLabel = createBlackLabel(formatEnumName(type.getName()));
         nameLabel.setFontScale(1.15f);
@@ -521,12 +478,6 @@ public abstract class AbstractScreen implements Screen {
         return block;
     }
 
-    /**
-     * Builds a scene2d Actor that plays a PAM animation via PamPlayer.
-     * Tracks its own state time (advanced each frame through act()) and
-     * draws through whatever Batch the Stage passes in -- same call
-     * pattern as GamePlayScreen's own PamPlayer usage.
-     */
     protected Actor createAnimationActor(String animationPath, String stateName) {
         return new PamAnimationActor(Main.getInstance().getPamPlayer(), animationPath, stateName);
     }
@@ -558,11 +509,7 @@ public abstract class AbstractScreen implements Screen {
         }
     }
 
-    public Label createLabel(
-        String text,
-        String fontName,
-        Color fontColor
-    ) {
+    public Label createLabel(String text, String fontName, Color fontColor) {
         BitmapFont font = skin.get(fontName, BitmapFont.class);
 
         Label.LabelStyle style = new Label.LabelStyle();

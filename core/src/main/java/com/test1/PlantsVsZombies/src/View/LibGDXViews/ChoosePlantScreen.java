@@ -1,3 +1,4 @@
+// file: core/src/main/java/com/test1/PlantsVsZombies/src/View/LibGDXViews/ChoosePlantScreen.java
 package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 
 import com.badlogic.gdx.graphics.Color;
@@ -24,7 +25,6 @@ import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.ChoosePlantMenuView;
 import pvz.skin.BorderedTable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenuView {
@@ -37,10 +37,8 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
     private static final String BOOSTED_PLANT_ICON_BOX_ASSET_ID = "IMAGE_UI_PACKETS_BOOST";
     private static final String SUN_ICON_ASSET_ID = "IMAGE_UI_SEASONS_UNCOMPRESSED_PVZ2_SEASONS_UIASSET_ICON_SUN";
 
-    private static final float CARD_SIZE = 130f;
     private static final float CARD_CELL_WIDTH = 160f;
     private static final float CARD_CELL_HEIGHT = 190f;
-    private static final float ICON_INSET = 14f;
     private static final float ANIMATION_BOX_WIDTH = 350f;
     private static final float ANIMATION_BOX_HEIGHT = 400f;
 
@@ -85,7 +83,7 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
         uiTable.add(topBar).expandX().fillX().top().row();
 
         // --------------------------------------------------------
-        // 8 selected-plant slots, 2 rows of 4.
+        // 8 selected-plant slots, 2 rows of 4
         // --------------------------------------------------------
         topSlotsContainer = new Table();
         uiTable.add(topSlotsContainer).padTop(10).row();
@@ -149,8 +147,7 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
                 slot = buildIconBoxButton(
                     boxAssetId,
                     type != null ? type.getIconAssetId() : null,
-                    CARD_SIZE,
-                    ICON_INSET,
+                    4f,
                     false,
                     new ClickListener() {
                         @Override
@@ -167,10 +164,10 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
                     }
                 );
             } else {
-                slot = buildIconBoxButton(PLANT_ICON_BOX_ASSET_ID, null, CARD_SIZE, ICON_INSET, false, null);
+                slot = buildIconBoxButton(PLANT_ICON_BOX_ASSET_ID, null, 4f, false, null);
             }
 
-            topSlotsContainer.add(slot).size(CARD_SIZE, CARD_SIZE).pad(6);
+            topSlotsContainer.add(slot).pad(6);
             if ((i + 1) % 4 == 0) topSlotsContainer.row();
         }
     }
@@ -208,8 +205,7 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
         Stack contentStack = buildIconBoxButton(
             boxAssetId,
             type.getIconAssetId(),
-            CARD_SIZE,
-            ICON_INSET,
+            4f,
             !unlocked,
             new ClickListener() {
                 @Override
@@ -228,20 +224,17 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
         );
 
         if (unlocked) {
-            Table corner = new Table();
-            corner.setTouchable(Touchable.disabled);
-            corner.top().right();
-
-            Table cluster = new Table();
-            cluster.add(buildCornerBadge("Lv" + level, 0.45f)).padRight(2);
-            cluster.add(buildSunCostBadge(type, level));
-
-            corner.add(cluster).pad(2);
-            contentStack.add(corner);
+            Table topBadges = new Table();
+            topBadges.setTouchable(Touchable.disabled);
+            topBadges.top();
+            topBadges.add(buildCornerBadge("Lv" + level, 0.48f)).left().padTop(2).padLeft(2);
+            topBadges.add().expandX();
+            topBadges.add(buildSunCostBadge(type, level)).right().padTop(2).padRight(2);
+            contentStack.add(topBadges);
         }
 
         Table card = new Table();
-        card.add(contentStack).size(CARD_SIZE, CARD_SIZE).row();
+        card.add(contentStack).row();
 
         if (unlocked) {
             int maxLevel = UserProgressManager.getMaxPlantLevel();
@@ -263,22 +256,29 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
 
     private Table buildSunCostBadge(PlantType type, int level) {
         Table badge = new Table();
+
         TextureRegion badgeBg = textureBank.region(CURRENCY_BOX_BG_ASSET_ID);
         if (badgeBg != null) {
-            badge.setBackground(new NinePatchDrawable(new NinePatch(badgeBg, 8, 8, 8, 8)));
+            NinePatchDrawable patchDrawable = new NinePatchDrawable(new NinePatch(badgeBg, 4, 4, 4, 4));
+            patchDrawable.setMinWidth(0);
+            patchDrawable.setMinHeight(0);
+            badge.setBackground(patchDrawable);
         }
 
         Label costLabel = createLabel(String.valueOf(getSunCost(type, level)), "FBUSV8C5EI_1_outline", Color.WHITE);
-        costLabel.setFontScale(0.45f);
-        badge.add(costLabel).padLeft(4);
+        costLabel.setFontScale(0.48f);
+        badge.add(costLabel).padLeft(3);
 
         TextureRegion sunIconRegion = textureBank.region(SUN_ICON_ASSET_ID);
         if (sunIconRegion != null) {
             Image sunIcon = new Image(sunIconRegion);
-            badge.add(sunIcon).size(14, 14).padLeft(2).padRight(4);
+            badge.add(sunIcon).size(14, 14).padLeft(2).padRight(3);
         } else {
-            badge.add().padRight(4);
+            badge.add().padRight(3);
         }
+
+        badge.pad(1, 2, 1, 2);
+        badge.pack();
 
         return badge;
     }
