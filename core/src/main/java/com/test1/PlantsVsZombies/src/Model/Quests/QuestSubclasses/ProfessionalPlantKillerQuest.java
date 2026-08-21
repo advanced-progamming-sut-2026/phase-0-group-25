@@ -14,6 +14,7 @@ public class ProfessionalPlantKillerQuest extends Quest {
 
     public ProfessionalPlantKillerQuest(String id, QuestCategory category, QuestPriority priority, boolean dailyReset, QuestPage page) {
         super(id, category, priority, dailyReset, page);
+        setIcon("IMAGE_UI_QUESTS_QUESTICONS_KNOCKBACK");
         randomizeVariable();
     }
 

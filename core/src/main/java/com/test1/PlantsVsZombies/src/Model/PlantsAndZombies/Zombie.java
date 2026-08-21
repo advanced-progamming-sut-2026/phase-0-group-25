@@ -24,7 +24,6 @@ public class Zombie extends Entity {
     private static Random RANDOM = new Random();
     private GamePlay GAME = GamePlay.activeInstance;
 
-
     private ZombieStats zombieStats;
     private Entity rival;
     private int waveNum;

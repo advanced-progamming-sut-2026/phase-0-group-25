@@ -32,7 +32,7 @@ public class BattlePlant extends Plant {
 
     private String status = "idle";
 
-    private GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlay.activeInstance;
 
     public BattlePlant(PlantStats plantStats, String name) {
         this.plantStats = plantStats;
@@ -102,6 +102,7 @@ public class BattlePlant extends Plant {
             } else {
                 this.status = "idle";
             }
+
         }
     }
 
@@ -255,7 +256,7 @@ public class BattlePlant extends Plant {
     }
 
     public void takeDamage(double damage) {
-        float armorHP = (int) this.plantStats.getAttributes().getOrDefault("armorHP", 0);
+        double armorHP = (int) this.plantStats.getAttributes().getOrDefault("armorHP", 0);
         if (armorHP > 0) {
             double finalArmorHP = armorHP - damage;
             if (finalArmorHP < 0) {
@@ -350,7 +351,7 @@ public class BattlePlant extends Plant {
                 zombiesInRange.addAll(tile.getZombies());
             }
 
-            if (!zombiesInRange.isEmpty()) {
+            if (zombiesInRange.size() != 0) {
                 this.status = "action";
             } else {
                 this.status = "idle";

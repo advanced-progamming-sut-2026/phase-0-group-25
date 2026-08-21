@@ -369,34 +369,7 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
 
 
 
-    private Actor createAssetButton(
-        String assetId,
-        String fallbackText,
-        ClickListener listener
-    ) {
-        if (assetId != null && !assetId.isEmpty()) {
-            TextureRegion region = textureBank.region(assetId);
-            if (region != null) {
-                TextureRegionDrawable drawable = new TextureRegionDrawable(region);
-                Button.ButtonStyle style = new Button.ButtonStyle();
-                style.up = drawable;
-                style.down = drawable.tint(new Color(0.70f, 0.70f, 0.70f, 1f));
 
-                Button button = new Button(style);
-                if (listener != null) {
-                    button.addListener(listener);
-                }
-                return button;
-            }
-        }
-
-        TextButton fallback = new TextButton(fallbackText, skin);
-        fallback.pad(8, 16, 8, 16);
-        if (listener != null) {
-            fallback.addListener(listener);
-        }
-        return fallback;
-    }
 
 
 

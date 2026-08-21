@@ -14,6 +14,7 @@ public class ChapterHunterQuest extends Quest {
 
     public ChapterHunterQuest(String id, QuestCategory c, QuestPriority p, boolean dr, QuestPage pg) {
         super(id, c, p, dr, pg);
+        setIcon("IMAGE_UI_QUESTS_QUESTICONS_ZOMBIE");
         randomizeVariable();
     }
 

@@ -12,18 +12,28 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
+import com.test1.PlantsVsZombies.src.Enums.PlantType;
+import com.test1.PlantsVsZombies.src.Model.DroppedPlantFood;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.Simple;
 import com.test1.PlantsVsZombies.src.Model.Mower;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
+import com.test1.PlantsVsZombies.src.Model.SandstormEffect;
 import com.test1.PlantsVsZombies.src.Model.Sun.Sun;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.test1.PlantsVsZombies.src.Model.Tile;
+import com.test1.PlantsVsZombies.src.Model.User.User;
+import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.GamePlayMenuView;
 import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
+import com.test1.PlantsVsZombies.src.Model.IcyWindEffect;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     private GamePlay gamePlay;
@@ -38,21 +48,79 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     private BitmapFont hudFont;
     private TextureRegion sunIcon;
     private TextureRegion plantFoodIcon;
+    private TextureRegion getPlantFoodIconInGame;
     private TextureRegion bgHud;
     private float timeAccumulator = 0f;
     private final float TICK_RATE = 0.1f;
     private TextureRegion flagIcon;
     private TextureRegion zombieHeadIcon;
     private TextureRegion progressBarFrame;
-
-
+    private TextureRegion cardBgRegion;
+    private BattlePlant selectedPlant = null;
+    private Vector3 mouseWorldPos = new Vector3();
+    private TextureRegion plusIcon;
+    private static final float SUN_PLUS_X = 190f;
+    private static final float SUN_PLUS_Y = 1120f;
+    private static final float PF_PLUS_X = 395f;
+    private static final float PF_PLUS_Y = 1120f;
+    private static final float PLUS_BTN_SIZE = 40f;
+    private static final float CARD_X = 45f;
+    private static final float CARD_START_Y = 980f;
+    private static final float CARD_WIDTH = 160f;
+    private static final float CARD_HEIGHT = 105f;
+    private static final float CARD_SPACING = 11f;
+    private static final String PLUS_BUTTON_ASSET_ID = "IMAGE_UI_HUD_INGAME_COIN_BUY";
+    private static final String CARD_BG_ASSET_ID = "IMAGE_UI_PACKETS_SELECTED";
     private static final String ERROR_BG_ASSET_ID = "IMAGE_UI_GENERIC_TIMER_RIBBON_RED";
+    private boolean isShovelSelected = false;
+    private TextureRegion shovelIcon;
+    private TextureRegion shovelIconInGame;
+    private TextureRegion iceSliderRegion;
+    private TextureRegion iceBlockTexture;
+    private static final String ICY_WIND_ANIM_PATH = "768/FULL/EFFECTS/FROSTBITE_CHILL_WIND/FROSTBITE_CHILL_WIND.PAM";
+    private static final String ICE_SLIDER_ASSET_ID = "IMAGE_EFFECTS_TILESLIDER_ICEAGE_UP_TILESLIDER_ICEAGE_UP_116X140";
+    private static final String SHOVEL_ASSET = "IMAGE_UI_HUD_INGAME_SHOVEL_ICON";
+    private static final String SHOVEL_ASSET_ID = "IMAGE_UI_HUD_INGAME_SHOVEL_BUTTON";
+    private static final String SANDSTORM_ANIM_PATH = "768/INITIAL/EFFECTS/SANDSTORM_TOP/SANDSTORM_TOP.PAM";
+    private static final float SHOVEL_BTN_X = 1770f;
+    private static final float SHOVEL_BTN_Y = 30f;
+    private static final float SHOVEL_BTN_SIZE = 100f;
+    private static final String[] EGYPT_GRAVE_ASSET_IDS = {
+        "IMAGE_GRAVESTONES_EGYPT_HIEROGLYPH_EGYPT_HIEROGLYPH_118X148",
+        "IMAGE_GRAVESTONES_EGYPT_HIEROGLYPH_EGYPT_HIEROGLYPH_118X148_2",
+        "IMAGE_GRAVESTONES_EGYPT_HIEROGLYPH_EGYPT_HIEROGLYPH_113X145",
+        "IMAGE_GRAVESTONES_EGYPT_HIEROGLYPH_EGYPT_HIEROGLYPH_110X145",
+        "IMAGE_GRAVESTONES_EGYPT_HIEROGLYPH_EGYPT_HIEROGLYPH_109X119"
+    };
+    private final TextureRegion[] iceStageRegions = new TextureRegion[3];
+    private static final String[] ICE_STAGE_ASSET_IDS = {
+        "IMAGE_EFFECTS_FROSTBITE_CHILL_PLANT_FROSTBITE_CHILL_PLANT_153X62",
+        "IMAGE_EFFECTS_FROSTBITE_CHILL_PLANT_FROSTBITE_CHILL_PLANT_153X79",
+        "IMAGE_EFFECTS_FROSTBITE_ICE_BLOCK_PLANT_FROSTBITE_ICE_BLOCK_PLANT_164X169"
+    };
+    private final TextureRegion[] darkNormalGraveRegions = new TextureRegion[5];
+    private final TextureRegion[] darkPlantFoodGraveRegions = new TextureRegion[5];
+    private final TextureRegion[] darkSunGraveRegions = new TextureRegion[5];
+    private TextureRegion necromancyRuneRegion;
 
+    private static final String[] DARK_NORMAL_GRAVES = {
+        "IMAGE_GRAVESTONES_DARK_NOOP_DARK_NOOP_132X160", "IMAGE_GRAVESTONES_DARK_NOOP_DARK_NOOP_132X160_2",
+        "IMAGE_GRAVESTONES_DARK_NOOP_DARK_NOOP_132X156", "IMAGE_GRAVESTONES_DARK_NOOP_DARK_NOOP_125X149", "IMAGE_GRAVESTONES_DARK_NOOP_DARK_NOOP_93X89"
+    };
+    private static final String[] DARK_PF_GRAVES = {
+        "IMAGE_GRAVESTONES_DARK_PLANTFOOD_DARK_PLANTFOOD_132X160", "IMAGE_GRAVESTONES_DARK_PLANTFOOD_DARK_PLANTFOOD_132X160_2",
+        "IMAGE_GRAVESTONES_DARK_PLANTFOOD_DARK_PLANTFOOD_132X157", "IMAGE_GRAVESTONES_DARK_PLANTFOOD_DARK_PLANTFOOD_129X144", "IMAGE_GRAVESTONES_DARK_PLANTFOOD_DARK_PLANTFOOD_93X95"
+    };
+    private static final String[] DARK_SUN_GRAVES = {
+        "IMAGE_GRAVESTONES_DARK_SUN_DARK_SUN_132X160", "IMAGE_GRAVESTONES_DARK_SUN_DARK_SUN_132X160_2",
+        "IMAGE_GRAVESTONES_DARK_SUN_DARK_SUN_132X157", "IMAGE_GRAVESTONES_DARK_SUN_DARK_SUN_132X144", "IMAGE_GRAVESTONES_DARK_SUN_DARK_SUN_93X91"
+    };
+    private final TextureRegion[] egyptGraveRegions = new TextureRegion[5];
+    private static final float GRAVE_MAX_HP = 700f;
 
     public GamePlayScreen(GamePlay gamePlay) {
         this.gamePlay = gamePlay;
     }
-
 
     @Override
     public void show() {
@@ -77,27 +145,138 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         parameter.borderWidth = 3;
         hudFont = generator.generateFont(parameter);
         generator.dispose();
-
+        shovelIcon = textureBank.region(SHOVEL_ASSET_ID);
+        shovelIconInGame = textureBank.region(SHOVEL_ASSET);
+        cardBgRegion = textureBank.region(CARD_BG_ASSET_ID);
+        plusIcon = textureBank.region(PLUS_BUTTON_ASSET_ID);
+        iceSliderRegion = textureBank.region(ICE_SLIDER_ASSET_ID);
         sunIcon = textureBank.region("IMAGE_UI_SEASONS_UNCOMPRESSED_PVZ2_SEASONS_UIASSET_ICON_SUN");
         plantFoodIcon = textureBank.region("IMAGE_UI_HUD_INGAME_PLANTFOOD_BUTTON");
+        getPlantFoodIconInGame = textureBank.region("IMAGE_EFFECTS_PLANTFOOD_PICKUP_PLANTFOOD_PICKUP_79X79");
         bgHud = textureBank.region("IMAGE_UI_HUD_INGAME_BACKGROUND_3SLICE");
         flagIcon = textureBank.region("IMAGE_ZOMBIE_ZOMBIE_FEASTIVUS_FLAG_ZOMBIE_FEASTIVUS_FLAG_123X95");
         zombieHeadIcon = textureBank.region("IMAGE_UI_HUD_INGAME_PROGRESS_METER_ZOMBIEHEAD");
         progressBarFrame = textureBank.region("IMAGE_UI_HUD_INGAME_PROGRESS_METER");
+        iceBlockTexture = textureBank.region("IMAGE_EFFECTS_FROSTBITE_ICE_BLOCK_ZOMBIE_FROSTBITE_ICE_BLOCK_ZOMBIE_153X243");
+        for (int i = 0; i < EGYPT_GRAVE_ASSET_IDS.length; i++) {
+            egyptGraveRegions[i] = textureBank.region(EGYPT_GRAVE_ASSET_IDS[i]);
+        }
+        for (int i = 0; i < ICE_STAGE_ASSET_IDS.length; i++) {
+            iceStageRegions[i] = textureBank.region(ICE_STAGE_ASSET_IDS[i]);
+        }
+        for (int i = 0; i < 5; i++) {
+            darkNormalGraveRegions[i] = textureBank.region(DARK_NORMAL_GRAVES[i]);
+            darkPlantFoodGraveRegions[i] = textureBank.region(DARK_PF_GRAVES[i]);
+            darkSunGraveRegions[i] = textureBank.region(DARK_SUN_GRAVES[i]);
+        }
+        necromancyRuneRegion = textureBank.region("IMAGE_EFFECTS_GRIMROSE_UNDERZOMBIE_EFFECT_GRIMROSE_UNDERZOMBIE_EFFECT_167X52");
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean mouseMoved(int screenX, int screenY) {
-                Vector3 worldPos = camera.unproject(new Vector3(screenX, screenY, 0));
-
-                gamePlay.tryCollectSunByClick(worldPos.x, worldPos.y);
+                camera.unproject(mouseWorldPos.set(screenX, screenY, 0));
+                gamePlay.tryCollectSunByClick(mouseWorldPos.x, mouseWorldPos.y);
+                gamePlay.tryCollectPlantFoodByHover(mouseWorldPos.x, mouseWorldPos.y);
                 return false;
             }
 
             @Override
             public boolean touchDragged(int screenX, int screenY, int pointer) {
-                Vector3 worldPos = camera.unproject(new Vector3(screenX, screenY, 0));
-                gamePlay.tryCollectSunByClick(worldPos.x, worldPos.y);
+                camera.unproject(mouseWorldPos.set(screenX, screenY, 0));
+                gamePlay.tryCollectSunByClick(mouseWorldPos.x, mouseWorldPos.y);
+                gamePlay.tryCollectPlantFoodByHover(mouseWorldPos.x, mouseWorldPos.y);
+                return false;
+            }
+
+            @Override
+            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                camera.unproject(mouseWorldPos.set(screenX, screenY, 0));
+
+                if (button == com.badlogic.gdx.Input.Buttons.RIGHT) {
+                    selectedPlant = null;
+                    return true;
+                }
+
+                User user = gamePlay.getThisUser();
+                boolean isDebug = user != null && user.isDebugMode();
+
+                if (isDebug && button == com.badlogic.gdx.Input.Buttons.LEFT) {
+                    if (mouseWorldPos.x >= SUN_PLUS_X && mouseWorldPos.x <= SUN_PLUS_X + PLUS_BTN_SIZE &&
+                        mouseWorldPos.y >= SUN_PLUS_Y && mouseWorldPos.y <= SUN_PLUS_Y + PLUS_BTN_SIZE) {
+                        gamePlay.cheatAddSun(100);
+                        return true;
+                    }
+
+                    if (mouseWorldPos.x >= PF_PLUS_X && mouseWorldPos.x <= PF_PLUS_X + PLUS_BTN_SIZE &&
+                        mouseWorldPos.y >= PF_PLUS_Y && mouseWorldPos.y <= PF_PLUS_Y + PLUS_BTN_SIZE) {
+                        gamePlay.addPlantFood();
+                        return true;
+                    }
+                }
+
+
+                if (gamePlay.tryCollectSunByClick(mouseWorldPos.x, mouseWorldPos.y)) {
+                    return true;
+                }
+
+
+                if (mouseWorldPos.x >= SHOVEL_BTN_X && mouseWorldPos.x <= SHOVEL_BTN_X + SHOVEL_BTN_SIZE &&
+                    mouseWorldPos.y >= SHOVEL_BTN_Y && mouseWorldPos.y <= SHOVEL_BTN_Y + SHOVEL_BTN_SIZE) {
+
+                    isShovelSelected = !isShovelSelected;
+                    if (isShovelSelected) {
+                        selectedPlant = null;
+                    }
+                    return true;
+                }
+
+
+                ArrayList<BattlePlant> deck = gamePlay.getPlants();
+                for (int i = 0; i < deck.size(); i++) {
+                    float cardX = CARD_X;
+                    float cardY = CARD_START_Y - (i * (CARD_HEIGHT + CARD_SPACING));
+
+                    if (mouseWorldPos.x >= cardX && mouseWorldPos.x <= cardX + CARD_WIDTH &&
+                        mouseWorldPos.y >= cardY && mouseWorldPos.y <= cardY + CARD_HEIGHT) {
+
+                        BattlePlant clickedPlant = deck.get(i);
+                        boolean canAfford = gamePlay.getMySuns() >= clickedPlant.getPlantStats().getCost();
+                        boolean isReady = clickedPlant.getCurrentCoolDown() <= 0 || !clickedPlant.getActiveCooldown();
+
+                        if (canAfford && isReady) {
+                            if (selectedPlant == clickedPlant) {
+                                selectedPlant = null;
+                            } else {
+                                selectedPlant = clickedPlant;
+                            }
+                        } else if (!canAfford) {
+                            showError("Not enough sun!");
+                        } else if (!isReady) {
+                            showError("Plant is recharging!");
+                        }
+                        return true;
+                    }
+                }
+
+                int col = (int) Math.floor((mouseWorldPos.x - 490) / 152.2) + 1;
+                int row = (int) Math.floor((mouseWorldPos.y - 130) / 150) + 1;
+
+                if (col >= 1 && col <= 9 && row >= 1 && row <= 5) {
+
+                    if (isShovelSelected) {
+                        gamePlay.plucking(new Position(col, row));
+                        isShovelSelected = false;
+                        return true;
+                    }
+
+
+                    if (selectedPlant != null) {
+                        gamePlay.planting(selectedPlant, new Position(col, row));
+                        selectedPlant = null;
+                        return true;
+                    }
+                }
+
                 return false;
             }
         });
@@ -125,19 +304,147 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             mower.update(delta, gamePlay);
         }
 
-
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
+        batch.draw(region, 0, 0, 1920, 1200);
+
+        if (gamePlay.getChapterType() == ChapterType.ANCIENT_EGYPT) {
+            for (Tile tile : gamePlay.getTiles()) {
+                if (!tile.isArable() && tile.getHP() > 0) {
+                    int gridX = (int) tile.getPosition().getX();
+                    int gridY = (int) tile.getPosition().getY();
+
+                    float realX = gamePlay.getRealX(gridX);
+                    float realY = gamePlay.getRealY(gridY);
+
+                    float hpRatio = Math.min(1.0f, tile.getHP() / GRAVE_MAX_HP);
+                    int stageIndex = 4 - (int) Math.min(4, Math.floor(hpRatio * 5));
+
+                    TextureRegion graveTexture = egyptGraveRegions[stageIndex];
+                    if (graveTexture != null) {
+                        float graveW = 115f;
+                        float graveH = 145f;
+                        batch.draw(graveTexture, realX - (graveW / 2f) - 7, realY - 30f, graveW, graveH);
+                    }
+                }
+            }
+        }
+        if (gamePlay.getChapterType() == ChapterType.FROSTBITE_CAVES) {
+            for (Tile tile : gamePlay.getTiles()) {
+                if (!tile.isArable()) {
+                    int gridX = (int) tile.getPosition().getX();
+                    int gridY = (int) tile.getPosition().getY();
+
+                    float realX = gamePlay.getRealX(gridX);
+                    float realY = gamePlay.getRealY(gridY);
+
+                    float tileW = 145f;
+                    float tileH = 140f;
+
+                    if (tile.getHP() == 0 && iceSliderRegion != null) {
+                        batch.draw(iceSliderRegion, realX - (tileW / 2f) , realY - 47f, tileW, tileH);
+                    }
+                    else if (tile.getHP() > 0 && iceBlockTexture != null) {
+                        batch.draw(iceBlockTexture, realX - (tileW / 2f) , realY - 25f, 130f, 155f);
+                    }
+                }
+            }
+        }
+        if (gamePlay.getChapterType() == ChapterType.DARK_AGE) {
+            for (Tile tile : gamePlay.getTiles()) {
+                if (!tile.isArable() && tile.getHP() > 0) {
+                    int gridX = (int) tile.getPosition().getX();
+                    int gridY = (int) tile.getPosition().getY();
+                    float realX = gamePlay.getRealX(gridX);
+                    float realY = gamePlay.getRealY(gridY);
+
+                    if (tile.isNecromancy() && !tile.isNecromancyTriggered()) {
+                        if (necromancyRuneRegion != null) {
+                            batch.draw(necromancyRuneRegion, realX - 60f, realY - 50f, 120f, 60f);
+                        }
+                    }
+
+                    float hpRatio = Math.max(0f, Math.min(1.0f, (float) tile.getHP() / GRAVE_MAX_HP));
+                    int stageIndex = 4 - (int) Math.min(4, Math.floor(hpRatio * 4.99f));
+
+                    TextureRegion graveTex = switch (tile.getGraveType()) {
+                        case PLANT_FOOD -> darkPlantFoodGraveRegions[stageIndex];
+                        case SUN -> darkSunGraveRegions[stageIndex];
+                        default -> darkNormalGraveRegions[stageIndex];
+                    };
+
+                    if (graveTex != null) {
+                        batch.draw(graveTex, realX - 60f - 7f, realY - 30f, 115f, 145f);
+                    }
+                }
+            }
+        }
 
         for (BattlePlant p : gamePlay.getGamePlants()) {
             if (p.isAlive() && p.getPosition() != null && p.getPlantStats().getAnimation() != null) {
-
                 float drawX = (float) p.getPosition().getX();
                 float drawY = (float) p.getPosition().getY();
 
-                player.draw(batch, p.getPlantStats().getAnimation(), p.getCurrentAnimationName(stateTime),
-                    stateTime, drawX, drawY, true, p.getVisibilities());
+                int iceStage = 0;
+                if (p.isFrozen() || p.getIceTime() >= 3) {
+                    iceStage = 3;
+                } else if (p.getIceTime() == 2) {
+                    iceStage = 2;
+                } else if (p.getIceTime() == 1) {
+                    iceStage = 1;
+                }
+
+                if (iceStage > 0) {
+                    batch.setColor(0.65f, 0.85f, 1.0f, 1.0f);
+                } else {
+                    batch.setColor(Color.WHITE);
+                }
+
+                player.draw(batch, p.getPlantStats().getAnimation(), p.getCurrentAnimationName(),
+                    stateTime, drawX, drawY, true);
+
+                batch.setColor(Color.WHITE);
+
+                if (iceStage > 0) {
+                    TextureRegion iceTex = iceStageRegions[iceStage - 1];
+                    if (iceTex != null) {
+                        float iceW = (iceStage == 3) ? 140f : 120f;
+                        float iceH = (iceStage == 3) ? 160f : 135f;
+                        float offsetX = iceW / 2f;
+                        float offsetY = 50f;
+
+                        batch.draw(iceTex, drawX - offsetX - 2f, drawY - offsetY, iceW, iceH);
+                    }
+                }
+            }
+        }
+
+        for (DroppedPlantFood pf : gamePlay.getActivePlantFoods()) {
+            float x = (float) pf.getPosition().getX();
+            float y = (float) pf.getPosition().getY();
+
+            float floatOffset = (float) Math.sin(stateTime * 5f) * 7f;
+
+            batch.draw(getPlantFoodIconInGame, x, y + floatOffset, 65, 65);
+        }
+
+        for (Zombie z : gamePlay.getGameZombies()) {
+            if (z.isAlive() && z.getZombieStats().getAnimation() != null) {
+                float drawX = (float) z.getPosition().getX();
+                float drawY = (float) z.getPosition().getY();
+
+                if (z.isHalated()) {
+                    float pulse = 0.75f + 0.25f * (float) Math.sin(stateTime * 7f);
+                    batch.setColor(0.35f * pulse, 1.0f, 0.45f * pulse, 1.0f);
+                } else {
+                    batch.setColor(Color.WHITE);
+                }
+
+                player.draw(batch, z.getZombieStats().getAnimation(), z.getCurrentAnimationName(),
+                    stateTime, drawX, drawY, true);
+
+                batch.setColor(Color.WHITE);
             }
         }
 
@@ -152,14 +459,11 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
 
                 if (sun.getNumberOfSun() >= 100) {
                     float scale = 1.35f;
-
                     batch.setTransformMatrix(batch.getTransformMatrix().idt()
                         .translate(x, y, 0)
                         .scale(scale, scale, 1)
                         .translate(-x, -y, 0));
-
                     player.draw(batch, sun.getAnimationPath(), "animation", stateTime, x, y, true);
-
                     batch.setTransformMatrix(batch.getTransformMatrix().idt());
                 } else {
                     player.draw(batch, sun.getAnimationPath(), "animation", stateTime, x, y, true);
@@ -185,39 +489,172 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             }
         }
 
-        batch.draw(bgHud, 20, 1100, 200, 80);
+        Iterator<SandstormEffect> it = gamePlay.getActiveSandstorms().iterator();
+        while (it.hasNext()) {
+            SandstormEffect storm = it.next();
+            storm.update(delta);
+
+            if (storm.isFinished()) {
+                it.remove();
+            } else {
+                player.draw(
+                    batch,
+                    SANDSTORM_ANIM_PATH,
+                    "loop",
+                    storm.getAnimTime(),
+                    storm.getX(),
+                    storm.getY() + 40,
+                    true
+                );
+            }
+        }
+
+        if (gamePlay.getChapterType() == ChapterType.FROSTBITE_CAVES) {
+            Iterator<IcyWindEffect> windIt = gamePlay.getActiveIcyWinds().iterator();
+            while (windIt.hasNext()) {
+                IcyWindEffect wind = windIt.next();
+                wind.update(delta);
+
+                if (wind.isFinished()) {
+                    windIt.remove();
+                } else {
+                    float rowY = gamePlay.getRealY(wind.getRow());
+                    player.draw(
+                        batch,
+                        ICY_WIND_ANIM_PATH,
+                        "animation",
+                        wind.getAnimTime(),
+                        960f,
+                        rowY + 25,
+                        true
+                    );
+                }
+            }
+        }
+
+        batch.draw(bgHud, 20, 1100, 215, 80);
         batch.draw(bgHud, 240, 1100, 200, 80);
         batch.draw(sunIcon, 30, 1110, 60, 60);
         batch.draw(plantFoodIcon, 250, 1110, 60, 60);
 
         String sunCount = String.valueOf(gamePlay.getMySuns());
         String pfCount = String.valueOf(gamePlay.getNumOfPlantFood());
-        hudFont.draw(batch, sunCount, 110, 1160);
+        hudFont.draw(batch, sunCount, 95, 1160);
         hudFont.draw(batch, pfCount, 330, 1160);
+
+        User currentUser = UsersManager.getInstance().getLoggedInUser();
+        if (currentUser != null && currentUser.isDebugMode() && plusIcon != null) {
+            batch.draw(plusIcon, SUN_PLUS_X, SUN_PLUS_Y, PLUS_BTN_SIZE, PLUS_BTN_SIZE);
+            batch.draw(plusIcon, PF_PLUS_X, PF_PLUS_Y, PLUS_BTN_SIZE, PLUS_BTN_SIZE);
+        }
+
+        ArrayList<BattlePlant> deck = gamePlay.getPlants();
+        for (int i = 0; i < deck.size(); i++) {
+            BattlePlant p = deck.get(i);
+            PlantType pType = PlantType.fromName(p.getName());
+            if (pType == null) continue;
+
+            TextureRegion plantIcon = textureBank.region(pType.getIconAssetId());
+            float cardX = CARD_X;
+            float cardY = CARD_START_Y - (i * (CARD_HEIGHT + CARD_SPACING));
+
+            boolean canAfford = gamePlay.getMySuns() >= p.getPlantStats().getCost();
+            boolean isReady = p.getCurrentCoolDown() <= 0 || !p.getActiveCooldown();
+
+            if (!canAfford || !isReady) {
+                batch.setColor(0.4f, 0.4f, 0.4f, 0.85f);
+            } else if (selectedPlant == p) {
+                batch.setColor(0.6f, 1f, 0.6f, 1f);
+            } else {
+                batch.setColor(Color.WHITE);
+            }
+
+
+            if (cardBgRegion != null) {
+                batch.draw(cardBgRegion, cardX, cardY, CARD_WIDTH, CARD_HEIGHT);
+            }
+
+
+            if (plantIcon != null) {
+                float availW = CARD_WIDTH - 20f;
+                float availH = CARD_HEIGHT - 35f;
+
+                float origW = plantIcon.getRegionWidth();
+                float origH = plantIcon.getRegionHeight();
+                float scale = Math.min(availW / origW, availH / origH);
+
+                float finalW = origW * scale;
+                float finalH = origH * scale;
+                float plantDrawX = cardX + (CARD_WIDTH - finalW) / 2f;
+                float plantDrawY = cardY + 22f + (availH - finalH) / 2f;
+
+                batch.draw(plantIcon, plantDrawX, plantDrawY, finalW, finalH);
+            }
+
+            batch.setColor(Color.WHITE);
+
+
+            hudFont.getData().setScale(0.40f);
+            hudFont.draw(batch, String.valueOf(p.getPlantStats().getCost()), cardX + CARD_WIDTH - 42, cardY + 22);
+            hudFont.getData().setScale(1f);
+        }
+
+        if (shovelIcon != null) {
+            if (isShovelSelected) {
+                batch.setColor(0.6f, 1f, 0.6f, 1f);
+            } else {
+                batch.setColor(Color.WHITE);
+            }
+            batch.draw(shovelIcon, SHOVEL_BTN_X, SHOVEL_BTN_Y, SHOVEL_BTN_SIZE, SHOVEL_BTN_SIZE);
+            batch.setColor(Color.WHITE);
+        }
 
         batch.end();
 
-
-        int totalWaves = gamePlay.calculateWaves(gamePlay.getChapterType(), gamePlay.getLevel());
-        float progress = gamePlay.getProgressPercentage();
-
-
         float barWidth = 450f;
         float barHeight = 45f;
-
-
         float barLeftX = (1920f - barWidth) / 2f;
         float barRightX = barLeftX + barWidth;
         float barY = 1130f;
 
-
+        float progress = gamePlay.getProgressPercentage();
         float headX = barRightX - (barWidth * progress);
         float greenWidth = barRightX - headX;
-
 
         Gdx.gl.glEnable(Gdx.gl.GL_BLEND);
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        if (selectedPlant != null || isShovelSelected) {
+            int hoverCol = (int) Math.floor((mouseWorldPos.x - 490) / 152.2) + 1;
+            int hoverRow = (int) Math.floor((mouseWorldPos.y - 130) / 150) + 1;
+
+            if (hoverCol >= 1 && hoverCol <= 9 && hoverRow >= 1 && hoverRow <= 5) {
+                float tileX = 490f + (hoverCol - 1) * 152.2f;
+                float tileY = 130f + (hoverRow - 1) * 150f;
+                float tileW = 145f;
+                float tileH = 140f;
+
+                shapeRenderer.setColor(new Color(1f, 1f, 1f, 0.35f));
+                shapeRenderer.rect(tileX - 5, tileY + 5, tileW, tileH);
+            }
+        }
+
+        for (int i = 0; i < deck.size(); i++) {
+            BattlePlant p = deck.get(i);
+            double cd = p.getCurrentCoolDown();
+            double totalCd = p.getPlantStats().getRechargeTime();
+
+            if (cd > 0 && totalCd > 0) {
+                float cdRatio = (float) Math.min(1.0, cd / totalCd);
+                float cardX = CARD_X;
+                float cardY = CARD_START_Y - (i * (CARD_HEIGHT + CARD_SPACING));
+                float overlayHeight = CARD_HEIGHT * cdRatio;
+
+                shapeRenderer.setColor(new Color(0f, 0f, 0f, 0.65f));
+                shapeRenderer.rect(cardX, cardY + (CARD_HEIGHT - overlayHeight), CARD_WIDTH, overlayHeight);
+            }
+        }
 
         shapeRenderer.setColor(new Color(0.1f, 0.1f, 0.1f, 0.8f));
         shapeRenderer.rect(barLeftX + 15, barY + 10, barWidth - 30, barHeight - 20);
@@ -226,18 +663,17 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             shapeRenderer.setColor(new Color(0.2f, 0.9f, 0.2f, 1f));
             shapeRenderer.rect(Math.max(headX, barLeftX + 15), barY + 10, greenWidth - 15, barHeight - 20);
         }
+
         shapeRenderer.end();
         Gdx.gl.glDisable(Gdx.gl.GL_BLEND);
-
 
         batch.begin();
         batch.draw(progressBarFrame, barLeftX, barY, barWidth, barHeight);
 
-
+        int totalWaves = gamePlay.calculateWaves(gamePlay.getChapterType(), gamePlay.getLevel());
         for (int i = 0; i < totalWaves; i++) {
             float flagProgressPercent = (float) i / totalWaves;
             float flagX = barRightX - (barWidth * flagProgressPercent);
-
 
             if (i == totalWaves - 1) {
                 batch.draw(flagIcon, flagX - 15, barY + 5, 45, 55);
@@ -246,10 +682,20 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             }
         }
 
-
         batch.draw(zombieHeadIcon, headX - 25, barY - 5, 50, 50);
 
+        if (selectedPlant != null && selectedPlant.getPlantStats().getAnimation() != null) {
+            player.draw(batch, selectedPlant.getPlantStats().getAnimation(), "idle",
+                stateTime, mouseWorldPos.x, mouseWorldPos.y, true);
+        }
+
+        if (isShovelSelected && shovelIcon != null) {
+            batch.draw(shovelIconInGame, mouseWorldPos.x - 40, mouseWorldPos.y - 10, 80, 80);
+        }
+
         batch.end();
+
+        UIManager.renderToasts(delta);
     }
 
     @Override
@@ -257,6 +703,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         viewport.update(width, height, true);
         camera.position.set(1920 / 2f, 1200 / 2f, 0);
         camera.update();
+        UIManager.resizeToasts(width, height);
     }
 
     @Override

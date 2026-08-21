@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.test1.PlantsVsZombies.Main;
@@ -45,19 +46,13 @@ public abstract class AbstractScreen implements Screen {
     private com.badlogic.gdx.graphics.Texture modalScrimTexture;
     private Texture fallbackBoxTexture;
 
-
-
-
-
-
     private int lastWidth = -1;
     private int lastHeight = -1;
 
     protected Label coinCountLabel;
     protected Label gemCountLabel;
 
-
-    protected static final String CURRENCY_BOX_BG_ASSET_ID = "IMAGE_UI_GENERIC_BUTTON_GENERIC_LTECURRENCY";
+    protected static final String CURRENCY_BOX_BG_ASSET_ID = "IMAGE_UI_HUD_INGAME_BACKGROUND_3SLICE";
     protected static final String COIN_ICON_ASSET_ID = "IMAGE_UI_THYMED_EVENTS_ECS_CONVRT_COIN";
     protected static final String GEM_ICON_ASSET_ID = "IMAGE_EFFECTS_COIN_DIAMOND_COIN_DIAMOND_141X146";
     protected static final String PLUS_BUTTON_ASSET_ID = "IMAGE_UI_HUD_INGAME_COIN_BUY";
@@ -75,7 +70,6 @@ public abstract class AbstractScreen implements Screen {
         modalStack = new Stack();
         toastStack = new Stack();
 
-
         modalStack.setTouchable(Touchable.childrenOnly);
         toastStack.setTouchable(Touchable.childrenOnly);
 
@@ -87,7 +81,6 @@ public abstract class AbstractScreen implements Screen {
         stage.addActor(mainStack);
         Gdx.input.setInputProcessor(stage);
     }
-
 
     public Actor createBackButton(MenuType targetMenu) {
         TextureRegion backRegion = textureBank.region(BACK_BUTTON_ASSET_ID);
@@ -282,7 +275,6 @@ public abstract class AbstractScreen implements Screen {
         Table badge = new Table();
         Stack stack = new Stack();
 
-
         Table boxTable = new Table();
         TextureRegion boxRegion = textureBank.region(CURRENCY_BOX_BG_ASSET_ID);
         if (boxRegion != null) {
@@ -298,14 +290,11 @@ public abstract class AbstractScreen implements Screen {
             gemCountLabel = countLabel;
         }
 
-
         boxTable.add(countLabel).center().pad(4, 35, 4, isDebug ? 28 : 12).minWidth(60);
         stack.add(boxTable);
 
-
         Table overlayTable = new Table();
         overlayTable.setTouchable(Touchable.childrenOnly);
-
 
         TextureRegion iconRegion = textureBank.region(iconAssetId);
         if (iconRegion != null) {
@@ -318,19 +307,14 @@ public abstract class AbstractScreen implements Screen {
 
         overlayTable.add().expandX();
 
-
         if (isDebug) {
             TextureRegion plusRegion = textureBank.region(PLUS_BUTTON_ASSET_ID);
             Actor plusActor;
 
             if (plusRegion != null) {
                 TextureRegionDrawable plusDrawable = new TextureRegionDrawable(plusRegion);
-
-
-
                 Button.ButtonStyle style = new Button.ButtonStyle();
                 style.up = plusDrawable;
-
                 style.down = plusDrawable.tint(new Color(0.7f, 0.7f, 0.7f, 1f));
 
                 Button plusBtn = new Button(style);
@@ -356,8 +340,6 @@ public abstract class AbstractScreen implements Screen {
         }
 
         stack.add(overlayTable);
-
-
         badge.add(stack).padLeft(10f).padRight(isDebug ? 10f : 0f);
         return badge;
     }
@@ -379,9 +361,43 @@ public abstract class AbstractScreen implements Screen {
     // (used by CollectionMenuScreen and ChoosePlantScreen)
     // ============================================================
 
+    /**
+     * A single-texture button (up/down tint), with a text fallback if the
+     * asset doesn't resolve. Promoted here from GameScreen's own private
+     * copy since TravelLogScreen needs the identical pattern.
+     */
+    protected Actor createAssetButton(
+        String assetId,
+        String fallbackText,
+        ClickListener listener
+    ) {
+        if (assetId != null && !assetId.isEmpty()) {
+            TextureRegion region = textureBank.region(assetId);
+            if (region != null) {
+                TextureRegionDrawable drawable = new TextureRegionDrawable(region);
+                Button.ButtonStyle style = new Button.ButtonStyle();
+                style.up = drawable;
+                style.down = drawable.tint(new Color(0.70f, 0.70f, 0.70f, 1f));
+
+                Button button = new Button(style);
+                if (listener != null) {
+                    button.addListener(listener);
+                }
+                return button;
+            }
+        }
+
+        TextButton fallback = new TextButton(fallbackText, skin);
+        fallback.pad(8, 16, 8, 16);
+        if (listener != null) {
+            fallback.addListener(listener);
+        }
+        return fallback;
+    }
+
     protected Drawable getFallbackBoxDrawable() {
         if (fallbackBoxTexture == null) {
-            Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+            Pixmap pixmap = new Pixmap(110, 140, Pixmap.Format.RGBA8888);
             pixmap.setColor(0.28f, 0.22f, 0.15f, 0.9f);
             pixmap.fill();
             fallbackBoxTexture = new Texture(pixmap);
@@ -391,24 +407,16 @@ public abstract class AbstractScreen implements Screen {
     }
 
     /**
-     * The reusable "icon inside a box" button: a Button styled with
-     * boxAssetId as its background (falling back to a plain colored box
-     * if the asset doesn't resolve), with iconAssetId layered on top
-     * (optionally tinted dark for "locked"). Returns the Stack so callers
-     * can layer their own extra decorations (badges, labels) on top of it.
-     *
-     * @param boxSize   size (both dimensions) of the box/icon square.
-     * @param iconInset padding between the box edges and the icon.
+     * Builds an icon inside a box button at natural 1:1 scale with customizable left padding.
      */
     protected Stack buildIconBoxButton(
         String boxAssetId,
         String iconAssetId,
-        float boxSize,
-        float iconInset,
+        float iconPadLeft,
         boolean tintIconDark,
         ClickListener clickListener
     ) {
-        TextureRegion boxRegion = (boxAssetId != null) ? textureBank.region(boxAssetId) : null;
+        TextureRegion boxRegion = (boxAssetId != null && textureBank != null) ? textureBank.region(boxAssetId) : null;
         Button.ButtonStyle style = new Button.ButtonStyle();
         if (boxRegion != null) {
             TextureRegionDrawable boxDrawable = new TextureRegionDrawable(boxRegion);
@@ -428,18 +436,20 @@ public abstract class AbstractScreen implements Screen {
         Stack contentStack = new Stack();
         contentStack.add(cardButton);
 
-        if (iconAssetId != null) {
+        if (iconAssetId != null && textureBank != null) {
             TextureRegion iconRegion = textureBank.region(iconAssetId);
             if (iconRegion != null) {
                 Image icon = new Image(iconRegion);
-                icon.setScaling(Scaling.fit);
+                icon.setScaling(Scaling.none);
+                icon.setAlign(Align.left);
                 if (tintIconDark) {
                     icon.setColor(0.25f, 0.25f, 0.25f, 1f);
                 }
-                Table iconInsetTable = new Table();
-                iconInsetTable.setTouchable(Touchable.disabled);
-                iconInsetTable.add(icon).size(boxSize - iconInset * 2).pad(iconInset);
-                contentStack.add(iconInsetTable);
+                Table iconTable = new Table();
+                iconTable.setTouchable(Touchable.disabled);
+                iconTable.left();
+                iconTable.add(icon).left().padLeft(iconPadLeft);
+                contentStack.add(iconTable);
             }
         }
 
@@ -455,11 +465,16 @@ public abstract class AbstractScreen implements Screen {
         Table badgeInner = new Table();
         TextureRegion badgeBg = textureBank.region(CURRENCY_BOX_BG_ASSET_ID);
         if (badgeBg != null) {
-            badgeInner.setBackground(new NinePatchDrawable(new NinePatch(badgeBg, 8, 8, 8, 8)));
+            NinePatchDrawable patchDrawable = new NinePatchDrawable(new NinePatch(badgeBg, 4, 4, 4, 4));
+            patchDrawable.setMinWidth(0);
+            patchDrawable.setMinHeight(0);
+            badgeInner.setBackground(patchDrawable);
         }
         Label label = createLabel(text, "FBUSV8C5EI_1_outline", Color.WHITE);
         label.setFontScale(fontScale);
-        badgeInner.add(label).pad(2, 6, 2, 6);
+        badgeInner.add(label).padLeft(3).padRight(3);
+        badgeInner.pad(1, 2, 1, 2);
+        badgeInner.pack();
         return badgeInner;
     }
 

@@ -21,7 +21,7 @@ public class AnimationDecider {
             return status.get("plantfood");
         }
 
-        if (plant.getPlantStats().getTags().contains("wramp_up")) {
+        if (plant.getPlantStats().getTags().contains("wramp-up")) {
             return getWrampUpPlantsAnimation(plant, status, stateTime);
         }
 

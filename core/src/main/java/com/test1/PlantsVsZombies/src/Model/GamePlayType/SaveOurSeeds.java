@@ -10,6 +10,7 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.ZombieFactory;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 import com.test1.PlantsVsZombies.src.Model.User.User;
+import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.Model.Wave.FinalWave;
 import com.test1.PlantsVsZombies.src.Model.Wave.Wave;
 
@@ -69,7 +70,7 @@ public class SaveOurSeeds extends GamePlay {
 
             if (!zombie.isAlive() || zombie.getCurrentHP() <= 0) {
                 killAward(this.thisUser);
-                glowingAward(this);
+                //glowingAward(this);
                 Position zPos = Position.getRowAndColumn(zombie.getPosition());
                 System.out.printf("Zombie of type %s is dead at (%d, %d)\n",
                         zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
@@ -141,6 +142,7 @@ public class SaveOurSeeds extends GamePlay {
         if (!canSaved()) {
             System.out.println("You couldn't save your important plant!!");
             System.out.println("The zombie ate your brain; LOSER!!!");
+            UsersManager.getInstance().addGamesPlayed();
             this.isPaused = true;
         }
 

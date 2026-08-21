@@ -14,9 +14,10 @@ public class OnlyCactusQuest extends Quest {
 
     public OnlyCactusQuest(String id, QuestCategory category, QuestPriority priority, boolean dailyReset, QuestPage page) {
         super(id, category, priority, dailyReset, page);
+        setIcon("IMAGE_UI_HUD_LOD_LOD_CACTUS");
         this.name = "Only Cactus";
         this.description = "Kill 10 zombies using CACTUS.";
-        this.reward = new Reward(RewardType.GEMS, 100);
+        this.reward = new Reward(RewardType.GEMS, 20);
     }
 
     @Override

@@ -48,8 +48,13 @@ public class MenuManager {
 
         menusAndTheirNames.put(MenuType.GamePlay, new GamePlayMenu());
         menusAndTheirNames.put(MenuType.GemWallet, new GemWalletMenu(new GemWalletMenuTerminalView()));
-        menusAndTheirNames.put(MenuType.GreenHouse, new GreenHouseMenu(new GreenHouseMenuTerminalView()));
         menusAndTheirNames.put(MenuType.LeaderBoard, new LeaderBoardMenu(new LeaderBoardMenuTerminalView()));
+
+        GreenHouseScreen greenHouseScreen = new GreenHouseScreen();
+        GreenHouseMenu greenHouseMenu = new GreenHouseMenu(greenHouseScreen);
+        greenHouseScreen.setMenuController(greenHouseMenu);
+        menusAndTheirNames.put(MenuType.GreenHouse, greenHouseMenu);
+
 
         SignUpMenuScreen signUpMenuScreen = new SignUpMenuScreen();
         SignUpMenu signUpMenu = new SignUpMenu(signUpMenuScreen);
@@ -71,7 +76,10 @@ public class MenuManager {
         menusAndTheirNames.put(MenuType.Quest, new QuestMenu(new QuestMenuTerminalView()));
         menusAndTheirNames.put(MenuType.Setting, new SettingMenu(new SettingMenuTerminalView()));
         menusAndTheirNames.put(MenuType.Shop, new ShopMenu(new ShopMenuTerminalView()));
-        menusAndTheirNames.put(MenuType.TravelLog, new TravelLogMenu(new TravelLogMenuTerminalView()));
+        TravelLogScreen travelLogScreen = new TravelLogScreen();
+        TravelLogMenu travelLogMenu = new TravelLogMenu(travelLogScreen);
+        travelLogScreen.setMenuController(travelLogMenu);
+        menusAndTheirNames.put(MenuType.TravelLog, travelLogMenu);
         menusAndTheirNames.put(MenuType.Network, new NetworkMenu(new NetworkMenuTerminalView()));
         ChoosePlantScreen choosePlantScreen = new ChoosePlantScreen();
         ChoosePlantMenu choosePlantMenu = new ChoosePlantMenu(

@@ -16,12 +16,20 @@ import com.test1.PlantsVsZombies.Main;
 public class UIManager {
     private static Main main;
     private static Stage toastStage;
+    private static Table toastContainer;
 
     public static void init(Main instance) {
         main = instance;
         toastStage = new Stage(new ScreenViewport());
-    }
 
+        toastContainer = new Table();
+        toastContainer.setFillParent(true);
+
+        toastContainer.top().right().padTop(25).padRight(25);
+        toastStage.addActor(toastContainer);
+
+        toastStage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+    }
     public static void changeScreen(Screen screen) {
         if (main != null) {
             main.setScreen(screen);
@@ -35,12 +43,11 @@ public class UIManager {
         return null;
     }
 
-
     public static void showToast(String message, String bgAssetId) {
-        if (toastStage == null || main == null) return;
+        if (toastStage == null || main == null || toastContainer == null) return;
 
         Table popup = new Table();
-        popup.pad(15, 20, 15, 20);
+        popup.pad(12, 22, 12, 22);
 
         if (bgAssetId != null && !bgAssetId.isEmpty() && main.getTextureBank() != null) {
             TextureRegion region = main.getTextureBank().region(bgAssetId);
@@ -53,19 +60,24 @@ public class UIManager {
         Label label = new Label(message, main.getSkin());
         label.setColor(Color.BLACK);
         popup.add(label);
-        popup.pack();
 
-        float margin = 20f;
-        popup.setPosition(
-            margin,
-            toastStage.getHeight() - popup.getHeight() - margin
-        );
 
-        toastStage.addActor(popup);
+        toastContainer.add(popup).padBottom(10).right().row();
+
         popup.addAction(Actions.sequence(
-            Actions.delay(2.5f),
-            Actions.fadeOut(0.5f),
-            Actions.removeActor()
+            Actions.parallel(
+                Actions.fadeIn(0.3f),
+                Actions.moveBy(-30f, 0, 0.3f)
+            ),
+            Actions.delay(3.0f),
+            Actions.parallel(
+                Actions.fadeOut(0.4f),
+                Actions.moveBy(40f, 0, 0.4f)
+            ),
+            Actions.run(() -> {
+                popup.remove();
+                toastContainer.invalidateHierarchy();
+            })
         ));
     }
 
