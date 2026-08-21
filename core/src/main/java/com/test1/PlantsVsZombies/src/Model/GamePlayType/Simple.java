@@ -10,6 +10,7 @@ import com.test1.PlantsVsZombies.src.Model.User.User;
 import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.Model.Wave.FinalWave;
 import com.test1.PlantsVsZombies.src.Model.Wave.Wave;
+import com.test1.PlantsVsZombies.src.View.LibGDXViews.UIManager;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -44,13 +45,20 @@ public class Simple extends GamePlay {
                 }
             }
             this.settedThePlants = true;
+            UIManager.showToast("Level Started! Protect your lawn!", "IMAGE_UI_GENERIC_VTB");
 
             planting(PlantFactory.createBattlePlant("SUNFLOWER", 1,
-                new Position(1, 2)), new Position(2, 2));
-            planting(PlantFactory.createBattlePlant("SUNFLOWER", 1,
-                new Position(1, 2)), new Position(7, 5));
-            planting(PlantFactory.createBattlePlant("SUNFLOWER", 1,
-                new Position(1, 2)), new Position(5, 1));
+                new Position(2, 2)), new Position(2, 2));
+            planting(PlantFactory.createBattlePlant("BONK_CHOY", 1,
+                new Position(1, 2)), new Position(8, 1));
+            planting(PlantFactory.createBattlePlant("BONK_CHOY", 1,
+                new Position(1, 2)), new Position(8, 2));
+            planting(PlantFactory.createBattlePlant("BONK_CHOY", 1,
+                new Position(1, 2)), new Position(8, 3));
+            planting(PlantFactory.createBattlePlant("BONK_CHOY", 1,
+                new Position(1, 2)), new Position(8, 4));
+            planting(PlantFactory.createBattlePlant("BONK_CHOY", 1,
+                new Position(1, 2)), new Position(8, 5));
         }
 
         if (this.chapterType != ChapterType.DARK_AGE) {
@@ -85,7 +93,9 @@ public class Simple extends GamePlay {
 
             if (!zombie.isAlive() || zombie.getCurrentHP() <= 0) {
                 killAward(this.thisUser);
-                glowingAward(this);
+                if (zombie.isHalated()) {
+                    glowingAward(zombie.getPosition());
+                }
                 Position zPos = Position.getRowAndColumn(zombie.getPosition());
                 System.out.printf("Zombie of type %s is dead at (%d, %d)\n",
                         zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
@@ -126,22 +136,34 @@ public class Simple extends GamePlay {
                     if (!thisWave.getStarted()) {
                         if (thisWave instanceof FinalWave) {
                             System.out.println("The final wave has come.");
+                            triggerNecromancy();
+                            UIManager.showToast("FINAL WAVE IS APPROACHING!", "IMAGE_UI_GENERIC_TIMER_RIBBON_RED");
                         } else {
                             System.out.printf("Wave %d started.\n", thisWave.getWaveNum());
+                            UIManager.showToast("Wave " + thisWave.getWaveNum() + " has started!", "IMAGE_UI_GENERIC_VTB");
                         }
                         thisWave.setStarted(true);
                     }
                     String nameOfZ = thisWave.spawnNextZombie().getName();
                     Position positionOfZ;
                     int spawnY = getNextRandomY();
-                    if (chapterType != ChapterType.FROSTBITE_CAVES && Math.random() >= 0.9) {
-                        positionOfZ = new Position(spawnX - 200, getRealY(spawnY));
+
+                    if (chapterType == ChapterType.ANCIENT_EGYPT && Math.random() <= 0.15) {
+                        int targetCol = random.nextInt(3) + 5;
+                        positionOfZ = new Position(getRealX(targetCol), getRealY(spawnY));
+                        addSandstormEffect((float) positionOfZ.getX(), (float) positionOfZ.getY());
+                        UIManager.showToast("Sandstorm Inbound! (Lane " + spawnY + ")", "IMAGE_UI_GENERIC_TIMER_RIBBON_RED");
                     } else {
                         positionOfZ = new Position(spawnX, getRealY(spawnY));
                     }
+
                     Zombie newZombie = ZombieFactory.createZombie(nameOfZ, positionOfZ);
                     System.out.printf("Zombie %s spawned at wave %d in lane %d which costed %d.\n",
-                            nameOfZ, thisWave.getWaveNum(), spawnY, newZombie.getCost());
+                        nameOfZ, thisWave.getWaveNum(), spawnY, newZombie.getCost());
+
+                    if (Math.random() <= 0.05) {
+                        newZombie.setHalated(true);
+                    }
 
                     newZombie.setWaveNum(thisWave.getWaveNum());
                     this.gameZombies.add(newZombie);
@@ -184,6 +206,31 @@ public class Simple extends GamePlay {
             onWin();
             System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
             this.isPaused = true;
+        }
+    }
+
+    public void triggerNecromancy() {
+        if (chapterType != ChapterType.DARK_AGE) return;
+
+        boolean spawnedAny = false;
+        for (Tile tile : tiles) {
+            if (!tile.isArable() && tile.getHP() > 0 && tile.isNecromancy() && !tile.isNecromancyTriggered()) {
+                int col = (int) tile.getPosition().getX();
+                int row = (int) tile.getPosition().getY();
+
+                Position spawnPos = new Position(getRealX(col), getRealY(row));
+                Zombie zombie = ZombieFactory.createZombie("DEFAULT", spawnPos);
+                zombie.setRow(row);
+                zombie.setColumn(col);
+                gameZombies.add(zombie);
+
+                tile.setNecromancyTriggered(true);
+                spawnedAny = true;
+            }
+        }
+
+        if (spawnedAny) {
+            UIManager.showToast("Necromancy! Zombies rising from tombs!", "IMAGE_UI_GENERIC_TIMER_RIBBON_RED");
         }
     }
 }

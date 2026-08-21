@@ -23,7 +23,6 @@ public class Zombie extends Entity {
     private static Random RANDOM = new Random();
     private GamePlay GAME = GamePlay.activeInstance;
 
-
     private ZombieStats zombieStats;
     private Entity rival;
     private int waveNum;
@@ -422,5 +421,11 @@ public class Zombie extends Entity {
         return decider.zombieVisibilities(this);
     }
 
+    public boolean isHalated() {
+        return isHalated;
+    }
 
+    public void setHalated(boolean isHalated) {
+        this.isHalated = isHalated;
+    }
 }

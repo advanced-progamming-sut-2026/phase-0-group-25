@@ -1,6 +1,7 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies;
 
 import com.test1.PlantsVsZombies.src.Enums.PlantCategory;
+import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities.*;
@@ -28,6 +29,8 @@ public class BattlePlant extends Plant {
     private boolean frozen;
     private int iceTime;
     private double iceHP;
+
+    private String status = "idle";
 
     private GamePlay GAME = GamePlay.activeInstance;
 
@@ -75,6 +78,8 @@ public class BattlePlant extends Plant {
         if (!this.plantStats.getCategory().equals("Wall-nut") &&
             !this.plantStats.getCategory().equals("Explosive")) {
 
+            checkStatus();
+
             if (this.isEffected) {
                 for (Ability ability : this.originalAbilities) {
                     ability.executeAbility(this);
@@ -89,7 +94,14 @@ public class BattlePlant extends Plant {
                 for (Ability ability : this.originalAbilities) {
                     ability.executeAbility(this);
                 }
+                if ((this.plantStats.getCategory().equals("Sun Producer")) ||
+                    (this.name.equals(PlantType.CHOMPER.getName()))) {
+                    return;
+                }
+
                 this.lastActionTime = GAME.getTotalTimePassed();
+            } else {
+                this.status = "idle";
             }
 
         }
@@ -242,7 +254,7 @@ public class BattlePlant extends Plant {
     }
 
     public void takeDamage(double damage) {
-        double armorHP = (double) this.plantStats.getAttributes().getOrDefault("armorHP", 0);
+        double armorHP = (int) this.plantStats.getAttributes().getOrDefault("armorHP", 0);
         if (armorHP > 0) {
             double finalArmorHP = armorHP - damage;
             if (finalArmorHP < 0) {
@@ -262,18 +274,8 @@ public class BattlePlant extends Plant {
     }
 
     public String getCurrentAnimationName() {
-        Map<String, String> status = this.plantStats.getStatus();
-        if (status == null) {
-            return "idle";
-        }
-        if (this.plantStats.getTags().contains("wramp_up")) {
-            return getWrampUpPlantsAnimation(status);
-        } else {
-            if (isTimeForAction()) {
-                return status.get("action");
-            }
-            return status.get("idle");
-        }
+        AnimationDecider decider = new AnimationDecider();
+        return decider.plantDecider(this, (float) GAME.getTotalTimePassed());
     }
 
     public HashMap<String, Boolean> getVisibilities() {
@@ -281,4 +283,54 @@ public class BattlePlant extends Plant {
         return decider.plantVisibilities(this);
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setLastActionTime(double lastActionTime) {
+        this.lastActionTime = lastActionTime;
+    }
+
+    private void checkStatus() {
+        if (this.plantStats.getCategory().equals("Sun Producer")) {
+            checkSunProducer();
+        }
+
+        if (this.plantStats.getCategory().equals("Melee")) {
+            checkMelee();
+        }
+    }
+
+    private void checkSunProducer() {
+        float difference = (float) (GAME.getTotalTimePassed() - this.lastActionTime);
+        float trigger = this.plantStats.getTrigger();
+        if ((trigger + difference) >= this.plantStats.getActionInterval()) {
+            this.status = "action";
+        } else {
+            this.status = "idle";
+        }
+    }
+
+    private void checkMelee() {
+        if (!this.name.equals(PlantType.CHOMPER.getName())) {
+            ArrayList<Zombie> zombiesInRange = new ArrayList<>();
+            for (int i = -1; i <= 1; i++) {
+                Tile tile = GAME.getTileByPosition(this.column + i, this.row);
+                if (tile == null) {
+                    continue;
+                }
+                zombiesInRange.addAll(tile.getZombies());
+            }
+
+            if (zombiesInRange.size() != 0) {
+                this.status = "action";
+            } else {
+                this.status = "idle";
+            }
+        }
+    }
 }

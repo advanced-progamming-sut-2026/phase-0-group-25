@@ -30,9 +30,15 @@ public class MeleeAttacking implements Ability {
         }
 
         if (tags.contains("insta-kill")) {
+            if (GAME.getGameZombies().isEmpty()) {
+                return;
+            }
+
             int randomIndex = RANDOM.nextInt(GAME.getGameZombies().size());
             Zombie target = GAME.getGameZombies().get(randomIndex);
             target.setCurrentHP(0);
+            plant.setLastActionTime(GAME.getTotalTimePassed());
+            plant.setStatus("action");
         } else if (tags.contains("wramp-up")) {
             handleWramp_Up(plant);
         } else {
@@ -45,15 +51,26 @@ public class MeleeAttacking implements Ability {
                 int range = (int) plant.getPlantStats().getAttributes().get("range");
                 rangeDamage(plantRow, plantColumn, range, damage);
             } else {
-                int frontAndBackRange = (int) plant.getPlantStats().getAttributes().get("front-range");
+                int frontAndBackRange = (int) plant.getPlantStats().getAttributes().get("front_range");
                 for (int i = -frontAndBackRange; i <= frontAndBackRange; i++) {
                     Tile tile = GAME.getTileByPosition(plantColumn + i, plantRow);
                     if (tile == null) {
                         continue;
                     }
-                    takeDamage(tile, damage);
+                    takeDamage(plant, tile, damage);
                 }
             }
+        }
+    }
+
+    private void takeDamage(BattlePlant plant, Tile tile, int damage) {
+        if (tile.getZombies() != null) {
+            plant.setStatus("action");
+        }
+
+
+        for (Zombie zombie : tile.getZombies()) {
+            zombie.setCurrentHP(zombie.getCurrentHP() - damage);
         }
     }
 

@@ -3,8 +3,8 @@ package com.test1.PlantsVsZombies.src.Model.GamePlayType;
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Enums.PlantCategory;
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
+import com.test1.PlantsVsZombies.src.Model.*;
 import com.test1.PlantsVsZombies.src.Model.ChaptersAndLevels.Level;
-import com.test1.PlantsVsZombies.src.Model.Mower;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities.Ability;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities.ProducingSun;
@@ -16,17 +16,16 @@ import com.test1.PlantsVsZombies.src.Model.Quests.Events.SunCollectedEvent;
 import com.test1.PlantsVsZombies.src.Model.Quests.QuestManager;
 import com.test1.PlantsVsZombies.src.Model.Sun.RadioActiveSun;
 import com.test1.PlantsVsZombies.src.Model.Sun.Sun;
-import com.test1.PlantsVsZombies.src.Model.Tile;
 import com.test1.PlantsVsZombies.src.Model.User.User;
 import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.Model.Wave.FinalWave;
 import com.test1.PlantsVsZombies.src.Model.Wave.Wave;
+import com.test1.PlantsVsZombies.src.View.LibGDXViews.UIManager;
 
 import java.util.*;
 
 public abstract class GamePlay {
     public static GamePlay activeInstance;
-
     protected float[] killedZombiesCostPerWave = new float[50];
     static int effectedTime = 3;
     static int spawnX = 1800;
@@ -58,7 +57,9 @@ public abstract class GamePlay {
     protected boolean settedThePlants = false;
     private List<Integer> rowBag = new ArrayList<>();
     protected double totalTimePassed;
-
+    protected ArrayList<DroppedPlantFood> activePlantFoods = new ArrayList<>();
+    protected ArrayList<SandstormEffect> activeSandstorms = new ArrayList<>();
+    protected ArrayList<IcyWindEffect> activeIcyWinds = new ArrayList<>();
 
     public GamePlay(ChapterType chapterType, int level, int difficulty, User thisUser,
                     ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
@@ -113,8 +114,31 @@ public abstract class GamePlay {
 
                 for (int x = 1; x < 10; x++) {
                     Position newPosition = new Position(x, y);
-                    Boolean isArable = Math.random() >= 0.06 || (x == 5 && (y == 2 || y == 4));
-                    Tile newTile = new Tile(newPosition, isArable, (isArable) ? 0 : 700);
+                    Boolean isArable = (Math.random() >= 0.06 || (x == 5 && (y == 2 || y == 4))) ||
+                        (x == 1 || x == 2 || x == 3);
+                    int tileHP = 0;
+                    if (!isArable && (chapterType == ChapterType.ANCIENT_EGYPT || chapterType == ChapterType.DARK_AGE)) {
+                        tileHP = 700;
+                    } else if (chapterType == ChapterType.FROSTBITE_CAVES) {
+                        tileHP = (Math.random() <= 0.5) ? 700 : 0;
+                    }
+                    Tile newTile = new Tile(newPosition, isArable, tileHP);
+
+                    if (!isArable && chapterType == ChapterType.DARK_AGE) {
+                        double rand = Math.random();
+                        if (rand < 0.20) {
+                            newTile.setGraveType(Tile.GraveType.PLANT_FOOD);
+                        } else if (rand < 0.40) {
+                            newTile.setGraveType(Tile.GraveType.SUN);
+                        } else {
+                            newTile.setGraveType(Tile.GraveType.NORMAL);
+                        }
+
+                        if (Math.random() <= 0.30) {
+                            newTile.setNecromancy(true);
+                        }
+                    }
+
                     tiles.add(newTile);
                 }
             }
@@ -148,6 +172,16 @@ public abstract class GamePlay {
     public abstract void update();
 
     public Boolean checkingTheEndOfTheGame() {
+        if (this.allWaves.isEmpty()) {
+            return false;
+        }
+
+        for (Wave wave : this.allWaves) {
+            if (!wave.getStarted() || wave.hasZombiesLeftToSpawn()) {
+                return false;
+            }
+        }
+
         return this.gameZombies.isEmpty();
     }
 
@@ -564,28 +598,51 @@ public abstract class GamePlay {
                     UsersManager.getInstance().addCoins(50);
                     int numOfCoins = thisUser.getUserProgress().getCoinsCount();
                     System.out.printf("A zombie dropped a coin; you have %d coins now.\n", numOfCoins);
+                    UIManager.showToast("+50 Coins dropped!", "IMAGE_UI_GENERIC_VTB");
                     break;
                 case 2:
                     UsersManager.getInstance().addGems(1);
                     int numOfGems = thisUser.getUserProgress().getGemsCount();
                     System.out.printf("A zombie dropped a diamond; you have %d diamonds now.\n", numOfGems);
+                    UIManager.showToast("+1 Diamond dropped!", "IMAGE_UI_GENERIC_VTB");
                     break;
                 case 3:
                     UsersManager.getInstance().addPots(1);
                     int numOfPots = thisUser.getUserProgress().getPotsCount();
                     System.out.printf("A zombie dropped a pot; you have %d pots now.\n", numOfPots);
+                    UIManager.showToast("+1 Pot unlocked!", "IMAGE_UI_GENERIC_VTB");
                     break;
             }
         }
     }
 
-    public void glowingAward(GamePlay thisGame) {
-        boolean isGlowing = Math.random() <= 0.05;
-        if (isGlowing) {
-            thisGame.addPlantFood();
-            System.out.printf("The glowing zombie dropped a plant food; you have %d plant foods now.\n",
-                    thisGame.getNumOfPlantFood());
+    public void glowingAward(Position zombiePosition) {
+        Position dropPos = new Position(zombiePosition.getX(), zombiePosition.getY());
+        activePlantFoods.add(new DroppedPlantFood(dropPos));
+        System.out.println("A glowing zombie dropped Plant Food!");
+        UIManager.showToast("Plant Food dropped!", "IMAGE_UI_GENERIC_VTB");
+    }
+
+    public boolean tryCollectPlantFoodByHover(float mouseX, float mouseY) {
+        DroppedPlantFood target = null;
+        for (DroppedPlantFood pf : activePlantFoods) {
+            float px = (float) pf.getPosition().getX() + 30;
+            float py = (float) pf.getPosition().getY() + 30;
+
+            if (Math.hypot(mouseX - px, mouseY - py) <= 65) {
+                target = pf;
+                break;
+            }
         }
+
+        if (target != null) {
+            if (this.numOfPlantFood < 3) {
+                addPlantFood();
+                activePlantFoods.remove(target);
+                return true;
+            }
+        }
+        return false;
     }
 
     public void updateZombieTiles() {
@@ -593,7 +650,7 @@ public abstract class GamePlay {
             tile.getZombies().clear();
             // Removing broken graves for the game
             if (chapterType == ChapterType.ANCIENT_EGYPT || chapterType == ChapterType.DARK_AGE) {
-                if (tile.getHP() == 0 && !tile.isArable() && !tile.isHole()) {
+                if (tile.getHP() <= 0 && !tile.isArable() && !tile.isHole()) {
                     tile.setArable(true);
                 }
             }
@@ -618,7 +675,7 @@ public abstract class GamePlay {
                 continue;
             }
 
-            if (!currentTile.isArable() && chapterType == ChapterType.FROSTBITE_CAVES) {
+            if (!currentTile.isArable() && chapterType == ChapterType.FROSTBITE_CAVES && currentTile.getHP() == 0) {
                 zombie.changeRow();
                 System.out.println("Changing the row...!!!");
                 zombiePosition = Position.getRowAndColumn(zombie.getPosition());
@@ -731,9 +788,12 @@ public abstract class GamePlay {
     }
 
     public void applyIcyWind() {
-        if (chapterType == ChapterType.FROSTBITE_CAVES && Math.random() < 0.02) {
+        if (chapterType == ChapterType.FROSTBITE_CAVES && Math.random() < 0.012) {
             int randomNumber = new Random().nextInt(5) + 1;
             System.out.println("An icy wind blew in row " + randomNumber + "!");
+
+            activeIcyWinds.add(new IcyWindEffect(randomNumber));
+
             for (BattlePlant bp : this.gamePlants) {
                 Position thisPos = Position.getRowAndColumn(bp.getPosition());
                 if (thisPos.getY() == randomNumber) {
@@ -770,6 +830,11 @@ public abstract class GamePlay {
             Tile thisTile = getTileByPosition((int) gridPos.getX(), (int) gridPos.getY());
             if (thisTile != null && !thisTile.getPlants().isEmpty()) {
                 Ability thisAbility = thisTile.getPlants().get(0).getOriginalAbilities().get(0);
+                for (BattlePlant bp : thisTile.getPlants()) {
+                    if (bp.getPlantStats().getCategory().equals("Sun Producer")) {
+                        bp.setLastActionTime(this.getTotalTimePassed());
+                    }
+                }
                 if (thisAbility instanceof ProducingSun) {
                     ((ProducingSun) thisAbility).setCollected(false);
                     ((ProducingSun) thisAbility).setProduced(false);
@@ -785,7 +850,6 @@ public abstract class GamePlay {
         }
 
         activeSuns.remove(targetSun);
-        this.mySuns += targetSun.getNumberOfSun();
         return true;
     }
 
@@ -808,10 +872,10 @@ public abstract class GamePlay {
 
         if (started == 0) return 0f;
 
-        // پیشروی پایه‌ی نوار بر اساس موج‌های رد شده
+
         float baseProgress = (float) (started - 1) / total;
 
-        // محاسبه کل Cost موج فعلی
+
         double difficultyMultiplier = 1 + (thisUser.getUserProgress().getGameDifficulty() / 10.0);
         float currentWaveTotalCost;
         if (started == total) {
@@ -820,18 +884,18 @@ public abstract class GamePlay {
             currentWaveTotalCost = (float) (calculateCost(chapterType, level, started) * difficultyMultiplier);
         }
 
-        // گرفتن مجموع کاست زامبی‌های کشته‌شده‌ی همین موج
+
         float killedCost = killedZombiesCostPerWave[started];
 
-        // درصد پیشرفت این موج بر اساس مرگ زامبی‌ها
+
         float depletion = killedCost / currentWaveTotalCost;
 
         float fraction;
         if (started < total) {
-            // چون موج بعدی در 75% شروع می‌شود، نوار تا پرچم بعدی در این نقطه پر می‌شود
+
             fraction = depletion / 0.75f;
         } else {
-            fraction = depletion; // موج آخر باید 100% پر شود
+            fraction = depletion;
         }
 
         if (fraction > 1.0f) fraction = 1.0f;
@@ -843,5 +907,25 @@ public abstract class GamePlay {
         if (waveNum >= 0 && waveNum < killedZombiesCostPerWave.length) {
             killedZombiesCostPerWave[waveNum] += cost;
         }
+    }
+
+    public ArrayList<DroppedPlantFood> getActivePlantFoods() {
+        return activePlantFoods;
+    }
+
+    public User getThisUser() {
+        return thisUser;
+    }
+
+    public ArrayList<SandstormEffect> getActiveSandstorms() {
+        return activeSandstorms;
+    }
+
+    public void addSandstormEffect(float x, float y) {
+        activeSandstorms.add(new SandstormEffect(x, y));
+    }
+
+    public ArrayList<IcyWindEffect> getActiveIcyWinds() {
+        return activeIcyWinds;
     }
 }

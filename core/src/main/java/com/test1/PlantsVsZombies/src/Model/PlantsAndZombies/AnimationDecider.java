@@ -16,8 +16,15 @@ public class AnimationDecider {
 
     public String plantDecider(BattlePlant plant, float stateTime) {
         Map<String, String> status = plant.getPlantStats().getStatus();
+        if (plant.isEffected()) {
+            return status.get("plantfood");
+        }
 
-        if (plant.getPlantStats().getCategory().equals(PlantCategory.MINT.name())) {
+        if (plant.getPlantStats().getTags().contains("wramp-up")) {
+            return getWrampUpPlantsAnimation(plant, status, stateTime);
+        }
+
+        if (plant.getPlantStats().getAbilities().contains("mint")) {
             return getMintAnimation(plant, stateTime);
         }
 
@@ -25,8 +32,15 @@ public class AnimationDecider {
             return getWallNutAnimation(plant);
         }
 
-        if (plant.getPlantStats().getTags().contains("wramp_up")) {
-            return getWrampUpPlantsAnimation(plant, status, stateTime);
+        if (plant.getPlantStats().getCategory().equals("Modifier")) {
+            return getModifierAnimation(plant);
+        }
+
+        if (plant.getPlantStats().getCategory().equals("Melee")) {
+            return getMeleeAnimation(plant);
+        }
+        if (plant.getPlantStats().getCategory().equals("Sun Producer")) {
+            return getSunProducerAnimation(plant);
         } else {
             if (isTimeForAction(plant, stateTime)) {
                 return status.get("action");
@@ -76,23 +90,17 @@ public class AnimationDecider {
         ArrayList<Integer> growthTimeStages = (ArrayList<Integer>) plant.getPlantStats().getAttributes().get("growth_time");
 
         double differenceTime = plant.getPlantTime();
+        String stage = "";
 
         if (differenceTime >= growthTimeStages.get(1)) {
-            if (isTimeForAction(plant, stateTime)) {
-                return status.get("action3");
-            }
-            return status.get("idle3");
+            stage += "3";
         } else if (differenceTime >= growthTimeStages.get(0)) {
-            if (isTimeForAction(plant, stateTime)) {
-                return status.get("action2");
-            }
-            return status.get("idle2");
+            stage += "2";
         } else {
-            if (isTimeForAction(plant, stateTime)) {
-                return status.get("action1");
-            }
-            return status.get("idle1");
+            stage += "1";
         }
+
+        return status.get(plant.getStatus() + stage);
     }
 
     private boolean isTimeForAction(BattlePlant plant, float stateTime) {
@@ -213,6 +221,20 @@ public class AnimationDecider {
         }
 
         return visibilities;
+    }
+
+    private String getMeleeAnimation(BattlePlant plant) {
+        return plant.getPlantStats().getStatus().get(plant.getStatus());
+    }
+
+    private String getSunProducerAnimation(BattlePlant plant) {
+        return plant.getPlantStats().getStatus().get(plant.getStatus());
+    }
+
+    private String getModifierAnimation(BattlePlant plant) {
+        Map<String, String> status = plant.getPlantStats().getStatus();
+
+        return status.get("idle");
     }
 
     private void checkArmorVisibility(BattlePlant plant, HashMap<String, Boolean> visibilities) {
