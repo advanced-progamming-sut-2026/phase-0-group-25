@@ -10,7 +10,7 @@ import com.test1.PlantsVsZombies.src.Model.Tile;
 
 
 public class StealingSun implements Ability {
-    private static double TURQUOISE_STEAL = 2.5;
+    private static double TURQUOISE_STEAL = 3;
     private double stolenSun = 0;
     private boolean isActivated = false;
     private GamePlay GAME = GamePlay.activeInstance;
@@ -24,15 +24,14 @@ public class StealingSun implements Ability {
             int zombieRow = zombie.getRow();
 
             if (!this.isActivated) {
-                for (int i = 0; i <= 4; i++) {
+                for (int i = 0; i < 4; i++) {
                     Tile tile = GAME.getTileByPosition(zombieColumn - i, zombieRow);
                     if (tile == null) {
                         continue;
                     }
-                    if (tile.getPlants() == null) {
+                    if (tile.getPlants().isEmpty()) {
                         continue;
                     } else {
-                        zombie.setCurrentVelocity(0);
                         zombie.setLastActionTime(GAME.getTotalTimePassed());
                         this.isActivated = true;
                         changeMovingActivation(zombie, false);
@@ -49,7 +48,7 @@ public class StealingSun implements Ability {
                         GAME.setMySuns(GAME.getMySuns() - (int) TURQUOISE_STEAL);
                     }
                 } else {
-                    for (int i = 0; i <= 4; i++) {
+                    for (int i = 0; i < 4; i++) {
                         Tile tile = GAME.getTileByPosition(zombieColumn - i, zombieRow);
                         if (tile == null) {
                             continue;
@@ -57,17 +56,44 @@ public class StealingSun implements Ability {
 
                         for (BattlePlant plant : tile.getPlants()) {
                             plant.setAlive(false);
+                            plant.setCurrentHP(0);
                         }
                     }
-                    this.setActivated(false);
+                    this.isActivated = false;
                     changeMovingActivation(zombie, true);
                 }
             }
 
         } else if (zombie.getZombieStats().getName().equals("RA")) {
-            for (Sun sun : GAME.getActiveSuns()) {
-                sun.setCollected(true);
-                this.stolenSun += sun.getNumberOfSun();
+            if (this.isActivated) {
+                double actionTime = (double) zombie.getZombieStats().getAttributes().get("actionTime");
+                float difference = (float) (GAME.getTotalTimePassed() - zombie.getLastActionTime());
+
+                if (difference > actionTime) {
+
+                    int activeSun = GAME.getActiveSuns().size();
+                    for (int i = 0; i < activeSun; i++) {
+                        try {
+                            Sun sun = GAME.getActiveSuns().get(i);
+                            sun.setCollected(true);
+                            this.stolenSun += sun.getNumberOfSun();
+                            GAME.getActiveSuns().remove(i);
+                            i -= 1;
+                        } catch (IndexOutOfBoundsException e) {
+
+                        }
+                    }
+                    this.isActivated = false;
+                    changeMovingActivation(zombie, true);
+                }
+            } else {
+
+                if (!GAME.getActiveSuns().isEmpty()) {
+                    zombie.setLastActionTime(GAME.getTotalTimePassed());
+                    this.isActivated = true;
+                    changeMovingActivation(zombie, false);
+                }
+
             }
         }
     }

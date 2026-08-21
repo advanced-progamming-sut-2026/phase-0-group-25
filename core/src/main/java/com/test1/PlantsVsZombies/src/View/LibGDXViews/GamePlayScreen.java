@@ -471,6 +471,17 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             }
         }
 
+        for (Zombie zombie : gamePlay.getGameZombies()) {
+            if (zombie.isAlive()) {
+                float px = (float) zombie.getPosition().getX();
+                float py = (float) zombie.getPosition().getY();
+                batch.setColor(zombie.getColor());
+                player.draw(batch, zombie.getZombieStats().getAnimation(), zombie.getCurrentAnimationName(),
+                    stateTime, px, py, true, zombie.getVisibility());
+                batch.setColor(Color.WHITE);
+            }
+        }
+
         for (Mower mower : gamePlay.getMowers()) {
             if (!mower.isDone()) {
                 player.draw(batch, mower.getAnimationPath(), mower.getCurrentAnimState(),
