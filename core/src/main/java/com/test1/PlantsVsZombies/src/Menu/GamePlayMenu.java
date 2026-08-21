@@ -10,6 +10,7 @@ import com.test1.PlantsVsZombies.src.Model.MiniGames.WallnutBowlingGame.WalnutBo
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
 import com.test1.PlantsVsZombies.src.View.LibGDXViews.GamePlayScreen;
+import com.test1.PlantsVsZombies.src.View.LibGDXViews.VasebreakerScreen;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.BaseView;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.GamePlayMenuView;
 
@@ -32,8 +33,11 @@ public class GamePlayMenu extends Menu {
             ((Screen) this.gamePlayMenuView).dispose();
         }
         GamePlayMenu.gamePlay = gamePlay;
-        this.gamePlayMenuView = new GamePlayScreen(gamePlay);
-    }
+        if (gamePlay instanceof VaseBreaker) {
+            this.gamePlayMenuView = new VasebreakerScreen((VaseBreaker) gamePlay);
+        } else {
+            this.gamePlayMenuView = new GamePlayScreen(gamePlay);
+        }    }
 
     public void startSession(GamePlay gamePlay, GamePlayMenuView gamePlayMenuView) {
         if (this.gamePlayMenuView instanceof Screen) {

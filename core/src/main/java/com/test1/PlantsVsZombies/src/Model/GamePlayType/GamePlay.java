@@ -60,6 +60,8 @@ public abstract class GamePlay {
     protected ArrayList<DroppedPlantFood> activePlantFoods = new ArrayList<>();
     protected ArrayList<SandstormEffect> activeSandstorms = new ArrayList<>();
     protected ArrayList<IcyWindEffect> activeIcyWinds = new ArrayList<>();
+    protected Set<String> boostedPlants = new HashSet<>();
+
 
     public GamePlay(ChapterType chapterType, int level, int difficulty, User thisUser,
                     ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
@@ -70,6 +72,10 @@ public abstract class GamePlay {
         this.chapterType = chapterType;
         this.thisUser = thisUser;
         activeInstance = this;
+
+        if (boosted != null) {
+            this.boostedPlants.addAll(boosted);
+        }
 
         for (String pName : plants) {
             this.plants.add(PlantFactory.createBattlePlant(pName, getLevelOfPlant(pName)));
@@ -927,5 +933,24 @@ public abstract class GamePlay {
 
     public ArrayList<IcyWindEffect> getActiveIcyWinds() {
         return activeIcyWinds;
+    }
+
+    public boolean isPlantBoosted(String plantName) {
+        if (boostedPlants.contains(plantName)) return true;
+        PlantType type = PlantType.fromName(plantName);
+        return type != null && thisUser != null && thisUser.getUserProgress() != null
+            && thisUser.getUserProgress().hasGreenhouseBoost(type);
+    }
+
+    public boolean usePlantFood(int gridX, int gridY) {
+        if (this.numOfPlantFood <= 0) return false;
+        Tile tile = getTileByPosition(gridX, gridY);
+        if (tile != null && !tile.getPlants().isEmpty()) {
+            applyPlantFood(gridX, gridY);
+            this.numOfPlantFood--;
+            System.out.printf("Plant food applied on plant at (%d, %d). Remaining: %d\n", gridX, gridY, this.numOfPlantFood);
+            return true;
+        }
+        return false;
     }
 }

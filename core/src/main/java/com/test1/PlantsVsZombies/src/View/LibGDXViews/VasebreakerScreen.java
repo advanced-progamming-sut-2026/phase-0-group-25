@@ -6,23 +6,27 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
-import com.test1.PlantsVsZombies.src.Model.Mower;
 import com.test1.PlantsVsZombies.src.Model.MiniGames.VasebreakerGame.*;
+import com.test1.PlantsVsZombies.src.Model.Mower;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
-
+import com.test1.PlantsVsZombies.src.Model.Tile;
+import com.test1.PlantsVsZombies.src.View.ViewInterfaces.GamePlayMenuView;
 import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
+import com.test1.PlantsVsZombies.src.View.ViewInterfaces.GamePlayMenuView;
 
-public class VasebreakerScreen extends ScreenAdapter {
+public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView {
     private VaseBreaker gamePlay;
     private OrthographicCamera camera;
     private SpriteBatch batch;
@@ -35,6 +39,9 @@ public class VasebreakerScreen extends ScreenAdapter {
     private TextureRegion orangeJarIcon;
     private TextureRegion greenJarIcon;
     private TextureRegion purpleJarIcon;
+    private TextureRegion progressBarFrame;
+    private TextureRegion peaRegion;
+    private BitmapFont hudFont;
 
     private float stateTime = 0;
     private float timeAccumulator = 0f;
@@ -57,10 +64,20 @@ public class VasebreakerScreen extends ScreenAdapter {
         player = new PamPlayer(textureBank, Gdx.files.local("assets/Assets"));
 
         bgRegion = textureBank.region("IMAGE_BACKGROUNDS_BACKGROUND_LOD_BIGBRAINZ_TEXTURE");
-
         orangeJarIcon = textureBank.region("IMAGE_VASEBREAKER_VASE_BROWN_VASE_BROWN_115X150");
         greenJarIcon = textureBank.region("IMAGE_VASEBREAKER_VASE_GREEN_VASE_GREEN_115X150");
         purpleJarIcon = textureBank.region("IMAGE_VASEBREAKER_VASE_GARGANTUAR_VASE_GARGANTUAR_115X150");
+        progressBarFrame = textureBank.region("IMAGE_UI_HUD_INGAME_PROGRESS_METER");
+        peaRegion = textureBank.region("IMAGE_PROJECTILES_PEA");
+
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.local("assets/pvz.ttf"));
+        FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+        parameter.size = 36;
+        parameter.color = Color.WHITE;
+        parameter.borderColor = Color.BLACK;
+        parameter.borderWidth = 2;
+        hudFont = generator.generateFont(parameter);
+        generator.dispose();
 
         UIManager.resizeToasts(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         setupInputProcessor();
@@ -86,7 +103,6 @@ public class VasebreakerScreen extends ScreenAdapter {
                 float wx = mouseWorldPos.x;
                 float wy = mouseWorldPos.y;
 
-
                 if (button == Input.Buttons.RIGHT) {
                     selectedCardIndex = -1;
                     return true;
@@ -96,11 +112,7 @@ public class VasebreakerScreen extends ScreenAdapter {
                 if (wy >= 1040 && wy <= 1190) {
                     int index = (int) ((wx - 20) / 110);
                     if (index >= 0 && index < gamePlay.getInventory().size()) {
-                        if (selectedCardIndex == index) {
-                            selectedCardIndex = -1;
-                        } else {
-                            selectedCardIndex = index;
-                        }
+                        selectedCardIndex = (selectedCardIndex == index) ? -1 : index;
                     }
                     return true;
                 }
@@ -111,13 +123,24 @@ public class VasebreakerScreen extends ScreenAdapter {
 
                 if (gridX >= 1 && gridX <= 9 && gridY >= 1 && gridY <= 5) {
                     if (selectedCardIndex != -1) {
-                        gamePlay.plantFromInventory(selectedCardIndex, gridX, gridY);
-                        selectedCardIndex = -1;
+                        boolean hasJar = gamePlay.getJars().stream().anyMatch(j ->
+                            !j.isBroken() && (int) j.getPosition().getX() == gamePlay.getRealX(gridX) &&
+                                (int) j.getPosition().getY() == gamePlay.getRealY(gridY));
+
+                        Tile targetTile = gamePlay.getTileByPosition(gridX, gridY);
+
+                        if (targetTile != null && targetTile.isArable() && targetTile.getPlants().isEmpty() && !hasJar) {
+                            gamePlay.plantFromInventory(selectedCardIndex, gridX, gridY);
+                            selectedCardIndex = -1;
+                        } else {
+                            UIManager.showToast("Cannot plant here!", "IMAGE_UI_GENERIC_TIMER_RIBBON_RED");
+                        }
                     } else {
                         gamePlay.breakJar(gridX, gridY);
                     }
+                    return true;
                 }
-                return true;
+                return false;
             }
         });
     }
@@ -127,7 +150,7 @@ public class VasebreakerScreen extends ScreenAdapter {
         stateTime += delta;
         textureBank.update();
 
-        if (!gamePlay.isPaused) {
+        if (!gamePlay.isPaused()) {
             timeAccumulator += delta;
             while (timeAccumulator >= TICK_RATE) {
                 gamePlay.update();
@@ -137,7 +160,6 @@ public class VasebreakerScreen extends ScreenAdapter {
 
         ScreenUtils.clear(0.1f, 0.1f, 0.1f, 1);
         camera.update();
-
 
         for (Mower mower : gamePlay.getMowers()) {
             mower.update(delta, gamePlay);
@@ -150,25 +172,23 @@ public class VasebreakerScreen extends ScreenAdapter {
         batch.begin();
         batch.draw(bgRegion, 0, 0, 1920, 1200);
 
-
         for (Jar jar : gamePlay.getJars()) {
             if (!jar.isBroken()) {
                 float jX = (float) jar.getPosition().getX();
                 float jY = (float) jar.getPosition().getY();
 
-                TextureRegion tex;
+                TextureRegion tex = orangeJarIcon;
                 if (jar instanceof GargantuarJar) {
-                    tex = purpleJarIcon;
+                    tex = (purpleJarIcon != null) ? purpleJarIcon : orangeJarIcon;
                 } else if (jar instanceof PlantJar) {
-                    tex = greenJarIcon;
-                } else {
-                    tex = orangeJarIcon;
+                    tex = (greenJarIcon != null) ? greenJarIcon : orangeJarIcon;
                 }
 
-                batch.draw(tex, jX - 75, jY - 25, 120, 150);
+                if (tex != null) {
+                    batch.draw(tex, jX - 60f, jY - 25f, 120f, 150f);
+                }
             }
         }
-
 
         for (BattlePlant p : gamePlay.getGamePlants()) {
             if (p.isAlive() && p.getPlantStats().getAnimation() != null) {
@@ -177,7 +197,6 @@ public class VasebreakerScreen extends ScreenAdapter {
             }
         }
 
-
         for (Zombie z : gamePlay.getGameZombies()) {
             if (z.isAlive() && z.getZombieStats().getAnimation() != null) {
                 player.draw(batch, z.getZombieStats().getAnimation(), z.getCurrentAnimationName(),
@@ -185,6 +204,11 @@ public class VasebreakerScreen extends ScreenAdapter {
             }
         }
 
+        for (Projectile proj : gamePlay.getProjectiles()) {
+            if (proj.isActive() && peaRegion != null) {
+                batch.draw(peaRegion, (float) proj.getPosition().getX(), (float) proj.getPosition().getY() + 30f, 32f, 32f);
+            }
+        }
 
         for (Mower mower : gamePlay.getMowers()) {
             if (!mower.isDone()) {
@@ -197,6 +221,16 @@ public class VasebreakerScreen extends ScreenAdapter {
 
 
 
+
+        int totalJars = gamePlay.getJars().size();
+        long brokenJars = gamePlay.getJars().stream().filter(Jar::isBroken).count();
+        float jarProgress = (totalJars > 0) ? (float) brokenJars / totalJars : 0f;
+
+        float barWidth = 450f;
+        float barHeight = 45f;
+        float barLeftX = (1920f - barWidth) / 2f;
+        float barY = 1130f;
+        float fillWidth = (barWidth - 30f) * jarProgress;
 
         Gdx.gl.glEnable(Gdx.gl.GL_BLEND);
         shapeRenderer.setProjectionMatrix(camera.combined);
@@ -223,6 +257,16 @@ public class VasebreakerScreen extends ScreenAdapter {
             shapeRenderer.rect(10, 1040, totalItems * 110 + 20, 145);
         }
 
+
+        shapeRenderer.setColor(new Color(0.1f, 0.1f, 0.1f, 0.85f));
+        shapeRenderer.rect(barLeftX + 15, barY + 10, barWidth - 30, barHeight - 20);
+
+
+        if (fillWidth > 0) {
+            shapeRenderer.setColor(new Color(0.2f, 0.9f, 0.2f, 1f));
+            shapeRenderer.rect(barLeftX + 15, barY + 10, fillWidth, barHeight - 20);
+        }
+
         shapeRenderer.end();
         Gdx.gl.glDisable(Gdx.gl.GL_BLEND);
 
@@ -230,11 +274,24 @@ public class VasebreakerScreen extends ScreenAdapter {
 
 
         batch.begin();
+
+        if (progressBarFrame != null) {
+            batch.draw(progressBarFrame, barLeftX, barY, barWidth, barHeight);
+        }
+        if (orangeJarIcon != null) {
+            batch.draw(orangeJarIcon, barLeftX + fillWidth - 10f, barY - 5f, 40f, 50f);
+        }
+
+
+        if (hudFont != null) {
+            String progressText = brokenJars + " / " + totalJars + " Jars";
+            hudFont.draw(batch, progressText, barLeftX + (barWidth / 2f) - 75f, barY + 32f);
+        }
+
+
         int slotX = 20;
         int index = 0;
-
         for (BattlePlant invPlant : gamePlay.getInventory()) {
-
             if (index == selectedCardIndex) {
                 batch.setColor(0.6f, 1f, 0.6f, 1f);
             } else {
@@ -261,7 +318,6 @@ public class VasebreakerScreen extends ScreenAdapter {
 
         batch.end();
 
-
         UIManager.renderToasts(delta);
     }
 
@@ -277,5 +333,17 @@ public class VasebreakerScreen extends ScreenAdapter {
     public void dispose() {
         batch.dispose();
         shapeRenderer.dispose();
+        if (hudFont != null) {
+            hudFont.dispose();
+        }
+    }
+
+    @Override
+    public void showCurrentMenu() {
+    }
+
+    @Override
+    public void showError(String errorMessage) {
+        UIManager.showToast(errorMessage, "IMAGE_UI_GENERIC_TIMER_RIBBON_RED");
     }
 }

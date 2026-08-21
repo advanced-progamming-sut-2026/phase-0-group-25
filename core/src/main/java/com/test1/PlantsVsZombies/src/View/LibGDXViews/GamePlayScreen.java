@@ -61,7 +61,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     private TextureRegion plusIcon;
     private static final float SUN_PLUS_X = 190f;
     private static final float SUN_PLUS_Y = 1120f;
-    private static final float PF_PLUS_X = 395f;
+    private static final float PF_PLUS_X = 269f;
     private static final float PF_PLUS_Y = 1120f;
     private static final float PLUS_BTN_SIZE = 40f;
     private static final float CARD_X = 45f;
@@ -69,6 +69,8 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     private static final float CARD_WIDTH = 160f;
     private static final float CARD_HEIGHT = 105f;
     private static final float CARD_SPACING = 11f;
+    private static final String PF_BANK_SLOT_ASSET_ID = "IMAGE_UI_HUD_INGAME_PLANTFOOD_BANK_FILLED_SLOT";
+    private TextureRegion pfBankSlotRegion;
     private static final String PLUS_BUTTON_ASSET_ID = "IMAGE_UI_HUD_INGAME_COIN_BUY";
     private static final String CARD_BG_ASSET_ID = "IMAGE_UI_PACKETS_SELECTED";
     private static final String ERROR_BG_ASSET_ID = "IMAGE_UI_GENERIC_TIMER_RIBBON_RED";
@@ -77,11 +79,21 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     private TextureRegion shovelIconInGame;
     private TextureRegion iceSliderRegion;
     private TextureRegion iceBlockTexture;
+    private TextureRegion cardBoostedBgRegion;
+    private static final String CARD_BOOSTED_BG_ASSET_ID = "IMAGE_UI_PACKETS_BOOST";
     private static final String ICY_WIND_ANIM_PATH = "768/FULL/EFFECTS/FROSTBITE_CHILL_WIND/FROSTBITE_CHILL_WIND.PAM";
     private static final String ICE_SLIDER_ASSET_ID = "IMAGE_EFFECTS_TILESLIDER_ICEAGE_UP_TILESLIDER_ICEAGE_UP_116X140";
     private static final String SHOVEL_ASSET = "IMAGE_UI_HUD_INGAME_SHOVEL_ICON";
     private static final String SHOVEL_ASSET_ID = "IMAGE_UI_HUD_INGAME_SHOVEL_BUTTON";
     private static final String SANDSTORM_ANIM_PATH = "768/INITIAL/EFFECTS/SANDSTORM_TOP/SANDSTORM_TOP.PAM";
+    private static final String FOOD_BANK_ASSET_ID = "IMAGE_UI_HUD_INGAME_PLANTFOOD_BANK";
+    private static final String PF_LOCKED_SLOT_ASSET_ID = "IMAGE_ZEN_GARDEN_LOCKED_POT_ICON";
+    private TextureRegion foodBankRegion;
+    private TextureRegion pfLockedSlotRegion;
+    private boolean isPlantFoodSelected = false;
+    private static final float PF_BTN_X = 1675f;
+    private static final float PF_BTN_Y = 30f;
+    private static final float PF_BTN_SIZE = 100f;
     private static final float SHOVEL_BTN_X = 1770f;
     private static final float SHOVEL_BTN_Y = 30f;
     private static final float SHOVEL_BTN_SIZE = 100f;
@@ -146,10 +158,12 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         hudFont = generator.generateFont(parameter);
         generator.dispose();
         shovelIcon = textureBank.region(SHOVEL_ASSET_ID);
+        pfBankSlotRegion = textureBank.region(PF_BANK_SLOT_ASSET_ID);
         shovelIconInGame = textureBank.region(SHOVEL_ASSET);
         cardBgRegion = textureBank.region(CARD_BG_ASSET_ID);
         plusIcon = textureBank.region(PLUS_BUTTON_ASSET_ID);
         iceSliderRegion = textureBank.region(ICE_SLIDER_ASSET_ID);
+        cardBoostedBgRegion = textureBank.region(CARD_BOOSTED_BG_ASSET_ID);
         sunIcon = textureBank.region("IMAGE_UI_SEASONS_UNCOMPRESSED_PVZ2_SEASONS_UIASSET_ICON_SUN");
         plantFoodIcon = textureBank.region("IMAGE_UI_HUD_INGAME_PLANTFOOD_BUTTON");
         getPlantFoodIconInGame = textureBank.region("IMAGE_EFFECTS_PLANTFOOD_PICKUP_PLANTFOOD_PICKUP_79X79");
@@ -164,6 +178,11 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         for (int i = 0; i < ICE_STAGE_ASSET_IDS.length; i++) {
             iceStageRegions[i] = textureBank.region(ICE_STAGE_ASSET_IDS[i]);
         }
+        foodBankRegion = textureBank.region(FOOD_BANK_ASSET_ID);
+        if (foodBankRegion == null) {
+            foodBankRegion = textureBank.region("IMAGE_UI_HUD_INGAME_BACKGROUND_3SLICE");
+        }
+        pfLockedSlotRegion = textureBank.region(PF_LOCKED_SLOT_ASSET_ID);
         for (int i = 0; i < 5; i++) {
             darkNormalGraveRegions[i] = textureBank.region(DARK_NORMAL_GRAVES[i]);
             darkPlantFoodGraveRegions[i] = textureBank.region(DARK_PF_GRAVES[i]);
@@ -194,11 +213,14 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
 
                 if (button == com.badlogic.gdx.Input.Buttons.RIGHT) {
                     selectedPlant = null;
+                    isShovelSelected = false;
+                    isPlantFoodSelected = false;
                     return true;
                 }
 
                 User user = gamePlay.getThisUser();
                 boolean isDebug = user != null && user.isDebugMode();
+
 
                 if (isDebug && button == com.badlogic.gdx.Input.Buttons.LEFT) {
                     if (mouseWorldPos.x >= SUN_PLUS_X && mouseWorldPos.x <= SUN_PLUS_X + PLUS_BTN_SIZE &&
@@ -206,14 +228,12 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                         gamePlay.cheatAddSun(100);
                         return true;
                     }
-
                     if (mouseWorldPos.x >= PF_PLUS_X && mouseWorldPos.x <= PF_PLUS_X + PLUS_BTN_SIZE &&
                         mouseWorldPos.y >= PF_PLUS_Y && mouseWorldPos.y <= PF_PLUS_Y + PLUS_BTN_SIZE) {
                         gamePlay.addPlantFood();
                         return true;
                     }
                 }
-
 
                 if (gamePlay.tryCollectSunByClick(mouseWorldPos.x, mouseWorldPos.y)) {
                     return true;
@@ -222,10 +242,25 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
 
                 if (mouseWorldPos.x >= SHOVEL_BTN_X && mouseWorldPos.x <= SHOVEL_BTN_X + SHOVEL_BTN_SIZE &&
                     mouseWorldPos.y >= SHOVEL_BTN_Y && mouseWorldPos.y <= SHOVEL_BTN_Y + SHOVEL_BTN_SIZE) {
-
                     isShovelSelected = !isShovelSelected;
                     if (isShovelSelected) {
                         selectedPlant = null;
+                        isPlantFoodSelected = false;
+                    }
+                    return true;
+                }
+
+
+                if (mouseWorldPos.x >= PF_BTN_X && mouseWorldPos.x <= PF_BTN_X + PF_BTN_SIZE &&
+                    mouseWorldPos.y >= PF_BTN_Y && mouseWorldPos.y <= PF_BTN_Y + PF_BTN_SIZE) {
+                    if (gamePlay.getNumOfPlantFood() > 0) {
+                        isPlantFoodSelected = !isPlantFoodSelected;
+                        if (isPlantFoodSelected) {
+                            selectedPlant = null;
+                            isShovelSelected = false;
+                        }
+                    } else {
+                        showError("No Plant Food available!");
                     }
                     return true;
                 }
@@ -244,11 +279,9 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                         boolean isReady = clickedPlant.getCurrentCoolDown() <= 0 || !clickedPlant.getActiveCooldown();
 
                         if (canAfford && isReady) {
-                            if (selectedPlant == clickedPlant) {
-                                selectedPlant = null;
-                            } else {
-                                selectedPlant = clickedPlant;
-                            }
+                            isShovelSelected = false;
+                            isPlantFoodSelected = false;
+                            selectedPlant = (selectedPlant == clickedPlant) ? null : clickedPlant;
                         } else if (!canAfford) {
                             showError("Not enough sun!");
                         } else if (!isReady) {
@@ -257,6 +290,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                         return true;
                     }
                 }
+
 
                 int col = (int) Math.floor((mouseWorldPos.x - 490) / 152.2) + 1;
                 int row = (int) Math.floor((mouseWorldPos.y - 130) / 150) + 1;
@@ -269,6 +303,17 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                         return true;
                     }
 
+                    if (isPlantFoodSelected) {
+                        Tile tile = gamePlay.getTileByPosition(col, row);
+                        if (tile != null && !tile.getPlants().isEmpty()) {
+                            if (gamePlay.usePlantFood(col, row)) {
+                                isPlantFoodSelected = false;
+                            }
+                        } else {
+                            showError("No plant on this tile!");
+                        }
+                        return true;
+                    }
 
                     if (selectedPlant != null) {
                         gamePlay.planting(selectedPlant, new Position(col, row));
@@ -402,7 +447,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                 }
 
                 player.draw(batch, p.getPlantStats().getAnimation(), p.getCurrentAnimationName(),
-                    stateTime, drawX, drawY, true);
+                    stateTime, drawX, drawY, true, p.getVisibilities());
 
                 batch.setColor(Color.WHITE);
 
@@ -442,7 +487,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                 }
 
                 player.draw(batch, z.getZombieStats().getAnimation(), z.getCurrentAnimationName(),
-                    stateTime, drawX, drawY, true);
+                    stateTime, drawX, drawY, true, z.getVisibility());
 
                 batch.setColor(Color.WHITE);
             }
@@ -521,20 +566,64 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             }
         }
 
-        batch.draw(bgHud, 20, 1100, 215, 80);
-        batch.draw(bgHud, 240, 1100, 200, 80);
-        batch.draw(sunIcon, 30, 1110, 60, 60);
-        batch.draw(plantFoodIcon, 250, 1110, 60, 60);
 
-        String sunCount = String.valueOf(gamePlay.getMySuns());
-        String pfCount = String.valueOf(gamePlay.getNumOfPlantFood());
-        hudFont.draw(batch, sunCount, 95, 1160);
-        hudFont.draw(batch, pfCount, 330, 1160);
+
+        batch.draw(bgHud, 20, 1100, 215, 80);
+        batch.draw(sunIcon, 30, 1110, 60, 60);
+        hudFont.draw(batch, String.valueOf(gamePlay.getMySuns()), 95, 1160);
+
+
+        batch.draw(foodBankRegion, 240, 1100, 230, 80);
+
 
         User currentUser = UsersManager.getInstance().getLoggedInUser();
         if (currentUser != null && currentUser.isDebugMode() && plusIcon != null) {
             batch.draw(plusIcon, SUN_PLUS_X, SUN_PLUS_Y, PLUS_BTN_SIZE, PLUS_BTN_SIZE);
             batch.draw(plusIcon, PF_PLUS_X, PF_PLUS_Y, PLUS_BTN_SIZE, PLUS_BTN_SIZE);
+        }
+
+
+        float slotStartX = 325f;
+        float slotSpacing = 27f;
+        float slotY = 1127f;
+        float slotSize = 25f;
+
+        for (int i = 0; i < 5; i++) {
+            float sx = slotStartX + (i * slotSpacing);
+            if (i < 3) {
+                if (i < gamePlay.getNumOfPlantFood()) {
+
+                    if (pfBankSlotRegion != null) {
+                        batch.draw(pfBankSlotRegion, sx, slotY, slotSize, slotSize);
+                    }
+                } else {
+
+                    if (pfBankSlotRegion != null) {
+                        batch.setColor(0.3f, 0.3f, 0.3f, 0.45f);
+                        batch.draw(pfBankSlotRegion, sx, slotY, slotSize, slotSize);
+                        batch.setColor(Color.WHITE);
+                    }
+                }
+            } else {
+
+                if (pfLockedSlotRegion != null) {
+                    batch.setColor(0.7f, 0.7f, 0.7f, 0.75f);
+                    batch.draw(pfLockedSlotRegion, sx + 3f, slotY + 3f, slotSize - 6f, slotSize - 6f);
+                    batch.setColor(Color.WHITE);
+                }
+            }
+        }
+
+        if (plantFoodIcon != null) {
+            if (isPlantFoodSelected) {
+                batch.setColor(0.6f, 1f, 0.6f, 1f);
+            } else if (gamePlay.getNumOfPlantFood() == 0) {
+                batch.setColor(0.5f, 0.5f, 0.5f, 0.7f);
+            } else {
+                batch.setColor(Color.WHITE);
+            }
+            batch.draw(plantFoodIcon, PF_BTN_X, PF_BTN_Y, PF_BTN_SIZE, PF_BTN_SIZE);
+            batch.setColor(Color.WHITE);
         }
 
         ArrayList<BattlePlant> deck = gamePlay.getPlants();
@@ -558,11 +647,14 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                 batch.setColor(Color.WHITE);
             }
 
+            boolean isBoosted = gamePlay.isPlantBoosted(p.getName());
+            TextureRegion currentCardBg = (isBoosted && cardBoostedBgRegion != null)
+                ? cardBoostedBgRegion
+                : cardBgRegion;
 
-            if (cardBgRegion != null) {
-                batch.draw(cardBgRegion, cardX, cardY, CARD_WIDTH, CARD_HEIGHT);
+            if (currentCardBg != null) {
+                batch.draw(currentCardBg, cardX, cardY, CARD_WIDTH, CARD_HEIGHT);
             }
-
 
             if (plantIcon != null) {
                 float availW = CARD_WIDTH - 20f;
@@ -629,6 +721,18 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             }
         }
 
+        if (selectedPlant != null || isShovelSelected || isPlantFoodSelected) {
+            int hoverCol = (int) Math.floor((mouseWorldPos.x - 490) / 152.2) + 1;
+            int hoverRow = (int) Math.floor((mouseWorldPos.y - 130) / 150) + 1;
+
+            if (hoverCol >= 1 && hoverCol <= 9 && hoverRow >= 1 && hoverRow <= 5) {
+                float tileX = 490f + (hoverCol - 1) * 152.2f;
+                float tileY = 130f + (hoverRow - 1) * 150f;
+                shapeRenderer.setColor(new Color(1f, 1f, 1f, 0.35f));
+                shapeRenderer.rect(tileX - 5, tileY + 5, 145f, 140f);
+            }
+        }
+
         for (int i = 0; i < deck.size(); i++) {
             BattlePlant p = deck.get(i);
             double cd = p.getCurrentCoolDown();
@@ -680,6 +784,9 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
 
         if (isShovelSelected && shovelIcon != null) {
             batch.draw(shovelIconInGame, mouseWorldPos.x - 40, mouseWorldPos.y - 10, 80, 80);
+        }
+        if (isPlantFoodSelected && getPlantFoodIconInGame != null) {
+            batch.draw(getPlantFoodIconInGame, mouseWorldPos.x - 30, mouseWorldPos.y - 30, 60, 60);
         }
 
         batch.end();
