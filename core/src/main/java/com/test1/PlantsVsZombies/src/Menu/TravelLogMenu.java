@@ -57,13 +57,30 @@ public class TravelLogMenu extends Menu {
         getView().showError("Invalid command format for this menu state.");
     }
 
-    private void startMiniGame(String miniGameName) {
+    public void startMiniGame(String miniGameName) {
+
+        User currentUser = UsersManager.getInstance().getLoggedInUser();
+        if (currentUser == null || currentUser.getUserProgress() == null) {
+            getView().showError("No logged in user found.");
+            return;
+        }
+
+        ArrayList<String> plantsStr = MenuManager.getInstance().getGameMenu().getPlantsStr();
+        if (
+            plantsStr == null
+                || plantsStr.isEmpty()
+        ) {
+            getView().showError(
+                "No plants selected! Please select plants in choose plant menu first."
+            );
+            return;
+        }
+
         MiniGameType type = MiniGameType.fromDisplayName(miniGameName);
         if (type == null) {
             getView().showError("Unknown mini-game: " + miniGameName + ". Available: Vasebreaker, Walnut Bowling, I Zombie");
             return;
         }
-        User currentUser = UsersManager.getInstance().getLoggedInUser();
         if (currentUser == null || currentUser.getUserProgress() == null) {
             getView().showError("No logged in user found.");
             return;
@@ -106,7 +123,7 @@ public class TravelLogMenu extends Menu {
         MenuManager.getInstance().changeMenu(MenuType.GamePlay);
     }
 
-    private void showQuestsPage(QuestPage page) {
+    public void showQuestsPage(QuestPage page) {
         QuestManager qm = QuestManager.getInstance();
         List<Quest> active, completed;
         if (page == null) {
@@ -123,7 +140,7 @@ public class TravelLogMenu extends Menu {
         travelLogMenuView.showQuests(active, completed, page);
     }
 
-    private void claimReward(String questId) {
+    public void claimReward(String questId) {
         String error = QuestManager.getInstance().claimReward(questId);
         if (error == null) {
             travelLogMenuView.showRewardClaimed(questId);

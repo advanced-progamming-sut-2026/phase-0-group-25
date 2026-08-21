@@ -25,7 +25,7 @@ public class QuestDefinitionLoader {
         quests.add(new DefenselessCrossQuest("defenseless_cross", QuestCategory.DAILY, QuestPriority.HIGH, true, QuestPage.GARDENER));
         quests.add(new MowerTimeQuest("mower_time", QuestCategory.CHALLENGE, QuestPriority.MEDIUM, false, QuestPage.ZOMBIE_SLAYER));
         quests.add(new ProfessionalPlantKillerQuest("professional_killer", QuestCategory.DAILY, QuestPriority.HIGH, true, QuestPage.ZOMBIE_SLAYER));
-        quests.add(new OnlyCactusQuest("only_cactus", QuestCategory.CHALLENGE, QuestPriority.MEDIUM, false, QuestPage.ZOMBIE_SLAYER));
+        quests.add(new OnlyCactusQuest("only_cactus", QuestCategory.DAILY, QuestPriority.HIGH, true, QuestPage.ZOMBIE_SLAYER));
 
         return quests;
     }
