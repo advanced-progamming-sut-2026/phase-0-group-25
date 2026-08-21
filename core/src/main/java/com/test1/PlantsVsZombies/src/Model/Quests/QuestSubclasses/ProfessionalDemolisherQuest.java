@@ -14,6 +14,7 @@ public class ProfessionalDemolisherQuest extends Quest {
 
     public ProfessionalDemolisherQuest(String id, QuestCategory category, QuestPriority priority, boolean dailyReset, QuestPage page) {
         super(id, category, priority, dailyReset, page);
+        setIcon("IMAGE_UI_QUESTS_QUESTICONS_EXPANSIONLEVEL");
         this.name = "Professional Demolisher";
         this.description = "Use 3 explosive plants in a single level.";
         this.reward = new Reward(RewardType.COINS, 100);

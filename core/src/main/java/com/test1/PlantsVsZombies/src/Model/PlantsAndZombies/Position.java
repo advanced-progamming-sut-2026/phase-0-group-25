@@ -10,15 +10,14 @@ public class Position {
     }
 
     public static Position getRowAndColumn(double x, double y) {
-        int column = (int) Math.floor((x - 20) / 200) + 1;
-        int row = (int) Math.floor((y - 40) / 200) + 1;
+        int column = (int) Math.floor((x - 490) / 152.2) + 1;
+        int row = (int) Math.floor((y - 130) / 150) + 1;
 
         return new Position(column, row);
     }
 
     public static Position getRowAndColumn(Position position) {
         Position newPosition = getRowAndColumn(position.getX(), position.getY());
-
         return newPosition;
     }
 

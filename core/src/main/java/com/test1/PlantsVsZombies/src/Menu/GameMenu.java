@@ -17,22 +17,39 @@ import java.util.Set;
 import java.util.regex.Matcher;
 
 public class GameMenu extends Menu {
-    private final GameMenuView gameMenuView;
-    private final Set<String> boostedPlants;
+    private final GameMenuView chapterSelectionView;
+    private GameMenuView activeView;
+    private GameMenuView levelSelectionView;
     private Chapter chapter;
     private ArrayList<String> plantsStr;
 
     public GameMenu(GameMenuView gameMenuView) {
         super(MenuType.Main);
-        this.gameMenuView = gameMenuView;
+        this.chapterSelectionView = gameMenuView;
+        this.activeView = gameMenuView;
         this.plantsStr = new ArrayList<>();
-        this.boostedPlants = new HashSet<>();
         addChangeableMenuType(MenuType.Collection);
         addChangeableMenuType(MenuType.ChoosePlant);
     }
 
+    public void setLevelSelectionView(GameMenuView levelSelectionView) {
+        this.levelSelectionView = levelSelectionView;
+    }
+
+    /**
+     * Currently stored greenhouse/choose-plant boosts, read live from the
+     * logged-in user's UserProgress (the single source of truth for boosts
+     * now -- see UserProgressManager.takeAndClearGreenhouseBoosts).
+     */
     public Set<String> getBoostedPlants() {
-        return boostedPlants;
+        Set<String> result = new HashSet<>();
+        User user = UsersManager.getInstance().getLoggedInUser();
+        if (user != null) {
+            for (PlantType type : user.getUserProgress().getGreenhouseBoosts()) {
+                result.add(type.getName());
+            }
+        }
+        return result;
     }
 
     public ArrayList<String> getPlantsStr() {
@@ -49,34 +66,50 @@ public class GameMenu extends Menu {
             getView().showError("Invalid wallet type.");
             return;
         }
-
         String error = UsersManager.getInstance().cheat(amount, walletType);
         if (error != null) {
             getView().showError(error);
         }
     }
 
-    private void enterChapter(String chapterName) {
+    @Override
+    public void onEnter() {
+        activeView = chapterSelectionView;
+    }
+
+    public void enterChapter(String chapterName) {
         ChapterType chapterType = ChapterType.getByName(chapterName);
         if (chapterType == null) {
             getView().showError("Invalid chapter name.");
             return;
         }
-
         User currentUser = UsersManager.getInstance().getLoggedInUser();
-        if (currentUser == null || currentUser.getUserProgress() == null ||
-                !currentUser.getUserProgress().getUnlockedChaptersAndLevels().keySet().contains(chapterType)) {
+        if (currentUser == null || currentUser.getUserProgress() == null
+            || !currentUser.getUserProgress().getUnlockedChaptersAndLevels().containsKey(chapterType)) {
             getView().showError("This chapter is locked.");
             return;
         }
 
         this.chapter = ChapterFactory.generateChapter(chapterType);
-        gameMenuView.showChapterEnterSuccess(chapterType.getName());
+        chapterSelectionView.showChapterEnterSuccess(chapterType.getName());
+
+        if (levelSelectionView != null) {
+            activeView = levelSelectionView;
+        }
+        if (levelSelectionView instanceof com.badlogic.gdx.Screen) {
+            com.test1.PlantsVsZombies.src.View.LibGDXViews.UIManager
+                .changeScreen((com.badlogic.gdx.Screen) levelSelectionView);
+        }
     }
 
-    private void startGame(int requestedLevel) {
+    /**
+     * Starts the last unlocked level of the current chapter directly --
+     * what the "Let's Rock" button on the Choose Plant screen calls,
+     * equivalent to clicking that level's island on the level-select screen.
+     */
+    public void startGame() {
         if (this.chapter == null) {
-            getView().showError("You must enter a chapter first using 'menu enter chapter -c <chapter_name>'.");
+            getView().showError("You must enter a chapter first.");
             return;
         }
         User currentUser = UsersManager.getInstance().getLoggedInUser();
@@ -84,29 +117,60 @@ public class GameMenu extends Menu {
             getView().showError("No logged in user found.");
             return;
         }
-        if (this.plantsStr == null || this.plantsStr.isEmpty()) {
-            getView().showError("No plants selected! Please select plants in choose plant menu first.");
+        ChapterType chapterType = this.chapter.getChapterType();
+        int lastCompletedLevel = currentUser.getUserProgress()
+            .getUnlockedChaptersAndLevels()
+            .getOrDefault(chapterType, 0);
+        int maxPlayableLevel = Math.min(lastCompletedLevel + 1, ChapterType.LEVELS_PER_CHAPTER);
+        startGame(maxPlayableLevel);
+    }
+
+    public void startGame(int requestedLevel) {
+        if (this.chapter == null) {
+            getView().showError("You must enter a chapter first.");
+            return;
+        }
+        User currentUser = UsersManager.getInstance().getLoggedInUser();
+        if (currentUser == null || currentUser.getUserProgress() == null) {
+            getView().showError("No logged in user found.");
             return;
         }
 
+        if (
+            this.plantsStr == null
+                || this.plantsStr.isEmpty()
+        ) {
+            getView().showError(
+                "No plants selected! Please select plants in choose plant menu first."
+            );
+            return;
+        }
 
-        if (requestedLevel < 1 || requestedLevel > 4) {
-            getView().showError("We only have 4 levels.");
+        if (
+            requestedLevel < 1
+                || requestedLevel > ChapterType.LEVELS_PER_CHAPTER
+        ) {
+            getView().showError(
+                "We only have "
+                    + ChapterType.LEVELS_PER_CHAPTER
+                    + " levels."
+            );
             return;
         }
 
         ChapterType chapterType = this.chapter.getChapterType();
-        int maxUnlockedLevelForChapter = currentUser.getUserProgress().getUnlockedChaptersAndLevels().getOrDefault(chapterType, 1);
+        int lastCompletedLevel = currentUser.getUserProgress()
+            .getUnlockedChaptersAndLevels()
+            .getOrDefault(chapterType, 0);
 
-
-        if (requestedLevel > maxUnlockedLevelForChapter) {
+        int maxPlayableLevel = Math.min(lastCompletedLevel + 1, ChapterType.LEVELS_PER_CHAPTER);
+        if (requestedLevel > maxPlayableLevel) {
             getView().showError("This level is locked. You must beat level " + (requestedLevel - 1) + " first.");
             return;
         }
 
         ArrayList<String> zombiesStrToPlay = new ArrayList<>();
         String chapterNameStr = chapterType.getName().toLowerCase();
-
         for (ZombieType zombieType : ZombieType.values()) {
             ZombieStats stats = GameDataLoader.getStatsForZombie(zombieType.getName());
             if (stats != null && stats.getCategory() != null) {
@@ -120,13 +184,21 @@ public class GameMenu extends Menu {
             }
         }
 
+        // Snapshot the currently stored boosts for THIS level session and
+        // clear the persisted list -- see UserProgressManager.takeAndClearGreenhouseBoosts.
+        Set<PlantType> boostSnapshot = UsersManager.getInstance().takeAndClearGreenhouseBoosts();
+        Set<String> boostedNames = new HashSet<>();
+        for (PlantType type : boostSnapshot) {
+            boostedNames.add(type.getName());
+        }
+
         GamePlay gamePlay = this.chapter.makeGame(
-                requestedLevel,
-                currentUser.getUserProgress().getGameDifficulty(),
-                currentUser,
-                plantsStr,
-                zombiesStrToPlay,
-                boostedPlants
+            requestedLevel,
+            currentUser.getUserProgress().getGameDifficulty(),
+            currentUser,
+            plantsStr,
+            zombiesStrToPlay,
+            boostedNames
         );
 
         if (gamePlay == null) {
@@ -134,60 +206,14 @@ public class GameMenu extends Menu {
             return;
         }
 
-        GamePlayMenu.setGamePlay(gamePlay);
+        MenuManager.getInstance().getGamePlayMenu().startSession(gamePlay);
         MenuManager.getInstance().changeMenu(MenuType.GamePlay);
     }
 
-    @Override
-    public void handleSpecificCommands(String input) {
-        Matcher matcher;
 
-        if ((matcher = getMatcher(input, Command.EnterChapter)) != null) {
-            enterChapter(matcher.group(1));
-            return;
-        }
-
-        if ((matcher = getMatcher(input, Command.StartGame)) != null) {
-            int level = Integer.parseInt(matcher.group(1));
-            startGame(level);
-            return;
-        }
-
-        if ((matcher = getMatcher(input, Command.EnterGreenHouse)) != null) {
-            MenuManager.getInstance().changeMenu(MenuType.GreenHouse);
-            return;
-        }
-
-        if ((matcher = getMatcher(input, Command.EnterTravelLog)) != null) {
-            MenuManager.getInstance().changeMenu(MenuType.TravelLog);
-            return;
-        }
-
-        if ((matcher = getMatcher(input, Command.EnterLeaderBoard)) != null) {
-            MenuManager.getInstance().changeMenu(MenuType.LeaderBoard);
-            return;
-        }
-
-        if ((matcher = getMatcher(input, Command.EnterCoinWallet)) != null) {
-            MenuManager.getInstance().changeMenu(MenuType.CoinWallet);
-            return;
-        }
-
-        if ((matcher = getMatcher(input, Command.EnterGemWallet)) != null) {
-            MenuManager.getInstance().changeMenu(MenuType.GemWallet);
-            return;
-        }
-
-        if ((matcher = getMatcher(input, Command.Cheat)) != null) {
-            cheat(Integer.parseInt(matcher.group(1)), matcher.group(2));
-            return;
-        }
-
-        getView().showError("Invalid command format for this menu state.");
-    }
 
     @Override
     public BaseView getView() {
-        return gameMenuView;
+        return activeView;
     }
 }

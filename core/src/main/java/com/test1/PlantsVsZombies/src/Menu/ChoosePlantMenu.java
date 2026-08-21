@@ -11,7 +11,6 @@ import com.test1.PlantsVsZombies.src.View.ViewInterfaces.ChoosePlantMenuView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 
 public class ChoosePlantMenu extends Menu {
@@ -19,16 +18,16 @@ public class ChoosePlantMenu extends Menu {
     private final ChoosePlantMenuView choosePlantMenuView;
     private final ArrayList<String> plantsStr;
 
-    private final Set<String> boostedPlants;
-
-    public ChoosePlantMenu(ChoosePlantMenuView view, ArrayList<String> plants, Set<String> boostedPlants) {
+    public ChoosePlantMenu(ChoosePlantMenuView view, ArrayList<String> plants) {
         super(MenuType.Game);
         this.plantsStr = plants;
         this.choosePlantMenuView = view;
-        this.boostedPlants = boostedPlants;
     }
 
-    @Override
+    public static int getMaxSelectedPlants() {
+        return DEFAULT_MAX_PLANTS;
+    }
+
     public void handleSpecificCommands(String input) {
         Matcher matcher;
 
@@ -43,43 +42,124 @@ public class ChoosePlantMenu extends Menu {
         }
 
         if ((matcher = getMatcher(input, Command.ChooseAddPlant)) != null) {
-            addPlant(matcher.group(1).trim());
+            String plantName = matcher.group(1).trim();
+            String error = addPlant(plantName);
+            if (error != null) {
+                getView().showError(error);
+            } else {
+                choosePlantMenuView.showPlantAddedSuccess(plantName);
+            }
             return;
         }
 
         if ((matcher = getMatcher(input, Command.ChooseRemovePlant)) != null) {
-            removePlant(matcher.group(1).trim());
+            String plantName = matcher.group(1).trim();
+            String error = removePlant(plantName);
+            if (error != null) {
+                getView().showError(error);
+            } else {
+                choosePlantMenuView.showPlantRemovedSuccess(plantName);
+            }
             return;
         }
 
         if ((matcher = getMatcher(input, Command.BoostPlant)) != null) {
             String plantName = matcher.group(1);
-            boostPlant(plantName);
+            String error = boostPlant(plantName);
+            if (error != null) {
+                getView().showError(error);
+            } else {
+                choosePlantMenuView.showPlantBoosted(plantName);
+            }
             return;
         }
-
 
         getView().showError("Invalid command format for this menu state.");
     }
 
-    private void boostPlant(String plantName) {
+    // ------------------------------------------------------------
+    // Each of these mutates state and returns null on success, or a
+    // user-facing error message on failure. handleSpecificCommands(...)
+    // routes the result to the terminal view above; CollectionMenuScreen's
+    // sibling, ChoosePlantScreen, calls these same methods directly for
+    // the GUI, so the validation logic lives in exactly one place.
+    // ------------------------------------------------------------
+
+    public String addPlant(String typeName) {
+        PlantType plantType = PlantType.fromName(typeName);
+        if (plantType == null) {
+            return "Plant type not found: " + typeName;
+        }
+
+        User currentUser = UsersManager.getInstance().getLoggedInUser();
+        if (currentUser == null || currentUser.getUserProgress() == null) {
+            return "No logged in user found.";
+        }
+
+        Map<PlantType, Integer> unlockedMap = currentUser.getUserProgress().getUnlockedPlantsAndTheirLevels();
+        if (!unlockedMap.containsKey(plantType)) {
+            return "Plant is locked: " + plantType.getName();
+        }
+
+        for (String plantStr : plantsStr) {
+            if (plantStr.equalsIgnoreCase(plantType.getName())) {
+                return "Plant is already selected: " + plantType.getName();
+            }
+        }
+
+        if (plantsStr.size() >= DEFAULT_MAX_PLANTS) {
+            return "Cannot add more plants. Maximum limit of " + DEFAULT_MAX_PLANTS + " plants reached.";
+        }
+
+        plantsStr.add(plantType.getName());
+        return null;
+    }
+
+    public String removePlant(String typeName) {
+        PlantType plantType = PlantType.fromName(typeName);
+        if (plantType == null) {
+            return "Plant type not found: " + typeName;
+        }
+
+        String plantToRemove = null;
+        for (String plantStr : plantsStr) {
+            if (plantStr.equalsIgnoreCase(plantType.getName())) {
+                plantToRemove = plantStr;
+                break;
+            }
+        }
+
+        if (plantToRemove == null) {
+            return "Plant is not currently selected: " + plantType.getName();
+        }
+
+        plantsStr.remove(plantToRemove);
+        return null;
+    }
+
+    /**
+     * Stores a boost for this plant (2 gems), same underlying storage as
+     * GreenHouse boosting -- see UserProgressManager.addGreenhouseBoost /
+     * takeAndClearGreenhouseBoosts.
+     */
+    public String boostPlant(String plantName) {
         PlantType plant = PlantType.fromName(plantName);
         if (plant == null) {
-            getView().showError("Invalid plant type.");
-            return;
+            return "Invalid plant type.";
         }
         User currentUser = UsersManager.getInstance().getLoggedInUser();
         if (currentUser == null || !currentUser.getUserProgress().getUnlockedPlantsAndTheirLevels().containsKey(plant)) {
-            getView().showError("Plant " + plantName + " is not unlocked.");
-            return;
+            return "Plant " + plantName + " is not unlocked.";
+        }
+        if (UsersManager.getInstance().hasGreenhouseBoost(plant)) {
+            return "You already have a boost stored for " + plantName + ".";
         }
         String gemError = UsersManager.getInstance().subtractGems(2);
         if (gemError != null) {
-            getView().showError(gemError);
-            return;
+            return gemError;
         }
-        boostedPlants.add(plantName.toUpperCase());
-        choosePlantMenuView.showPlantBoosted(plantName);
+        UsersManager.getInstance().addGreenhouseBoost(plant);
+        return null;
     }
 
     public void showAllPlants() {
@@ -105,63 +185,13 @@ public class ChoosePlantMenu extends Menu {
         choosePlantMenuView.showAvailablePlants(availablePlantNames);
     }
 
-    public void addPlant(String typeName) {
-        PlantType plantType = PlantType.fromName(typeName);
-        if (plantType == null) {
-            getView().showError("Plant type not found: " + typeName);
-            return;
-        }
-
-        User currentUser = UsersManager.getInstance().getLoggedInUser();
-        if (currentUser == null || currentUser.getUserProgress() == null) {
-            getView().showError("No logged in user found.");
-            return;
-        }
-
-        Map<PlantType, Integer> unlockedMap = currentUser.getUserProgress().getUnlockedPlantsAndTheirLevels();
-        if (!unlockedMap.containsKey(plantType)) {
-            getView().showError("Plant is locked: " + plantType.getName());
-            return;
-        }
-
-        for (String plantStr : plantsStr) {
-            if (plantStr.equalsIgnoreCase(plantType.getName())) {
-                getView().showError("Plant is already selected: " + plantType.getName());
-                return;
-            }
-        }
-
-        if (plantsStr.size() >= DEFAULT_MAX_PLANTS) {
-            getView().showError("Cannot add more plants. Maximum limit of " + DEFAULT_MAX_PLANTS + " plants reached.");
-            return;
-        }
-
-        plantsStr.add(plantType.getName());
-        choosePlantMenuView.showPlantAddedSuccess(plantType.getName());
-    }
-
-    public void removePlant(String typeName) {
-        PlantType plantType = PlantType.fromName(typeName);
-        if (plantType == null) {
-            getView().showError("Plant type not found: " + typeName);
-            return;
-        }
-
-        String plantToRemove = null;
-        for (String plantStr : plantsStr) {
-            if (plantStr.equalsIgnoreCase(plantType.getName())) {
-                plantToRemove = plantStr;
-                break;
-            }
-        }
-
-        if (plantToRemove == null) {
-            getView().showError("Plant is not currently selected: " + plantType.getName());
-            return;
-        }
-
-        plantsStr.remove(plantToRemove);
-        choosePlantMenuView.showPlantRemovedSuccess(plantType.getName());
+    /**
+     * The plants currently selected for the next game (shared, same list
+     * reference GameMenu holds -- adding/removing here is reflected there
+     * too, since they're literally the same ArrayList).
+     */
+    public ArrayList<String> getSelectedPlants() {
+        return plantsStr;
     }
 
     @Override

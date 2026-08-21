@@ -17,8 +17,6 @@ import com.test1.PlantsVsZombies.src.View.ViewInterfaces.LoginMenuView;
 import pvz.skin.BorderedTable;
 
 public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
-    private static final String DEFAULT_BUTTON_BG_ASSET_ID = "IMAGE_UI_GENERIC_GREENBUTTON_DOWN";
-    private static final String FORGET_BUTTON_BG_ASSET_ID = "IMAGE_UI_GENERIC_BROWNBUTTON_DOWN";
     private static final String ERROR_BG_ASSET_ID = "IMAGE_UI_GENERIC_TIMER_RIBBON_RED";
     private static final String SUCCESS_BG_ASSET_ID = "IMAGE_UI_GENERIC_VTB";
 
@@ -27,16 +25,16 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
 
     private LoginMenu menuController;
 
-    // Main Containers
+
     private Table mainContainer;
     private BorderedTable loginTable;
     private BorderedTable forgetPasswordTable;
 
-    // Login Fields
+
     private TextField usernameField;
     private TextField passwordField;
 
-    // Stay Logged In Toggle State
+
     private boolean stayLoggedIn = true;
     private Image checkImage;
     private Image xImage;
@@ -44,7 +42,7 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
     private Cell<Image> xCell;
     private Table stayLoggedInRow;
 
-    // Forgot Password Fields
+
     private TextField forgetUsernameField;
     private TextField forgetEmailField;
     private TextField forgetAnswerField;
@@ -87,28 +85,6 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
         rootTable.add(screenStack).grow();
     }
 
-    private TextButton createStretchedButton(String text, String bgAssetId, ClickListener listener) {
-        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
-        style.font = skin.get(Label.LabelStyle.class).font;
-        style.fontColor = Color.BLACK;
-
-        if (bgAssetId != null && !bgAssetId.isEmpty()) {
-            TextureRegion bgRegion = textureBank.region(bgAssetId);
-            if (bgRegion != null) {
-                NinePatch patch = new NinePatch(bgRegion, 15, 15, 15, 15);
-                style.up = new NinePatchDrawable(patch);
-            }
-        }
-
-        TextButton button = new TextButton(text, style);
-        button.getLabel().setColor(Color.BLACK);
-        button.pad(10, 20, 10, 20);
-
-        if (listener != null) {
-            button.addListener(listener);
-        }
-        return button;
-    }
 
     private void updateStayLoggedInSelection() {
         TextureRegion checkRegion = textureBank.region(CHECKMARK_ASSET_ID);
@@ -138,7 +114,8 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
         loginTable = new BorderedTable();
         loginTable.pad(30);
 
-        Label titleLabel = createBlackLabel("USER LOGIN");
+        Label titleLabel = createLabel("USER LOGIN", "FBUSV8C5EI_2", Color.BLACK);
+        titleLabel.setFontScale(0.75f);
 
         usernameField = new TextField("", skin);
         passwordField = new TextField("", skin);
@@ -173,11 +150,12 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
         stayLoggedInRow = new Table();
         checkCell = stayLoggedInRow.add(checkImage).padRight(10);
         xCell = stayLoggedInRow.add(xImage).padRight(15);
-        stayLoggedInRow.add(createBlackLabel("Stay Logged In"));
+        stayLoggedInRow.add(createLabel("Stay Logged In", "AVENIRNEXTLTPRO-DEMICN", Color.BLACK));
 
         updateStayLoggedInSelection();
 
-        TextButton loginButton = createStretchedButton("Login", DEFAULT_BUTTON_BG_ASSET_ID, new ClickListener() {
+        TextButton loginButton = new TextButton("Login", skin);
+        loginButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (menuController != null) {
@@ -190,7 +168,8 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
             }
         });
 
-        TextButton forgotPassButton = createStretchedButton("Forgot Password?", FORGET_BUTTON_BG_ASSET_ID, new ClickListener() {
+        TextButton forgotPassButton = new TextButton("Forgot Password?", skin, "brown");
+        forgotPassButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 mainContainer.clearChildren();
@@ -200,10 +179,10 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
 
         loginTable.add(titleLabel).colspan(2).padBottom(20).row();
 
-        loginTable.add(createBlackLabel("Username:")).right().pad(5);
+        loginTable.add(createLabel("Username:", "AVENIRNEXTLTPRO-DEMICN", Color.BLACK)).right().pad(5);
         loginTable.add(usernameField).width(250).pad(5).row();
 
-        loginTable.add(createBlackLabel("Password:")).right().pad(5);
+        loginTable.add(createLabel("Password:", "AVENIRNEXTLTPRO-DEMICN", Color.BLACK)).right().pad(5);
         loginTable.add(passwordField).width(250).pad(5).row();
 
         loginTable.add(stayLoggedInRow).colspan(2).center().pad(10).row();
@@ -217,13 +196,14 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
         forgetPasswordTable = new BorderedTable();
         forgetPasswordTable.pad(30);
 
-        Label titleLabel = createBlackLabel("RECOVER PASSWORD");
-
+        Label titleLabel = createLabel("RECOVER PASSWORD", "FBUSV8C5EI_2", Color.BLACK);
+        titleLabel.setFontScale(0.75f);
         forgetUsernameField = new TextField("", skin);
         forgetEmailField = new TextField("", skin);
         forgetAnswerField = new TextField("", skin);
 
-        TextButton submitRecoveryButton = createStretchedButton("Submit Recovery", DEFAULT_BUTTON_BG_ASSET_ID, new ClickListener() {
+        TextButton submitRecoveryButton = new TextButton("Submit Recovery", skin, "green_small");
+        submitRecoveryButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (menuController != null) {
@@ -236,7 +216,8 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
             }
         });
 
-        TextButton backToLoginButton = createStretchedButton("Back to Login", FORGET_BUTTON_BG_ASSET_ID, new ClickListener() {
+        TextButton backToLoginButton = new TextButton("Back to Login", skin, "brown");
+        backToLoginButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 mainContainer.clearChildren();
@@ -246,13 +227,13 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
 
         forgetPasswordTable.add(titleLabel).colspan(2).padBottom(20).row();
 
-        forgetPasswordTable.add(createBlackLabel("Username:")).right().pad(5);
+        forgetPasswordTable.add(createLabel("Username:", "AVENIRNEXTLTPRO-DEMICN", Color.BLACK)).right().pad(5);
         forgetPasswordTable.add(forgetUsernameField).width(280).pad(5).row();
 
-        forgetPasswordTable.add(createBlackLabel("Email:")).right().pad(5);
+        forgetPasswordTable.add(createLabel("Email:", "AVENIRNEXTLTPRO-DEMICN", Color.BLACK)).right().pad(5);
         forgetPasswordTable.add(forgetEmailField).width(280).pad(5).row();
 
-        forgetPasswordTable.add(createBlackLabel("Security Answer:")).right().pad(5);
+        forgetPasswordTable.add(createLabel("Security Answer:", "AVENIRNEXTLTPRO-DEMICN", Color.BLACK)).right().pad(5);
         forgetPasswordTable.add(forgetAnswerField).width(280).pad(5).row();
 
         forgetPasswordTable.add(submitRecoveryButton).colspan(2).center().padTop(15).row();
@@ -263,7 +244,8 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
     private void buildBottomBar(Table uiTable) {
         Table bottomTable = new Table();
 
-        TextButton backToSignupButton = createStretchedButton("Back to Signup", FORGET_BUTTON_BG_ASSET_ID, new ClickListener() {
+        TextButton backToSignupButton = new TextButton("Back to Signup", skin, "brown");
+        backToSignupButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 MenuManager.getInstance().changeMenu(MenuType.Signup);
@@ -285,24 +267,31 @@ public class LoginMenuScreen extends AbstractScreen implements LoginMenuView {
         BorderedTable modal = new BorderedTable();
         modal.pad(25);
 
-        Label titleLabel = createBlackLabel("SET NEW PASSWORD");
+        Label titleLabel = createLabel("SET NEW PASSWORD", "FBUSV8C5EI_2", Color.BLACK);
+        titleLabel.setFontScale(0.75f);
         TextField newPasswordField = new TextField("", skin);
+        TextField confirmPasswordField = new TextField("", skin);
+        confirmPasswordField.setPasswordMode(true);
         newPasswordField.setPasswordMode(true);
+        confirmPasswordField.setPasswordCharacter('*');
         newPasswordField.setPasswordCharacter('*');
 
-        TextButton submitNewPasswordButton = createStretchedButton("Set Password", DEFAULT_BUTTON_BG_ASSET_ID, new ClickListener() {
+        TextButton submitNewPasswordButton = new TextButton("Set Password", skin, "green_small");
+        submitNewPasswordButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (menuController != null) {
-                    menuController.setNewPassword(newPasswordField.getText().trim());
+                    menuController.setNewPassword(newPasswordField.getText().trim(), confirmPasswordField.getText().trim());
                     modal.remove();
                 }
             }
         });
 
         modal.add(titleLabel).colspan(2).padBottom(15).row();
-        modal.add(createBlackLabel("New Password:")).right().pad(5);
+        modal.add(createLabel("New Password:", "AVENIRNEXTLTPRO-DEMICN", Color.BLACK)).right().pad(5);
         modal.add(newPasswordField).width(250).pad(5).row();
+        modal.add(createLabel("Confirm Password:", "AVENIRNEXTLTPRO-DEMICN", Color.BLACK)).right().pad(5);
+        modal.add(confirmPasswordField).width(250).pad(5).row();
         modal.add(submitNewPasswordButton).colspan(2).center().padTop(15);
 
         modal.pack();

@@ -24,7 +24,6 @@ public class CoinWalletMenu extends Menu {
         coinWalletMenuView.showCoinsCount(currentUser.getUserProgress().getCoinsCount());
     }
 
-    @Override
     public void handleSpecificCommands(String input) {
 
     }

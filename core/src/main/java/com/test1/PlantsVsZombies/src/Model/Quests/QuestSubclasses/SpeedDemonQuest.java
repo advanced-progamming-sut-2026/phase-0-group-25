@@ -12,6 +12,7 @@ import com.test1.PlantsVsZombies.src.Model.Quests.Reward;
 public class SpeedDemonQuest extends Quest {
     public SpeedDemonQuest(String id, QuestCategory c, QuestPriority p, boolean dr, QuestPage pg) {
         super(id, c, p, dr, pg);
+        setIcon("IMAGE_UI_QUESTS_QUESTICONS_ASH");
         this.name = "Speed Demon";
         this.description = "Kill 10 zombies in less than 30 seconds after the first wave.";
         this.reward = new Reward(RewardType.COINS, 500);

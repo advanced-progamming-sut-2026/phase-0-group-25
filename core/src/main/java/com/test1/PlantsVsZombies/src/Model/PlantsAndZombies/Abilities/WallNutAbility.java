@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 
 public class WallNutAbility implements Ability {
-    private GamePlay GAME = GamePlay.activeInstance;
+    private GamePlay GAME = GamePlayMenu.getGamePlay();
 
     @Override
     public void executeAbility(Entity entity) {
@@ -26,7 +26,7 @@ public class WallNutAbility implements Ability {
 
             attacker.setCurrentHP(attacker.getCurrentHP() - damage);
             plant.setCurrentHP(plant.getCurrentHP()
-                    + attacker.getZombieStats().getEatdps());
+                + attacker.getZombieStats().getEatdps());
         }
         if (tags.contains("move-zombies")) {
             if ((int) plant.getPlantStats().getAttributes().get("move") == 1) {
@@ -78,7 +78,9 @@ public class WallNutAbility implements Ability {
 
         if (!plant.getPlantStats().getTags().contains("moveZombies")) {
             int armor = (int) plant.getPlantStats().getPlantFoodEffect().get("armor");
-            plant.setCurrentHP(plant.getCurrentHP() + armor);
+            plant.getPlantStats().getAttributes().put("armorHP", armor);
+
+            plant.setCurrentHP(plant.getPlantStats().getBaseHP());
         }
     }
 

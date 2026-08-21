@@ -10,6 +10,7 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.ZombieFactory;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 import com.test1.PlantsVsZombies.src.Model.User.User;
+import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.Model.Wave.FinalWave;
 import com.test1.PlantsVsZombies.src.Model.Wave.Wave;
 
@@ -63,7 +64,7 @@ public class TimedWar extends GamePlay {
 
             if (!zombie.isAlive() || zombie.getCurrentHP() <= 0) {
                 killAward(this.thisUser);
-                glowingAward(this);
+                //glowingAward(this);
                 numOfDeadZombies += 1;
                 Position zPos = Position.getRowAndColumn(zombie.getPosition());
                 System.out.printf("Zombie of type %s is dead at (%d, %d)\n",
@@ -131,27 +132,12 @@ public class TimedWar extends GamePlay {
         }
 
         // Checking if the end of the game (Losing) + Activate Mowers :
-        int x = 20;
-        for (Zombie zombie : gameZombies) {
-            int yOfz = (int) zombie.getPosition().getY();
-            int xOfz = (int) zombie.getPosition().getX();
-            Mower thisMower = mowers.stream().filter(m -> getRealY(m.getY()) == yOfz).findFirst().get();
-
-            if (xOfz <= x) {
-                if (!thisMower.isUsed()) {
-                    System.out.println("The lawn mower in the row " + (int) (thisMower.getY()) + " is triggered and killed these zombies:");
-                    thisMower.killZombies(this);
-                } else {
-                    System.out.println("The zombie ate your brain; LOSER!!!");
-                    this.isPaused = true;
-                }
-            }
-        }
 
         // Another condition for losing (in this game) :
         if (totalTicksPassed >= 150 && numOfDeadZombies < 10) {
             System.out.println("You must kill at least 10 zombies within 15 seconds!!");
             System.out.println("The zombie ate your brain; LOSER!!!");
+            UsersManager.getInstance().addGamesPlayed();
             this.isPaused = true;
         }
 

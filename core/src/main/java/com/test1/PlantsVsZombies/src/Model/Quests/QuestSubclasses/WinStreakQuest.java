@@ -14,6 +14,7 @@ public class WinStreakQuest extends Quest {
 
     public WinStreakQuest(String id, QuestCategory category, QuestPriority priority, boolean dailyReset, QuestPage page) {
         super(id, category, priority, dailyReset, page);
+        setIcon("IMAGE_UI_QUESTS_QUESTICONS_LOTD");
         this.name = "Win Streak";
         this.description = "Win 5 levels in a row on the highest difficulty.";
         this.reward = new Reward(RewardType.COINS, 5000);

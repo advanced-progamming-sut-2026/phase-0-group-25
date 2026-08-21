@@ -1,6 +1,7 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies;
 
 import com.test1.PlantsVsZombies.src.Enums.PlantCategory;
+import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities.*;
@@ -28,6 +29,8 @@ public class BattlePlant extends Plant {
     private boolean frozen;
     private int iceTime;
     private double iceHP;
+
+    private String status = "idle";
 
     private GamePlay GAME = GamePlay.activeInstance;
 
@@ -75,6 +78,8 @@ public class BattlePlant extends Plant {
         if (!this.plantStats.getCategory().equals("Wall-nut") &&
             !this.plantStats.getCategory().equals("Explosive")) {
 
+            checkStatus();
+
             if (this.isEffected) {
                 for (Ability ability : this.originalAbilities) {
                     ability.executeAbility(this);
@@ -89,7 +94,14 @@ public class BattlePlant extends Plant {
                 for (Ability ability : this.originalAbilities) {
                     ability.executeAbility(this);
                 }
+                if ((this.plantStats.getCategory().equals("Sun Producer")) ||
+                    (this.name.equals(PlantType.CHOMPER.getName()))) {
+                    return;
+                }
+
                 this.lastActionTime = GAME.getTotalTimePassed();
+            } else {
+                this.status = "idle";
             }
 
         }
@@ -233,45 +245,92 @@ public class BattlePlant extends Plant {
         }
     }
 
-    private boolean isTimeForAction() {
+    public double getLastActionTime() {
+        return lastActionTime;
+    }
+
+    public boolean isTimeForAction() {
         return ((GAME.getTotalTimePassed() - this.lastActionTime) >= this.plantStats.getActionInterval());
     }
 
-    public String getCurrentAnimationName() {
-        Map<String, String> status = this.plantStats.getStatus();
-        if (status == null) {
-            return "idle";
-        }
-        if (this.plantStats.getTags().contains("wramp_up")) {
-            return getWrampUpPlantsAnimation(status);
-        } else {
-            if (isTimeForAction()) {
-                return status.get("action");
+    public void takeDamage(double damage) {
+        double armorHP = (int) this.plantStats.getAttributes().getOrDefault("armorHP", 0);
+        if (armorHP > 0) {
+            double finalArmorHP = armorHP - damage;
+            if (finalArmorHP < 0) {
+                finalArmorHP = 0;
             }
-            return status.get("idle");
+            this.plantStats.getAttributes().put("armorHP", finalArmorHP);
+
+            return;
+        }
+
+        this.currentHP -= damage;
+    }
+
+    public String getCurrentAnimationName(float stateTime) {
+        AnimationDecider decider = new AnimationDecider();
+        return decider.plantDecider(this, stateTime);
+    }
+
+    public String getCurrentAnimationName() {
+        AnimationDecider decider = new AnimationDecider();
+        return decider.plantDecider(this, (float) GAME.getTotalTimePassed());
+    }
+
+    public HashMap<String, Boolean> getVisibilities() {
+        AnimationDecider decider = new AnimationDecider();
+        return decider.plantVisibilities(this);
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setLastActionTime(double lastActionTime) {
+        this.lastActionTime = lastActionTime;
+    }
+
+    private void checkStatus() {
+        if (this.plantStats.getCategory().equals("Sun Producer")) {
+            checkSunProducer();
+        }
+
+        if (this.plantStats.getCategory().equals("Melee")) {
+            checkMelee();
         }
     }
 
-    private String getWrampUpPlantsAnimation(Map<String, String> status) {
-        ArrayList<Integer> growthTimeStages = (ArrayList<Integer>) this.plantStats.getAttributes().get("growth_time");
-
-        double differenceTime = GAME.getTotalTimePassed() - this.plantTime;
-
-        if (differenceTime >= growthTimeStages.get(1)) {
-            if (isTimeForAction()) {
-                return status.get("action3");
-            }
-            return status.get("idle3");
-        } else if (differenceTime >= growthTimeStages.get(0)) {
-            if (isTimeForAction()) {
-                return status.get("action2");
-            }
-            return status.get("idle2");
+    private void checkSunProducer() {
+        float difference = (float) (GAME.getTotalTimePassed() - this.lastActionTime);
+        float trigger = this.plantStats.getTrigger();
+        if ((trigger + difference) >= this.plantStats.getActionInterval()) {
+            this.status = "action";
         } else {
-            if (isTimeForAction()) {
-                return status.get("action1");
+            this.status = "idle";
+        }
+    }
+
+    private void checkMelee() {
+        if (!this.name.equals(PlantType.CHOMPER.getName())) {
+            ArrayList<Zombie> zombiesInRange = new ArrayList<>();
+            for (int i = -1; i <= 1; i++) {
+                Tile tile = GAME.getTileByPosition(this.column + i, this.row);
+                if (tile == null) {
+                    continue;
+                }
+                zombiesInRange.addAll(tile.getZombies());
             }
-            return status.get("idle1");
+
+            if (zombiesInRange.size() != 0) {
+                this.status = "action";
+            } else {
+                this.status = "idle";
+            }
         }
     }
 }

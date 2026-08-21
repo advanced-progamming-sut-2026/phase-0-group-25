@@ -12,7 +12,6 @@ public class NetworkMenu extends Menu {
         this.networkMenuView = networkMenuView;
     }
 
-    @Override
     public void handleSpecificCommands(String input) {
 
     }

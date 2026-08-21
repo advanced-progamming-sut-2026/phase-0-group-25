@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.test1.PlantsVsZombies.src.Menu.MenuManager;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.GameDataLoader;
 import com.test1.PlantsVsZombies.src.View.LibGDXViews.UIManager;
+import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
 import pvz.skin.PvzSkin;
 
@@ -15,14 +16,17 @@ public class Main extends Game {
     private SpriteBatch batch;
     private Skin skin;
     private TextureBank textureBank;
+    private PamPlayer pamPlayer;
 
     @Override
     public void create() {
+        GameDataLoader.loadGameData();
         instance = this;
         batch = new SpriteBatch();
-
         skin = PvzSkin.get();
-        textureBank = new TextureBank("768", Gdx.files.absolute("Assets"));
+
+        textureBank = new TextureBank("768", Gdx.files.internal("assets/Assets"));
+        pamPlayer = new PamPlayer(textureBank, Gdx.files.internal("assets/Assets"));
 
         GameDataLoader.loadGameData();
         UIManager.init(this);
@@ -36,8 +40,8 @@ public class Main extends Game {
 
     @Override
     public void render() {
-        super.render(); // renders the current Screen as usual
-        UIManager.renderToasts(Gdx.graphics.getDeltaTime()); // draw toasts on top, survives screen switches
+        super.render();
+        UIManager.renderToasts(Gdx.graphics.getDeltaTime());
     }
 
     @Override
@@ -56,6 +60,10 @@ public class Main extends Game {
 
     public TextureBank getTextureBank() {
         return textureBank;
+    }
+
+    public PamPlayer getPamPlayer() {
+        return pamPlayer;
     }
 
     @Override

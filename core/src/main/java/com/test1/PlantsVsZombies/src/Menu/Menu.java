@@ -37,29 +37,6 @@ public abstract class Menu {
         return null;
     }
 
-    public void processCommand(String input) {
-        Matcher matcher;
-        if ((matcher = getMatcher(input, Command.Exit)) != null) {
-            MenuManager.getInstance().exitCurrentMenu();
-            return;
-        } else if ((matcher = getMatcher(input, Command.changeMenu)) != null) {
-            for (MenuType menuType : changeableMenuTypes) {
-                if (matcher.group(1).equals(menuType.getString())) {
-                    MenuManager.getInstance().changeMenu(menuType);
-                    return;
-                }
-            }
-            getView().showError("menu not found!");
-            return;
-        } else if ((matcher = getMatcher(input, Command.ShowMenu)) != null) {
-            getView().showCurrentMenu();
-            return;
-        }
-        handleSpecificCommands(input);
-    }
-
-    public abstract void handleSpecificCommands(String input);
-
     public abstract BaseView getView();
 
 }

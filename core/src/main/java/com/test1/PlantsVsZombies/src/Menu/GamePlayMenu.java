@@ -1,5 +1,6 @@
 package com.test1.PlantsVsZombies.src.Menu;
 
+import com.badlogic.gdx.Screen;
 import com.test1.PlantsVsZombies.src.Enums.Command;
 import com.test1.PlantsVsZombies.src.Enums.MenuType;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
@@ -8,6 +9,7 @@ import com.test1.PlantsVsZombies.src.Model.MiniGames.VasebreakerGame.VaseBreaker
 import com.test1.PlantsVsZombies.src.Model.MiniGames.WallnutBowlingGame.WalnutBowling;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
+import com.test1.PlantsVsZombies.src.View.LibGDXViews.GamePlayScreen;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.BaseView;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.GamePlayMenuView;
 
@@ -15,14 +17,31 @@ import java.util.regex.Matcher;
 
 public class GamePlayMenu extends Menu {
     private static GamePlay gamePlay;
-    private final GamePlayMenuView gamePlayMenuView;
+    private GamePlayMenuView gamePlayMenuView;
 
-
-    public GamePlayMenu(GamePlayMenuView gamePlayMenuView) {
+    public GamePlayMenu() {
         super(MenuType.Game);
-        this.gamePlayMenuView = gamePlayMenuView;
     }
 
+    /**
+     * Initializes a new gameplay session, disposes of previous screen resources,
+     * and attaches a fresh GamePlayScreen.
+     */
+    public void startSession(GamePlay gamePlay) {
+        if (this.gamePlayMenuView instanceof Screen) {
+            ((Screen) this.gamePlayMenuView).dispose();
+        }
+        GamePlayMenu.gamePlay = gamePlay;
+        this.gamePlayMenuView = new GamePlayScreen(gamePlay);
+    }
+
+    public void startSession(GamePlay gamePlay, GamePlayMenuView gamePlayMenuView) {
+        if (this.gamePlayMenuView instanceof Screen) {
+            ((Screen) this.gamePlayMenuView).dispose();
+        }
+        GamePlayMenu.gamePlay = gamePlay;
+        this.gamePlayMenuView = gamePlayMenuView;
+    }
 
     public static GamePlay getGamePlay() {
         return gamePlay;
@@ -32,6 +51,9 @@ public class GamePlayMenu extends Menu {
         GamePlayMenu.gamePlay = gamePlay;
     }
 
+    public void setGamePlayMenuView(GamePlayMenuView gamePlayMenuView) {
+        this.gamePlayMenuView = gamePlayMenuView;
+    }
 
     private void checkWinCondition() {
         if (gamePlay != null && gamePlay.checkingTheEndOfTheGame()) {
@@ -43,7 +65,6 @@ public class GamePlayMenu extends Menu {
         }
     }
 
-    @Override
     public void handleSpecificCommands(String input) {
         if (gamePlay == null) {
             getView().showError("No active game play found. Returning to game menu.");
@@ -87,7 +108,7 @@ public class GamePlayMenu extends Menu {
             } else {
                 Position thisPosition = new Position(x, y);
                 BattlePlant thisPlant = gamePlay.getPlants().stream()
-                        .filter(plant -> plant.getName().equals(type)).findFirst().orElse(null);
+                    .filter(plant -> plant.getName().equals(type)).findFirst().orElse(null);
                 gamePlay.planting(thisPlant, thisPosition);
             }
         } else if ((matcher = getMatcher(input, Command.PluckPlant)) != null) {
@@ -130,14 +151,6 @@ public class GamePlayMenu extends Menu {
             } else {
                 System.out.println("This command is only available in the Vasebreaker mini-game!");
             }
-        } else if ((matcher = getMatcher(input, Command.CollectSeedPacket)) != null) {
-            int x = Integer.parseInt(matcher.group("x"));
-            int y = Integer.parseInt(matcher.group("y"));
-            if (gamePlay instanceof VaseBreaker) {
-                ((VaseBreaker) gamePlay).collectSeedPacket(x, y);
-            } else {
-                System.out.println("This command is only available in the Vasebreaker mini-game!");
-            }
         } else if ((matcher = getMatcher(input, Command.PlantFromInventory)) != null) {
             int index = Integer.parseInt(matcher.group("index"));
             int x = Integer.parseInt(matcher.group("x"));
@@ -169,7 +182,6 @@ public class GamePlayMenu extends Menu {
             System.out.println("Unknown command: " + input);
         }
     }
-
 
     @Override
     public BaseView getView() {

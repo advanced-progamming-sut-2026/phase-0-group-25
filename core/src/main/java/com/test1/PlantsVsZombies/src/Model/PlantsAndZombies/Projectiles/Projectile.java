@@ -6,6 +6,8 @@ import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.ZombieFactory;
+import com.test1.PlantsVsZombies.src.Model.Sun.Sun;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 
 public class Projectile {
@@ -109,18 +111,42 @@ public class Projectile {
         Position rowAndColumn = Position.getRowAndColumn(this.position.getX(), this.position.getY());
         int column = (int) rowAndColumn.getX();
         int row = (int) rowAndColumn.getY();
-
         Tile tile = GAME.getTileByPosition(column, row);
         if (tile == null) {
             return;
         }
+
         if (GAME.getChapterType() != null) {
-            if ((GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT)) ||
-                    (GAME.getChapterType().equals(ChapterType.DARK_AGE))) {
-                if (!tile.isArable()) {
-                    tile.setHP(tile.getHP() - this.damage);
+            if (GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT) ||
+                GAME.getChapterType().equals(ChapterType.DARK_AGE) ||
+                GAME.getChapterType().equals(ChapterType.FROSTBITE_CAVES)) {
+
+                if (!tile.isArable() && tile.getHP() > 0) {
+                    tile.setHP(Math.max(0, tile.getHP() - this.damage));
+
                     if (tile.getHP() == 0) {
-                        System.out.println("Tomb destroyed!!!!!");
+                        tile.setArable(true);
+
+                        if (GAME.getChapterType().equals(ChapterType.FROSTBITE_CAVES)) {
+                            Position spawnPos = new Position(GAME.getRealX(column), GAME.getRealY(row));
+                            Zombie zombie = ZombieFactory.createZombie("DEFAULT", spawnPos);
+                            zombie.setRow(row);
+                            zombie.setColumn(column);
+                            GAME.getGameZombies().add(zombie);
+                            System.out.println("Ice block broken! Zombie spawned at (" + column + ", " + row + ")!");
+                        }
+                        else if (GAME.getChapterType().equals(ChapterType.DARK_AGE)) {
+                            Position dropPos = new Position(GAME.getRealX(column), GAME.getRealY(row));
+                            if (tile.getGraveType() == Tile.GraveType.PLANT_FOOD) {
+                                GAME.glowingAward(dropPos);
+                            } else if (tile.getGraveType() == Tile.GraveType.SUN) {
+                                GAME.getActiveSuns().add(new Sun(50, dropPos, 0));
+                            }
+                            System.out.println("Dark Age tomb destroyed!");
+                        }
+                        else {
+                            System.out.println("Tomb destroyed!!!!!");
+                        }
                     }
                     this.isActive = false;
                 }
