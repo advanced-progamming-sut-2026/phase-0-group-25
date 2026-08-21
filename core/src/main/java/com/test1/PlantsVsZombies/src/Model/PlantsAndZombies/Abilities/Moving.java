@@ -3,16 +3,13 @@ package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 
 
 public class Moving implements Ability {
     private static int SNORKEL_X_LIMIT = 1420;
-    private static int PIANO_ACTION_INTERVAL = 3;
+    private static int PIANO_ACTION_INTERVAL = 20;
     private GamePlay GAME = GamePlay.activeInstance;
 
 
@@ -59,7 +56,7 @@ public class Moving implements Ability {
                     if (zombie.getZombieStats().getName().equals("EXPLORER")) {
                         handleExplorerTorch(zombie, plant);
                     } else if ((zombie.getZombieStats().getName().equals("SNORKEL")) &&
-                            (zombie.getPosition().getX() < SNORKEL_X_LIMIT)) {
+                        (zombie.getPosition().getX() < SNORKEL_X_LIMIT)) {
                         zombie.getZombieStats().getAttributes().replace("submarine", "off");
                     }
                     return;
@@ -67,8 +64,8 @@ public class Moving implements Ability {
             }
 
             if (zombie.getZombieStats().getName().equals("ALL_STAR") ||
-                    (zombie.getZombieStats().getName().equals("TROGLOBITE")) ||
-                    (zombie.getZombieStats().getName().equals("ARCADE"))) {
+                (zombie.getZombieStats().getName().equals("TROGLOBITE")) ||
+                (zombie.getZombieStats().getName().equals("ARCADE"))) {
 
                 checkFatalDamageZombies(zombie);
             }
@@ -78,7 +75,7 @@ public class Moving implements Ability {
 
     private void handleHypnotizedZombie(Zombie zombie) {
         double velocity = zombie.getCurrentVelocity();
-        double differenceX = velocity * 10;
+        double differenceX = velocity * 25;
 
         double zombieFinalPositionX = zombie.getPosition().getX() + differenceX;
         Position newPosition = new Position(zombieFinalPositionX, zombie.getPosition().getY());
@@ -100,7 +97,7 @@ public class Moving implements Ability {
         int initialColumn = zombie.getColumn();
 
         double velocity = zombie.getCurrentVelocity();
-        double differenceX = velocity * 10;
+        double differenceX = velocity * 30;
 
         double zombieFinalPositionX = zombie.getPosition().getX() - differenceX;
         Position newPosition = new Position(zombieFinalPositionX, zombie.getPosition().getY());
@@ -144,7 +141,7 @@ public class Moving implements Ability {
                 zombie.setCurrentVelocity(0);
                 zombie.setRival(zombie1);
                 if ((zombie.getZombieStats().getName().equals("ARCADE")) &&
-                        (zombie.getActiveArmors().isEmpty())) {
+                    (zombie.getActiveArmors().isEmpty())) {
                     deleteFatalDamage(zombie);
                 }
                 makeEatingActivated(zombie);
@@ -163,15 +160,15 @@ public class Moving implements Ability {
     }
 
     private void makeEatingActivated(Zombie zombie) {
+        this.isActivated = false;
         for (Ability ability : zombie.getOriginalAbilities()) {
             if (ability instanceof FatalDamage) {
                 ((FatalDamage) ability).setActivated(true);
-                this.isActivated = false;
-                break;
+                zombie.setLastActionTime(GAME.getTotalTimePassed());
+                return;
             } else if (ability instanceof Eating) {
                 ((Eating) ability).setActivated(true);
-                this.isActivated = false;
-                break;
+                return;
             }
         }
     }

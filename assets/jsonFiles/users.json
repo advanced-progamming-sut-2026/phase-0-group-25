@@ -831,7 +831,7 @@
         "WALNUT_BOWLING" : 1
       },
       "questProgress" : {
-        "one_column_less" : 0,
+        "one_column_less" : 1,
         "defenseless_row" : 0,
         "thrifty_farmer" : 1,
         "speed_demon" : 0,

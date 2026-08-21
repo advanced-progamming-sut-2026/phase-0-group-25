@@ -38,7 +38,7 @@ public class Mower {
             if (z.isAlive() && z.getRow() == this.row) {
                 if (Math.abs(z.getPosition().getX() - this.x) <= 60 || z.getPosition().getX() < this.x) {
                     z.takeDamage(2000);
-                    z.setAlive(false);
+                    z.setCurrentHP(0);
                     killedCount++;
                 }
             }

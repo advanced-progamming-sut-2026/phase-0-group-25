@@ -21,9 +21,6 @@ public abstract class Entity {
 
     public void setCurrentHP(double currentHP) {
         this.currentHP = currentHP;
-        if (this.currentHP <= 0) {
-            this.isAlive = false;
-        }
     }
 
     public boolean isAlive() {

@@ -1,6 +1,7 @@
 package com.test1.PlantsVsZombies.src.Model.GamePlayType;
 
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
+import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Model.Mower;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Dynamite;
@@ -91,19 +92,21 @@ public class Simple extends GamePlay {
         while (z.hasNext()) {
             Zombie zombie = z.next();
 
-            if (!zombie.isAlive() || zombie.getCurrentHP() <= 0) {
+            if (!zombie.isAlive()) {
                 killAward(this.thisUser);
                 if (zombie.isHalated()) {
                     glowingAward(zombie.getPosition());
                 }
                 Position zPos = Position.getRowAndColumn(zombie.getPosition());
                 System.out.printf("Zombie of type %s is dead at (%d, %d)\n",
-                        zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
+                    zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
 
                 addKilledZombieCost(zombie.getWaveNum(), zombie.getCost());
                 z.remove();
             } else {
-                zombie.update();
+                if (zombie.getCurrentHP() > 0) {
+                    zombie.update();
+                }
             }
         }
         updateZombieTiles();
@@ -193,7 +196,7 @@ public class Simple extends GamePlay {
                         System.out.println("Lawn mower triggered in row: " + zRow);
                         currentMower.trigger();
                     }
-                } else if (currentMower.isDone() && zX <= 490) {
+                } else if (currentMower.isDone() && zX <= 390) {
                     System.out.println("The zombie ate your brain; LOSER!!!");
                     UsersManager.getInstance().addGamesPlayed();
                     this.isPaused = true;
