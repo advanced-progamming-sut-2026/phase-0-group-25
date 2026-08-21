@@ -14,11 +14,19 @@ public class Eating implements Ability {
             Zombie zombie = (Zombie) entity;
             double damageAmount = zombie.getZombieStats().getEatdps() * 0.1;
             if (zombie.isHypnotized()) {
-                Zombie target = (Zombie) zombie.getRival();
+                if (zombie.getRival() instanceof Zombie) {
+                    Zombie target = (Zombie) zombie.getRival();
 
-                target.takeDamage(damageAmount);
-                checkTargetLife(zombie, target);
+                    target.takeDamage(damageAmount);
+                    checkTargetLife(zombie, target);
+                    return;
+                } else {
+                    this.isActivated = false;
+                    makeMovingActivated(zombie);
+                    zombie.setRival(null);
+                }
                 return;
+
             }
 
             if (zombie.getRival() instanceof Zombie) {
@@ -33,7 +41,7 @@ public class Eating implements Ability {
             plant.takeDamage(damageAmount);
 
 
-            if (!plant.isAlive()) {
+            if (!plant.isAlive() || plant.getCurrentHP() <= 0) {
                 this.isActivated = false;
                 makeMovingActivated(zombie);
 

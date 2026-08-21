@@ -1,6 +1,7 @@
 package com.test1.PlantsVsZombies.src.Model.GamePlayType;
 
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
+import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Model.Mower;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Dynamite;
@@ -44,12 +45,20 @@ public class Simple extends GamePlay {
             }
             this.settedThePlants = true;
 
-            planting(PlantFactory.createBattlePlant("SUNFLOWER", 1,
-                new Position(1, 2)), new Position(2, 2));
-            planting(PlantFactory.createBattlePlant("SUNFLOWER", 1,
+            planting(PlantFactory.createBattlePlant(PlantType.GOLD_BLOOM.getName(), 1,
+                new Position(1, 2)), new Position(4, 5));
+            planting(PlantFactory.createBattlePlant(PlantType.HYPNO_SHROOM.getName(), 1,
                 new Position(1, 2)), new Position(7, 5));
-            planting(PlantFactory.createBattlePlant("SUNFLOWER", 1,
-                new Position(1, 2)), new Position(5, 1));
+            planting(PlantFactory.createBattlePlant(PlantType.HYPNO_SHROOM.getName(), 1,
+                new Position(1, 2)), new Position(7, 4));
+            planting(PlantFactory.createBattlePlant(PlantType.HYPNO_SHROOM.getName(), 1,
+                new Position(1, 2)), new Position(7, 3));
+            planting(PlantFactory.createBattlePlant(PlantType.HYPNO_SHROOM.getName(), 1,
+                new Position(1, 2)), new Position(7, 2));
+            planting(PlantFactory.createBattlePlant(PlantType.HYPNO_SHROOM.getName(), 1,
+                new Position(1, 2)), new Position(7, 1));
+
+
         }
 
         if (this.chapterType != ChapterType.DARK_AGE) {
@@ -82,17 +91,19 @@ public class Simple extends GamePlay {
         while (z.hasNext()) {
             Zombie zombie = z.next();
 
-            if (!zombie.isAlive() || zombie.getCurrentHP() <= 0) {
+            if (!zombie.isAlive()) {
                 killAward(this.thisUser);
                 glowingAward(this);
                 Position zPos = Position.getRowAndColumn(zombie.getPosition());
                 System.out.printf("Zombie of type %s is dead at (%d, %d)\n",
-                        zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
+                    zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
 
                 addKilledZombieCost(zombie.getWaveNum(), zombie.getCost());
                 z.remove();
             } else {
-                zombie.update();
+                if (zombie.getCurrentHP() > 0) {
+                    zombie.update();
+                }
             }
         }
         updateZombieTiles();
@@ -138,9 +149,9 @@ public class Simple extends GamePlay {
                     } else {
                         positionOfZ = new Position(spawnX, getRealY(spawnY));
                     }
-                    Zombie newZombie = ZombieFactory.createZombie(nameOfZ, positionOfZ);
+                    Zombie newZombie = ZombieFactory.createZombie("DEFAULT", positionOfZ);
                     System.out.printf("Zombie %s spawned at wave %d in lane %d which costed %d.\n",
-                            nameOfZ, thisWave.getWaveNum(), spawnY, newZombie.getCost());
+                        nameOfZ, thisWave.getWaveNum(), spawnY, newZombie.getCost());
 
                     newZombie.setWaveNum(thisWave.getWaveNum());
                     this.gameZombies.add(newZombie);
@@ -170,7 +181,7 @@ public class Simple extends GamePlay {
                         System.out.println("Lawn mower triggered in row: " + zRow);
                         currentMower.trigger();
                     }
-                } else if (currentMower.isDone() && zX <= 490) {
+                } else if (currentMower.isDone() && zX <= 390) {
                     System.out.println("The zombie ate your brain; LOSER!!!");
                     this.isPaused = true;
                 }

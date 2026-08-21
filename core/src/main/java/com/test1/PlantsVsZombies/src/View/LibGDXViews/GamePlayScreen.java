@@ -54,7 +54,6 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     }
 
 
-
     @Override
     public void show() {
         camera = new OrthographicCamera();
@@ -114,7 +113,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
 
         if (!gamePlay.isPaused()) {
             timeAccumulator += delta;
-            while (timeAccumulator >=  TICK_RATE) {
+            while (timeAccumulator >= TICK_RATE) {
                 gamePlay.update();
                 timeAccumulator -= TICK_RATE;
             }
@@ -127,24 +126,8 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         }
 
 
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-
-        shapeRenderer.setColor(Color.RED);
-        for (Zombie zombie : gamePlay.getGameZombies()) {
-            if (zombie.isAlive()) {
-                float px = (float) zombie.getPosition().getX();
-                float py = (float) zombie.getPosition().getY();
-                shapeRenderer.rect(px - 20, py - 20, 40, 40);
-            }
-        }
-
-        shapeRenderer.end();
-
-
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-
 
 
         for (BattlePlant p : gamePlay.getGamePlants()) {
@@ -153,8 +136,8 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                 float drawX = (float) p.getPosition().getX();
                 float drawY = (float) p.getPosition().getY();
 
-                player.draw(batch, p.getPlantStats().getAnimation(), p.getCurrentAnimationName(),
-                    stateTime, drawX, drawY, true);
+                player.draw(batch, p.getPlantStats().getAnimation(), p.getCurrentAnimationName(stateTime),
+                    stateTime, drawX, drawY, true, p.getVisibilities());
             }
         }
 
@@ -181,6 +164,17 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                 } else {
                     player.draw(batch, sun.getAnimationPath(), "animation", stateTime, x, y, true);
                 }
+            }
+        }
+
+        for (Zombie zombie : gamePlay.getGameZombies()) {
+            if (zombie.isAlive()) {
+                float px = (float) zombie.getPosition().getX();
+                float py = (float) zombie.getPosition().getY();
+                batch.setColor(zombie.getColor());
+                player.draw(batch, zombie.getZombieStats().getAnimation(), zombie.getCurrentAnimationName(),
+                    stateTime, px, py, true, zombie.getVisibility());
+                batch.setColor(Color.WHITE);
             }
         }
 

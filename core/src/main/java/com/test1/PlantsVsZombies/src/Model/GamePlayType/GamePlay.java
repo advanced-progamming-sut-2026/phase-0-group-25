@@ -774,6 +774,7 @@ public abstract class GamePlay {
                     ((ProducingSun) thisAbility).setCollected(false);
                     ((ProducingSun) thisAbility).setProduced(false);
                 }
+                thisTile.getPlants().get(0).setLastActionTime(this.getTotalTimePassed());
             }
         }
 

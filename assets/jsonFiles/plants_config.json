@@ -44,7 +44,7 @@
   ],
 
   "GOLD_BLOOM": [
-    { "category": "Sun Producer", "baseHP": 0, "cost": 0, "actionInterval": 1.7, "rechargeTime": 75, "abilities": ["producing sun"], "tags": [], "attributes": {"sun_quantity": 375, "life_span": 4.1}, "plantFoodEffect": {},
+    { "category": "Sun Producer", "baseHP": 0, "cost": 0, "actionInterval": 1.7, "rechargeTime": 75, "abilities": ["producing sun"], "tags": [], "attributes": {"sun_quantity": 375, "life_span": 25}, "plantFoodEffect": {},
       "animation": "768/INITIAL/PLANT/GOLDBLOOM/GOLDBLOOM.PAM", "status": {"idle": "idle", "action": "attack"}, "trigger": 2.40  },
     { "category": "Sun Producer", "baseHP": 0, "cost": 0, "actionInterval": 1.7, "rechargeTime": 70, "abilities": ["producing sun"], "tags": [], "attributes": {"sun_quantity": 375, "life_span": 4.1}, "plantFoodEffect": {},
       "animation": "768/INITIAL/PLANT/GOLDBLOOM/GOLDBLOOM.PAM", "status": {"idle": "idle", "action": "attack"}, "trigger": 2.40  },
@@ -488,13 +488,13 @@
   ],
 
   "HYPNO_SHROOM": [
-    { "category": "Modifier", "baseHP": 300, "cost": 125, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.0,"Damage_Buff": 1.0}, "plantFoodEffect": {},
+    { "category": "Wall-nut", "baseHP": 300, "cost": 125, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.0,"Damage_Buff": 1.0}, "plantFoodEffect": {},
       "animation": "768/INITIAL/PLANT/HYPNOSHROOM/HYPNOSHROOM.PAM", "status": {"idle": "idle", "plantfood": "plantfood"}},
-    { "category": "Modifier", "baseHP": 300, "cost": 100, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.0,"Damage_Buff": 1.0}, "plantFoodEffect": {},
+    { "category": "Wall-nut", "baseHP": 300, "cost": 100, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.0,"Damage_Buff": 1.0}, "plantFoodEffect": {},
       "animation": "768/INITIAL/PLANT/HYPNOSHROOM/HYPNOSHROOM.PAM", "status": {"idle": "idle", "plantfood": "plantfood"} },
-    { "category": "Modifier", "baseHP": 300, "cost": 100, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.1,"Damage_Buff": 1.0}, "plantFoodEffect": {},
+    { "category": "Wall-nut", "baseHP": 300, "cost": 100, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.1,"Damage_Buff": 1.0}, "plantFoodEffect": {},
       "animation": "768/INITIAL/PLANT/HYPNOSHROOM/HYPNOSHROOM.PAM", "status": {"idle": "idle", "plantfood": "plantfood"}},
-    { "category": "Modifier", "baseHP": 300, "cost": 100, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.1,"Damage_Buff": 1.2}, "plantFoodEffect": {},
+    { "category": "Wall-nut", "baseHP": 300, "cost": 100, "actionInterval": 0, "rechargeTime": 20, "abilities": ["wall-nut"], "tags": ["shroom", "magic"], "attributes": {"HP_Buff": 1.1,"Damage_Buff": 1.2}, "plantFoodEffect": {},
       "animation": "768/INITIAL/PLANT/HYPNOSHROOM/HYPNOSHROOM.PAM", "status": {"idle": "idle", "plantfood": "plantfood"}}
   ],
 

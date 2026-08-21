@@ -58,8 +58,7 @@ public class BattlePlant extends Plant {
 
     @Override
     public void update() {
-
-        if (this.plantStats.getAttributes().containsKey("life_span")) {
+        if (this.plantStats.getAttributes().containsKey("life-span")) {
             double lifespan = (double) this.plantStats.getAttributes().get("life_span");
             if ((GAME.getTotalTimePassed() - this.plantTime) >= lifespan) {
                 this.setCurrentHP(0);
@@ -237,6 +236,9 @@ public class BattlePlant extends Plant {
     @Override
     public void setCurrentHP(double currentHP) {
         super.setCurrentHP(currentHP);
+        if (currentHP <= 0) {
+            this.isAlive = false;
+        }
         if (!this.isAlive) {
             if (this.plantStats.getCategory().equals(PlantCategory.EXPLOSIVE.name())) {
                 QuestManager.getInstance().notifyEvent(new ExplosiveUsedEvent(this.name));
@@ -253,7 +255,7 @@ public class BattlePlant extends Plant {
     }
 
     public void takeDamage(double damage) {
-        double armorHP = (double) this.plantStats.getAttributes().getOrDefault("armorHP", 0);
+        float armorHP = (int) this.plantStats.getAttributes().getOrDefault("armorHP", 0);
         if (armorHP > 0) {
             double finalArmorHP = armorHP - damage;
             if (finalArmorHP < 0) {
@@ -323,21 +325,25 @@ public class BattlePlant extends Plant {
         }
     }
 
-    private void checkSunProducer() {
+    public void checkSunProducer() {
         float difference = (float) (GAME.getTotalTimePassed() - this.lastActionTime);
         float trigger = this.plantStats.getTrigger();
-        if ((trigger + difference) >= this.plantStats.getActionInterval()) {
+        float total = difference + trigger;
+        System.out.println(difference + "        " + total + "    sdfsfd" + this.plantStats.getActionInterval());
+        if ((total >= this.plantStats.getActionInterval())) {
             this.status = "action";
         } else {
             this.status = "idle";
         }
+
+        System.out.println(this.status);
     }
 
-    private void checkMelee() {
+    public void checkMelee() {
         if (!this.name.equals(PlantType.CHOMPER.getName())) {
             ArrayList<Zombie> zombiesInRange = new ArrayList<>();
             for (int i = -1; i <= 1; i++) {
-                Tile tile = GAME.getTileByPosition(this.column, this.row);
+                Tile tile = GAME.getTileByPosition(this.column + i, this.row);
                 if (tile == null) {
                     continue;
                 }
@@ -349,10 +355,20 @@ public class BattlePlant extends Plant {
             } else {
                 this.status = "idle";
             }
+        } else {
+            Tile tile = GAME.getTileByPosition(this.column, this.row);
+            ArrayList<Zombie> zombiesInRange = new ArrayList<>();
+            for (Zombie zombie : tile.getZombies()) {
+                if (zombie.getPosition().distance(this.position) <= 20) {
+                    this.status = "action";
+                } else {
+                    this.status = "idle";
+                }
+            }
         }
     }
 
-    private void checkSquash() {
+    public void checkSquash() {
         ArrayList<Zombie> zombiesInRange = new ArrayList<>();
         for (int i = 0; i <= 1; i++) {
             Tile tile = GAME.getTileByPosition(this.column, this.row);

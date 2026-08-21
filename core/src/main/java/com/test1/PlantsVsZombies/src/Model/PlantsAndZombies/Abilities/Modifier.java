@@ -36,6 +36,8 @@ public class Modifier implements Ability {
         }
 
 
+
+
     }
 
     private void plantFoodEffect(BattlePlant plant, ArrayList<String> tags) {

@@ -30,7 +30,7 @@ public class WallNutAbility implements Ability {
         }
         if (tags.contains("move-zombies")) {
             if ((int) plant.getPlantStats().getAttributes().get("move") == 1) {
-                if (!plant.isAlive()) {
+                if (plant.getCurrentHP() <= 0) {
                     if (plant.isEffected()) {
                         repelZombiesInEffected(plant);
                         return;
@@ -65,7 +65,7 @@ public class WallNutAbility implements Ability {
         }
 
         if (tags.contains("shroom")) {
-            if (!plant.isAlive()) {
+            if (plant.getCurrentHP() <= 0) {
                 hypnotizeZombie(attacker, plant);
             }
         }
@@ -117,12 +117,15 @@ public class WallNutAbility implements Ability {
     private void hypnotizeZombie(Zombie attacker, BattlePlant plant) {
         attacker.setHypnotized(true);
 
+        /*
         double HPMultiplier = (double) plant.getPlantStats().getAttributes().get("HP_Buff");
         attacker.setCurrentHP(attacker.getCurrentHP() * HPMultiplier);
 
         double damageMultiplier = (double) plant.getPlantStats().getAttributes().get("Damage_Buff");
         attacker.getZombieStats().setEatdps(attacker.getZombieStats().getEatdps() * damageMultiplier);
 
+
+         */
     }
 
 }
