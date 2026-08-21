@@ -20,6 +20,7 @@ public abstract class Quest {
     private boolean isCompleted;
     private boolean isClaimed;
     private LocalDate dateAssigned;
+    private String icon;
 
     protected Quest(String id, QuestCategory category, QuestPriority priority, boolean dailyReset, QuestPage page) {
         this.id = id;
@@ -31,6 +32,14 @@ public abstract class Quest {
         this.isCompleted = false;
         this.isClaimed = false;
         this.dateAssigned = dailyReset ? LocalDate.now() : null;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public abstract void check(Event event);

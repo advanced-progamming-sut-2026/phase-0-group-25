@@ -41,6 +41,7 @@ public class UsersManager {
         return instance;
     }
 
+    // ----- Existing methods (unchanged) -----
     public void setQuestVariablesForCurrentUser(Map<String, String> variables) {
         progressManager.setQuestVariablesForCurrentUser(variables);
     }
@@ -147,7 +148,7 @@ public class UsersManager {
         return null;
     }
 
-    public String validateAndChangePassword(String newPassword, String oldPassword) {
+    public String validateAndChangePassword(String newPassword, String newPasswordConfirmed, String oldPassword) {
         if (loggedInUser == null) return "No logged in user.";
         if (!loggedInUser.getPassword().equals(oldPassword))
             return "Invalid password: Old password does not match.";
@@ -155,6 +156,8 @@ public class UsersManager {
             return "you are already using this password.";
         if (newPassword.contains(" "))
             return "Weak password: Spaces are not allowed within password strings.";
+        if(!newPassword.equals(newPasswordConfirmed))
+            return "Password and its confirmation do not match.";
         if (!PASSWORD_COMPLEXITY_REGEX.matcher(newPassword).matches())
             return "Weak password: Must be at least 8 characters long and include numbers, " +
                 "uppercase/lowercase letters, and special characters.";
@@ -197,7 +200,6 @@ public class UsersManager {
         loggedInUser.setUserName(newUsername);
         userCache.put(newUsername, loggedInUser);
         writeUsers();
-
 
         File stateFile = new File(STATE_FILE);
         if (stateFile.exists()) {
@@ -400,6 +402,9 @@ public class UsersManager {
         progressManager.handleLevelWin(chapterType, currentLevel, plantRewards);
     }
 
+    public void addGamesPlayed(){
+        progressManager.addGamesPlayed();
+    }
 
     public ArrayList<String> getUnreadNews() {
         if (loggedInUser == null) return new ArrayList<>();
@@ -415,7 +420,6 @@ public class UsersManager {
         return news;
     }
 
-
     public String changeDifficulty(String difficultyLevel) {
         if (loggedInUser == null) return "No logged in user.";
         int difficulty;
@@ -429,5 +433,43 @@ public class UsersManager {
         loggedInUser.getUserProgress().setGameDifficulty(difficulty);
         updateUser();
         return null;
+    }
+
+    // ----- NEW methods for settings -----
+    public String setGameSpeed(int speed) {
+        if (loggedInUser == null) return "No logged in user.";
+        if (speed < 1 || speed > 3) return "Speed must be 1, 2, or 3.";
+        loggedInUser.getUserProgress().setGameSpeed(speed);
+        updateUser();
+        return null;
+    }
+
+    public int getGameSpeed() {
+        if (loggedInUser == null) return 1;
+        return loggedInUser.getUserProgress().getGameSpeed();
+    }
+
+    public String setShowTileGrid(boolean show) {
+        if (loggedInUser == null) return "No logged in user.";
+        loggedInUser.getUserProgress().setShowTileGrid(show);
+        updateUser();
+        return null;
+    }
+
+    public boolean isShowTileGrid() {
+        if (loggedInUser == null) return false;
+        return loggedInUser.getUserProgress().isShowTileGrid();
+    }
+
+    // Debug mode is already handled via User.isDebugMode()
+    public void setDebugMode(boolean debug) {
+        if (loggedInUser != null) {
+            loggedInUser.setDebugMode(debug);
+            updateUser();
+        }
+    }
+
+    public boolean isDebugMode() {
+        return loggedInUser != null && loggedInUser.isDebugMode();
     }
 }

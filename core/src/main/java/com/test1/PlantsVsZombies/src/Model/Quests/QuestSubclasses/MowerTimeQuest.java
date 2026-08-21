@@ -17,6 +17,7 @@ public class MowerTimeQuest extends Quest {
 
     public MowerTimeQuest(String id, QuestCategory c, QuestPriority p, boolean dr, QuestPage pg) {
         super(id, c, p, dr, pg);
+        setIcon("IMAGE_DANGERROOM_CARD_MOWER");
         randomizeVariable();
     }
 

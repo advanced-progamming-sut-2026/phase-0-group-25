@@ -13,6 +13,7 @@ public class ThriftyFarmerQuest extends Quest {
 
     public ThriftyFarmerQuest(String id, QuestCategory c, QuestPriority p, boolean dr, QuestPage pg) {
         super(id, c, p, dr, pg);
+        setIcon("IMAGE_UI_QUESTS_QUESTICONS_PLANT");
         randomizeVariable();
     }
 

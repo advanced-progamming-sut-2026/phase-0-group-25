@@ -14,6 +14,7 @@ public class MasterOfDefenseQuest extends Quest {
 
     public MasterOfDefenseQuest(String id, QuestCategory category, QuestPriority priority, boolean dailyReset, QuestPage page) {
         super(id, category, priority, dailyReset, page);
+        setIcon("IMAGE_UI_QUESTS_QUESTICONS_ARENA");
         this.name = "Master of Defense";
         this.description = "Finish a level with exactly zero sun left.";
         this.reward = new Reward(RewardType.GEMS, 200);

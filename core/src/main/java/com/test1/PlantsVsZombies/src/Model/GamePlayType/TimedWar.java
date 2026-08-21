@@ -10,6 +10,7 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.ZombieFactory;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 import com.test1.PlantsVsZombies.src.Model.User.User;
+import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.Model.Wave.FinalWave;
 import com.test1.PlantsVsZombies.src.Model.Wave.Wave;
 
@@ -136,6 +137,7 @@ public class TimedWar extends GamePlay {
         if (totalTicksPassed >= 150 && numOfDeadZombies < 10) {
             System.out.println("You must kill at least 10 zombies within 15 seconds!!");
             System.out.println("The zombie ate your brain; LOSER!!!");
+            UsersManager.getInstance().addGamesPlayed();
             this.isPaused = true;
         }
 
