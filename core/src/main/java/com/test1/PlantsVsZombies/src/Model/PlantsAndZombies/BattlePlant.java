@@ -254,7 +254,7 @@ public class BattlePlant extends Plant {
     }
 
     public void takeDamage(double damage) {
-        double armorHP = (double) this.plantStats.getAttributes().getOrDefault("armorHP", 0);
+        double armorHP = (int) this.plantStats.getAttributes().getOrDefault("armorHP", 0);
         if (armorHP > 0) {
             double finalArmorHP = armorHP - damage;
             if (finalArmorHP < 0) {
@@ -319,14 +319,14 @@ public class BattlePlant extends Plant {
         if (!this.name.equals(PlantType.CHOMPER.getName())) {
             ArrayList<Zombie> zombiesInRange = new ArrayList<>();
             for (int i = -1; i <= 1; i++) {
-                Tile tile = GAME.getTileByPosition(this.column, this.row);
+                Tile tile = GAME.getTileByPosition(this.column + i, this.row);
                 if (tile == null) {
                     continue;
                 }
                 zombiesInRange.addAll(tile.getZombies());
             }
 
-            if (!zombiesInRange.isEmpty()) {
+            if (zombiesInRange.size() != 0) {
                 this.status = "action";
             } else {
                 this.status = "idle";

@@ -64,7 +64,7 @@ public class LoveYourPlants extends GamePlay {
 
             if (!zombie.isAlive() || zombie.getCurrentHP() <= 0) {
                 killAward(this.thisUser);
-                glowingAward(this);
+                //wingAward(this);
                 Position zPos = Position.getRowAndColumn(zombie.getPosition());
                 System.out.printf("Zombie of type %s is dead at (%d, %d)\n",
                         zombie.getName(), (int) zPos.getX(), (int) zPos.getY());

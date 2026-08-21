@@ -11,12 +11,14 @@ public class Tile {
     private ArrayList<BattlePlant> plants;
     private ArrayList<Zombie> zombies;
     private ArrayList<Projectile> projectiles;
-
-
     private int HP;
     private Position position;
     private boolean isArable;
     private boolean isHole = false;
+    public enum GraveType { NORMAL, PLANT_FOOD, SUN }
+    private GraveType graveType = GraveType.NORMAL;
+    private boolean isNecromancy = false;
+    private boolean necromancyTriggered = false;
 
     public Tile(Position position, Boolean isArable, int HP) {
         this.position = position;
@@ -26,6 +28,18 @@ public class Tile {
         zombies = new ArrayList<>();
         projectiles = new ArrayList<>();
     }
+
+    public GraveType getGraveType() { return graveType; }
+
+    public void setGraveType(GraveType graveType) { this.graveType = graveType; }
+
+    public boolean isNecromancy() { return isNecromancy; }
+
+    public void setNecromancy(boolean necromancy) { this.isNecromancy = necromancy; }
+
+    public boolean isNecromancyTriggered() { return necromancyTriggered; }
+
+    public void setNecromancyTriggered(boolean triggered) { this.necromancyTriggered = triggered; }
 
     public Position getPosition() {
         return position;

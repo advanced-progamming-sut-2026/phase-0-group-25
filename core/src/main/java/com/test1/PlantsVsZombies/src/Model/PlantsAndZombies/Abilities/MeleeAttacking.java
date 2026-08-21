@@ -51,7 +51,7 @@ public class MeleeAttacking implements Ability {
                 int range = (int) plant.getPlantStats().getAttributes().get("range");
                 rangeDamage(plantRow, plantColumn, range, damage);
             } else {
-                int frontAndBackRange = (int) plant.getPlantStats().getAttributes().get("front-range");
+                int frontAndBackRange = (int) plant.getPlantStats().getAttributes().get("front_range");
                 for (int i = -frontAndBackRange; i <= frontAndBackRange; i++) {
                     Tile tile = GAME.getTileByPosition(plantColumn + i, plantRow);
                     if (tile == null) {

@@ -33,7 +33,7 @@ public class Eating implements Ability {
             plant.takeDamage(damageAmount);
 
 
-            if (!plant.isAlive()) {
+            if (!plant.isAlive() || plant.getCurrentHP() <= 0) {
                 this.isActivated = false;
                 makeMovingActivated(zombie);
 
