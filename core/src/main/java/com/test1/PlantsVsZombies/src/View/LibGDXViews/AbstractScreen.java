@@ -1,4 +1,3 @@
-// file: core/src/main/java/com/test1/PlantsVsZombies/src/View/LibGDXViews/AbstractScreen.java
 package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 
 import com.badlogic.gdx.Gdx;
@@ -44,7 +43,7 @@ public abstract class AbstractScreen implements Screen {
     private Stack mainStack;
     private Stack modalStack;
     private Stack toastStack;
-    private Texture modalScrimTexture;
+    private com.badlogic.gdx.graphics.Texture modalScrimTexture;
     private Texture fallbackBoxTexture;
 
     private int lastWidth = -1;
@@ -121,14 +120,22 @@ public abstract class AbstractScreen implements Screen {
         return label;
     }
 
+    /**
+     * Shows content as a modal box: a dimmed scrim behind it (clicking the
+     * scrim, i.e. anywhere outside the content, dismisses it) with the
+     * content centered on top. Uses the modalStack layer that already
+     * sits above the screen's own content and below toasts.
+     * Replaces any modal currently showing.
+     */
     protected void showModal(Actor content) {
         modalStack.clearChildren();
 
         if (modalScrimTexture == null) {
-            Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+            com.badlogic.gdx.graphics.Pixmap pixmap =
+                new com.badlogic.gdx.graphics.Pixmap(1, 1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
             pixmap.setColor(0f, 0f, 0f, 0.6f);
             pixmap.fill();
-            modalScrimTexture = new Texture(pixmap);
+            modalScrimTexture = new com.badlogic.gdx.graphics.Texture(pixmap);
             pixmap.dispose();
         }
 
@@ -179,6 +186,11 @@ public abstract class AbstractScreen implements Screen {
         return button;
     }
 
+    /**
+     * Builds a button using one of the skin's own registered TextButton
+     * styles (e.g. "default", "brown", "purple", "green", "green_small")
+     * instead of a NinePatch region looked up from textureBank.
+     */
     public TextButton createSkinButton(String text, String skinStyleName, ClickListener listener) {
         TextButton button = new TextButton(text, skin, skinStyleName);
         button.pad(10, 20, 10, 20);
@@ -237,8 +249,21 @@ public abstract class AbstractScreen implements Screen {
         int coins = (user != null && user.getUserProgress() != null) ? user.getUserProgress().getCoinsCount() : 0;
         int gems = (user != null && user.getUserProgress() != null) ? user.getUserProgress().getGemsCount() : 0;
 
-        Table coinBadge = buildCurrencyBadge(COIN_ICON_ASSET_ID, String.valueOf(coins), true, debug);
-        Table gemBadge = buildCurrencyBadge(GEM_ICON_ASSET_ID, String.valueOf(gems), false, debug);
+
+        Table coinBadge = buildCurrencyBadge(
+            COIN_ICON_ASSET_ID,
+            String.valueOf(coins),
+            true,
+            debug
+        );
+
+
+        Table gemBadge = buildCurrencyBadge(
+            GEM_ICON_ASSET_ID,
+            String.valueOf(gems),
+            false,
+            debug
+        );
 
         hudTable.add(coinBadge).left().padRight(12);
         hudTable.add(gemBadge).left();
@@ -333,7 +358,42 @@ public abstract class AbstractScreen implements Screen {
 
     // ============================================================
     // SHARED PLANT/ZOMBIE CARD BUILDING
+    // (used by CollectionMenuScreen and ChoosePlantScreen)
     // ============================================================
+
+    /**
+     * A single-texture button (up/down tint), with a text fallback if the
+     * asset doesn't resolve. Promoted here from GameScreen's own private
+     * copy since TravelLogScreen needs the identical pattern.
+     */
+    protected Actor createAssetButton(
+        String assetId,
+        String fallbackText,
+        ClickListener listener
+    ) {
+        if (assetId != null && !assetId.isEmpty()) {
+            TextureRegion region = textureBank.region(assetId);
+            if (region != null) {
+                TextureRegionDrawable drawable = new TextureRegionDrawable(region);
+                Button.ButtonStyle style = new Button.ButtonStyle();
+                style.up = drawable;
+                style.down = drawable.tint(new Color(0.70f, 0.70f, 0.70f, 1f));
+
+                Button button = new Button(style);
+                if (listener != null) {
+                    button.addListener(listener);
+                }
+                return button;
+            }
+        }
+
+        TextButton fallback = new TextButton(fallbackText, skin);
+        fallback.pad(8, 16, 8, 16);
+        if (listener != null) {
+            fallback.addListener(listener);
+        }
+        return fallback;
+    }
 
     protected Drawable getFallbackBoxDrawable() {
         if (fallbackBoxTexture == null) {
@@ -396,26 +456,11 @@ public abstract class AbstractScreen implements Screen {
         return contentStack;
     }
 
-    protected Stack buildIconBoxButton(
-        String boxAssetId,
-        String iconAssetId,
-        boolean tintIconDark,
-        ClickListener clickListener
-    ) {
-        return buildIconBoxButton(boxAssetId, iconAssetId, 4f, tintIconDark, clickListener);
-    }
-
-    protected Stack buildIconBoxButton(
-        String boxAssetId,
-        String iconAssetId,
-        float boxSize,
-        float iconInset,
-        boolean tintIconDark,
-        ClickListener clickListener
-    ) {
-        return buildIconBoxButton(boxAssetId, iconAssetId, 4f, tintIconDark, clickListener);
-    }
-
+    /**
+     * Small pill-style badge (plant level, sun cost, etc.) meant to sit in
+     * a corner of a card via Stack + Table alignment. Not touchable, so it
+     * never blocks clicks meant for the card button beneath it.
+     */
     protected Table buildCornerBadge(String text, float fontScale) {
         Table badgeInner = new Table();
         TextureRegion badgeBg = textureBank.region(CURRENCY_BOX_BG_ASSET_ID);
@@ -433,6 +478,10 @@ public abstract class AbstractScreen implements Screen {
         return badgeInner;
     }
 
+    /**
+     * Turns SOME_ENUM_NAME into "Some Enum Name". Used for plant/zombie
+     * names and PlantCategory values alike.
+     */
     protected String formatEnumName(String rawName) {
         if (rawName == null) return "Unknown";
         String[] parts = rawName.split("_");
@@ -446,6 +495,13 @@ public abstract class AbstractScreen implements Screen {
         return sb.toString().trim();
     }
 
+    /**
+     * The name/level/family/cost/health/tags info block shown in a plant's
+     * detail dialog. Fetches PlantStats itself (gracefully handling
+     * missing JSON data), so callers don't need their own PlantFactory
+     * try/catch. Callers append their own button rows onto the returned
+     * Table afterward (upgrade/boost/add-to-selection/close differ per screen).
+     */
     protected Table buildPlantStatsBlock(PlantType type, int level) {
         Table block = new Table();
         block.top().left();
@@ -454,7 +510,9 @@ public abstract class AbstractScreen implements Screen {
         try {
             BattlePlant battlePlant = PlantFactory.createBattlePlant(type.getName(), Math.max(level, 1));
             if (battlePlant != null) stats = battlePlant.getPlantStats();
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            // Missing JSON data for this plant/level -- fall back to "unavailable" below.
+        }
 
         Label nameLabel = createBlackLabel(formatEnumName(type.getName()));
         nameLabel.setFontScale(1.15f);
@@ -478,6 +536,12 @@ public abstract class AbstractScreen implements Screen {
         return block;
     }
 
+    /**
+     * Builds a scene2d Actor that plays a PAM animation via PamPlayer.
+     * Tracks its own state time (advanced each frame through act()) and
+     * draws through whatever Batch the Stage passes in -- same call
+     * pattern as GamePlayScreen's own PamPlayer usage.
+     */
     protected Actor createAnimationActor(String animationPath, String stateName) {
         return new PamAnimationActor(Main.getInstance().getPamPlayer(), animationPath, stateName);
     }
@@ -509,7 +573,11 @@ public abstract class AbstractScreen implements Screen {
         }
     }
 
-    public Label createLabel(String text, String fontName, Color fontColor) {
+    public Label createLabel(
+        String text,
+        String fontName,
+        Color fontColor
+    ) {
         BitmapFont font = skin.get(fontName, BitmapFont.class);
 
         Label.LabelStyle style = new Label.LabelStyle();
