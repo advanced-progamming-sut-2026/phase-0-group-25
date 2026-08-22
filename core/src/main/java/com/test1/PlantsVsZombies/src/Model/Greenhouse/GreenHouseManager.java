@@ -18,6 +18,10 @@ public class GreenHouseManager {
         usersManager = UsersManager.getInstance();
     }
 
+    public static int getPotCost(){
+        return UNLOCK_POT_COST;
+    }
+
     public static GreenHouseManager getInstance() {
         if (instance == null) {
             instance = new GreenHouseManager();
@@ -44,8 +48,8 @@ public class GreenHouseManager {
         sb.append("=== Greenhouse ===\n");
         sb.append("(Rows 1-3, Columns 1-4)\n");
 
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 4; x++) {
+        for (int y = 0; y < UserProgress.getPotRowCount(); y++) {
+            for (int x = 0; x < UserProgress.getPotColumnCount(); x++) {
                 if (!unlocked[y][x]) {
                     sb.append("[LOCKED] ");
                     continue;
@@ -70,7 +74,7 @@ public class GreenHouseManager {
         String error = getUserError();
         if (error != null) return error;
 
-        if (x < 1 || x > 4 || y < 1 || y > 3) {
+        if (x < 1 || x > UserProgress.getPotColumnCount() || y < 1 || y > UserProgress.getPotRowCount()) {
             return "Invalid coordinates. Use x=1-4, y=1-3.";
         }
 
@@ -94,7 +98,7 @@ public class GreenHouseManager {
         String error = getUserError();
         if (error != null) return error;
 
-        if (x < 1 || x > 4 || y < 1 || y > 3) {
+        if (x < 1 || x > UserProgress.getPotColumnCount() || y < 1 || y > UserProgress.getPotRowCount()) {
             return "Invalid coordinates. Use x=1-4, y=1-3.";
         }
 
@@ -135,7 +139,7 @@ public class GreenHouseManager {
         String error = getUserError();
         if (error != null) return error;
 
-        if (x < 1 || x > 4 || y < 1 || y > 3) {
+        if (x < 1 || x > UserProgress.getPotColumnCount() || y < 1 || y > UserProgress.getPotRowCount()) {
             return "Invalid coordinates.";
         }
 
@@ -169,7 +173,7 @@ public class GreenHouseManager {
         String error = getUserError();
         if (error != null) return error;
 
-        if (x < 1 || x > 4 || y < 1 || y > 3) {
+        if (x < 1 || x > UserProgress.getPotColumnCount() || y < 1 || y > UserProgress.getPotRowCount()) {
             return "Invalid coordinates.";
         }
 

@@ -32,7 +32,7 @@ public class ShopManager {
 
     private void initPermanentItems() {
 
-        permanentItems.add(new ShopItem(1, "Pot", ShopItemType.POT, 2000, WalletType.COIN, 1, 20,
+        permanentItems.add(new ShopItem(1, "Pot", ShopItemType.POT, 2000, WalletType.COIN, 1, 12,
                 "Unlocks a greenhouse slot (max 20)"));
         permanentItems.add(new ShopItem(2, "Plant Food", ShopItemType.PLANT_FOOD, 3, WalletType.DIAMOND, 1, 3,
                 "Used to boost plants (max 3 stored)"));

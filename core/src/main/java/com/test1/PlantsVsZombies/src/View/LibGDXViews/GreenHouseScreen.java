@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.test1.PlantsVsZombies.src.Enums.MenuType;
 import com.test1.PlantsVsZombies.src.Menu.GreenHouseMenu;
 import com.test1.PlantsVsZombies.src.Menu.MenuManager;
+import com.test1.PlantsVsZombies.src.Model.Greenhouse.GreenHouseManager;
 import com.test1.PlantsVsZombies.src.Model.Greenhouse.GreenhousePlant;
 import com.test1.PlantsVsZombies.src.Model.User.UserProgress;
 import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
@@ -63,7 +64,7 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
 
     private GreenHouseMenu menuController;
     private Group potGroup;
-    private Label[][] timerLabels = new Label[3][4];
+    private Label[][] timerLabels = new Label[UserProgress.getPotRowCount()][UserProgress.getPotColumnCount()];
 
     // Background projection metrics for exact anchoring
     private float bgWidth;
@@ -192,10 +193,10 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
         boolean[][] unlocked = progress.getUnlockedPots();
         GreenhousePlant[][] plants = progress.getPotPlants();
 
-        timerLabels = new Label[3][4];
+        timerLabels = new Label[UserProgress.getPotRowCount()][UserProgress.getPotColumnCount()];
 
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 4; x++) {
+        for (int y = 0; y < UserProgress.getPotRowCount(); y++) {
+            for (int x = 0; x < UserProgress.getPotColumnCount(); x++) {
                 final int gridX = x + 1;
                 final int gridY = y + 1;
 
@@ -356,7 +357,7 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
         title.setFontScale(1.1f);
         box.add(title).colspan(2).padBottom(20).row();
 
-        box.add(createBlackLabel("Cost: 50 Gems")).colspan(2).left().padBottom(20).row();
+        box.add(createBlackLabel("Cost: "+ GreenHouseManager.getPotCost() +" Gems")).colspan(2).left().padBottom(20).row();
 
         TextButton buyBtn = createSkinButton("Buy", "green", new ClickListener() {
             @Override
