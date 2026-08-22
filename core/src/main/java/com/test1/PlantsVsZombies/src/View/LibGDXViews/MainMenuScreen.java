@@ -581,16 +581,16 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         });
         box.add(editNicknameBtn).right().padLeft(10).padBottom(20).row();
 
-        box.add(createBlackLabel("Total Levels Passed:")).left().padRight(10);
+        box.add(createBlackLabel("Total Levels Passed:")).left().padBottom(20).padRight(10);
         box.add(createBlackLabel(String.valueOf(totalLevels))).left().padLeft(10).padBottom(20).row();
 
-        box.add(createBlackLabel("Gems:")).left().padRight(10);
+        box.add(createBlackLabel("Gems:")).left().padBottom(20).padRight(10);
         box.add(createBlackLabel(String.valueOf(loggedUser.getUserProgress().getGemsCount()))).left().padLeft(10).padBottom(20).row();
 
-        box.add(createBlackLabel("Coins:")).left().padRight(10);
+        box.add(createBlackLabel("Coins:")).left().padBottom(20).padRight(10);
         box.add(createBlackLabel(String.valueOf(loggedUser.getUserProgress().getCoinsCount()))).left().padLeft(10).padBottom(20).row();
 
-        box.add(createBlackLabel("Games Played:")).left().padRight(10);
+        box.add(createBlackLabel("Games Played:")).padBottom(20).left().padRight(10);
         box.add(createBlackLabel(String.valueOf(progress.getGamesPlayed()))).left().padLeft(10).padBottom(20).row();
 
         TextButton changePasswordBtn = createSkinButton("Change Password", "green_small", new ClickListener() {

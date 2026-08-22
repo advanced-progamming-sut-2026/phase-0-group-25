@@ -74,7 +74,7 @@ public class LeaderBoardMenu extends Menu {
         int maxChapterNum = -1;
 
         for (ChapterType ct : unlocked.keySet()) {
-            if (ct != ChapterType.MINI_GAME && ct.getChapterNumber() > maxChapterNum) {
+            if (ct != ChapterType.MINI_GAME && ct.getChapterNumber() > maxChapterNum && unlocked.get(ct)>0) {
                 maxChapterNum = ct.getChapterNumber();
                 highestChapter = ct;
             }
