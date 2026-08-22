@@ -80,6 +80,9 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     private TextureRegion iceSliderRegion;
     private TextureRegion iceBlockTexture;
     private TextureRegion cardBoostedBgRegion;
+    private static final String BEACH_WATER_ANIM_PATH = "768/FULL/BACKGROUNDS/WAVE_UPPERLAYER/WAVE_UPPERLAYER.PAM";
+    private static final String BEACH_TIDELINE_ANIM_PATH = "768/FULL/BACKGROUNDS/WATER_TIDE_LINE/WATER_TIDE_LINE.PAM";
+    private TextureRegion lowTideRuneRegion;
     private static final String CARD_BOOSTED_BG_ASSET_ID = "IMAGE_UI_PACKETS_BOOST";
     private static final String ICY_WIND_ANIM_PATH = "768/FULL/EFFECTS/FROSTBITE_CHILL_WIND/FROSTBITE_CHILL_WIND.PAM";
     private static final String ICE_SLIDER_ASSET_ID = "IMAGE_EFFECTS_TILESLIDER_ICEAGE_UP_TILESLIDER_ICEAGE_UP_116X140";
@@ -114,7 +117,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     private final TextureRegion[] darkPlantFoodGraveRegions = new TextureRegion[5];
     private final TextureRegion[] darkSunGraveRegions = new TextureRegion[5];
     private TextureRegion necromancyRuneRegion;
-
+    private IntroDialogueCutscene introCutscene;
     private static final String[] DARK_NORMAL_GRAVES = {
         "IMAGE_GRAVESTONES_DARK_NOOP_DARK_NOOP_132X160", "IMAGE_GRAVESTONES_DARK_NOOP_DARK_NOOP_132X160_2",
         "IMAGE_GRAVESTONES_DARK_NOOP_DARK_NOOP_132X156", "IMAGE_GRAVESTONES_DARK_NOOP_DARK_NOOP_125X149", "IMAGE_GRAVESTONES_DARK_NOOP_DARK_NOOP_93X89"
@@ -129,6 +132,12 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     };
     private final TextureRegion[] egyptGraveRegions = new TextureRegion[5];
     private static final float GRAVE_MAX_HP = 700f;
+
+    private static final float TIDELINE_X = 1595f;
+    private static final float TIDELINE_Y = 505f;
+    private static final float WATER_BASE_X = 2220f;
+    private static final float WATER_BASE_Y = 505f;
+    private static final float WATER_MOVE_RANGE = 76f;
 
     public GamePlayScreen(GamePlay gamePlay) {
         this.gamePlay = gamePlay;
@@ -172,6 +181,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         zombieHeadIcon = textureBank.region("IMAGE_UI_HUD_INGAME_PROGRESS_METER_ZOMBIEHEAD");
         progressBarFrame = textureBank.region("IMAGE_UI_HUD_INGAME_PROGRESS_METER");
         iceBlockTexture = textureBank.region("IMAGE_EFFECTS_FROSTBITE_ICE_BLOCK_ZOMBIE_FROSTBITE_ICE_BLOCK_ZOMBIE_153X243");
+        lowTideRuneRegion = textureBank.region("IMAGE_PLANT_WATERRABBIT_WATERRABBIT_82X82");
         for (int i = 0; i < EGYPT_GRAVE_ASSET_IDS.length; i++) {
             egyptGraveRegions[i] = textureBank.region(EGYPT_GRAVE_ASSET_IDS[i]);
         }
@@ -187,6 +197,10 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             darkNormalGraveRegions[i] = textureBank.region(DARK_NORMAL_GRAVES[i]);
             darkPlantFoodGraveRegions[i] = textureBank.region(DARK_PF_GRAVES[i]);
             darkSunGraveRegions[i] = textureBank.region(DARK_SUN_GRAVES[i]);
+        }
+        if (gamePlay.getChapterType() == ChapterType.ANCIENT_EGYPT && gamePlay.getLevel() == 1) {
+            introCutscene = new IntroDialogueCutscene(textureBank);
+            gamePlay.Pause();
         }
         necromancyRuneRegion = textureBank.region("IMAGE_EFFECTS_GRIMROSE_UNDERZOMBIE_EFFECT_GRIMROSE_UNDERZOMBIE_EFFECT_167X52");
 
@@ -211,6 +225,13 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 camera.unproject(mouseWorldPos.set(screenX, screenY, 0));
 
+                if (introCutscene != null && !introCutscene.isFinished()) {
+                    introCutscene.advance();
+                    if (introCutscene.isFinished()) {
+                        gamePlay.isPaused = false;
+                    }
+                    return true;
+                }
                 if (button == com.badlogic.gdx.Input.Buttons.RIGHT) {
                     selectedPlant = null;
                     isShovelSelected = false;
@@ -329,25 +350,36 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
 
     @Override
     public void render(float delta) {
-        stateTime += delta;
+        int gameSpeed = 1;
+        User user = gamePlay.getThisUser();
+        if (user != null && user.getUserProgress() != null) {
+            gameSpeed = Math.max(1, Math.min(3, user.getUserProgress().getGameSpeed()));
+        }
+        float effectiveDelta = delta * gameSpeed;
+
+        stateTime += effectiveDelta;
         gamePlay.setTotalTimePassed(stateTime);
         textureBank.update();
 
         ScreenUtils.clear(0.1f, 0.4f, 0.1f, 1);
 
         if (!gamePlay.isPaused()) {
-            timeAccumulator += delta;
+            timeAccumulator += effectiveDelta;
             while (timeAccumulator >= TICK_RATE) {
                 gamePlay.update();
                 timeAccumulator -= TICK_RATE;
             }
+
+            for (Mower mower : gamePlay.getMowers()) {
+                mower.update(effectiveDelta, gamePlay);
+            }
+
+            for (Sun sun : gamePlay.getActiveSuns()) {
+                sun.update(effectiveDelta);
+            }
         }
 
         camera.update();
-
-        for (Mower mower : gamePlay.getMowers()) {
-            mower.update(delta, gamePlay);
-        }
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -375,7 +407,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                 }
             }
         }
-        if (gamePlay.getChapterType() == ChapterType.FROSTBITE_CAVES) {
+        else if (gamePlay.getChapterType() == ChapterType.FROSTBITE_CAVES) {
             for (Tile tile : gamePlay.getTiles()) {
                 if (!tile.isArable()) {
                     int gridX = (int) tile.getPosition().getX();
@@ -396,7 +428,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                 }
             }
         }
-        if (gamePlay.getChapterType() == ChapterType.DARK_AGE) {
+        else if (gamePlay.getChapterType() == ChapterType.DARK_AGE) {
             for (Tile tile : gamePlay.getTiles()) {
                 if (!tile.isArable() && tile.getHP() > 0) {
                     int gridX = (int) tile.getPosition().getX();
@@ -424,6 +456,30 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                     }
                 }
             }
+        }
+        if (gamePlay.getChapterType() == ChapterType.BIG_WAVE_BEACH) {
+            for (Tile tile : gamePlay.getTiles()) {
+                if (!tile.isArable() && tile.isLowTide() && !tile.isLowTideTriggered()) {
+                    int gridX = (int) tile.getPosition().getX();
+                    int gridY = (int) tile.getPosition().getY();
+                    float realX = gamePlay.getRealX(gridX);
+                    float realY = gamePlay.getRealY(gridY);
+
+                    if (lowTideRuneRegion != null) {
+                        float pulse = 0.6f + 0.4f * (float) Math.sin(stateTime * 4f);
+                        batch.setColor(0.1f, 0.7f, 1f, pulse);
+                        batch.draw(lowTideRuneRegion, realX - 60f, realY - 45f, 120f, 60f);
+                        batch.setColor(Color.WHITE);
+                    }
+                }
+            }
+
+            float waterOffset = (float) Math.sin(stateTime * 0.8f) * WATER_MOVE_RANGE;
+            float currentWaterX = WATER_BASE_X + waterOffset;
+
+            player.draw(batch, BEACH_WATER_ANIM_PATH, "water", stateTime, currentWaterX, WATER_BASE_Y, true);
+
+            player.draw(batch, BEACH_TIDELINE_ANIM_PATH, "idle", stateTime, TIDELINE_X, TIDELINE_Y, true);
         }
 
         for (BattlePlant p : gamePlay.getGamePlants()) {
@@ -491,10 +547,6 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
 
                 batch.setColor(Color.WHITE);
             }
-        }
-
-        for (Sun sun : gamePlay.getActiveSuns()) {
-            sun.update(delta);
         }
 
         for (Sun sun : gamePlay.getActiveSuns()) {
@@ -576,8 +628,6 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                 }
             }
         }
-
-
 
         batch.draw(bgHud, 20, 1100, 215, 80);
         batch.draw(sunIcon, 30, 1110, 60, 60);
@@ -769,6 +819,23 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         }
 
         shapeRenderer.end();
+
+        boolean showGrid = (user != null && user.getUserProgress() != null && user.getUserProgress().isShowTileGrid());
+        if (showGrid) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.setColor(new Color(1f, 0f, 0f, 0.85f));
+            Gdx.gl.glLineWidth(2);
+
+            for (int r = 1; r <= 5; r++) {
+                for (int c = 1; c <= 9; c++) {
+                    float tileX = 490f + (c - 1) * 152.2f;
+                    float tileY = 130f + (r - 1) * 150f;
+                    shapeRenderer.rect(tileX - 5, tileY + 5, 145f, 140f);
+                }
+            }
+            shapeRenderer.end();
+        }
+
         Gdx.gl.glDisable(Gdx.gl.GL_BLEND);
 
         batch.begin();
@@ -789,7 +856,9 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         batch.draw(zombieHeadIcon, headX - 25, barY - 5, 50, 50);
 
         if (selectedPlant != null && selectedPlant.getPlantStats().getAnimation() != null) {
-            player.draw(batch, selectedPlant.getPlantStats().getAnimation(), "idle",
+            String strOfidle = PlantType.fromName(selectedPlant.getName()).getStateName();
+
+            player.draw(batch, selectedPlant.getPlantStats().getAnimation(), strOfidle,
                 stateTime, mouseWorldPos.x, mouseWorldPos.y, true);
         }
 
@@ -801,6 +870,10 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         }
 
         batch.end();
+
+        if (introCutscene != null && !introCutscene.isFinished()) {
+            introCutscene.render(batch, shapeRenderer, player, hudFont, stateTime);
+        }
 
         UIManager.renderToasts(delta);
     }

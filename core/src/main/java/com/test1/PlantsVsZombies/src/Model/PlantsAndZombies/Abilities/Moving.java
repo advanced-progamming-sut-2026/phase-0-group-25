@@ -97,7 +97,7 @@ public class Moving implements Ability {
         int initialColumn = zombie.getColumn();
 
         double velocity = zombie.getCurrentVelocity();
-        double differenceX = velocity * 30;
+        double differenceX = velocity * 10;
 
         double zombieFinalPositionX = zombie.getPosition().getX() - differenceX;
         Position newPosition = new Position(zombieFinalPositionX, zombie.getPosition().getY());

@@ -32,19 +32,33 @@ public class VaseBreaker extends GamePlay {
 
     private void setupJars() {
         jars.clear();
+        String[] possiblePlants = {"PEASHOOTER", "REPEATER", "WALL_NUT", "BONK_CHOY", "SNOW_PEA"};
+        String[] possibleZombies = {"DEFAULT", "CONE_HEAD", "BUCKET_HEAD"};
+
         for (int y = 1; y <= 5; y++) {
             for (int x = 5; x <= 9; x++) {
                 Position pos = new Position(getRealX(x), getRealY(y));
 
                 if (x == 9 && y == 3) {
+
                     Zombie gargantuar = ZombieFactory.createZombie("GARGANTUAR", pos);
                     jars.add(new GargantuarJar(pos, gargantuar));
-                } else if ((x + y) % 3 == 0) {
-                    BattlePlant plant = PlantFactory.createBattlePlant(PlantType.PEASHOOTER.getName(), 1, pos);
+                } else if ((x + y) % 4 == 0) {
+
+                    String pName = possiblePlants[random.nextInt(possiblePlants.length)];
+                    BattlePlant plant = PlantFactory.createBattlePlant(pName, 1, pos);
                     jars.add(new PlantJar(pos, plant));
                 } else {
-                    Zombie basicZombie = ZombieFactory.createZombie("DEFAULT", pos);
-                    jars.add(new SimpleJar(pos, basicZombie));
+
+                    if (Math.random() < 0.5) {
+                        String pName = possiblePlants[random.nextInt(possiblePlants.length)];
+                        BattlePlant plant = PlantFactory.createBattlePlant(pName, 1, pos);
+                        jars.add(new SimpleJar(pos, plant));
+                    } else {
+                        String zName = possibleZombies[random.nextInt(possibleZombies.length)];
+                        Zombie basicZombie = ZombieFactory.createZombie(zName, pos);
+                        jars.add(new SimpleJar(pos, basicZombie));
+                    }
                 }
             }
         }
@@ -55,7 +69,7 @@ public class VaseBreaker extends GamePlay {
     public void sunMaker() {
     }
 
-    public void breakJar(int x, int y) {
+    public BattlePlant breakJar(int x, int y) {
         Jar targetJar = null;
         for (Jar j : jars) {
             if ((int) j.getPosition().getX() == getRealX(x) && (int) j.getPosition().getY() == getRealY(y) && !j.isBroken()) {
@@ -64,7 +78,7 @@ public class VaseBreaker extends GamePlay {
             }
         }
 
-        if (targetJar == null) return;
+        if (targetJar == null) return null;
 
         targetJar.setBroken(true);
         System.out.printf("Jar at (%d, %d) broken!\n", x, y);
@@ -77,31 +91,36 @@ public class VaseBreaker extends GamePlay {
             z.setColumn(x);
             gameZombies.add(z);
             System.out.printf("A %s emerged from the jar!\n", z.getName());
+            return null;
         } else if (content instanceof BattlePlant) {
             BattlePlant plant = (BattlePlant) content;
-            inventory.add(plant);
-            System.out.printf("Plant %s directly added to your inventory!\n", plant.getName());
+            System.out.printf("Plant %s ready to be planted directly!\n", plant.getName());
+            return plant;
         }
+        return null;
     }
 
-    public void plantFromInventory(int inventoryIndex, int x, int y) {
-        if (inventoryIndex < 0 || inventoryIndex >= inventory.size()) {
-            return;
-        }
+    public boolean plantOnTile(BattlePlant plant, int x, int y) {
+        if (plant == null) return false;
+
+        boolean hasJar = jars.stream().anyMatch(j ->
+            !j.isBroken() && (int) j.getPosition().getX() == getRealX(x) &&
+                (int) j.getPosition().getY() == getRealY(y));
 
         Tile targetTile = getTileByPosition(x, y);
 
-        if (targetTile != null && targetTile.isArable() && targetTile.getPlants().isEmpty()) {
-            BattlePlant plantToPlant = inventory.remove(inventoryIndex);
-            plantToPlant.setRow(y);
-            plantToPlant.setColumn(x);
-            plantToPlant.setPosition(new Position(getRealX(x), getRealY(y)));
+        if (targetTile != null && targetTile.isArable() && targetTile.getPlants().isEmpty() && !hasJar) {
+            plant.setRow(y);
+            plant.setColumn(x);
+            plant.setPosition(new Position(getRealX(x), getRealY(y)));
 
-            this.gamePlants.add(plantToPlant);
-            targetTile.addPlant(plantToPlant);
+            this.gamePlants.add(plant);
+            targetTile.addPlant(plant);
 
-            System.out.printf("Planted %s at (%d, %d) from Seed Packet.\n", plantToPlant.getName(), x, y);
+            System.out.printf("Planted %s at (%d, %d).\n", plant.getName(), x, y);
+            return true;
         }
+        return false;
     }
 
     @Override

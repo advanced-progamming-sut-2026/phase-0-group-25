@@ -107,8 +107,13 @@ public abstract class GamePlay {
 
                 for (int x = 1; x < 10; x++) {
                     Position newPosition = new Position(x, y);
-                    Boolean isArable = (x != 9 && x != 8);
+                    Boolean isArable = (x <= 7);
                     Tile newTile = new Tile(newPosition, isArable, 0);
+
+                    if (x == 9 && Math.random() <= 0.60) {
+                        newTile.setLowTide(true);
+                    }
+
                     tiles.add(newTile);
                 }
             }
@@ -953,5 +958,30 @@ public abstract class GamePlay {
             return true;
         }
         return false;
+    }
+
+    public void triggerLowTide() {
+        if (chapterType != ChapterType.BIG_WAVE_BEACH) return;
+
+        boolean spawnedAny = false;
+        for (Tile tile : tiles) {
+            if (!tile.isArable() && tile.isLowTide() && !tile.isLowTideTriggered()) {
+                int col = (int) tile.getPosition().getX();
+                int row = (int) tile.getPosition().getY();
+
+                Position spawnPos = new Position(getRealX(col), getRealY(row));
+                Zombie zombie = ZombieFactory.createZombie("DEFAULT", spawnPos);
+                zombie.setRow(row);
+                zombie.setColumn(col);
+                gameZombies.add(zombie);
+
+                tile.setLowTideTriggered(true);
+                spawnedAny = true;
+            }
+        }
+
+        if (spawnedAny) {
+            UIManager.showToast("Low Tide! Zombies rising from the water!", "IMAGE_UI_GENERIC_TIMER_RIBBON_RED");
+        }
     }
 }

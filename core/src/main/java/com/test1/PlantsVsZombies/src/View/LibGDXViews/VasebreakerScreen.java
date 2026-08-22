@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Model.MiniGames.VasebreakerGame.*;
 import com.test1.PlantsVsZombies.src.Model.Mower;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
@@ -35,7 +36,7 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
     private TextureBank textureBank;
     private PamPlayer player;
     private TextureRegion bgRegion;
-
+    private BattlePlant heldPlant = null;
     private TextureRegion orangeJarIcon;
     private TextureRegion greenJarIcon;
     private TextureRegion purpleJarIcon;
@@ -104,39 +105,27 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
                 float wy = mouseWorldPos.y;
 
                 if (button == Input.Buttons.RIGHT) {
-                    selectedCardIndex = -1;
+                    heldPlant = null;
                     return true;
                 }
-
-
-                if (wy >= 1040 && wy <= 1190) {
-                    int index = (int) ((wx - 20) / 110);
-                    if (index >= 0 && index < gamePlay.getInventory().size()) {
-                        selectedCardIndex = (selectedCardIndex == index) ? -1 : index;
-                    }
-                    return true;
-                }
-
 
                 int gridX = (int) Math.round((wx - 566.1) / 152.2) + 1;
                 int gridY = (int) Math.round((wy - 205) / 150) + 1;
 
                 if (gridX >= 1 && gridX <= 9 && gridY >= 1 && gridY <= 5) {
-                    if (selectedCardIndex != -1) {
-                        boolean hasJar = gamePlay.getJars().stream().anyMatch(j ->
-                            !j.isBroken() && (int) j.getPosition().getX() == gamePlay.getRealX(gridX) &&
-                                (int) j.getPosition().getY() == gamePlay.getRealY(gridY));
+                    if (heldPlant != null) {
 
-                        Tile targetTile = gamePlay.getTileByPosition(gridX, gridY);
-
-                        if (targetTile != null && targetTile.isArable() && targetTile.getPlants().isEmpty() && !hasJar) {
-                            gamePlay.plantFromInventory(selectedCardIndex, gridX, gridY);
-                            selectedCardIndex = -1;
+                        if (gamePlay.plantOnTile(heldPlant, gridX, gridY)) {
+                            heldPlant = null;
                         } else {
                             UIManager.showToast("Cannot plant here!", "IMAGE_UI_GENERIC_TIMER_RIBBON_RED");
                         }
                     } else {
-                        gamePlay.breakJar(gridX, gridY);
+
+                        BattlePlant releasedPlant = gamePlay.breakJar(gridX, gridY);
+                        if (releasedPlant != null) {
+                            heldPlant = releasedPlant;
+                        }
                     }
                     return true;
                 }
@@ -160,13 +149,6 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
 
         ScreenUtils.clear(0.1f, 0.1f, 0.1f, 1);
         camera.update();
-
-        for (Mower mower : gamePlay.getMowers()) {
-            mower.update(delta, gamePlay);
-        }
-
-
-
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -200,7 +182,7 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
         for (Zombie z : gamePlay.getGameZombies()) {
             if (z.isAlive() && z.getZombieStats().getAnimation() != null) {
                 player.draw(batch, z.getZombieStats().getAnimation(), z.getCurrentAnimationName(),
-                    stateTime, (float) z.getPosition().getX(), (float) z.getPosition().getY(), true);
+                    stateTime, (float) z.getPosition().getX(), (float) z.getPosition().getY(), true, z.getVisibility());
             }
         }
 
@@ -210,17 +192,7 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
             }
         }
 
-        for (Mower mower : gamePlay.getMowers()) {
-            if (!mower.isDone()) {
-                player.draw(batch, mower.getAnimationPath(), mower.getCurrentAnimState(),
-                    stateTime, mower.getX(), mower.getY(), true);
-            }
-        }
-
         batch.end();
-
-
-
 
         int totalJars = gamePlay.getJars().size();
         long brokenJars = gamePlay.getJars().stream().filter(Jar::isBroken).count();
@@ -236,8 +208,7 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-
-        if (selectedCardIndex != -1) {
+        if (heldPlant != null) {
             int hoverCol = (int) Math.round((mouseWorldPos.x - 566.1) / 152.2) + 1;
             int hoverRow = (int) Math.round((mouseWorldPos.y - 205) / 150) + 1;
 
@@ -246,21 +217,12 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
                 float tileY = (float) (205 + (hoverRow - 1) * 150) - 25f;
 
                 shapeRenderer.setColor(new Color(1f, 1f, 1f, 0.35f));
-                shapeRenderer.rect(tileX, tileY, 145f, 145f);
+                shapeRenderer.rect(tileX-13 , tileY-35, 145f, 145f);
             }
         }
 
-
-        int totalItems = gamePlay.getInventory().size();
-        if (totalItems > 0) {
-            shapeRenderer.setColor(new Color(0f, 0f, 0f, 0.65f));
-            shapeRenderer.rect(10, 1040, totalItems * 110 + 20, 145);
-        }
-
-
         shapeRenderer.setColor(new Color(0.1f, 0.1f, 0.1f, 0.85f));
         shapeRenderer.rect(barLeftX + 15, barY + 10, barWidth - 30, barHeight - 20);
-
 
         if (fillWidth > 0) {
             shapeRenderer.setColor(new Color(0.2f, 0.9f, 0.2f, 1f));
@@ -270,50 +232,25 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
         shapeRenderer.end();
         Gdx.gl.glDisable(Gdx.gl.GL_BLEND);
 
-
-
-
         batch.begin();
 
         if (progressBarFrame != null) {
             batch.draw(progressBarFrame, barLeftX, barY, barWidth, barHeight);
         }
+
         if (orangeJarIcon != null) {
             batch.draw(orangeJarIcon, barLeftX + fillWidth - 10f, barY - 5f, 40f, 50f);
         }
-
 
         if (hudFont != null) {
             String progressText = brokenJars + " / " + totalJars + " Jars";
             hudFont.draw(batch, progressText, barLeftX + (barWidth / 2f) - 75f, barY + 32f);
         }
 
-
-        int slotX = 20;
-        int index = 0;
-        for (BattlePlant invPlant : gamePlay.getInventory()) {
-            if (index == selectedCardIndex) {
-                batch.setColor(0.6f, 1f, 0.6f, 1f);
-            } else {
-                batch.setColor(Color.WHITE);
-            }
-
-            if (invPlant.getPlantStats().getAnimation() != null) {
-                player.draw(batch, invPlant.getPlantStats().getAnimation(), "idle", stateTime, slotX + 50, 1070, true);
-            }
-
-            batch.setColor(Color.WHITE);
-            slotX += 110;
-            index++;
-        }
-
-
-        if (selectedCardIndex >= 0 && selectedCardIndex < gamePlay.getInventory().size()) {
-            BattlePlant previewPlant = gamePlay.getInventory().get(selectedCardIndex);
-            if (previewPlant.getPlantStats().getAnimation() != null) {
-                player.draw(batch, previewPlant.getPlantStats().getAnimation(), "idle",
-                    stateTime, mouseWorldPos.x, mouseWorldPos.y, true);
-            }
+        if (heldPlant != null && heldPlant.getPlantStats().getAnimation() != null) {
+            String strOfidle = PlantType.fromName(heldPlant.getName()).getStateName();
+            player.draw(batch, heldPlant.getPlantStats().getAnimation(), strOfidle,
+                stateTime, mouseWorldPos.x, mouseWorldPos.y, true);
         }
 
         batch.end();
