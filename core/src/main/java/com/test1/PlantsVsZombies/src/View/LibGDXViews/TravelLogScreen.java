@@ -1,10 +1,10 @@
 // file: core/src/main/java/com/test1/PlantsVsZombies/src/View/LibGDXViews/TravelLogScreen.java
 package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -45,6 +45,7 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
     private Table minigamesContentTable;
     private Table dailyQuestsSection;
     private Table regularQuestsContainer;
+    private ScrollPane questsScrollPane;
     private Actor goToMinigamesButton;
     private Actor backToQuestsButton;
 
@@ -103,7 +104,6 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
         contentStack.add(questsContentTable);
         contentStack.add(minigamesContentTable);
 
-        // minHeight(0) ensures the inner scroll content doesn't push the bottomBar off-screen
         uiTable.add(contentStack)
             .expand()
             .fill()
@@ -190,37 +190,68 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
     }
 
     // ============================================================
-    // QUESTS TAB
+    // QUESTS TAB (SCROLLABLE & SEPARATED)
     // ============================================================
 
     private Table buildQuestsView() {
         Table mainContainer = new Table();
         mainContainer.top();
 
-        // 1. Daily Quests Section at the top
+        Table scrollInnerContainer = new Table();
+        scrollInnerContainer.top().pad(5);
+
         dailyQuestsSection = new Table();
         dailyQuestsSection.top();
-        mainContainer.add(dailyQuestsSection).fillX().padBottom(10).row();
+        scrollInnerContainer.add(dailyQuestsSection).fillX().padBottom(15).row();
 
-        // 2. Regular Quests in a ScrollPane underneath
         regularQuestsContainer = new Table();
         regularQuestsContainer.top();
+        scrollInnerContainer.add(regularQuestsContainer).fillX().padBottom(15).row();
 
         ScrollPane.ScrollPaneStyle scrollStyle = new ScrollPane.ScrollPaneStyle();
         scrollStyle.background = null;
 
-        ScrollPane regularScroll = new ScrollPane(regularQuestsContainer, scrollStyle);
-        regularScroll.setScrollingDisabled(true, false);
-        regularScroll.setFadeScrollBars(true);
-        regularScroll.setOverscroll(false, false);
+        questsScrollPane = new ScrollPane(scrollInnerContainer, scrollStyle);
+        questsScrollPane.setScrollingDisabled(true, false);
+        questsScrollPane.setFadeScrollBars(false);
+        questsScrollPane.setOverscroll(false, false);
 
-        mainContainer.add(regularScroll).expand().fill().minHeight(0).row();
+        questsScrollPane.addListener(new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                if (stage != null) {
+                    stage.setScrollFocus(questsScrollPane);
+                }
+            }
 
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                if (stage != null && (toActor == null || !toActor.isDescendantOf(questsScrollPane))) {
+                    stage.setScrollFocus(null);
+                }
+            }
+        });
+
+        mainContainer.add(questsScrollPane).expand().fill().minHeight(0).row();
         return mainContainer;
+    }
+
+    private Table createSectionHeader(String title) {
+        Table header = new Table();
+        header.left();
+
+        Label label = createBlackLabel(title);
+        header.add(label).left().padLeft(5).padBottom(8);
+
+        return header;
     }
 
     private void refreshQuests() {
         if (dailyQuestsSection == null || regularQuestsContainer == null) return;
+
+        // Sync user progress before rendering
+        QuestManager.getInstance().loadProgress();
+
         dailyQuestsSection.clearChildren();
         regularQuestsContainer.clearChildren();
 
@@ -228,11 +259,31 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
         notYetClaimed.addAll(QuestManager.getInstance().getActiveQuests());
         notYetClaimed.addAll(QuestManager.getInstance().getCompletedQuests());
 
+        List<Quest> dailyQuests = new ArrayList<>();
+        List<Quest> regularQuests = new ArrayList<>();
+
         for (Quest quest : notYetClaimed) {
-            Table card = buildQuestCard(quest);
             if (quest.isDailyReset()) {
-                dailyQuestsSection.add(card).fillX().padBottom(10).row();
+                dailyQuests.add(quest);
             } else {
+                regularQuests.add(quest);
+            }
+        }
+
+        // Render Daily Quests Section
+        if (!dailyQuests.isEmpty()) {
+            dailyQuestsSection.add(createSectionHeader("--- DAILY QUESTS ---")).left().padBottom(6).row();
+            for (Quest quest : dailyQuests) {
+                Table card = buildQuestCard(quest);
+                dailyQuestsSection.add(card).fillX().padBottom(10).row();
+            }
+        }
+
+        // Render Regular Quests Section
+        if (!regularQuests.isEmpty()) {
+            regularQuestsContainer.add(createSectionHeader("--- REGULAR QUESTS ---")).left().padBottom(6).row();
+            for (Quest quest : regularQuests) {
+                Table card = buildQuestCard(quest);
                 regularQuestsContainer.add(card).fillX().padBottom(10).row();
             }
         }
@@ -256,7 +307,7 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
             card.add().size(64, 64).padRight(15);
         }
 
-        // Explanation and progress bar (middle)
+        // Description and progress bar (middle)
         Table middle = new Table();
 
         Label descLabel = createBlackLabel(quest.getDescription());

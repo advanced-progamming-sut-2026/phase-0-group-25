@@ -40,6 +40,13 @@ public class UserProgress {
     private Map<PlantType, Integer> seedPackets;
     private LocalDate dailyOfferPurchaseDate;
 
+    // Persisted so the daily offer stays the same plant across app restarts,
+    // and only actually changes when the calendar day changes.
+    private PlantType dailyOfferPlantType;
+    private int dailyOfferPrice;
+    private int dailyOfferSeedPacketCount;
+    private LocalDate dailyOfferGeneratedDate;
+
     private int miniGamesCompleted;
     private int dailyQuestsCompleted;
     private int nonDailyQuestsCompleted;
@@ -47,6 +54,9 @@ public class UserProgress {
     private boolean[][] unlockedPots;
     private GreenhousePlant[][] potPlants;
     private Set<PlantType> greenhouseBoosts;
+
+    private static int potRowCount = 3;
+    private static int potColumnCount = 4;
 
     public UserProgress() {
         this.unlockedChaptersAndLevels = new HashMap<>();
@@ -64,11 +74,11 @@ public class UserProgress {
         this.seedPackets = new HashMap<>();
         this.dailyOfferPurchaseDate = null;
 
-        this.unlockedPots = new boolean[4][5];
-        this.potPlants = new GreenhousePlant[4][5];
+        this.unlockedPots = new boolean[potRowCount][potColumnCount];
+        this.potPlants = new GreenhousePlant[potRowCount][potColumnCount];
         this.greenhouseBoosts = new HashSet<>();
 
-        for (int x = 0; x < 5; x++) {
+        for (int x = 0; x < potColumnCount; x++) {
             unlockedPots[0][x] = true;
         }
 
@@ -86,6 +96,14 @@ public class UserProgress {
         for (MiniGameType type : MiniGameType.values()) {
             miniGameLevels.put(type, 1);
         }
+    }
+
+    public static int getPotRowCount() {
+        return potRowCount;
+    }
+
+    public static int getPotColumnCount() {
+        return potColumnCount;
     }
 
     // ----- Existing getters/setters (unchanged) -----
@@ -166,20 +184,20 @@ public class UserProgress {
     }
     public int getPotsCount() {
         int count = 0;
-        for (int y = 0; y < 4; y++) {
-            for (int x = 0; x < 5; x++) {
+        for (int y = 0; y < potRowCount; y++) {
+            for (int x = 0; x < potColumnCount; x++) {
                 if (unlockedPots[y][x]) count++;
             }
         }
         return count;
     }
     void unlockPot(int x, int y) {
-        if (x < 1 || x > 5 || y < 1 || y > 4) return;
+        if (x < 1 || x > potColumnCount || y < 1 || y > potRowCount) return;
         unlockedPots[y - 1][x - 1] = true;
     }
     void unlockNextPot() {
-        for (int y = 0; y < 4; y++) {
-            for (int x = 0; x < 5; x++) {
+        for (int y = 0; y < potRowCount; y++) {
+            for (int x = 0; x < potColumnCount; x++) {
                 if (!unlockedPots[y][x]) {
                     unlockedPots[y][x] = true;
                     return;
@@ -188,11 +206,11 @@ public class UserProgress {
         }
     }
     void plantInPot(int x, int y, GreenhousePlant plant) {
-        if (x < 1 || x > 5 || y < 1 || y > 4) return;
+        if (x < 1 || x > potColumnCount || y < 1 || y > potRowCount) return;
         potPlants[y - 1][x - 1] = plant;
     }
     void removePlantFromPot(int x, int y) {
-        if (x < 1 || x > 5 || y < 1 || y > 4) return;
+        if (x < 1 || x > potColumnCount || y < 1 || y > potRowCount) return;
         potPlants[y - 1][x - 1] = null;
     }
     void addGreenhouseBoost(PlantType plant) {
@@ -227,6 +245,41 @@ public class UserProgress {
     }
     public boolean isDailyOfferBoughtToday() {
         return dailyOfferPurchaseDate != null && dailyOfferPurchaseDate.equals(LocalDate.now());
+    }
+    public PlantType getDailyOfferPlantType() {
+        return dailyOfferPlantType;
+    }
+    void setDailyOfferPlantType(PlantType plantType) {
+        this.dailyOfferPlantType = plantType;
+    }
+    public int getDailyOfferPrice() {
+        return dailyOfferPrice;
+    }
+    void setDailyOfferPrice(int price) {
+        this.dailyOfferPrice = price;
+    }
+    public int getDailyOfferSeedPacketCount() {
+        return dailyOfferSeedPacketCount;
+    }
+    void setDailyOfferSeedPacketCount(int seedPacketCount) {
+        this.dailyOfferSeedPacketCount = seedPacketCount;
+    }
+    public LocalDate getDailyOfferGeneratedDate() {
+        return dailyOfferGeneratedDate;
+    }
+    void setDailyOfferGeneratedDate(LocalDate date) {
+        this.dailyOfferGeneratedDate = date;
+    }
+    /**
+     * True only if a daily offer was generated today AND the plant it was
+     * generated for is still unlocked. Used to decide whether a saved
+     * offer can be reused as-is or must be regenerated.
+     */
+    public boolean hasValidPersistedDailyOffer() {
+        return dailyOfferGeneratedDate != null
+            && dailyOfferGeneratedDate.equals(LocalDate.now())
+            && dailyOfferPlantType != null
+            && unlockedPlantsAndTheirLevels.containsKey(dailyOfferPlantType);
     }
     public HashMap<ChapterType, Integer> getUnlockedChaptersAndLevels() {
         return unlockedChaptersAndLevels;

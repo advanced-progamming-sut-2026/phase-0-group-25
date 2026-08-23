@@ -88,7 +88,12 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
             .expandX();
 
 
-        topBar.add(createBackButton(MenuType.Game))
+        topBar.add(createBackButton(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    MenuManager.getInstance().getGameMenu().backToChapterSelection();
+                }
+            }))
             .right()
             .size(70, 70)
             .padRight(15)
