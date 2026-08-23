@@ -40,6 +40,13 @@ public class UserProgress {
     private Map<PlantType, Integer> seedPackets;
     private LocalDate dailyOfferPurchaseDate;
 
+    // Persisted so the daily offer stays the same plant across app restarts,
+    // and only actually changes when the calendar day changes.
+    private PlantType dailyOfferPlantType;
+    private int dailyOfferPrice;
+    private int dailyOfferSeedPacketCount;
+    private LocalDate dailyOfferGeneratedDate;
+
     private int miniGamesCompleted;
     private int dailyQuestsCompleted;
     private int nonDailyQuestsCompleted;
@@ -238,6 +245,41 @@ public class UserProgress {
     }
     public boolean isDailyOfferBoughtToday() {
         return dailyOfferPurchaseDate != null && dailyOfferPurchaseDate.equals(LocalDate.now());
+    }
+    public PlantType getDailyOfferPlantType() {
+        return dailyOfferPlantType;
+    }
+    void setDailyOfferPlantType(PlantType plantType) {
+        this.dailyOfferPlantType = plantType;
+    }
+    public int getDailyOfferPrice() {
+        return dailyOfferPrice;
+    }
+    void setDailyOfferPrice(int price) {
+        this.dailyOfferPrice = price;
+    }
+    public int getDailyOfferSeedPacketCount() {
+        return dailyOfferSeedPacketCount;
+    }
+    void setDailyOfferSeedPacketCount(int seedPacketCount) {
+        this.dailyOfferSeedPacketCount = seedPacketCount;
+    }
+    public LocalDate getDailyOfferGeneratedDate() {
+        return dailyOfferGeneratedDate;
+    }
+    void setDailyOfferGeneratedDate(LocalDate date) {
+        this.dailyOfferGeneratedDate = date;
+    }
+    /**
+     * True only if a daily offer was generated today AND the plant it was
+     * generated for is still unlocked. Used to decide whether a saved
+     * offer can be reused as-is or must be regenerated.
+     */
+    public boolean hasValidPersistedDailyOffer() {
+        return dailyOfferGeneratedDate != null
+            && dailyOfferGeneratedDate.equals(LocalDate.now())
+            && dailyOfferPlantType != null
+            && unlockedPlantsAndTheirLevels.containsKey(dailyOfferPlantType);
     }
     public HashMap<ChapterType, Integer> getUnlockedChaptersAndLevels() {
         return unlockedChaptersAndLevels;
