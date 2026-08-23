@@ -209,7 +209,7 @@ public class Zombie extends Entity {
 
             if ((!this.zombieStats.getName().equals("IMP_DRAGON")) || (!projectile.isFiring())) {
                 this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
-                if (!this.isAlive) {
+                if (currentHP <= 0) {
                     checkKiller(projectile);
                 }
             }
@@ -267,7 +267,7 @@ public class Zombie extends Entity {
 
         if (leftoverDamage > 0) {
             this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
-            if (!this.isAlive) {
+            if (currentHP <= 0) {
                 checkKiller(plant);
             }
         }
