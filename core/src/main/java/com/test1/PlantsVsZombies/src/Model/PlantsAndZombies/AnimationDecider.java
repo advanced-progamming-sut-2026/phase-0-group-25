@@ -74,7 +74,6 @@ public class AnimationDecider {
     public String zombieDecider(Zombie zombie) {
         Map<String, String> status = zombie.getZombieStats().getStatus();
         if (zombie.getCurrentHP() <= 0) {
-            System.out.println("hjkjhghjk");
             return handleZombieDeath(zombie, status);
         }
 
@@ -351,7 +350,6 @@ public class AnimationDecider {
 
         double dieSpan = (double) zombie.getZombieStats().getAttributes().get("dieSpan");
         double difference = GAME.getTotalTimePassed() - zombie.getDieTime();
-        System.out.println(dieSpan + "    " + difference + "   " + zombie.getDieTime());
 
 
         if (difference >= dieSpan / 2) {

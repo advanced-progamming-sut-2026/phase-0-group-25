@@ -159,7 +159,6 @@ public class BattlePlant extends Plant {
     public void setIceTime(int iceTime) {
         this.iceTime = iceTime;
         if (this.iceTime >= 3) {
-            System.out.println("This Plant Was Frozen! (" + this.getPosition().getX() + " , " + this.getPosition().getY() + ")");
             this.setFrozen(true);
             this.iceTime = 0;
         }
@@ -330,14 +329,12 @@ public class BattlePlant extends Plant {
         float difference = (float) (GAME.getTotalTimePassed() - this.lastActionTime);
         float trigger = this.plantStats.getTrigger();
         float total = difference + trigger;
-        System.out.println(difference + "        " + total + "    sdfsfd" + this.plantStats.getActionInterval());
         if ((total >= this.plantStats.getActionInterval())) {
             this.status = "action";
         } else {
             this.status = "idle";
         }
 
-        System.out.println(this.status);
     }
 
     public void checkMelee() {

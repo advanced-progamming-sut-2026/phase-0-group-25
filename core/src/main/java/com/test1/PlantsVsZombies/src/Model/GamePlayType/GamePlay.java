@@ -372,7 +372,7 @@ public abstract class GamePlay {
             int thisPY = (int) thisPosition.getY();
             String thisPName = thisPlant.getName();
             if (thisPName.equals("IMITATER")) {
-                int number = new Random().nextInt(plants.size()) + 1;
+                int number = new Random().nextInt(plants.size());
                 thisPName = this.plants.get(number).getName();
                 isImitaterBoosted = getLevelOfPlant("IMITATER") == 4;
             }

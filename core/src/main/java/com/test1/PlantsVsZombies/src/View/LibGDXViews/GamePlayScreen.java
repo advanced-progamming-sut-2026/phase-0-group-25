@@ -14,8 +14,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Model.DroppedPlantFood;
-import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
-import com.test1.PlantsVsZombies.src.Model.GamePlayType.Simple;
+import com.test1.PlantsVsZombies.src.Model.GamePlayType.*;
 import com.test1.PlantsVsZombies.src.Model.Mower;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
@@ -70,6 +69,9 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     private static final float CARD_HEIGHT = 105f;
     private static final float CARD_SPACING = 11f;
     private static final String PF_BANK_SLOT_ASSET_ID = "IMAGE_UI_HUD_INGAME_PLANTFOOD_BANK_FILLED_SLOT";
+        private static final String SOS_TILE_ASSET_ID = "IMAGE_BACKGROUNDS_PROTECT_TILE_PROTECT_TILE_112X125";
+    private TextureRegion sosTileRegion;
+    private static final float DEADLINE_X = 943f;
     private TextureRegion pfBankSlotRegion;
     private static final String PLUS_BUTTON_ASSET_ID = "IMAGE_UI_HUD_INGAME_COIN_BUY";
     private static final String CARD_BG_ASSET_ID = "IMAGE_UI_PACKETS_SELECTED";
@@ -139,6 +141,11 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     private static final float WATER_BASE_Y = 505f;
     private static final float WATER_MOVE_RANGE = 76f;
 
+    private static final float START_WAVE_BTN_X = 1450f;
+    private static final float START_WAVE_BTN_Y = 1100f;
+    private static final float START_WAVE_BTN_W = 220f;
+    private static final float START_WAVE_BTN_H = 75f;
+
     public GamePlayScreen(GamePlay gamePlay) {
         this.gamePlay = gamePlay;
     }
@@ -173,6 +180,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         plusIcon = textureBank.region(PLUS_BUTTON_ASSET_ID);
         iceSliderRegion = textureBank.region(ICE_SLIDER_ASSET_ID);
         cardBoostedBgRegion = textureBank.region(CARD_BOOSTED_BG_ASSET_ID);
+        sosTileRegion = textureBank.region(SOS_TILE_ASSET_ID);
         sunIcon = textureBank.region("IMAGE_UI_SEASONS_UNCOMPRESSED_PVZ2_SEASONS_UIASSET_ICON_SUN");
         plantFoodIcon = textureBank.region("IMAGE_UI_HUD_INGAME_PLANTFOOD_BUTTON");
         getPlantFoodIconInGame = textureBank.region("IMAGE_EFFECTS_PLANTFOOD_PICKUP_PLANTFOOD_PICKUP_79X79");
@@ -287,6 +295,18 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                 }
 
 
+                if (gamePlay instanceof PlantWhatYouGet) {
+                    PlantWhatYouGet pwyb = (PlantWhatYouGet) gamePlay;
+                    if (!pwyb.isWaveStarted()) {
+                        if (mouseWorldPos.x >= START_WAVE_BTN_X && mouseWorldPos.x <= START_WAVE_BTN_X + START_WAVE_BTN_W &&
+                            mouseWorldPos.y >= START_WAVE_BTN_Y && mouseWorldPos.y <= START_WAVE_BTN_Y + START_WAVE_BTN_H) {
+                            pwyb.startWave();
+                            return true;
+                        }
+                    }
+                }
+
+
                 ArrayList<BattlePlant> deck = gamePlay.getPlants();
                 for (int i = 0; i < deck.size(); i++) {
                     float cardX = CARD_X;
@@ -297,7 +317,9 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
 
                         BattlePlant clickedPlant = deck.get(i);
                         boolean canAfford = gamePlay.getMySuns() >= clickedPlant.getPlantStats().getCost();
-                        boolean isReady = clickedPlant.getCurrentCoolDown() <= 0 || !clickedPlant.getActiveCooldown();
+
+                        boolean isSetupPhase = (gamePlay instanceof PlantWhatYouGet && !((PlantWhatYouGet) gamePlay).isWaveStarted());
+                        boolean isReady = isSetupPhase || (clickedPlant.getCurrentCoolDown() <= 0 || !clickedPlant.getActiveCooldown());
 
                         if (canAfford && isReady) {
                             isShovelSelected = false;
@@ -385,6 +407,25 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         batch.begin();
 
         batch.draw(region, 0, 0, 1920, 1200);
+
+
+        if (gamePlay instanceof SaveOurSeeds){
+            int[][] protectedCoords = {{5, 2}, {5, 4}};
+            float pulse = 0.75f + 0.25f * (float) Math.sin(stateTime * 5f);
+
+            for (int[] coord : protectedCoords) {
+                float realX = gamePlay.getRealX(coord[0]);
+                float realY = gamePlay.getRealY(coord[1]);
+                float tileW = 145f;
+                float tileH = 140f;
+
+                if (sosTileRegion != null) {
+                    batch.setColor(1f, 0.9f, 0.2f, pulse);
+                    batch.draw(sosTileRegion, realX - (tileW / 2f) - 7, realY - 60f, tileW, tileH);
+                    batch.setColor(Color.WHITE);
+                }
+            }
+        }
 
         if (gamePlay.getChapterType() == ChapterType.ANCIENT_EGYPT) {
             for (Tile tile : gamePlay.getTiles()) {
@@ -794,19 +835,23 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             }
         }
 
-        for (int i = 0; i < deck.size(); i++) {
-            BattlePlant p = deck.get(i);
-            double cd = p.getCurrentCoolDown();
-            double totalCd = p.getPlantStats().getRechargeTime();
+        boolean isSetupPhase = (gamePlay instanceof PlantWhatYouGet && !((PlantWhatYouGet) gamePlay).isWaveStarted());
 
-            if (cd > 0 && totalCd > 0) {
-                float cdRatio = (float) Math.min(1.0, cd / totalCd);
-                float cardX = CARD_X;
-                float cardY = CARD_START_Y - (i * (CARD_HEIGHT + CARD_SPACING));
-                float overlayHeight = CARD_HEIGHT * cdRatio;
+        if (!isSetupPhase) {
+            for (int i = 0; i < deck.size(); i++) {
+                BattlePlant p = deck.get(i);
+                double cd = p.getCurrentCoolDown();
+                double totalCd = p.getPlantStats().getRechargeTime();
 
-                shapeRenderer.setColor(new Color(0f, 0f, 0f, 0.65f));
-                shapeRenderer.rect(cardX, cardY + (CARD_HEIGHT - overlayHeight), CARD_WIDTH, overlayHeight);
+                if (cd > 0 && totalCd > 0) {
+                    float cdRatio = (float) Math.min(1.0, cd / totalCd);
+                    float cardX = CARD_X;
+                    float cardY = CARD_START_Y - (i * (CARD_HEIGHT + CARD_SPACING));
+                    float overlayHeight = CARD_HEIGHT * cdRatio;
+
+                    shapeRenderer.setColor(new Color(0f, 0f, 0f, 0.65f));
+                    shapeRenderer.rect(cardX, cardY + (CARD_HEIGHT - overlayHeight), CARD_WIDTH, overlayHeight);
+                }
             }
         }
 
@@ -821,18 +866,39 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         shapeRenderer.end();
 
         boolean showGrid = (user != null && user.getUserProgress() != null && user.getUserProgress().isShowTileGrid());
-        if (showGrid) {
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            shapeRenderer.setColor(new Color(1f, 0f, 0f, 0.85f));
-            Gdx.gl.glLineWidth(2);
 
-            for (int r = 1; r <= 5; r++) {
-                for (int c = 1; c <= 9; c++) {
-                    float tileX = 490f + (c - 1) * 152.2f;
-                    float tileY = 130f + (r - 1) * 150f;
-                    shapeRenderer.rect(tileX - 5, tileY + 5, 145f, 140f);
+
+
+
+        boolean isDeadLineMode = (gamePlay instanceof DeadLine);
+
+        if (showGrid || isDeadLineMode) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+
+
+            if (showGrid) {
+                shapeRenderer.setColor(new Color(1f, 0f, 0f, 0.85f));
+                Gdx.gl.glLineWidth(2);
+
+                for (int r = 1; r <= 5; r++) {
+                    for (int c = 1; c <= 9; c++) {
+                        float tileX = 490f + (c - 1) * 152.2f;
+                        float tileY = 130f + (r - 1) * 150f;
+                        shapeRenderer.rect(tileX - 5, tileY + 5, 145f, 140f);
+                    }
                 }
             }
+
+
+            if (isDeadLineMode) {
+                float pulse = 0.7f + 0.3f * (float) Math.sin(stateTime * 6f);
+                shapeRenderer.setColor(new Color(1f, 0.1f, 0.1f, pulse));
+                Gdx.gl.glLineWidth(6);
+
+
+                shapeRenderer.line(DEADLINE_X, 130f, DEADLINE_X, 130f + (5 * 150f));
+            }
+
             shapeRenderer.end();
         }
 
@@ -862,9 +928,79 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                 stateTime, mouseWorldPos.x, mouseWorldPos.y, true);
         }
 
+
+        if (gamePlay instanceof TimedWar) {
+            TimedWar tw = (TimedWar) gamePlay;
+            int kills = tw.getNumOfDeadZombies();
+            int targetKills = 7;
+            float timeLeft = Math.max(0f, (600 - tw.getTotalTicksPassed()) * 0.1f);
+            boolean targetReached = kills >= targetKills;
+
+            float boxX = 1450f;
+            float boxY = 1100f;
+
+            batch.draw(bgHud, boxX, boxY, 280, 80);
+            hudFont.getData().setScale(0.48f);
+
+            if (targetReached) {
+                hudFont.setColor(Color.GREEN);
+                hudFont.draw(batch, "GOAL ACHIEVED! (" + kills + "/" + targetKills + ")", boxX + 20, boxY + 50);
+            } else {
+                if (timeLeft <= 10.0f) {
+                    hudFont.setColor(Color.RED);
+                } else {
+                    hudFont.setColor(Color.YELLOW);
+                }
+                hudFont.draw(batch, "Kills: " + kills + " / " + targetKills, boxX + 25, boxY + 60);
+                hudFont.draw(batch, String.format("Time: %.1fs", timeLeft), boxX + 25, boxY + 30);
+            }
+
+            hudFont.getData().setScale(1f);
+            hudFont.setColor(Color.WHITE);
+        }
+
+        if (gamePlay instanceof LoveYourPlants) {
+            LoveYourPlants lyp = (LoveYourPlants) gamePlay;
+            int lost = lyp.getNumOfLost();
+            int maxAllowed = 5;
+
+            float boxX = 1450f;
+            float boxY = 1100f;
+
+            batch.draw(bgHud, boxX, boxY, 260, 80);
+            hudFont.getData().setScale(0.45f);
+
+            if (lost >= 4) {
+                hudFont.setColor(Color.RED);
+            } else {
+                hudFont.setColor(Color.WHITE);
+            }
+
+            hudFont.draw(batch, "Plants Lost: " + lost + " / " + maxAllowed, boxX + 20, boxY + 48);
+            hudFont.getData().setScale(1f);
+            hudFont.setColor(Color.WHITE);
+        }
+
+        if (gamePlay instanceof PlantWhatYouGet) {
+            PlantWhatYouGet pwyb = (PlantWhatYouGet) gamePlay;
+            if (!pwyb.isWaveStarted()) {
+                float pulse = 0.85f + 0.15f * (float) Math.sin(stateTime * 6f);
+                batch.setColor(0.3f, 0.9f, 0.3f, pulse);
+                batch.draw(bgHud, START_WAVE_BTN_X, START_WAVE_BTN_Y, START_WAVE_BTN_W, START_WAVE_BTN_H);
+                batch.setColor(Color.WHITE);
+
+                hudFont.getData().setScale(0.55f);
+                hudFont.setColor(Color.YELLOW);
+                hudFont.draw(batch, "LET'S ROCK!", START_WAVE_BTN_X + 28, START_WAVE_BTN_Y + 50);
+                hudFont.getData().setScale(1f);
+                hudFont.setColor(Color.WHITE);
+            }
+        }
+
         if (isShovelSelected && shovelIcon != null) {
             batch.draw(shovelIconInGame, mouseWorldPos.x - 40, mouseWorldPos.y - 10, 80, 80);
         }
+
         if (isPlantFoodSelected && getPlantFoodIconInGame != null) {
             batch.draw(getPlantFoodIconInGame, mouseWorldPos.x - 30, mouseWorldPos.y - 30, 60, 60);
         }
