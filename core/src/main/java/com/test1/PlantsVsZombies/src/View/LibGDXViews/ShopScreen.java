@@ -47,7 +47,6 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
     private static final float CARD_WIDTH = 260f;
     private static final float CARD_HEIGHT = 450f;
     private static final float CARD_IMAGE_SIZE = 150f;
-    private static final float PICK_BOX_SIZE = 70f;
 
     private ShopMenu menuController;
     private Table itemsContainer;
