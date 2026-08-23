@@ -77,8 +77,8 @@
       },
       "unlockedZombies" : [ "DEFAULT", "CONE_HEAD", "BUCKET_HEAD", "BRICK_HEAD", "KNIGHT", "GARGANTUAR", "IMP", "RA", "EXPLORER", "TOMB_RAISER", "ALL_STAR", "ARCADE", "UMBRELLA", "TURQUOISE", "PROSPECTOR", "PIANO", "NEWSPAPER" ],
       "unlockedPlantsAndTheirLevels" : {
-        "SUNFLOWER" : 1,
-        "PEASHOOTER" : 1
+        "PEASHOOTER" : 1,
+        "SUNFLOWER" : 1
       },
       "gemsCount" : 2,
       "coinsCount" : 0,
@@ -94,6 +94,8 @@
         "defenseless_cross" : "4",
         "professional_killer" : "REPEATER"
       },
+      "gameSpeed" : 1,
+      "showTileGrid" : false,
       "miniGameLevels" : {
         "VASEBREAKER" : 1,
         "WALNUT_BOWLING" : 1,
@@ -218,9 +220,9 @@
       },
       "unlockedZombies" : [ "DEFAULT", "CONE_HEAD", "BUCKET_HEAD", "BRICK_HEAD", "KNIGHT", "GARGANTUAR", "IMP", "RA", "EXPLORER", "TOMB_RAISER", "ALL_STAR", "ARCADE", "UMBRELLA", "TURQUOISE", "PROSPECTOR", "PIANO", "NEWSPAPER" ],
       "unlockedPlantsAndTheirLevels" : {
+        "PEASHOOTER" : 1,
         "SUN_SHROOM" : 1,
-        "SUNFLOWER" : 1,
-        "PEASHOOTER" : 1
+        "SUNFLOWER" : 1
       },
       "gemsCount" : 99932,
       "coinsCount" : 984450,
@@ -236,6 +238,8 @@
         "defenseless_cross" : "4",
         "professional_killer" : "REPEATER"
       },
+      "gameSpeed" : 1,
+      "showTileGrid" : false,
       "miniGameLevels" : {
         "VASEBREAKER" : 1,
         "WALNUT_BOWLING" : 1,
@@ -339,15 +343,15 @@
     "genderType" : "Male",
     "userProgress" : {
       "unlockedChaptersAndLevels" : {
-        "ANCIENT_EGYPT" : 1,
-        "BIG_WAVE_BEACH" : 1,
+        "FROSTBITE_CAVES" : 1,
         "DARK_AGE" : 1,
-        "FROSTBITE_CAVES" : 1
+        "BIG_WAVE_BEACH" : 1,
+        "ANCIENT_EGYPT" : 1
       },
       "unlockedZombies" : [ "DEFAULT" ],
       "unlockedPlantsAndTheirLevels" : {
-        "SUNFLOWER" : 1,
-        "PEASHOOTER" : 1
+        "PEASHOOTER" : 1,
+        "SUNFLOWER" : 1
       },
       "gemsCount" : 0,
       "coinsCount" : 0,
@@ -363,6 +367,8 @@
         "defenseless_cross" : "5",
         "professional_killer" : "CABBAGE_PULT"
       },
+      "gameSpeed" : 1,
+      "showTileGrid" : false,
       "miniGameLevels" : {
         "VASEBREAKER" : 1,
         "WALNUT_BOWLING" : 1,
@@ -728,110 +734,112 @@
     "genderType" : "Male",
     "userProgress" : {
       "unlockedChaptersAndLevels" : {
-        "ANCIENT_EGYPT" : 2,
-        "BIG_WAVE_BEACH" : 0,
+        "FROSTBITE_CAVES" : 0,
         "DARK_AGE" : 1,
-        "FROSTBITE_CAVES" : 0
+        "BIG_WAVE_BEACH" : 0,
+        "ANCIENT_EGYPT" : 2
       },
       "unlockedZombies" : [ "DEFAULT", "CONE_HEAD", "BUCKET_HEAD", "BRICK_HEAD", "KNIGHT", "GARGANTUAR", "IMP", "RA", "EXPLORER", "TOMB_RAISER", "ALL_STAR", "ARCADE", "UMBRELLA", "TURQUOISE", "PROSPECTOR", "PIANO", "NEWSPAPER", "JUGGLER", "WIZARD", "KING", "IMP_DRAGON", "DODO", "HUNTER", "TROGLOBITE" ],
       "unlockedPlantsAndTheirLevels" : {
-        "FUME_SHROOM" : 1,
-        "SUN_SHROOM" : 1,
-        "TORCHWOOD" : 1,
-        "THREEPEATER" : 1,
-        "PRIMAL_POTATO_MINE" : 1,
-        "HOMING_THISTLE" : 1,
-        "PUFF_SHROOM" : 1,
-        "REINFORCE_MINT" : 1,
-        "SUN_BEAN" : 1,
-        "EXPLODE_O_NUT" : 1,
-        "WALL_NUT" : 1,
         "SEA_SHROOM" : 1,
-        "GOO_PEASHOOTER" : 1,
-        "ELECTRIC_BLUEBERRY" : 1,
-        "CACTUS" : 1,
-        "SPLIT_PEA" : 1,
-        "ENDURIAN" : 1,
-        "ICEBERG_LETTUCE" : 1,
-        "DOOM_SHROOM" : 1,
-        "REPEATER" : 1,
-        "APPEASE_MINT" : 1,
-        "STARFRUIT" : 1,
-        "CITRON" : 1,
-        "CHERRY_BOMB" : 1,
-        "MAGNET_SHROOM" : 1,
-        "PEA_POD" : 1,
-        "HYPNO_SHROOM" : 1,
-        "ICE_SHROOM" : 1,
-        "PEASHOOTER" : 1,
+        "SQUASH" : 1,
+        "PUFF_SHROOM" : 1,
         "SWEET_POTATO" : 1,
+        "PEASHOOTER" : 1,
+        "PUMPKIN" : 1,
+        "TALL_NUT" : 1,
+        "SNOW_PEA" : 1,
+        "ELECTRIC_BLUEBERRY" : 1,
+        "REPEATER" : 1,
+        "TWIN_SUNFLOWER" : 1,
+        "SPLIT_PEA" : 1,
+        "KIWIBEAST" : 1,
+        "ENFORCE_MINT" : 1,
+        "IMITATER" : 1,
+        "BOWLING_BULB" : 1,
+        "CITRON" : 1,
+        "EXPLODE_O_NUT" : 1,
+        "WINTER_MELON" : 1,
+        "ARMA_MINT" : 1,
+        "CHOMPER" : 1,
+        "SUNFLOWER" : 1,
+        "SUN_BEAN" : 1,
+        "CACTUS" : 1,
+        "ROTOBAGA" : 1,
+        "MAGNET_SHROOM" : 1,
+        "FIRE_PEASHOOTER" : 1,
+        "GRAPESHOT" : 1,
+        "TORCHWOOD" : 1,
+        "HOT_POTATO" : 1,
         "ENCHANT_MINT" : 1,
+        "THREEPEATER" : 1,
+        "CHERRY_BOMB" : 1,
+        "GARLIC" : 1,
+        "BONK_CHOY" : 1,
+        "TANGLE_KELP" : 1,
+        "MELON_PULT" : 1,
+        "APPEASE_MINT" : 1,
+        "CABBAGE_PULT" : 1,
+        "HYPNO_SHROOM" : 1,
+        "FUME_SHROOM" : 1,
+        "REINFORCE_MINT" : 1,
+        "PEA_POD" : 1,
+        "PRIMAL_SUNFLOWER" : 1,
+        "STARFRUIT" : 1,
+        "JALAPENO" : 1,
+        "MEGA_GATLING_PEA" : 1,
+        "POTATO_MINE" : 1,
+        "GOO_PEASHOOTER" : 1,
+        "ENLIGHTEN_MINT" : 1,
+        "WASABI_WHIP" : 1,
+        "BOMBARD_MINT" : 1,
         "GOLD_BLOOM" : 1,
         "GRAVE_BUSTER" : 1,
-        "GRAPESHOT" : 1,
-        "GARLIC" : 1,
-        "PEPPER_PULT" : 1,
-        "HOT_POTATO" : 1,
-        "ROTOBAGA" : 1,
-        "KIWIBEAST" : 1,
-        "MELON_PULT" : 1,
-        "MEGA_GATLING_PEA" : 1,
-        "PHAT_BEET" : 1,
-        "JALAPENO" : 1,
-        "POTATO_MINE" : 1,
-        "TANGLE_KELP" : 1,
-        "LILY_PAD" : 1,
-        "PUMPKIN" : 1,
-        "CHOMPER" : 1,
-        "SQUASH" : 1,
+        "ICEBERG_LETTUCE" : 1,
+        "DOOM_SHROOM" : 1,
         "KERNEL_PULT" : 1,
-        "SUNFLOWER" : 1,
-        "BONK_CHOY" : 1,
-        "BOWLING_BULB" : 1,
-        "SNOW_PEA" : 1,
-        "TWIN_SUNFLOWER" : 1,
-        "CABBAGE_PULT" : 1,
-        "WASABI_WHIP" : 1,
-        "ENFORCE_MINT" : 1,
-        "TALL_NUT" : 1,
+        "ICE_SHROOM" : 1,
+        "LILY_PAD" : 1,
         "CAULIPOWER" : 1,
-        "PRIMAL_SUNFLOWER" : 1,
-        "WINTER_MELON" : 1,
-        "FIRE_PEASHOOTER" : 1,
-        "ARMA_MINT" : 1,
-        "BOMBARD_MINT" : 1,
-        "ENLIGHTEN_MINT" : 1,
-        "IMITATER" : 1
+        "PRIMAL_POTATO_MINE" : 1,
+        "ENDURIAN" : 1,
+        "WALL_NUT" : 1,
+        "PHAT_BEET" : 1,
+        "SUN_SHROOM" : 1,
+        "PEPPER_PULT" : 1,
+        "HOMING_THISTLE" : 1
       },
-      "gemsCount" : 605,
-      "coinsCount" : 87954100,
+      "gemsCount" : 604,
+      "coinsCount" : 87954150,
       "gameDifficulty" : 3,
       "gamesPlayed" : 5,
       "questVariables" : {
-        "one_column_less" : "7",
-        "defenseless_row" : "1",
+        "one_column_less" : "5",
+        "defenseless_row" : "2",
         "thrifty_farmer" : "5",
         "chapter_hunter" : "MINI_GAME",
         "mower_time" : "40",
-        "daily_sun_collector" : "4000",
+        "daily_sun_collector" : "5000",
         "defenseless_cross" : "5",
-        "professional_killer" : "REPEATER"
+        "professional_killer" : "MELON_PULT"
       },
+      "gameSpeed" : 1,
+      "showTileGrid" : false,
       "miniGameLevels" : {
         "VASEBREAKER" : 1,
         "I_ZOMBIE" : 1,
         "WALNUT_BOWLING" : 1
       },
       "questProgress" : {
-        "one_column_less" : 0,
+        "one_column_less" : 1,
         "defenseless_row" : 0,
         "thrifty_farmer" : 1,
         "speed_demon" : 0,
         "chapter_hunter" : 0,
-        "mower_time" : 7,
+        "mower_time" : 9,
         "defenseless_cross" : 0,
         "only_cactus" : 0,
-        "daily_sun_collector" : 2175,
+        "daily_sun_collector" : 1400,
         "master_defense" : 0,
         "professional_demolisher" : 0,
         "win_streak" : 0,
@@ -840,7 +848,7 @@
       },
       "completedQuestIds" : [ "thrifty_farmer" ],
       "claimedQuestIds" : [ ],
-      "lastDailyReset" : [ 2026, 8, 20 ],
+      "lastDailyReset" : [ 2026, 8, 21 ],
       "plantFoodCount" : 0,
       "seedPackets" : { },
       "dailyOfferPurchaseDate" : null,
@@ -886,14 +894,16 @@
       },
       "unlockedZombies" : [ "DEFAULT" ],
       "unlockedPlantsAndTheirLevels" : {
-        "SUNFLOWER" : 1,
-        "PEASHOOTER" : 1
+        "PEASHOOTER" : 1,
+        "SUNFLOWER" : 1
       },
       "gemsCount" : 0,
       "coinsCount" : 0,
       "gameDifficulty" : 3,
       "gamesPlayed" : 0,
       "questVariables" : { },
+      "gameSpeed" : 1,
+      "showTileGrid" : false,
       "miniGameLevels" : {
         "VASEBREAKER" : 1,
         "WALNUT_BOWLING" : 1,
@@ -962,15 +972,15 @@
     "genderType" : "Male",
     "userProgress" : {
       "unlockedChaptersAndLevels" : {
-        "ANCIENT_EGYPT" : 1,
-        "BIG_WAVE_BEACH" : 1,
+        "FROSTBITE_CAVES" : 1,
         "DARK_AGE" : 1,
-        "FROSTBITE_CAVES" : 1
+        "BIG_WAVE_BEACH" : 1,
+        "ANCIENT_EGYPT" : 1
       },
       "unlockedZombies" : [ "DEFAULT" ],
       "unlockedPlantsAndTheirLevels" : {
-        "SUNFLOWER" : 1,
-        "PEASHOOTER" : 1
+        "PEASHOOTER" : 1,
+        "SUNFLOWER" : 1
       },
       "gemsCount" : 0,
       "coinsCount" : 0,
@@ -986,6 +996,8 @@
         "defenseless_cross" : "4",
         "professional_killer" : "CACTUS"
       },
+      "gameSpeed" : 1,
+      "showTileGrid" : false,
       "miniGameLevels" : {
         "WALNUT_BOWLING" : 1,
         "VASEBREAKER" : 1,
@@ -1069,15 +1081,15 @@
     "genderType" : "Male",
     "userProgress" : {
       "unlockedChaptersAndLevels" : {
-        "ANCIENT_EGYPT" : 1,
-        "BIG_WAVE_BEACH" : 1,
+        "FROSTBITE_CAVES" : 1,
         "DARK_AGE" : 1,
-        "FROSTBITE_CAVES" : 1
+        "BIG_WAVE_BEACH" : 1,
+        "ANCIENT_EGYPT" : 1
       },
       "unlockedZombies" : [ "DEFAULT" ],
       "unlockedPlantsAndTheirLevels" : {
-        "SUNFLOWER" : 1,
-        "PEASHOOTER" : 1
+        "PEASHOOTER" : 1,
+        "SUNFLOWER" : 1
       },
       "gemsCount" : 0,
       "coinsCount" : 0,
@@ -1093,6 +1105,8 @@
         "defenseless_cross" : "2",
         "professional_killer" : "CACTUS"
       },
+      "gameSpeed" : 1,
+      "showTileGrid" : false,
       "miniGameLevels" : {
         "I_ZOMBIE" : 1,
         "WALNUT_BOWLING" : 1,
@@ -1176,15 +1190,15 @@
     "genderType" : "Male",
     "userProgress" : {
       "unlockedChaptersAndLevels" : {
-        "ANCIENT_EGYPT" : 1,
-        "BIG_WAVE_BEACH" : 1,
+        "FROSTBITE_CAVES" : 1,
         "DARK_AGE" : 1,
-        "FROSTBITE_CAVES" : 1
+        "BIG_WAVE_BEACH" : 1,
+        "ANCIENT_EGYPT" : 1
       },
       "unlockedZombies" : [ "DEFAULT" ],
       "unlockedPlantsAndTheirLevels" : {
-        "SUNFLOWER" : 1,
-        "PEASHOOTER" : 1
+        "PEASHOOTER" : 1,
+        "SUNFLOWER" : 1
       },
       "gemsCount" : 0,
       "coinsCount" : 0,
@@ -1200,6 +1214,8 @@
         "defenseless_cross" : "5",
         "professional_killer" : "PEASHOOTER"
       },
+      "gameSpeed" : 1,
+      "showTileGrid" : false,
       "miniGameLevels" : {
         "WALNUT_BOWLING" : 1,
         "I_ZOMBIE" : 1,

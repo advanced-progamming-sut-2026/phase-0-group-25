@@ -510,7 +510,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         } else {
             messagesToShow = UsersManager.getInstance().getAllNews();
         }
-        messagesToShow = new ArrayList<>(messagesToShow.reversed());
+        //messagesToShow = new ArrayList<>(messagesToShow.reversed());
 
         if (messagesToShow.isEmpty()) {
             String text = unreadOnly ? "No unread news" : "No news";

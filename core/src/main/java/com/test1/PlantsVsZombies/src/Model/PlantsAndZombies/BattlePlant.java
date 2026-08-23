@@ -58,8 +58,7 @@ public class BattlePlant extends Plant {
 
     @Override
     public void update() {
-
-        if (this.plantStats.getAttributes().containsKey("life_span")) {
+        if (this.plantStats.getAttributes().containsKey("life-span")) {
             double lifespan = (double) this.plantStats.getAttributes().get("life_span");
             if ((GAME.getTotalTimePassed() - this.plantTime) >= lifespan) {
                 this.setCurrentHP(0);
@@ -160,7 +159,6 @@ public class BattlePlant extends Plant {
     public void setIceTime(int iceTime) {
         this.iceTime = iceTime;
         if (this.iceTime >= 3) {
-            System.out.println("This Plant Was Frozen! (" + this.getPosition().getX() + " , " + this.getPosition().getY() + ")");
             this.setFrozen(true);
             this.iceTime = 0;
         }
@@ -238,6 +236,9 @@ public class BattlePlant extends Plant {
     @Override
     public void setCurrentHP(double currentHP) {
         super.setCurrentHP(currentHP);
+        if (currentHP <= 0) {
+            this.isAlive = false;
+        }
         if (!this.isAlive) {
             if (this.plantStats.getCategory().equals(PlantCategory.EXPLOSIVE.name())) {
                 QuestManager.getInstance().notifyEvent(new ExplosiveUsedEvent(this.name));
@@ -278,6 +279,21 @@ public class BattlePlant extends Plant {
         return decider.plantDecider(this, (float) GAME.getTotalTimePassed());
     }
 
+    public String getAnimationPath() {
+        if (this.plantStats.getAbilities().contains("explosionWithLifeSpan")) {
+            double difference = GAME.getTotalTimePassed() - this.plantTime;
+            double attackTime = (double) this.plantStats.getAttributes().get("attackTime");
+
+            if (difference >= attackTime) {
+                return (String) this.plantStats.getAttributes().get("explosionAnimation");
+            }
+
+            return this.plantStats.getAnimation();
+        }
+
+        return this.plantStats.getAnimation();
+    }
+
     public HashMap<String, Boolean> getVisibilities() {
         AnimationDecider decider = new AnimationDecider();
         return decider.plantVisibilities(this);
@@ -303,19 +319,25 @@ public class BattlePlant extends Plant {
         if (this.plantStats.getCategory().equals("Melee")) {
             checkMelee();
         }
+
+        if (this.name.equals(PlantType.SQUASH.getName())) {
+            checkSquash();
+        }
     }
 
-    private void checkSunProducer() {
+    public void checkSunProducer() {
         float difference = (float) (GAME.getTotalTimePassed() - this.lastActionTime);
         float trigger = this.plantStats.getTrigger();
-        if ((trigger + difference) >= this.plantStats.getActionInterval()) {
+        float total = difference + trigger;
+        if ((total >= this.plantStats.getActionInterval())) {
             this.status = "action";
         } else {
             this.status = "idle";
         }
+
     }
 
-    private void checkMelee() {
+    public void checkMelee() {
         if (!this.name.equals(PlantType.CHOMPER.getName())) {
             ArrayList<Zombie> zombiesInRange = new ArrayList<>();
             for (int i = -1; i <= 1; i++) {
@@ -331,6 +353,37 @@ public class BattlePlant extends Plant {
             } else {
                 this.status = "idle";
             }
+        } else {
+            Tile tile = GAME.getTileByPosition(this.column, this.row);
+            ArrayList<Zombie> zombiesInRange = new ArrayList<>();
+            for (Zombie zombie : tile.getZombies()) {
+                if (zombie.getPosition().distance(this.position) <= 20) {
+                    this.status = "action";
+                } else {
+                    this.status = "idle";
+                }
+            }
+        }
+    }
+
+    public void checkSquash() {
+        ArrayList<Zombie> zombiesInRange = new ArrayList<>();
+        for (int i = 0; i <= 1; i++) {
+            Tile tile = GAME.getTileByPosition(this.column, this.row);
+            if (tile == null) {
+                continue;
+            }
+            for (Zombie zombie : tile.getZombies()) {
+                if (this.position.distance(zombie.position) <= 50f) {
+                    zombiesInRange.add(zombie);
+                }
+            }
+        }
+
+        if (!zombiesInRange.isEmpty()) {
+            this.status = "action";
+        } else {
+            this.status = "idle";
         }
     }
 }

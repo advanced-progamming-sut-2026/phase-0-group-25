@@ -18,8 +18,8 @@ public class GamePlayFactory {
         switch (type) {
             case SAVE_OUR_SEEDS:
                 return new SaveOurSeeds(chapterType, level, difficulty, user, plants, zombies, boosted);
-            case NIGHT_OPS:
-                return new NightOps(chapterType, level, difficulty, user, plants, zombies, boosted);
+            case PLANT_WHAT_YOU_GET:
+                return new PlantWhatYouGet(chapterType, level, difficulty, user, plants, zombies, boosted);
             case TIMED_WAR:
                 return new TimedWar(chapterType, level, difficulty, user, plants, zombies, boosted);
             case DEADLINE:

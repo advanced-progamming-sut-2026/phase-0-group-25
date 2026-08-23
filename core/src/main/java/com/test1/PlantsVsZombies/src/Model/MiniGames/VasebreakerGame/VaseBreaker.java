@@ -4,7 +4,6 @@ import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Enums.MiniGameType;
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
-import com.test1.PlantsVsZombies.src.Model.Mower;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
 import com.test1.PlantsVsZombies.src.Model.Tile;
@@ -16,8 +15,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class VaseBreaker extends GamePlay {
-    private final MiniGameType miniGameType = MiniGameType.VASEBREAKER;  // identify this game
-    private boolean isSeted = false;
+    private final MiniGameType miniGameType = MiniGameType.VASEBREAKER;
     private ArrayList<Jar> jars = new ArrayList<>();
     private ArrayList<BattlePlant> inventory = new ArrayList<>();
 
@@ -27,33 +25,51 @@ public class VaseBreaker extends GamePlay {
         this.allWaves.clear();
         this.gameZombies.clear();
         this.gamePlants.clear();
+
+
+        setupJars();
     }
 
     private void setupJars() {
+        jars.clear();
+        String[] possiblePlants = {"PEASHOOTER", "REPEATER", "WALL_NUT", "BONK_CHOY", "SNOW_PEA"};
+        String[] possibleZombies = {"DEFAULT", "CONE_HEAD", "BUCKET_HEAD"};
+
         for (int y = 1; y <= 5; y++) {
             for (int x = 5; x <= 9; x++) {
                 Position pos = new Position(getRealX(x), getRealY(y));
 
                 if (x == 9 && y == 3) {
+
                     Zombie gargantuar = ZombieFactory.createZombie("GARGANTUAR", pos);
                     jars.add(new GargantuarJar(pos, gargantuar));
-                } else if ((x + y) % 3 == 0) {
-                    BattlePlant plant = PlantFactory.createBattlePlant(PlantType.PEASHOOTER.getName(), 1, pos);
+                } else if ((x + y) % 4 == 0) {
+
+                    String pName = possiblePlants[random.nextInt(possiblePlants.length)];
+                    BattlePlant plant = PlantFactory.createBattlePlant(pName, 1, pos);
                     jars.add(new PlantJar(pos, plant));
                 } else {
-                    Zombie basicZombie = ZombieFactory.createZombie("DEFAULT", pos);
-                    jars.add(new SimpleJar(pos, basicZombie));
+
+                    if (Math.random() < 0.5) {
+                        String pName = possiblePlants[random.nextInt(possiblePlants.length)];
+                        BattlePlant plant = PlantFactory.createBattlePlant(pName, 1, pos);
+                        jars.add(new SimpleJar(pos, plant));
+                    } else {
+                        String zName = possibleZombies[random.nextInt(possibleZombies.length)];
+                        Zombie basicZombie = ZombieFactory.createZombie(zName, pos);
+                        jars.add(new SimpleJar(pos, basicZombie));
+                    }
                 }
             }
         }
-        System.out.println("The jars were placed.");
+        System.out.println("The jars were placed. Total: " + jars.size());
     }
 
     @Override
     public void sunMaker() {
     }
 
-    public void breakJar(int x, int y) {
+    public BattlePlant breakJar(int x, int y) {
         Jar targetJar = null;
         for (Jar j : jars) {
             if ((int) j.getPosition().getX() == getRealX(x) && (int) j.getPosition().getY() == getRealY(y) && !j.isBroken()) {
@@ -62,58 +78,55 @@ public class VaseBreaker extends GamePlay {
             }
         }
 
-        if (targetJar == null) return;
+        if (targetJar == null) return null;
 
-        targetJar.setBroken(true); // کوزه درجا از بین می‌رود
+        targetJar.setBroken(true);
         System.out.printf("Jar at (%d, %d) broken!\n", x, y);
 
         Entity content = targetJar.getContent();
         if (content instanceof Zombie) {
             Zombie z = (Zombie) content;
             z.setPosition(new Position(getRealX(x), getRealY(y)));
+            z.setRow(y);
+            z.setColumn(x);
             gameZombies.add(z);
             System.out.printf("A %s emerged from the jar!\n", z.getName());
+            return null;
         } else if (content instanceof BattlePlant) {
             BattlePlant plant = (BattlePlant) content;
-            // گیاه مستقیماً و بدون افتادن روی زمین، به موجودی (inventory) اضافه می‌شود
-            inventory.add(plant);
-            System.out.printf("Plant %s directly added to your inventory!\n", plant.getName());
+            System.out.printf("Plant %s ready to be planted directly!\n", plant.getName());
+            return plant;
         }
+        return null;
     }
 
-    public void plantFromInventory(int inventoryIndex, int x, int y) {
-        if (inventoryIndex < 0 || inventoryIndex >= inventory.size()) {
-            System.out.println("Invalid seed packet index!");
-            return;
-        }
+    public boolean plantOnTile(BattlePlant plant, int x, int y) {
+        if (plant == null) return false;
+
+        boolean hasJar = jars.stream().anyMatch(j ->
+            !j.isBroken() && (int) j.getPosition().getX() == getRealX(x) &&
+                (int) j.getPosition().getY() == getRealY(y));
 
         Tile targetTile = getTileByPosition(x, y);
 
-        if (targetTile != null && targetTile.isArable() && targetTile.getPlants().isEmpty()) {
-            BattlePlant plantToPlant = inventory.remove(inventoryIndex);
-            plantToPlant.setRow(y);
-            plantToPlant.setColumn(x);
-            plantToPlant.setPosition(new Position(getRealX(x), getRealY(y)));
+        if (targetTile != null && targetTile.isArable() && targetTile.getPlants().isEmpty() && !hasJar) {
+            plant.setRow(y);
+            plant.setColumn(x);
+            plant.setPosition(new Position(getRealX(x), getRealY(y)));
 
-            this.gamePlants.add(plantToPlant);
-            targetTile.addPlant(plantToPlant);
+            this.gamePlants.add(plant);
+            targetTile.addPlant(plant);
 
-            System.out.printf("Planted %s at (%d, %d) from Seed Packet.\n",
-                    plantToPlant.getName(), x, y);
-        } else {
-            System.out.println("Cannot plant at this tile!");
+            System.out.printf("Planted %s at (%d, %d).\n", plant.getName(), x, y);
+            return true;
         }
+        return false;
     }
 
     @Override
     public void update() {
         if (isPaused) return;
         totalTicksPassed++;
-
-        if (!isSeted) {
-            setupJars();
-            isSeted = true;
-        }
 
         Iterator<BattlePlant> bp = gamePlants.iterator();
         while (bp.hasNext()) {
@@ -124,10 +137,10 @@ public class VaseBreaker extends GamePlay {
                 plant.setCooldown(Math.max(plant.getCooldown() - 1, 0));
             } else {
                 Tile currentTile = tiles.stream()
-                        .filter(t -> (int) t.getPosition().getX() == plant.getColumn() &&
-                                (int) t.getPosition().getY() == plant.getRow())
-                        .findFirst()
-                        .orElse(null);
+                    .filter(t -> (int) t.getPosition().getX() == plant.getColumn() &&
+                        (int) t.getPosition().getY() == plant.getRow())
+                    .findFirst()
+                    .orElse(null);
 
                 if (currentTile != null) {
                     currentTile.getPlants().remove(plant);
@@ -142,10 +155,8 @@ public class VaseBreaker extends GamePlay {
 
             if (!zombie.isAlive() || zombie.getCurrentHP() <= 0) {
                 killAward(this.thisUser);
-                //glowingAward(this);
                 Position zPos = Position.getRowAndColumn(zombie.getPosition());
-                System.out.printf("Zombie of type %s is dead at (%d, %d)\n",
-                        zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
+                System.out.printf("Zombie %s is dead at (%d, %d)\n", zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
                 z.remove();
             } else {
                 zombie.update();
@@ -160,22 +171,6 @@ public class VaseBreaker extends GamePlay {
                 thisProjectile.update();
             } else {
                 pj.remove();
-            }
-        }
-
-        z = gameZombies.iterator();
-        while (z.hasNext()) {
-            Zombie zombie = z.next();
-
-            if (!zombie.isAlive() || zombie.getCurrentHP() <= 0) {
-                killAward(this.thisUser);
-                //glowingAward(this);
-                Position zPos = Position.getRowAndColumn(zombie.getPosition());
-                System.out.printf("Zombie of type %s is dead at (%d, %d)\n",
-                        zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
-                z.remove();
-            } else {
-                zombie.update();
             }
         }
 
@@ -194,6 +189,7 @@ public class VaseBreaker extends GamePlay {
     }
 
     private boolean checkWinCondition() {
+        if (jars.isEmpty()) return false;
         boolean allJarsBroken = jars.stream().allMatch(Jar::isBroken);
         return allJarsBroken && gameZombies.isEmpty();
     }

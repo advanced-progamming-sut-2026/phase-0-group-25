@@ -11,13 +11,14 @@ import com.test1.PlantsVsZombies.src.Model.Tile;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Throwing implements Ability {
+public class
+Throwing implements Ability {
     private static int TILE_X_LENGTH = 200;
-    private static int TOMB_RAISER_ACTION_INTERVAL = 4;
-    private static int HUNTER_ACTION_INTERVAL = 2;
-    private static int OCTOPUS_ACTION_INTERVAL = 4;
-    private static int FISHERMAN_ACTION_INTERVAL = 3;
-    private static int KING_ACTION_INTERVAL = 5;
+    private static int TOMB_RAISER_ACTION_INTERVAL = 20;
+    private static int HUNTER_ACTION_INTERVAL = 20;
+    private static int OCTOPUS_ACTION_INTERVAL = 20;
+    private static int FISHERMAN_ACTION_INTERVAL = 20;
+    private static int KING_ACTION_INTERVAL = 20;
     private static Random RANDOM = new Random();
 
     private GamePlay GAME = GamePlay.activeInstance;
@@ -112,13 +113,13 @@ public class Throwing implements Ability {
 
         ArrayList<Zombie> properZombie = new ArrayList<>();
         for (int i = -1; i <= 1; i++) {
-            Tile tile = GAME.getTileByPosition(zombieColumn, zombieRow + i);
+            Tile tile = GAME.getTileByPosition(zombieColumn , zombieRow + i);
             if (tile == null) {
                 continue;
             }
 
             for (Zombie zombieInTile : tile.getZombies()) {
-                if (zombie.getZombieStats().getName().equals("DEFAULT")) {
+                if (zombieInTile.getZombieStats().getName().equals("DEFAULT")) {
                     properZombie.add(zombieInTile);
                 }
             }
@@ -157,14 +158,19 @@ public class Throwing implements Ability {
 
             if (targetPlant != null) {
                 Tile targetRightTile = GAME.getTileByPosition(targetPlant.getColumn() + 1,
-                        targetPlant.getRow());
+                    targetPlant.getRow());
+                if (targetRightTile == null) {
+                    targetPlant.setCurrentHP(0);
+                    targetPlant.setAlive(false);
+                }
 
                 if (isVoid(targetRightTile)) {
                     targetPlant.setPosition(new Position(
-                            targetPlant.getPosition().getX() + TILE_X_LENGTH,
-                            targetPlant.getPosition().getY()));
+                        targetPlant.getPosition().getX() + TILE_X_LENGTH,
+                        targetPlant.getPosition().getY()));
                 } else {
                     targetPlant.setCurrentHP(0);
+                    targetPlant.setAlive(false);
                 }
             }
             afterAbility(zombie);
@@ -179,7 +185,7 @@ public class Throwing implements Ability {
         int zombieRow = zombie.getRow();
 
         ArrayList<BattlePlant> plantsInSameRow = new ArrayList<>();
-        for (int i = 0; i < 9; i++) {
+        for (int i = 1; i <= 9; i++) {
             Tile tile = GAME.getTileByPosition(i, zombieRow);
 
             for (BattlePlant plant : tile.getPlants()) {
@@ -191,12 +197,17 @@ public class Throwing implements Ability {
     }
 
     private boolean isVoid(Tile tile) {
+        if (tile == null) {
+            return false;
+        }
+
         if (tile.isArable()) {
             if (tile.getPlants().isEmpty()) {
                 return true;
             }
             return false;
         }
+
         return false;
     }
 

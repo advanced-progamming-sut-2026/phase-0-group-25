@@ -7,8 +7,10 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.GameDataLoader;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-//        GameDataLoader.loadGameData();
-//        MenuManager menuManager = MenuManager.getInstance();
-//        menuManager.startAppLoop();
+    //    GameDataLoader.loadGameData();
+    //    MenuManager menuManager = MenuManager.getInstance();
+    //    menuManager.startAppLoop();
+
+
     }
 }

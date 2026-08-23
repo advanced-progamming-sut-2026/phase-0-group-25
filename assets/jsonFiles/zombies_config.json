@@ -1,82 +1,82 @@
 {
-  "DEFAULT": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 100, "armor": [], "abilities": ["moving", "eating"],
-    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC_BRICK/ZOMBIE_DARK_BASIC_BRICK.PAM"},
+  "DEFAULT": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 100, "armor": [], "abilities": ["moving", "eating"], "attributes": {"dieSpan": 1.83},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC_BRICK/ZOMBIE_DARK_BASIC_BRICK.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "die": "die"}},
 
-  "CONE_HEAD": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 200, "armor": ["Cone"], "abilities": ["moving", "eating"],
-    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC_BRICK/ZOMBIE_DARK_BASIC_BRICK.PAM"},
+  "CONE_HEAD": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 200, "armor": ["Cone"], "abilities": ["moving", "eating"], "attributes": {"dieSpan": 1.83},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC_BRICK/ZOMBIE_DARK_BASIC_BRICK.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "die": "die"}},
 
-  "BUCKET_HEAD": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 400, "armor": ["Bucket"], "abilities": ["moving", "eating"],
-    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC_BRICK/ZOMBIE_DARK_BASIC_BRICK.PAM"},
+  "BUCKET_HEAD": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 400, "armor": ["Bucket"], "abilities": ["moving", "eating"], "attributes": {"dieSpan": 1.83},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC_BRICK/ZOMBIE_DARK_BASIC_BRICK.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "die": "die"}},
 
-  "BRICK_HEAD": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185,  "waveCost": 700, "armor": ["Brick"], "abilities": ["moving", "eating"],
-    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC_BRICK/ZOMBIE_DARK_BASIC_BRICK.PAM"},
+  "BRICK_HEAD": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185,  "waveCost": 700, "armor": ["Brick"], "abilities": ["moving", "eating"], "attributes": {"dieSpan": 1.83},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC_BRICK/ZOMBIE_DARK_BASIC_BRICK.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "die": "die"}},
 
-  "KNIGHT": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 550, "armor": ["Crown", "Shoulder Armor"], "abilities": ["moving", "eating"],
-    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC_BRICK/ZOMBIE_DARK_BASIC_BRICK.PAM"},
+  "KNIGHT": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 550, "armor": ["Crown", "Shoulder Armor"], "abilities": ["moving", "eating"], "attributes": {"dieSpan": 1.83},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC_BRICK/ZOMBIE_DARK_BASIC_BRICK.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "die": "die"}},
 
-  "GARGANTUAR": {"category": "all", "eatdps": 1500, "baseHP":  3600, "velocity": 0.24, "waveCost": 1500, "armor": [], "abilities": ["moving", "fatalDamage"],
-    "animation": "768/FULL/ZOMBIE/DARK_GARGANTUAR/DARK_GARGANTUAR.PAM"},
+  "GARGANTUAR": {"category": "all", "eatdps": 1500, "baseHP":  3600, "velocity": 0.24, "waveCost": 1500, "armor": [], "abilities": ["fatalDamage", "moving"], "attributes": {"firstEat": 1.27, "secondEat": 1.77, "fatalTime": 3.04, "firstThrow": 0.97, "secondThrow": 0.57, "isThrown": "no", "throwTime": 0.00, "dieSpan": 2.63},
+    "animation": "768/FULL/ZOMBIE/DARK_GARGANTUAR/DARK_GARGANTUAR.PAM", "status": {"idle": "idle", "walk": "walk", "firstEat": "eat", "secondEat": "smash_left", "firstThrow": "fire", "secondThrow": "cannon_fire", "die": "die"}},
 
-  "IMP": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.22, "waveCost": 100, "armor": [], "abilities": ["moving", "eating"],
-    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_IMP_MONK/ZOMBIE_DARK_IMP_MONK.PAM"},
+  "IMP": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.22, "waveCost": 100, "armor": [], "abilities": ["moving", "eating"], "attributes": {"dieSpan": 1.20},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_IMP_MONK/ZOMBIE_DARK_IMP_MONK.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "die": "die"}},
 
-  "RA": {"category": "ancient egypt", "eatdps": 100, "baseHP":  190, "velocity": 0.2, "waveCost": 100, "armor": [], "abilities": ["moving", "eating", "stealingSun"],
-    "animation": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_RA/ZOMBIE_EGYPT_RA.PAM"},
+  "RA": {"category": "ancient egypt", "eatdps": 100, "baseHP":  190, "velocity": 0.2, "waveCost": 100, "armor": [], "abilities": ["moving", "eating", "stealingSun"], "attributes": {"actionTime": 1.00, "dieSpan": 2.17},
+    "animation": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_RA/ZOMBIE_EGYPT_RA.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "action": "power", "die": "die"}},
 
-  "EXPLORER": {"category": "ancient egypt", "eatdps": 100, "baseHP":  250, "velocity": 0.25, "waveCost": 250, "armor": [], "abilities": ["moving", "eating"], "attributes": {"torch":  "on"},
-    "animation": "768/INITIAL/ZOMBIE/ZOMBIE_EXPLORER/ZOMBIE_EXPLORER.PAM"},
+  "EXPLORER": {"category": "ancient egypt", "eatdps": 100, "baseHP":  250, "velocity": 0.25, "waveCost": 250, "armor": [], "abilities": ["moving", "eating"], "attributes": {"torch":  "on", "visibility": "torch_fire_frame_01", "dieSpan": 3.63},
+    "animation": "768/INITIAL/ZOMBIE/ZOMBIE_EXPLORER/ZOMBIE_EXPLORER.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "die": "die"}},
 
-  "TOMB_RAISER": {"category": "ancient egypt", "eatdps": 100, "baseHP":  380, "velocity": 0.185, "waveCost": 300, "armor": [], "abilities": ["moving", "eating", "throwing"],
-    "animation": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_TOMBRAISER/ZOMBIE_EGYPT_TOMBRAISER.PAM"},
+  "TOMB_RAISER": {"category": "ancient egypt", "eatdps": 100, "baseHP":  380, "velocity": 0.185, "waveCost": 300, "armor": [], "abilities": ["moving", "eating", "throwing"], "attributes": {"dieSpan": 1.80, "throwTime": 3.00},
+    "animation": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_TOMBRAISER/ZOMBIE_EGYPT_TOMBRAISER.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "action": "power", "die": "die"}},
 
-  "DODO": {"category": "frostbite caves", "eatdps": 100, "baseHP":  490, "velocity": 0.3, "waveCost": 600, "armor": [], "abilities": ["moving", "eating", "flying"],
-    "animation": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_DODORIDER/ZOMBIE_ICEAGE_DODORIDER.PAM"},
+  "DODO": {"category": "frostbite caves", "eatdps": 100, "baseHP":  490, "velocity": 0.3, "waveCost": 600, "armor": [], "abilities": ["moving", "eating", "flying"], "attributes": {"dieSpan": 2.50},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_DODORIDER/ZOMBIE_ICEAGE_DODORIDER.PAM", "status": {"idle": "idle", "walk": "walk", "action": "fly_loop", "eat": "eat", "die": "die"}},
 
-  "HUNTER": {"category": "frostbite caves", "eatdps": 100, "baseHP":  700, "velocity": 0.12, "waveCost": 500, "armor": [], "abilities": ["moving", "eating", "throwing"],
-    "animation": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_HUNTER/ZOMBIE_ICEAGE_HUNTER.PAM"},
+  "HUNTER": {"category": "frostbite caves", "eatdps": 100, "baseHP":  700, "velocity": 0.12, "waveCost": 500, "armor": [], "abilities": ["moving", "eating", "throwing"], "attributes": {"dieSpan": 2.17, "throwTime": 2.10},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_HUNTER/ZOMBIE_ICEAGE_HUNTER.PAM", "status": {"idle": "idle", "walk": "walk", "action": "throw", "eat": "eat", "die": "die"}},
 
-  "TROGLOBITE": {"category": "frostbite caves", "eatdps": 100, "baseHP":  470, "velocity": 0.185, "waveCost": 600, "armor": [], "abilities": ["moving", "fatalDamage"],
-    "animation": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_TROGLOBITE/ZOMBIE_ICEAGE_TROGLOBITE.PAM"},
+  "TROGLOBITE": {"category": "frostbite caves", "eatdps": 100, "baseHP":  470, "velocity": 0.185, "waveCost": 600, "armor": [], "abilities": ["moving", "fatalDamage"], "attributes": {"dieSpan": 2.15},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_TROGLOBITE/ZOMBIE_ICEAGE_TROGLOBITE.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "die": "die"}},
 
-  "FISHERMAN": {"category": "big wave beach", "eatdps": 100, "baseHP":  1000, "velocity": 0, "waveCost": 700, "armor": [], "abilities": ["eating", "throwing"],
-    "animation": "768/FULL/ZOMBIE/ZOMBIE_BEACH_FISHERMAN/ZOMBIE_BEACH_FISHERMAN.PAM"},
+  "FISHERMAN": {"category": "big wave beach", "eatdps": 100, "baseHP":  1000, "velocity": 0, "waveCost": 700, "armor": [], "abilities": ["throwing"], "attributes": {"dieSpan": 3.73, "throwTime": 2.43},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_BEACH_FISHERMAN/ZOMBIE_BEACH_FISHERMAN.PAM", "status": {"idle": "idle", "action": "toss", "die": "die2"}},
 
-  "OCTOPUS": {"category": "big wave beach", "eatdps": 100, "baseHP":  910, "velocity": 0.12, "waveCost": 900, "armor": [], "abilities": ["moving", "eating", "throwing"],
-    "animation": "768/FULL/ZOMBIE/ZOMBIE_BEACH_OCTOPUS/ZOMBIE_BEACH_OCTOPUS.PAM"},
+  "OCTOPUS": {"category": "big wave beach", "eatdps": 100, "baseHP":  910, "velocity": 0.12, "waveCost": 900, "armor": [], "abilities": ["moving", "eating", "throwing"], "attributes": {"dieSpan": 2.50, "throwTime": 3.07},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_BEACH_OCTOPUS/ZOMBIE_BEACH_OCTOPUS.PAM", "status": {"idle": "idle", "walk": "walk", "action": "toss", "eat": "eat", "die": "die"}},
 
-  "SNORKEL": {"category": "big wave beach", "eatdps": 100, "baseHP":  350, "velocity": 0.185, "waveCost": 200, "armor": [], "abilities": ["moving", "eating"], "attributes": {"submarine":  "on"},
-    "animation": "768/FULL/ZOMBIE/ZOMBIE_BEACH_SNORKELER/ZOMBIE_BEACH_SNORKELER.PAM"},
+  "SNORKEL": {"category": "big wave beach", "eatdps": 100, "baseHP":  350, "velocity": 0.185, "waveCost": 200, "armor": [], "abilities": ["moving", "eating"], "attributes": {"submarine":  "on", "dieSpan": 2.27},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_BEACH_SNORKELER/ZOMBIE_BEACH_SNORKELER.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "die": "die"}},
 
-  "JUGGLER": {"category": "dark age", "eatdps": 100, "baseHP":  420, "velocity": 0.2, "waveCost": 450, "armor": [], "abilities": ["moving", "eating"],
-    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_JESTER/ZOMBIE_DARK_JESTER.PAM"},
+  "JUGGLER": {"category": "dark age", "eatdps": 100, "baseHP":  420, "velocity": 0.2, "waveCost": 450, "armor": [], "abilities": ["moving", "eating"], "attributes": {"dieSpan": 1.70},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_JESTER/ZOMBIE_DARK_JESTER.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "die": "die"}},
 
-  "WIZARD": {"category": "dark age", "eatdps": 100, "baseHP":  490, "velocity": 0.12, "waveCost": 800, "armor": [], "abilities": ["moving", "eating"],
-    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_WIZARD/ZOMBIE_DARK_WIZARD.PAM"},
+  "WIZARD": {"category": "dark age", "eatdps": 100, "baseHP":  490, "velocity": 0.12, "waveCost": 800, "armor": [], "abilities": ["moving", "eating"], "attributes": {"dieSpan": 2.17},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_WIZARD/ZOMBIE_DARK_WIZARD.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "die": "die"}},
 
-  "KING": {"category": "dark age", "eatdps": 100, "baseHP":  100, "velocity": 0, "waveCost": 750, "armor": [], "abilities": ["throwing"],
-    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_KING/ZOMBIE_DARK_KING.PAM"},
+  "KING": {"category": "dark age", "eatdps": 100, "baseHP":  100, "velocity": 0, "waveCost": 750, "armor": [], "abilities": ["throwing"], "attributes": {"dieSpan": 3.12, "throwTime": 4.00},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_KING/ZOMBIE_DARK_KING.PAM", "status": {"idle": "idle", "action": "special", "die": "die"}},
 
-  "IMP_DRAGON": {"category": "dark age", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 150, "armor": [], "abilities": ["moving", "eating"],
-    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_IMP_DRAGON/ZOMBIE_DARK_IMP_DRAGON.PAM"},
+  "IMP_DRAGON": {"category": "dark age", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 150, "armor": [], "abilities": ["moving", "eating"], "attributes": {"dieSpan": 1.20},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_IMP_DRAGON/ZOMBIE_DARK_IMP_DRAGON.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "die": "die"}},
 
-  "ALL_STAR": {"category": "all", "eatdps": 100, "baseHP":  1100, "velocity": 0.16, "waveCost": 1000, "armor": ["Arcade"], "abilities": ["moving", "eating", "fatalDamage"],
-    "animation": "768/FULL/ZOMBIE/ZOMBIE_MODERN_ALLSTAR/ZOMBIE_MODERN_ALLSTAR.PAM"},
+  "ALL_STAR": {"category": "all", "eatdps": 100, "baseHP":  1100, "velocity": 0.16, "waveCost": 1000, "armor": ["Arcade"], "abilities": ["fatalDamage", "moving"], "attributes": {"fatalTime": 1.60, "dieSpan": 1.83},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_MODERN_ALLSTAR/ZOMBIE_MODERN_ALLSTAR.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "kick", "die": "die"}},
 
-  "ARCADE": {"category": "all", "eatdps": 100, "baseHP":  490, "velocity": 0.19, "waveCost": 600, "armor": [], "abilities": ["moving", "eating", "fatalDamage"],
-    "animation": "768/FULL/ZOMBIE/ZOMBIE_80S_ARCADE/ZOMBIE_80S_ARCADE.PAM"},
+  "ARCADE": {"category": "all", "eatdps": 100, "baseHP":  490, "velocity": 0.19, "waveCost": 600, "armor": [], "abilities": ["moving", "eating", "fatalDamage"], "attributes": {"dieSpan": 2.50},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_80S_ARCADE/ZOMBIE_80S_ARCADE.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "die": "die"}},
 
-  "UMBRELLA": {"category": "all", "eatdps": 100, "baseHP":  350, "velocity": 0.25, "waveCost": 200, "armor": [], "abilities": ["moving", "eating", "repelLobbers"],
-    "animation": ""},
+  "UMBRELLA": {"category": "all", "eatdps": 100, "baseHP":  350, "velocity": 0.25, "waveCost": 200, "armor": [], "abilities": ["moving", "eating", "repelLobbers"], "attributes": {"dieSpan": 2.50},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_EXCAVATOR/ZOMBIE_LOSTCITY_EXCAVATOR.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat_shovel", "die": "die"}},
 
-  "TURQUOISE": {"category": "all", "eatdps": 100, "baseHP":  250, "velocity": 0.185, "waveCost": 500, "armor": [], "abilities": ["moving", "eating", "stealingSun"],
-    "animation": ""},
+  "TURQUOISE": {"category": "all", "eatdps": 100, "baseHP":  250, "velocity": 0.185, "waveCost": 500, "armor": [], "abilities": ["moving", "eating", "stealingSun"], "attributes": {"actionTime": 1.00, "attackTime": 1.97, "dieSpan": 2.50},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_CRYSTALSKULL/ZOMBIE_LOSTCITY_CRYSTALSKULL.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "action": "power", "attack": "attack", "die": "die"}},
 
-  "PROSPECTOR": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.16, "waveCost": 200, "armor": [], "abilities": ["moving", "eating"], "attributes": {"dynamite":  "on"},
-    "animation": "768/FULL/ZOMBIE/ZOMBIE_PROSPECTOR/ZOMBIE_PROSPECTOR.PAM"},
+  "PROSPECTOR": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.16, "waveCost": 200, "armor": [], "abilities": ["moving", "eating"], "attributes": {"dynamite":  "on", "dieSpan": 2.27},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_PROSPECTOR/ZOMBIE_PROSPECTOR.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "die": "die"}},
 
-  "PIANO": {"category": "all", "eatdps": 4000, "baseHP":  840, "velocity": 0.12, "waveCost": 400, "armor": [], "abilities": ["moving", "fatalDamage"],
-    "animation": "768/FULL/ZOMBIE/ZOMBIE_PIANO/ZOMBIE_PIANO.PAM"},
+  "PIANO": {"category": "all", "eatdps": 4000, "baseHP":  840, "velocity": 0.12, "waveCost": 400, "armor": [], "abilities": ["moving", "fatalDamage"], "attributes": {"dieSpan": 1.00},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_PIANO/ZOMBIE_PIANO.PAM", "status": {"idle": "idle", "walk": "play", "die": "die"}},
 
-  "NEWSPAPER": {"category": "all", "eatdps": 200, "baseHP":  460, "velocity": 0.22, "waveCost": 700, "armor": ["Newspaper"], "abilities": ["moving", "eating"],
-    "animation": "768/FULL/ZOMBIE/ZOMBIE_MODERN_NEWSPAPER/ZOMBIE_MODERN_NEWSPAPER.PAM"}
+  "NEWSPAPER": {"category": "all", "eatdps": 200, "baseHP":  460, "velocity": 0.22, "waveCost": 700, "armor": ["Newspaper"], "abilities": ["moving", "eating"], "attributes": {"dieSpan": 1.83},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_MODERN_NEWSPAPER/ZOMBIE_MODERN_NEWSPAPER.PAM", "status": {"idle": "idle_newspaper", "walk": "walk_newspaper", "eat": "eat_newspaper", "die": "die"}}
 }
