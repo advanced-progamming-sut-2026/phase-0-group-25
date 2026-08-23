@@ -11,6 +11,7 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities.ProducingS
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Dynamite;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
 import com.test1.PlantsVsZombies.src.Model.PlayGroundType.PlayGround;
+import com.test1.PlantsVsZombies.src.Model.Quests.Events.LevelStartedEvent;
 import com.test1.PlantsVsZombies.src.Model.Quests.Events.LevelWonEvent;
 import com.test1.PlantsVsZombies.src.Model.Quests.Events.SunCollectedEvent;
 import com.test1.PlantsVsZombies.src.Model.Quests.QuestManager;
@@ -70,6 +71,8 @@ public abstract class GamePlay {
         this.chapterType = chapterType;
         this.thisUser = thisUser;
         activeInstance = this;
+
+        QuestManager.getInstance().notifyEvent(new LevelStartedEvent(chapterType, level, difficulty));
 
         for (String pName : plants) {
             this.plants.add(PlantFactory.createBattlePlant(pName, getLevelOfPlant(pName)));
