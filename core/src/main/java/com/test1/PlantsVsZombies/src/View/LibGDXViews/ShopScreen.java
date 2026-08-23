@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
@@ -29,37 +30,28 @@ import java.util.List;
 
 public class ShopScreen extends AbstractScreen implements ShopMenuView {
 
-    // ==========================================================
-    // ASSET IDENTIFIERS
-    // Same background as the main menu, per spec. The card background
-    // and per-item images below are PLACEHOLDERS -- swap in the real
-    // asset ids from the shop mock-up image.
-    // ==========================================================
     private static final String BACKGROUND_ASSET_ID = "IMAGE_MAINMENU_BACKGROUND";
     private static final String ERROR_BG_ASSET_ID = "IMAGE_UI_GENERIC_TIMER_RIBBON_RED";
     private static final String SUCCESS_BG_ASSET_ID = "IMAGE_UI_GENERIC_VTB";
 
-    // TODO: replace with the real item-table background asset id from the shop image.
-    private static final String ITEM_CARD_BG_ASSET_ID = "IMAGE_UI_CARDS_ALMANAC_PLANT_CARD";
+    private static final String ITEM_CARD_BG_ASSET_ID = "IMAGE_UI_THYMED_EVENTS_ECS_CONVRT_PLANT_CARD";
 
-    // TODO: replace each with the real per-item image asset id from the shop image.
     private static final String POT_IMAGE_ASSET_ID = "IMAGE_ZEN_GARDEN_GROWING_PLANT_SLOT_GROWING_PLANT_SLOT_184X161";
     private static final String PLANT_FOOD_IMAGE_ASSET_ID = "IMAGE_UI_GENERIC_LEAF_BACKDROP";
     private static final String RANDOM_SEED_IMAGE_ASSET_ID = "IMAGE_UI_QUESTS_QUESTICONS_RENT_A_PLANT";
     private static final String SELECTIVE_SEED_IMAGE_ASSET_ID = "IMAGE_UI_QUESTS_QUESTICONS_PLANT";
     private static final String CURRENCY_EXCHANGE_IMAGE_ASSET_ID = "IMAGE_UI_QUESTS_EPIC_REWARD_COINS";
 
-    // Small box used for the "pick a plant" picker, reusing the same look
-    // as the plant boxes in Collection / Choose Plant.
     private static final String PLANT_PICK_BOX_ASSET_ID = "IMAGE_UI_PACKETS_SELECTED_PREMIUM";
 
-    private static final float CARD_WIDTH = 210f;
-    private static final float CARD_HEIGHT = 260f;
-    private static final float CARD_IMAGE_SIZE = 96f;
+    private static final float CARD_WIDTH = 260f;
+    private static final float CARD_HEIGHT = 450f;
+    private static final float CARD_IMAGE_SIZE = 150f;
     private static final float PICK_BOX_SIZE = 70f;
 
     private ShopMenu menuController;
     private Table itemsContainer;
+    private ScrollPane shopScrollPane;
 
     public void setMenuController(ShopMenu menuController) {
         this.menuController = menuController;
@@ -92,23 +84,39 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
         topBar.add(createBackButton(MenuType.GreenHouse)).right().top().size(70, 70).padRight(15).padTop(15);
         uiTable.add(topBar).expandX().fillX().top().row();
 
-        Label title = createLabel("SHOP", "FBUSV8C5EI_2", Color.WHITE);
-        title.setFontScale(1.1f);
-        uiTable.add(title).padTop(6).row();
+        Label title = createLabel("SHOP", "FBUSV8C5EI_1", Color.WHITE);
+        uiTable.add(title).padTop(4).padBottom(4).row();
 
         // --------------------------------------------------------
         // Horizontal scroll pane of shop item cards
         // --------------------------------------------------------
         itemsContainer = new Table();
-        itemsContainer.center();
+        itemsContainer.center().pad(10);
 
-        ScrollPane scrollPane = new ScrollPane(itemsContainer, skin);
-        scrollPane.setScrollingDisabled(false, true);
-        scrollPane.setFadeScrollBars(false);
-        scrollPane.setScrollBarPositions(false, true);
-        scrollPane.setOverscroll(false, false);
+        shopScrollPane = new ScrollPane(itemsContainer, skin);
+        shopScrollPane.setScrollingDisabled(false, true); // Enable X scrolling, disable Y scrolling
+        shopScrollPane.setFadeScrollBars(false);          // Keep scrollbar visible
+        shopScrollPane.setScrollBarPositions(true, false); // Position horizontal scrollbar at bottom
+        shopScrollPane.setScrollbarsVisible(true);
+        shopScrollPane.setOverscroll(false, false);
 
-        uiTable.add(scrollPane).expand().fillX().pad(20).row();
+        shopScrollPane.addListener(new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                if (stage != null) {
+                    stage.setScrollFocus(shopScrollPane);
+                }
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                if (stage != null && (toActor == null || !toActor.isDescendantOf(shopScrollPane))) {
+                    stage.setScrollFocus(null);
+                }
+            }
+        });
+
+        uiTable.add(shopScrollPane).expand().fillX().padLeft(15).padRight(15).padBottom(15).row();
 
         screenStack.add(uiTable);
         rootTable.add(screenStack).grow();
@@ -135,32 +143,50 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
         Table card = new Table();
         card.pad(14);
         applyCardBackground(card);
+        card.top();
 
-        Label nameLabel = createBlackLabel(item.getName());
+        // 1. Title (Top)
+        Label nameLabel = createLabel(item.getName(), "FBUSV8C5EI_1_outline", Color.WHITE);
+        nameLabel.setFontScale(0.65f);
         nameLabel.setWrap(true);
         nameLabel.setAlignment(Align.center);
-        card.add(nameLabel).width(CARD_WIDTH - 30).padBottom(8).row();
+        card.add(nameLabel).width(CARD_WIDTH - 28).padTop(4).padBottom(4).row();
 
+        // 2. Image Area (Middle - Expands vertically to push bottom block down)
+        Table imageWrapper = new Table();
         String imageAssetId = getImageAssetIdForType(item.getType());
         TextureRegion imgRegion = (imageAssetId != null) ? textureBank.region(imageAssetId) : null;
         if (imgRegion != null) {
             Image itemImage = new Image(imgRegion);
             itemImage.setScaling(Scaling.fit);
-            card.add(itemImage).size(CARD_IMAGE_SIZE).padBottom(8).row();
+            imageWrapper.add(itemImage).size(CARD_IMAGE_SIZE);
         } else {
-            card.add().size(CARD_IMAGE_SIZE).padBottom(8).row();
+            imageWrapper.add().size(CARD_IMAGE_SIZE);
         }
+        card.add(imageWrapper).expandY().center().padBottom(6).row();
 
-        card.add(createBlackLabel(item.getPrice() + " " + currencyText(item.getCurrency())))
-            .padBottom(10).row();
+        // 3. Description (Bottom Block)
+        String description = item.getDescription();
+        Label descLabel = createLabel(description != null ? description : "", "FBUSV8C5EI_2", Color.BLACK);
+        descLabel.setFontScale(0.75f);
+        descLabel.setWrap(true);
+        descLabel.setAlignment(Align.center);
+        card.add(descLabel).width(CARD_WIDTH - 30).height(44).padBottom(6).row();
 
+        // 4. Price (Bottom Block)
+        Label priceLabel = createLabel(item.getPrice() + " " + currencyText(item.getCurrency()), "FBUSV8C5EI_2", Color.BLACK);
+//        priceLabel.setFontScale(0f);
+        priceLabel.setColor(Color.GOLD);
+        card.add(priceLabel).padBottom(12).row();
+
+        // 5. Buy Button (Bottom Block)
         TextButton buyButton = createSkinButton("Buy", "green", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 onBuyClicked(item);
             }
         });
-        card.add(buyButton);
+        card.add(buyButton).width(120).padBottom(4);
 
         return card;
     }
@@ -171,24 +197,42 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
         Table card = new Table();
         card.pad(14);
         applyCardBackground(card);
+        card.top();
 
+        // 1. Title (Top)
         String plantName = (offer != null) ? formatEnumName(offer.getPlantType().getName()) : "Daily Offer";
-        Label nameLabel = createBlackLabel(plantName + " Seed Packet");
+        Label nameLabel = createLabel(plantName + " Seed Packet", "FBUSV8C5EI_1_outline", Color.WHITE);
+        nameLabel.setFontScale(0.65f);
         nameLabel.setWrap(true);
         nameLabel.setAlignment(Align.center);
-        card.add(nameLabel).width(CARD_WIDTH - 30).padBottom(8).row();
+        card.add(nameLabel).width(CARD_WIDTH - 28).padTop(4).padBottom(4).row();
 
-        // Daily offer shows the plant's idle animation instead of a static image.
+        // 2. Animated Plant Hero (Middle - Expands vertically)
+        Table animWrapper = new Table();
         if (offer != null) {
             Actor anim = createAnimationActor(offer.getPlantType().getIdleAnimationPath(), offer.getPlantType().getStateName());
-            card.add(anim).size(CARD_IMAGE_SIZE).padBottom(8).row();
+            animWrapper.add(anim).size(CARD_IMAGE_SIZE);
         } else {
-            card.add().size(CARD_IMAGE_SIZE).padBottom(8).row();
+            animWrapper.add().size(CARD_IMAGE_SIZE);
         }
+        card.add(animWrapper).expandY().center().padBottom(6).row();
 
+        // 3. Description (Bottom Block)
+        int count = (offer != null) ? offer.getSeedPacketCount() : 0;
+        Label descLabel = createLabel("Special daily offer: " + count + " seed packets for " + plantName + ".", "FBUSV8C5EI_2", Color.BLACK);
+        descLabel.setFontScale(0.75f);
+        descLabel.setWrap(true);
+        descLabel.setAlignment(Align.center);
+        card.add(descLabel).width(CARD_WIDTH - 30).height(44).padBottom(6).row();
+
+        // 4. Price (Bottom Block)
         int price = (offer != null) ? offer.getPrice() : 0;
-        card.add(createBlackLabel(price + " Coins")).padBottom(10).row();
+        Label priceLabel = createLabel(price + " Coins", "FBUSV8C5EI_2", Color.BLACK);
+//        priceLabel.setFontScale(0.75f);
+        priceLabel.setColor(Color.GOLD);
+        card.add(priceLabel).padBottom(12).row();
 
+        // 5. Action Button (Bottom Block)
         boolean alreadyBought = menuController.isDailyOfferBoughtToday();
         TextButton buyButton;
         if (alreadyBought || offer == null) {
@@ -206,7 +250,7 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
                 }
             });
         }
-        card.add(buyButton);
+        card.add(buyButton).width(120).padBottom(4);
 
         return card;
     }
@@ -273,12 +317,6 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
         openDailyOfferConfirmDialog(offer);
     }
 
-    // ----------------------------------------------------------
-    // Plant picker (for selective seed packet) -- a small bordered
-    // table showing only the box for each unlocked plant, no level
-    // or sun-cost badges, reusing the same box-button building block
-    // used by Collection / Choose Plant.
-    // ----------------------------------------------------------
     private void openPlantPickerDialog(ShopItem item) {
         User user = UsersManager.getInstance().getLoggedInUser();
         UserProgress progress = (user != null) ? user.getUserProgress() : null;
@@ -338,9 +376,6 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
         showModal(box);
     }
 
-    // ----------------------------------------------------------
-    // "Are you sure?" confirmation, shared by every purchasable item.
-    // ----------------------------------------------------------
     private void openConfirmDialog(ShopItem item, String plantTypeName, int price, WalletType currency) {
         BorderedTable box = new BorderedTable();
         box.pad(30);
@@ -402,8 +437,6 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
         TextButton confirmButton = createSkinButton("Confirm", "green", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Daily offer is item id 6 by convention in ShopManager.purchaseItem;
-                // count/plantTypeName are unused on that branch.
                 String error = menuController.buyItem(6, offer.getSeedPacketCount(), null);
                 closeModal();
                 if (error != null) {
