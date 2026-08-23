@@ -93,7 +93,7 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
         itemsContainer.center().pad(10);
 
         shopScrollPane = new ScrollPane(itemsContainer, skin);
-        shopScrollPane.setScrollingDisabled(false, true); // Enable X scrolling, disable Y scrolling
+        shopScrollPane.setScrollingDisabled(false, true); // Enable horizontal, disable vertical
         shopScrollPane.setFadeScrollBars(false);          // Keep scrollbar visible
         shopScrollPane.setScrollBarPositions(true, false); // Position horizontal scrollbar at bottom
         shopScrollPane.setScrollbarsVisible(true);
@@ -174,7 +174,6 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
 
         // 4. Price (Bottom Block)
         Label priceLabel = createLabel(item.getPrice() + " " + currencyText(item.getCurrency()), "FBUSV8C5EI_2", Color.BLACK);
-//        priceLabel.setFontScale(0f);
         priceLabel.setColor(Color.GOLD);
         card.add(priceLabel).padBottom(12).row();
 
@@ -227,7 +226,6 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
         // 4. Price (Bottom Block)
         int price = (offer != null) ? offer.getPrice() : 0;
         Label priceLabel = createLabel(price + " Coins", "FBUSV8C5EI_2", Color.BLACK);
-//        priceLabel.setFontScale(0.75f);
         priceLabel.setColor(Color.GOLD);
         card.add(priceLabel).padBottom(12).row();
 
@@ -316,6 +314,9 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
         openDailyOfferConfirmDialog(offer);
     }
 
+    // ----------------------------------------------------------
+    // Plant picker (for selective seed packet)
+    // ----------------------------------------------------------
     private void openPlantPickerDialog(ShopItem item) {
         User user = UsersManager.getInstance().getLoggedInUser();
         UserProgress progress = (user != null) ? user.getUserProgress() : null;
@@ -352,7 +353,8 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
                         }
                     }
                 );
-                grid.add(plantBox).size(PICK_BOX_SIZE).pad(5);
+                // Natural size as defined by buildIconBoxButton and its asset textures
+                grid.add(plantBox).pad(6);
                 count++;
                 if (count % columns == 0) grid.row();
             }
@@ -361,7 +363,7 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
             gridScroll.setScrollingDisabled(true, false);
             gridScroll.setFadeScrollBars(false);
             gridScroll.setOverscroll(false, false);
-            box.add(gridScroll).size(PICK_BOX_SIZE * columns + 60, PICK_BOX_SIZE * 2 + 30).padBottom(14).row();
+            box.add(gridScroll).size(700, 320).padBottom(14).row();
         }
 
         TextButton cancelButton = createSkinButton("Cancel", "brown", new ClickListener() {

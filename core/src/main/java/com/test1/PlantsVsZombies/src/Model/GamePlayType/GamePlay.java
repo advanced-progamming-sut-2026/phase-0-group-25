@@ -74,6 +74,9 @@ public abstract class GamePlay {
         this.thisUser = thisUser;
         activeInstance = this;
 
+        QuestManager.getInstance().notifyEvent(new LevelStartedEvent(chapterType, level, difficulty));
+
+
         if (boosted != null) {
             this.boostedPlants.addAll(boosted);
         }
