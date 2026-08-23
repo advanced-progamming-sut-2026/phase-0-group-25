@@ -60,6 +60,8 @@ public abstract class GamePlay {
     protected ArrayList<DroppedPlantFood> activePlantFoods = new ArrayList<>();
     protected ArrayList<SandstormEffect> activeSandstorms = new ArrayList<>();
     protected ArrayList<IcyWindEffect> activeIcyWinds = new ArrayList<>();
+    protected Set<String> boostedPlants = new HashSet<>();
+
 
     public GamePlay(ChapterType chapterType, int level, int difficulty, User thisUser,
                     ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
@@ -70,6 +72,10 @@ public abstract class GamePlay {
         this.chapterType = chapterType;
         this.thisUser = thisUser;
         activeInstance = this;
+
+        if (boosted != null) {
+            this.boostedPlants.addAll(boosted);
+        }
 
         for (String pName : plants) {
             this.plants.add(PlantFactory.createBattlePlant(pName, getLevelOfPlant(pName)));
@@ -101,8 +107,13 @@ public abstract class GamePlay {
 
                 for (int x = 1; x < 10; x++) {
                     Position newPosition = new Position(x, y);
-                    Boolean isArable = (x != 9 && x != 8);
+                    Boolean isArable = (x <= 7);
                     Tile newTile = new Tile(newPosition, isArable, 0);
+
+                    if (x == 9 && Math.random() <= 0.60) {
+                        newTile.setLowTide(true);
+                    }
+
                     tiles.add(newTile);
                 }
             }
@@ -361,7 +372,7 @@ public abstract class GamePlay {
             int thisPY = (int) thisPosition.getY();
             String thisPName = thisPlant.getName();
             if (thisPName.equals("IMITATER")) {
-                int number = new Random().nextInt(plants.size()) + 1;
+                int number = new Random().nextInt(plants.size());
                 thisPName = this.plants.get(number).getName();
                 isImitaterBoosted = getLevelOfPlant("IMITATER") == 4;
             }
@@ -928,5 +939,49 @@ public abstract class GamePlay {
 
     public ArrayList<IcyWindEffect> getActiveIcyWinds() {
         return activeIcyWinds;
+    }
+
+    public boolean isPlantBoosted(String plantName) {
+        if (boostedPlants.contains(plantName)) return true;
+        PlantType type = PlantType.fromName(plantName);
+        return type != null && thisUser != null && thisUser.getUserProgress() != null
+            && thisUser.getUserProgress().hasGreenhouseBoost(type);
+    }
+
+    public boolean usePlantFood(int gridX, int gridY) {
+        if (this.numOfPlantFood <= 0) return false;
+        Tile tile = getTileByPosition(gridX, gridY);
+        if (tile != null && !tile.getPlants().isEmpty()) {
+            applyPlantFood(gridX, gridY);
+            this.numOfPlantFood--;
+            System.out.printf("Plant food applied on plant at (%d, %d). Remaining: %d\n", gridX, gridY, this.numOfPlantFood);
+            return true;
+        }
+        return false;
+    }
+
+    public void triggerLowTide() {
+        if (chapterType != ChapterType.BIG_WAVE_BEACH) return;
+
+        boolean spawnedAny = false;
+        for (Tile tile : tiles) {
+            if (!tile.isArable() && tile.isLowTide() && !tile.isLowTideTriggered()) {
+                int col = (int) tile.getPosition().getX();
+                int row = (int) tile.getPosition().getY();
+
+                Position spawnPos = new Position(getRealX(col), getRealY(row));
+                Zombie zombie = ZombieFactory.createZombie("DEFAULT", spawnPos);
+                zombie.setRow(row);
+                zombie.setColumn(col);
+                gameZombies.add(zombie);
+
+                tile.setLowTideTriggered(true);
+                spawnedAny = true;
+            }
+        }
+
+        if (spawnedAny) {
+            UIManager.showToast("Low Tide! Zombies rising from the water!", "IMAGE_UI_GENERIC_TIMER_RIBBON_RED");
+        }
     }
 }

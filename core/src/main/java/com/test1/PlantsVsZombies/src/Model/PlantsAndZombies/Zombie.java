@@ -457,4 +457,12 @@ public class Zombie extends Entity {
 
         return Color.WHITE;
     }
+
+    public boolean isHalated() {
+        return isHalated;
+    }
+
+    public void setHalated(boolean isHalated) {
+        this.isHalated = isHalated;
+    }
 }
