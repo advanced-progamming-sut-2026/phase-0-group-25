@@ -5,6 +5,7 @@ import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 
@@ -91,6 +92,15 @@ public class ExplosionWithLifespan implements Ability {
                 }
             }
         }
+
+        if (plant.getPlantStats().getTags().contains("shoot")) {
+            int bounce = (int) plant.getPlantStats().getAttributes().get("bounce");
+            for (int i = 0; i < bounce; i++) {
+                //todo
+                Projectile projectile = new Projectile(plant, 50, 0, plant.getPosition(), 10, 1);
+                GAME.getProjectiles().add(projectile);
+            }
+        }
     }
 
     private void handleMakingArablePlants(BattlePlant plant, ArrayList<String> tags) {
@@ -106,10 +116,14 @@ public class ExplosionWithLifespan implements Ability {
                 }
             }
 
+        } else if (tags.contains("Ice")) {
+            for (Zombie zombie : GAME.getGameZombies()) {
+                zombie.freeze(2);
+            }
         } else {
             for (Tile tile : GAME.getTiles()) {
                 if ((GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT)) ||
-                        ((GAME.getChapterType().equals(ChapterType.DARK_AGE)))) {
+                    ((GAME.getChapterType().equals(ChapterType.DARK_AGE)))) {
                     if (!tile.isArable()) {
                         tile.setArable(true);
                     }
@@ -136,7 +150,7 @@ public class ExplosionWithLifespan implements Ability {
             for (int j = -range; j <= range; j++) {
                 Tile tile = GAME.getTileByPosition(plantColumn + i, plantRow + j);
                 if (tile == null) {
-                    return;
+                    continue;
                 }
 
                 for (BattlePlant plant1 : tile.getPlants()) {

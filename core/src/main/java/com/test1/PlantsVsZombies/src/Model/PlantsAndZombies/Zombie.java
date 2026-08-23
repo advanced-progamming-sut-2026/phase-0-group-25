@@ -1,5 +1,6 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies;
 
+import com.badlogic.gdx.graphics.Color;
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
@@ -35,11 +36,13 @@ public class Zombie extends Entity {
     private boolean isFrozen;
     private double timeWhenFrozen;
     private int frozenTime;
+    private boolean isButtered = false;
 
 
     private ArrayList<Armor> activeArmors;
     private double lastActionTime;
     private double spawnTime;
+    private double dieTime;
 
     public Zombie(ZombieStats zombieStats, String name) {
         this.zombieStats = zombieStats;
@@ -86,12 +89,12 @@ public class Zombie extends Entity {
 
     private void addAbilities() {
         for (String ability : this.zombieStats.getAbilities()) {
-            if (ability.equals("moving")) {
+            if (ability.equals("fatalDamage")) {
+                this.originalAbilities.add(new FatalDamage());
+            } else if (ability.equals("moving")) {
                 this.originalAbilities.add(new Moving());
             } else if (ability.equals("eating")) {
                 this.originalAbilities.add(new Eating());
-            } else if (ability.equals("fatalDamage")) {
-                this.originalAbilities.add(new FatalDamage());
             } else if (ability.equals("flying")) {
                 this.originalAbilities.add(new Flying());
             } else if (ability.equals("stealingSun")) {
@@ -314,17 +317,13 @@ public class Zombie extends Entity {
     public void checkLife() {
         if (this.name.equals("GARGANTUAR")) {
             if (this.currentHP <= (this.zombieStats.getBaseHP() / 2)) {
-                Position impPosition = new Position((this.getColumn() * 200 - 80), this.position.getY());
-                Zombie imp = ZombieFactory.createZombie("Imp", impPosition);
-
-                GAME.getGameZombies().add(imp);
+                this.zombieStats.getAttributes().put("isThrown", "yes");
+                this.zombieStats.getAttributes().put("throwTime", GAME.getTotalTimePassed());
             }
         }
 
         if (this.currentHP <= 0) {
             this.currentHP = 0;
-            this.isAlive = false;
-            checkSteal();
         }
 
     }
@@ -335,11 +334,11 @@ public class Zombie extends Entity {
                 if (ability instanceof StealingSun) {
                     double stolenSun = ((StealingSun) ability).getStolenSun();
 
-                    if (zombieStats.getName().equals("Turquoise")) {
+                    if (zombieStats.getName().equals("TURQUOISE")) {
                         Sun sun = new Sun((int) (stolenSun / 2), this.position);
                         GAME.getActiveSuns().add(sun);
 
-                    } else if (zombieStats.getName().equals("Ra")) {
+                    } else if (zombieStats.getName().equals("RA")) {
                         GAME.setMySuns(GAME.getMySuns() + (int) stolenSun);
                     }
                 }
@@ -411,6 +410,14 @@ public class Zombie extends Entity {
         return originalAbilities;
     }
 
+    @Override
+    public void setAlive(boolean alive) {
+        super.setAlive(alive);
+        if (!this.isAlive) {
+            checkSteal();
+        }
+    }
+
     public String getCurrentAnimationName() {
         AnimationDecider decider = new AnimationDecider();
         return decider.zombieDecider(this);
@@ -419,6 +426,36 @@ public class Zombie extends Entity {
     public HashMap<String, Boolean> getVisibility() {
         AnimationDecider decider = new AnimationDecider();
         return decider.zombieVisibilities(this);
+    }
+
+    @Override
+    public void setCurrentHP(double currentHP) {
+        super.setCurrentHP(currentHP);
+        if (currentHP <= 0) {
+            dieTime = GAME.getTotalTimePassed();
+        }
+    }
+
+    public double getDieTime() {
+        return dieTime;
+    }
+
+    public Color getColor() {
+        if (this.isFrozen) {
+            return Color.BLUE;
+        } else if (this.isButtered) {
+            return Color.YELLOW;
+        } else if (this.column <= 2) {
+            return Color.RED;
+        } else if (this.isHalated) {
+            return Color.GREEN;
+        } else if (this.name.equals("SNORKEL")) {
+            if ((boolean) this.zombieStats.getAttributes().get("submarine")) {
+                return Color.FOREST;
+            }
+        }
+
+        return Color.WHITE;
     }
 
     public boolean isHalated() {

@@ -15,6 +15,7 @@ public class ZombieStats {
     private Map<String, Object> attributes;
     private ArrayList<String> abilities;
     private String animation;
+    private Map<String, String> status;
 
     public String getName() {
         return name;
@@ -68,4 +69,7 @@ public class ZombieStats {
         return animation;
     }
 
+    public Map<String, String> getStatus() {
+        return status;
+    }
 }

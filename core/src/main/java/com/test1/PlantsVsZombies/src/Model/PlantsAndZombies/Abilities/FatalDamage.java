@@ -1,24 +1,40 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
+import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
+import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
 
 public class FatalDamage implements Ability {
     private boolean isActivated = false;
+    private GamePlay GAME = GamePlayMenu.getGamePlay();
 
     @Override
     public void executeAbility(Entity entity) {
         if (this.isActivated) {
             Zombie zombie = (Zombie) entity;
             Entity rival = zombie.getRival();
-            rival.setCurrentHP(0);
 
             if (zombie.getZombieStats().getName().equals("ALL_STAR")) {
                 zombie.setCurrentVelocity(zombie.getZombieStats().getVelocity() / 2);
             }
 
-            this.isActivated = false;
-            makeMovingActivated(zombie);
+            double fatalTime = (double) zombie.getZombieStats().getAttributes().get("fatalTime");
+            float difference = (float) (GAME.getTotalTimePassed() - zombie.getLastActionTime());
+
+            System.out.println(fatalTime + "   " + difference);
+
+
+            if (fatalTime < difference) {
+                double zombieFinalPositionX = zombie.getPosition().getX() - 10;
+                Position newPosition = new Position(zombieFinalPositionX, zombie.getPosition().getY());
+                zombie.setPosition(newPosition);
+
+
+                rival.setCurrentHP(0);
+                rival.setAlive(false);
+                this.isActivated = false;
+                makeMovingActivated(zombie);
+            }
         }
     }
 
@@ -32,5 +48,9 @@ public class FatalDamage implements Ability {
 
     public void setActivated(boolean activated) {
         this.isActivated = activated;
+    }
+
+    public boolean isActivated() {
+        return isActivated;
     }
 }

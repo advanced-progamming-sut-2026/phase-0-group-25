@@ -19,6 +19,8 @@ public class Tile {
     private GraveType graveType = GraveType.NORMAL;
     private boolean isNecromancy = false;
     private boolean necromancyTriggered = false;
+    private boolean isLowTide = false;
+    private boolean lowTideTriggered = false;
 
     public Tile(Position position, Boolean isArable, int HP) {
         this.position = position;
@@ -28,6 +30,14 @@ public class Tile {
         zombies = new ArrayList<>();
         projectiles = new ArrayList<>();
     }
+
+    public boolean isLowTide() { return isLowTide; }
+
+    public void setLowTide(boolean lowTide) { this.isLowTide = lowTide; }
+
+    public boolean isLowTideTriggered() { return lowTideTriggered; }
+
+    public void setLowTideTriggered(boolean lowTideTriggered) { this.lowTideTriggered = lowTideTriggered; }
 
     public GraveType getGraveType() { return graveType; }
 

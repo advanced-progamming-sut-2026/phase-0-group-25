@@ -1,6 +1,7 @@
 package com.test1.PlantsVsZombies.src.Model.GamePlayType;
 
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
+import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Model.Mower;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Dynamite;
@@ -31,8 +32,8 @@ public class Simple extends GamePlay {
 
         if (!settedThePlants) {
             if (chapterType == ChapterType.FROSTBITE_CAVES) {
-                String thisPName1 = plants.get(0).getName();
-                String thisPName2 = plants.get(1).getName();
+                String thisPName1 = "SUNFLOWER";
+                String thisPName2 = "SUNFLOWER";
                 Position position1 = new Position(2, 2);
                 Position position2 = new Position(3, 5);
                 BattlePlant thisP1 = PlantFactory.createBattlePlant(thisPName1, getLevelOfPlant(thisPName1), position1);
@@ -46,19 +47,6 @@ public class Simple extends GamePlay {
             }
             this.settedThePlants = true;
             UIManager.showToast("Level Started! Protect your lawn!", "IMAGE_UI_GENERIC_VTB");
-
-            planting(PlantFactory.createBattlePlant("SUNFLOWER", 1,
-                new Position(2, 2)), new Position(2, 2));
-            planting(PlantFactory.createBattlePlant("BONK_CHOY", 1,
-                new Position(1, 2)), new Position(8, 1));
-            planting(PlantFactory.createBattlePlant("BONK_CHOY", 1,
-                new Position(1, 2)), new Position(8, 2));
-            planting(PlantFactory.createBattlePlant("BONK_CHOY", 1,
-                new Position(1, 2)), new Position(8, 3));
-            planting(PlantFactory.createBattlePlant("BONK_CHOY", 1,
-                new Position(1, 2)), new Position(8, 4));
-            planting(PlantFactory.createBattlePlant("BONK_CHOY", 1,
-                new Position(1, 2)), new Position(8, 5));
         }
 
         if (this.chapterType != ChapterType.DARK_AGE) {
@@ -91,19 +79,21 @@ public class Simple extends GamePlay {
         while (z.hasNext()) {
             Zombie zombie = z.next();
 
-            if (!zombie.isAlive() || zombie.getCurrentHP() <= 0) {
+            if (!zombie.isAlive()) {
                 killAward(this.thisUser);
                 if (zombie.isHalated()) {
                     glowingAward(zombie.getPosition());
                 }
                 Position zPos = Position.getRowAndColumn(zombie.getPosition());
                 System.out.printf("Zombie of type %s is dead at (%d, %d)\n",
-                        zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
+                    zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
 
                 addKilledZombieCost(zombie.getWaveNum(), zombie.getCost());
                 z.remove();
             } else {
-                zombie.update();
+                if (zombie.getCurrentHP() > 0) {
+                    zombie.update();
+                }
             }
         }
         updateZombieTiles();
@@ -137,6 +127,7 @@ public class Simple extends GamePlay {
                         if (thisWave instanceof FinalWave) {
                             System.out.println("The final wave has come.");
                             triggerNecromancy();
+                            triggerLowTide();
                             UIManager.showToast("FINAL WAVE IS APPROACHING!", "IMAGE_UI_GENERIC_TIMER_RIBBON_RED");
                         } else {
                             System.out.printf("Wave %d started.\n", thisWave.getWaveNum());
@@ -148,7 +139,7 @@ public class Simple extends GamePlay {
                     Position positionOfZ;
                     int spawnY = getNextRandomY();
 
-                    if (chapterType == ChapterType.ANCIENT_EGYPT && Math.random() <= 0.15) {
+                    if (chapterType == ChapterType.ANCIENT_EGYPT && Math.random() <= 0.12) {
                         int targetCol = random.nextInt(3) + 5;
                         positionOfZ = new Position(getRealX(targetCol), getRealY(spawnY));
                         addSandstormEffect((float) positionOfZ.getX(), (float) positionOfZ.getY());
@@ -193,7 +184,7 @@ public class Simple extends GamePlay {
                         System.out.println("Lawn mower triggered in row: " + zRow);
                         currentMower.trigger();
                     }
-                } else if (currentMower.isDone() && zX <= 490) {
+                } else if (currentMower.isDone() && zX <= 390) {
                     System.out.println("The zombie ate your brain; LOSER!!!");
                     UsersManager.getInstance().addGamesPlayed();
                     this.isPaused = true;

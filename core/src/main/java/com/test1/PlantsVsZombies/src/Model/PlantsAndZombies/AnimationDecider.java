@@ -2,17 +2,18 @@ package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies;
 
 import com.test1.PlantsVsZombies.src.Enums.PlantCategory;
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities.Ability;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities.Eating;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities.Moving;
+import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
+import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities.*;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Armors.Armor;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class AnimationDecider {
-    //private GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlayMenu.getGamePlay();
 
     public String plantDecider(BattlePlant plant, float stateTime) {
         Map<String, String> status = plant.getPlantStats().getStatus();
@@ -22,6 +23,10 @@ public class AnimationDecider {
 
         if (plant.getPlantStats().getTags().contains("wramp-up")) {
             return getWrampUpPlantsAnimation(plant, status, stateTime);
+        }
+
+        if (plant.getPlantStats().getTags().contains("charge")) {
+            return getChargePlantsAnimation(plant, status, stateTime);
         }
 
         if (plant.getPlantStats().getAbilities().contains("mint")) {
@@ -39,8 +44,16 @@ public class AnimationDecider {
         if (plant.getPlantStats().getCategory().equals("Melee")) {
             return getMeleeAnimation(plant);
         }
+
         if (plant.getPlantStats().getCategory().equals("Sun Producer")) {
             return getSunProducerAnimation(plant);
+        }
+
+        if (plant.getPlantStats().getCategory().equals("Homing")) {
+            return getHomingAnimation(plant);
+        }
+        if (plant.getPlantStats().getCategory().equals("Explosive")) {
+            return getExplosiveAnimation(plant, stateTime);
         } else {
             if (isTimeForAction(plant, stateTime)) {
                 return status.get("action");
@@ -59,14 +72,44 @@ public class AnimationDecider {
     }
 
     public String zombieDecider(Zombie zombie) {
+        Map<String, String> status = zombie.getZombieStats().getStatus();
+        if (zombie.getCurrentHP() <= 0) {
+            return handleZombieDeath(zombie, status);
+        }
+
+        if (zombie.getName().equals("GARGANTUAR")) {
+            String isThrown = (String) zombie.getZombieStats().getAttributes().get("isThrown");
+            if (isThrown.equals("yes")) {
+                for (Ability ability : zombie.getOriginalAbilities()) {
+                    if (ability instanceof Moving) {
+                        ((Moving) ability).setActivated(false);
+                    } else if (ability instanceof Eating) {
+                        ((Eating) ability).setActivated(false);
+                    }
+                }
+                return handleGargantuarThrow(zombie, status);
+            }
+            return handleGargantuar(zombie, status);
+        }
+
+        if (zombie.getName().equals("ALL_STAR")) {
+            return handleAllStar(zombie, status);
+        }
+
+        if (zombie.getZombieStats().getAbilities().contains("throwing")) {
+            return handleZombieThrowing(zombie, status);
+        }
+
         for (Ability ability : zombie.getOriginalAbilities()) {
-            if ((ability instanceof Moving) && (((Moving) ability).isActivated())) {
-                return "walk";
+            if ((ability instanceof StealingSun) && (((StealingSun) ability).isActivated())) {
+                return status.get("action");
+            } else if ((ability instanceof Moving) && (((Moving) ability).isActivated())) {
+                return status.get("walk");
             } else if ((ability instanceof Eating) && (((Eating) ability).isActivated())) {
-                return "eat";
+                return status.get("eat");
             }
         }
-        return "idle";
+        return status.get("idle");
     }
 
     public HashMap<String, Boolean> zombieVisibilities(Zombie zombie) {
@@ -101,6 +144,15 @@ public class AnimationDecider {
         }
 
         return status.get(plant.getStatus() + stage);
+    }
+
+    private String getChargePlantsAnimation(BattlePlant plant, Map<String, String> status, float stateTime) {
+        int armTime = (int) plant.getPlantStats().getAttributes().get("armTime");
+        if ((stateTime - plant.getPlantTime()) < armTime) {
+            return status.get("disarmed");
+        }
+
+        return status.get("armed");
     }
 
     private boolean isTimeForAction(BattlePlant plant, float stateTime) {
@@ -224,10 +276,12 @@ public class AnimationDecider {
     }
 
     private String getMeleeAnimation(BattlePlant plant) {
+        plant.checkMelee();
         return plant.getPlantStats().getStatus().get(plant.getStatus());
     }
 
     private String getSunProducerAnimation(BattlePlant plant) {
+        plant.checkSunProducer();
         return plant.getPlantStats().getStatus().get(plant.getStatus());
     }
 
@@ -235,6 +289,40 @@ public class AnimationDecider {
         Map<String, String> status = plant.getPlantStats().getStatus();
 
         return status.get("idle");
+    }
+
+    private String getHomingAnimation(BattlePlant plant) {
+        Map<String, String> status = plant.getPlantStats().getStatus();
+
+        return status.get("idle");
+    }
+
+    private String getExplosiveAnimation(BattlePlant plant, float stateTime) {
+        if (plant.getPlantStats().getAbilities().contains("explosionWithLifeSpan")) {
+            return handleExplosionLifeSpan(plant, stateTime);
+        }
+        if (plant.getName().equals(PlantType.SQUASH.getName())) {
+            return getSquashAnimation(plant);
+        }
+
+        return "idle";
+    }
+
+    private String handleExplosionLifeSpan(BattlePlant plant, float stateTime) {
+        double attackTime = (double) plant.getPlantStats().getAttributes().get("attackTime");
+        Map<String, String> status = plant.getPlantStats().getStatus();
+
+        double timeDifference = stateTime - plant.getPlantTime();
+        if (timeDifference >= attackTime) {
+            return status.get("explosion");
+        } else {
+            return status.get("attack");
+        }
+    }
+
+    private String getSquashAnimation(BattlePlant plant) {
+        plant.checkSquash();
+        return plant.getPlantStats().getStatus().get(plant.getStatus());
     }
 
     private void checkArmorVisibility(BattlePlant plant, HashMap<String, Boolean> visibilities) {
@@ -249,4 +337,146 @@ public class AnimationDecider {
         }
     }
 
+    private String handleZombieDeath(Zombie zombie, Map<String, String> status) {
+        for (Ability ability : zombie.getOriginalAbilities()) {
+            if (ability instanceof Moving) {
+                ((Moving) ability).setActivated(false);
+            } else if (ability instanceof Eating) {
+                ((Eating) ability).setActivated(false);
+            } else if (ability instanceof StealingSun) {
+                ((StealingSun) ability).setActivated(false);
+            }
+        }
+
+        double dieSpan = (double) zombie.getZombieStats().getAttributes().get("dieSpan");
+        double difference = GAME.getTotalTimePassed() - zombie.getDieTime();
+
+
+        if (difference >= dieSpan / 2) {
+            zombie.setAlive(false);
+        }
+
+        return status.get("die");
+    }
+
+    private String handleZombieThrowing(Zombie zombie, Map<String, String> status) {
+        double difference = GAME.getTotalTimePassed() - zombie.getLastActionTime();
+        double throwTime = (double) zombie.getZombieStats().getAttributes().get("throwTime");
+        if ((difference + throwTime) >= 20) {
+            for (Ability ability : zombie.getOriginalAbilities()) {
+                if (ability instanceof Moving) {
+                    ((Moving) ability).setActivated(false);
+                } else if (ability instanceof Eating) {
+                    ((Eating) ability).setActivated(false);
+                }
+            }
+
+            return status.get("action");
+        } else {
+            if ((zombie.getName().equals("KING")) || (zombie.getName().equals("FISHERMAN"))) {
+                return status.get("idle");
+            } else {
+                if ((zombie.getRival() != null) && (zombie.getRival().currentHP > 0)) {
+                    for (Ability ability : zombie.getOriginalAbilities()) {
+                        if (ability instanceof Eating) {
+                            ((Eating) ability).setActivated(true);
+                        }
+                    }
+                    return status.get("eat");
+                } else {
+                    for (Ability ability : zombie.getOriginalAbilities()) {
+                        if (ability instanceof Moving) {
+                            ((Moving) ability).setActivated(true);
+                        }
+                    }
+                    return status.get("walk");
+                }
+            }
+        }
+    }
+
+    private String handleGargantuarThrow(Zombie zombie, Map<String, String> status) {
+        float throwTime = (float) zombie.getZombieStats().getAttributes().get("throwTime");
+        float difference = (float) GAME.getTotalTimePassed() - throwTime;
+        float firstThrow = (float) zombie.getZombieStats().getAttributes().get("firstThrow");
+        float secondThrow = (float) zombie.getZombieStats().getAttributes().get("secondThrow");
+
+
+        if (difference <= firstThrow) {
+            return status.get("firstThrow");
+        } else if (difference <= (firstThrow + secondThrow)) {
+            return status.get("secondThrow");
+        } else {
+            zombie.getZombieStats().getAttributes().put("isThrown", "no");
+
+            Position impPosition = new Position(380.5, ((zombie.getRow() - 1) * 150) + 205);
+            Zombie imp = ZombieFactory.createZombie("IMP", impPosition);
+            GAME.getGameZombies().add(imp);
+
+            if ((zombie.getRival() != null) && (zombie.getRival().currentHP > 0)) {
+                for (Ability ability : zombie.getOriginalAbilities()) {
+                    if (ability instanceof Eating) {
+                        ((Eating) ability).setActivated(true);
+                    }
+                }
+                return status.get("eat");
+            } else {
+                for (Ability ability : zombie.getOriginalAbilities()) {
+                    if (ability instanceof Moving) {
+                        ((Moving) ability).setActivated(true);
+                    }
+                }
+                return status.get("walk");
+            }
+
+        }
+    }
+
+    private String handleGargantuar(Zombie zombie, Map<String, String> status) {
+        for (Ability ability : zombie.getOriginalAbilities()) {
+
+            if ((ability instanceof FatalDamage) && (((FatalDamage) ability).isActivated())) {
+                double firstEat = (double) zombie.getZombieStats().getAttributes().get("firstEat");
+                double secondEat = (double) zombie.getZombieStats().getAttributes().get("secondEat");
+
+                float difference = (float) (GAME.getTotalTimePassed() - zombie.getLastActionTime());
+
+                if (difference <= firstEat) {
+                    return status.get("firstEat");
+                } else if (difference <= (firstEat + secondEat)) {
+                    return status.get("secondEat");
+                } else {
+
+                    return status.get("idle");
+                }
+
+            } else if ((ability instanceof Moving) && (((Moving) ability).isActivated())) {
+                return status.get("walk");
+            }
+        }
+
+        return status.get("idle");
+    }
+
+    private String handleAllStar(Zombie zombie, Map<String, String> status) {
+        for (Ability ability : zombie.getOriginalAbilities()) {
+
+            if ((ability instanceof FatalDamage) && (((FatalDamage) ability).isActivated())) {
+                double fatalTime = (double) zombie.getZombieStats().getAttributes().get("fatalTime");
+
+                float difference = (float) (GAME.getTotalTimePassed() - zombie.getLastActionTime());
+
+                if (difference <= fatalTime) {
+                    return status.get("eat");
+                } else {
+                    return status.get("idle");
+                }
+
+            } else if ((ability instanceof Moving) && (((Moving) ability).isActivated())) {
+                return status.get("walk");
+            }
+        }
+
+        return status.get("idle");
+    }
 }
