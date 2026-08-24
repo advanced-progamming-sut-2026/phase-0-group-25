@@ -315,6 +315,21 @@ public class UserProgressManager {
         return user.getUserProgress().isDailyOfferBoughtToday();
     }
 
+    /**
+     * Persists today's freshly-generated daily offer so it survives an app
+     * restart and only actually changes when the calendar day changes.
+     */
+    public void saveDailyOffer(PlantType plantType, int price, int seedPacketCount, LocalDate generatedDate) {
+        User user = getLoggedInUser();
+        if (user == null) return;
+        UserProgress progress = user.getUserProgress();
+        progress.setDailyOfferPlantType(plantType);
+        progress.setDailyOfferPrice(price);
+        progress.setDailyOfferSeedPacketCount(seedPacketCount);
+        progress.setDailyOfferGeneratedDate(generatedDate);
+        save();
+    }
+
 
     public void setQuestProgressForCurrentUser(Map<String, Integer> progress) {
         User user = getLoggedInUser();

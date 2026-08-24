@@ -365,6 +365,10 @@ public class UsersManager {
         return progressManager.isDailyOfferBoughtToday();
     }
 
+    public void saveDailyOffer(PlantType plantType, int price, int seedPacketCount, LocalDate generatedDate) {
+        progressManager.saveDailyOffer(plantType, price, seedPacketCount, generatedDate);
+    }
+
     public void setQuestProgressForCurrentUser(Map<String, Integer> progress) {
         progressManager.setQuestProgressForCurrentUser(progress);
     }

@@ -33,21 +33,31 @@ public class QuestManager {
         return instance;
     }
 
+    // In QuestManager.java
     public void loadProgress() {
-        if (currentUser == null) return;
+        this.currentUser = UsersManager.getInstance().getLoggedInUser();
+        if (currentUser == null || currentUser.getUserProgress() == null) return;
+
         UserProgress progress = currentUser.getUserProgress();
         Map<String, Integer> questProgress = progress.getQuestProgress();
-
-
         Map<String, String> questVariables = progress.getQuestVariables();
         if (questVariables == null) questVariables = new HashMap<>();
-
         List<String> completedIds = progress.getCompletedQuestIds();
         List<String> claimedIds = progress.getClaimedQuestIds();
         LocalDate lastDailyReset = progress.getLastDailyReset();
         LocalDate today = LocalDate.now();
-
         boolean performedDailyReset = false;
+
+        // allQuests is one shared, in-memory list reused no matter who is
+        // logged in. Wipe every quest back to a pristine state first so a
+        // freshly-switched-to user (especially a brand-new one, whose saved
+        // maps below are empty) never inherits progress/completion/claim
+        // state left behind by whoever was logged in before them.
+        for (Quest q : allQuests) {
+            q.randomizeVariable();
+            q.reset();
+        }
+
         if (lastDailyReset == null || !lastDailyReset.equals(today)) {
             resetDailyQuests();
             UsersManager.getInstance().setLastDailyResetForCurrentUser(today);
@@ -55,32 +65,27 @@ public class QuestManager {
         }
 
         for (Quest q : allQuests) {
-
             if (performedDailyReset && q.isDailyReset()) {
                 q.setDateAssigned(today);
                 continue;
             }
-
             if (questVariables.containsKey(q.getId())) {
                 q.setQuestVariable(questVariables.get(q.getId()));
             }
-            if (questProgress.containsKey(q.getId())) {
+            if (questProgress != null && questProgress.containsKey(q.getId())) {
                 q.setCurrentProgress(questProgress.get(q.getId()));
             }
-            if (completedIds.contains(q.getId())) {
+            if (completedIds != null && completedIds.contains(q.getId())) {
                 q.setCompleted(true);
             }
-            if (claimedIds.contains(q.getId())) {
+            if (claimedIds != null && claimedIds.contains(q.getId())) {
                 q.setClaimed(true);
             }
-
-
             if (q.isDailyReset() && q.getDateAssigned() != null && !q.getDateAssigned().equals(today)) {
                 q.reset();
                 q.setDateAssigned(today);
             }
         }
-
 
         if (performedDailyReset) {
             saveProgress();

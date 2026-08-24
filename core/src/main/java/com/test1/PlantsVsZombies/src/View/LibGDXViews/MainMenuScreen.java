@@ -25,6 +25,7 @@ import com.test1.PlantsVsZombies.src.View.ViewInterfaces.MainMenuView;
 import pvz.skin.BorderedTable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MainMenuScreen extends AbstractScreen implements MainMenuView {
 
@@ -510,8 +511,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         } else {
             messagesToShow = UsersManager.getInstance().getAllNews();
         }
-        //messagesToShow = new ArrayList<>(messagesToShow.reversed());
-
+        Collections.reverse(messagesToShow);
         if (messagesToShow.isEmpty()) {
             String text = unreadOnly ? "No unread news" : "No news";
             Label noNews = createLabel(text, "FBUSV8C5EI_1", Color.GRAY);
@@ -581,16 +581,16 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         });
         box.add(editNicknameBtn).right().padLeft(10).padBottom(20).row();
 
-        box.add(createBlackLabel("Total Levels Passed:")).left().padRight(10);
+        box.add(createBlackLabel("Total Levels Passed:")).left().padBottom(20).padRight(10);
         box.add(createBlackLabel(String.valueOf(totalLevels))).left().padLeft(10).padBottom(20).row();
 
-        box.add(createBlackLabel("Gems:")).left().padRight(10);
+        box.add(createBlackLabel("Gems:")).left().padBottom(20).padRight(10);
         box.add(createBlackLabel(String.valueOf(loggedUser.getUserProgress().getGemsCount()))).left().padLeft(10).padBottom(20).row();
 
-        box.add(createBlackLabel("Coins:")).left().padRight(10);
+        box.add(createBlackLabel("Coins:")).left().padBottom(20).padRight(10);
         box.add(createBlackLabel(String.valueOf(loggedUser.getUserProgress().getCoinsCount()))).left().padLeft(10).padBottom(20).row();
 
-        box.add(createBlackLabel("Games Played:")).left().padRight(10);
+        box.add(createBlackLabel("Games Played:")).padBottom(20).left().padRight(10);
         box.add(createBlackLabel(String.valueOf(progress.getGamesPlayed()))).left().padLeft(10).padBottom(20).row();
 
         TextButton changePasswordBtn = createSkinButton("Change Password", "green_small", new ClickListener() {

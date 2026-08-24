@@ -2,10 +2,14 @@ package com.test1.PlantsVsZombies.src.Menu;
 
 import com.test1.PlantsVsZombies.src.Enums.Command;
 import com.test1.PlantsVsZombies.src.Enums.MenuType;
+import com.test1.PlantsVsZombies.src.Model.Shop.DailyOffer;
+import com.test1.PlantsVsZombies.src.Model.Shop.ShopItem;
 import com.test1.PlantsVsZombies.src.Model.Shop.ShopManager;
+import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.BaseView;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.ShopMenuView;
 
+import java.util.List;
 import java.util.regex.Matcher;
 
 public class ShopMenu extends Menu {
@@ -45,6 +49,23 @@ public class ShopMenu extends Menu {
         }
 
         getView().showError("Invalid command format for this menu state.");
+    }
+
+    // Public wrappers for the GUI Screen to call
+    public List<ShopItem> getPermanentItems() {
+        return shopManager.getPermanentItems();
+    }
+
+    public DailyOffer getDailyOffer() {
+        return shopManager.getDailyOffer();
+    }
+
+    public boolean isDailyOfferBoughtToday() {
+        return UsersManager.getInstance().isDailyOfferBoughtToday();
+    }
+
+    public String buyItem(int itemId, int count, String plantTypeName) {
+        return shopManager.purchaseItem(itemId, count, plantTypeName);
     }
 
     @Override

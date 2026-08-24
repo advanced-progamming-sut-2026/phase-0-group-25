@@ -11,6 +11,7 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities.ProducingS
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Dynamite;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
 import com.test1.PlantsVsZombies.src.Model.PlayGroundType.PlayGround;
+import com.test1.PlantsVsZombies.src.Model.Quests.Events.LevelStartedEvent;
 import com.test1.PlantsVsZombies.src.Model.Quests.Events.LevelWonEvent;
 import com.test1.PlantsVsZombies.src.Model.Quests.Events.SunCollectedEvent;
 import com.test1.PlantsVsZombies.src.Model.Quests.QuestManager;
@@ -60,6 +61,17 @@ public abstract class GamePlay {
     protected ArrayList<DroppedPlantFood> activePlantFoods = new ArrayList<>();
     protected ArrayList<SandstormEffect> activeSandstorms = new ArrayList<>();
     protected ArrayList<IcyWindEffect> activeIcyWinds = new ArrayList<>();
+    protected Set<String> boostedPlants = new HashSet<>();
+
+    private String levelObjectives;
+
+    public String getLevelObjectives() {
+        return levelObjectives;
+    }
+
+    public void setLevelObjectives(String levelObjectives) {
+        this.levelObjectives = levelObjectives;
+    }
 
     public GamePlay(ChapterType chapterType, int level, int difficulty, User thisUser,
                     ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
@@ -70,6 +82,13 @@ public abstract class GamePlay {
         this.chapterType = chapterType;
         this.thisUser = thisUser;
         activeInstance = this;
+
+        QuestManager.getInstance().notifyEvent(new LevelStartedEvent(chapterType, level, difficulty));
+
+
+        if (boosted != null) {
+            this.boostedPlants.addAll(boosted);
+        }
 
         for (String pName : plants) {
             this.plants.add(PlantFactory.createBattlePlant(pName, getLevelOfPlant(pName)));
@@ -101,8 +120,13 @@ public abstract class GamePlay {
 
                 for (int x = 1; x < 10; x++) {
                     Position newPosition = new Position(x, y);
-                    Boolean isArable = (x != 9 && x != 8);
+                    Boolean isArable = (x <= 7);
                     Tile newTile = new Tile(newPosition, isArable, 0);
+
+                    if (x == 9 && Math.random() <= 0.60) {
+                        newTile.setLowTide(true);
+                    }
+
                     tiles.add(newTile);
                 }
             }
@@ -239,7 +263,7 @@ public abstract class GamePlay {
                     remainingTime = 0;
                     Position posOfSun = Position.getRowAndColumn(sun.getPosition());
                     System.out.printf("Sun reached the ground at position (%d, %d)\n",
-                            (int) posOfSun.getX(), (int) posOfSun.getY());
+                        (int) posOfSun.getX(), (int) posOfSun.getY());
 
                     if (sun instanceof RadioActiveSun) {
                         Sun regularSun = new Sun(25, sun.getPosition(), 0);
@@ -272,8 +296,8 @@ public abstract class GamePlay {
         }
 
         int sunProducersCount = (int) gamePlants.stream()
-                .filter(p -> p.getCategory() == PlantCategory.SUN_PRODUCER)
-                .count();
+            .filter(p -> p.getCategory() == PlantCategory.SUN_PRODUCER)
+            .count();
 
         boolean[] emptyColumns = new boolean[10];
         boolean[] emptyRows = new boolean[6];
@@ -286,9 +310,9 @@ public abstract class GamePlay {
         }
 
         QuestManager.getInstance().notifyEvent(new LevelWonEvent(
-                lostPlants, mySuns,
-                thisUser.getUserProgress().getGameDifficulty(),
-                sunProducersCount, emptyColumns, emptyRows
+            lostPlants, mySuns,
+            thisUser.getUserProgress().getGameDifficulty(),
+            sunProducersCount, emptyColumns, emptyRows
         ));
     }
 
@@ -361,7 +385,7 @@ public abstract class GamePlay {
             int thisPY = (int) thisPosition.getY();
             String thisPName = thisPlant.getName();
             if (thisPName.equals("IMITATER")) {
-                int number = new Random().nextInt(plants.size()) + 1;
+                int number = new Random().nextInt(plants.size());
                 thisPName = this.plants.get(number).getName();
                 isImitaterBoosted = getLevelOfPlant("IMITATER") == 4;
             }
@@ -401,7 +425,7 @@ public abstract class GamePlay {
             System.out.println("There is no plants in this tile!!");
         } else {
             this.gamePlants.removeIf(p -> p.getRow() == (int) thisPosition.getY()
-                    && p.getColumn() == (int) thisPosition.getX());
+                && p.getColumn() == (int) thisPosition.getX());
             thisTile.removePlant();
             System.out.println("Plunked successfully!");
         }
@@ -422,7 +446,7 @@ public abstract class GamePlay {
             System.out.println("->  " + p.getName() + " | HP : " + p.getCurrentHP());
             PlantStats ps = p.getPlantStats();
             System.out.printf("level: %d | cost: %d | baseHP: %d\n", ps.getLevel(),
-                    ps.getCost(), ps.getBaseHP());
+                ps.getCost(), ps.getBaseHP());
             System.out.println("Abilities :");
             for (String ability : ps.getAbilities()) {
                 System.out.printf(" # %s", ability);
@@ -456,9 +480,9 @@ public abstract class GamePlay {
             final int currentY = y;
 
             Mower currentMower = mowers.stream()
-                    .filter(m -> m.getY() == currentY)
-                    .findFirst()
-                    .orElse(null);
+                .filter(m -> m.getY() == currentY)
+                .findFirst()
+                .orElse(null);
 
             if (currentMower != null && !currentMower.isUsed()) {
                 System.out.print("(M) ");
@@ -497,7 +521,7 @@ public abstract class GamePlay {
             String name = plant.getName();
             int cost = plant.getPlantStats().getCost();
             boolean isPlantable = (this.mySuns >= plant.getPlantStats().getCost())
-                    && (plant.getCurrentCoolDown() == 0 || !plant.getActiveCooldown());
+                && (plant.getCurrentCoolDown() == 0 || !plant.getActiveCooldown());
             int cooldown = (int) plant.getCurrentCoolDown();
 
             System.out.printf("- %s:\n", name);
@@ -692,7 +716,7 @@ public abstract class GamePlay {
 
     public String getKindOfTile(ChapterType thisChapter) {
         if (thisChapter == ChapterType.ANCIENT_EGYPT ||
-                thisChapter == ChapterType.DARK_AGE) {
+            thisChapter == ChapterType.DARK_AGE) {
             return "Grave";
         } else if (thisChapter == ChapterType.FROSTBITE_CAVES) {
             return "Landslide";
@@ -703,10 +727,10 @@ public abstract class GamePlay {
 
     public Tile getTileByPosition(int x, int y) {
         return tiles.stream()
-                .filter(t -> (int) t.getPosition().getX() == x &&
-                        (int) t.getPosition().getY() == y)
-                .findFirst()
-                .orElse(null);
+            .filter(t -> (int) t.getPosition().getX() == x &&
+                (int) t.getPosition().getY() == y)
+            .findFirst()
+            .orElse(null);
     }
 
     public int getRandomTime() {
@@ -805,6 +829,37 @@ public abstract class GamePlay {
 
     public boolean isPaused() {
         return isPaused;
+    }
+
+    private boolean gameOver = false;
+    private boolean won = false;
+
+    /**
+     * True once the level has actually ended (won or lost), as opposed to
+     * isPaused, which is also true while e.g. a UI modal has paused the
+     * game. Set exclusively through endGame(...).
+     */
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    /**
+     * Only meaningful once isGameOver() is true.
+     */
+    public boolean hasWon() {
+        return won;
+    }
+
+    /**
+     * Called by GamePlayType subclasses once win/loss-specific business
+     * logic (onWin(), addGamesPlayed(), etc.) has already run, to mark the
+     * level as finished and pause it so the UI can show the end-of-game
+     * modal.
+     */
+    protected void endGame(boolean won) {
+        this.won = won;
+        this.gameOver = true;
+        this.isPaused = true;
     }
 
     public boolean tryCollectSunByClick(float clickX, float clickY) {
@@ -928,5 +983,49 @@ public abstract class GamePlay {
 
     public ArrayList<IcyWindEffect> getActiveIcyWinds() {
         return activeIcyWinds;
+    }
+
+    public boolean isPlantBoosted(String plantName) {
+        if (boostedPlants.contains(plantName)) return true;
+        PlantType type = PlantType.fromName(plantName);
+        return type != null && thisUser != null && thisUser.getUserProgress() != null
+            && thisUser.getUserProgress().hasGreenhouseBoost(type);
+    }
+
+    public boolean usePlantFood(int gridX, int gridY) {
+        if (this.numOfPlantFood <= 0) return false;
+        Tile tile = getTileByPosition(gridX, gridY);
+        if (tile != null && !tile.getPlants().isEmpty()) {
+            applyPlantFood(gridX, gridY);
+            this.numOfPlantFood--;
+            System.out.printf("Plant food applied on plant at (%d, %d). Remaining: %d\n", gridX, gridY, this.numOfPlantFood);
+            return true;
+        }
+        return false;
+    }
+
+    public void triggerLowTide() {
+        if (chapterType != ChapterType.BIG_WAVE_BEACH) return;
+
+        boolean spawnedAny = false;
+        for (Tile tile : tiles) {
+            if (!tile.isArable() && tile.isLowTide() && !tile.isLowTideTriggered()) {
+                int col = (int) tile.getPosition().getX();
+                int row = (int) tile.getPosition().getY();
+
+                Position spawnPos = new Position(getRealX(col), getRealY(row));
+                Zombie zombie = ZombieFactory.createZombie("DEFAULT", spawnPos);
+                zombie.setRow(row);
+                zombie.setColumn(col);
+                gameZombies.add(zombie);
+
+                tile.setLowTideTriggered(true);
+                spawnedAny = true;
+            }
+        }
+
+        if (spawnedAny) {
+            UIManager.showToast("Low Tide! Zombies rising from the water!", "IMAGE_UI_GENERIC_TIMER_RIBBON_RED");
+        }
     }
 }

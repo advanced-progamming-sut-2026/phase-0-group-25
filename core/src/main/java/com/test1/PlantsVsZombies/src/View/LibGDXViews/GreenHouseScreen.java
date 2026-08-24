@@ -16,6 +16,8 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.test1.PlantsVsZombies.src.Enums.MenuType;
 import com.test1.PlantsVsZombies.src.Menu.GreenHouseMenu;
+import com.test1.PlantsVsZombies.src.Menu.MenuManager;
+import com.test1.PlantsVsZombies.src.Model.Greenhouse.GreenHouseManager;
 import com.test1.PlantsVsZombies.src.Model.Greenhouse.GreenhousePlant;
 import com.test1.PlantsVsZombies.src.Model.User.UserProgress;
 import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
@@ -62,7 +64,7 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
 
     private GreenHouseMenu menuController;
     private Group potGroup;
-    private Label[][] timerLabels = new Label[3][4];
+    private Label[][] timerLabels = new Label[UserProgress.getPotRowCount()][UserProgress.getPotColumnCount()];
 
     // Background projection metrics for exact anchoring
     private float bgWidth;
@@ -127,7 +129,7 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
             shopBtn.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    showToast("Shop opened!", SUCCESS_BG_ASSET_ID);
+                    MenuManager.getInstance().changeMenu(MenuType.Shop);
                 }
             });
             topBar.add(shopBtn).right().top().padRight(15).padTop(15);
@@ -135,7 +137,7 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
             TextButton shopBtn = createSkinButton("Shop", "green", new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    showToast("Shop opened!", SUCCESS_BG_ASSET_ID);
+                    MenuManager.getInstance().changeMenu(MenuType.Shop);
                 }
             });
             topBar.add(shopBtn).right().top().padRight(15).padTop(15);
@@ -191,10 +193,10 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
         boolean[][] unlocked = progress.getUnlockedPots();
         GreenhousePlant[][] plants = progress.getPotPlants();
 
-        timerLabels = new Label[3][4];
+        timerLabels = new Label[UserProgress.getPotRowCount()][UserProgress.getPotColumnCount()];
 
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 4; x++) {
+        for (int y = 0; y < UserProgress.getPotRowCount(); y++) {
+            for (int x = 0; x < UserProgress.getPotColumnCount(); x++) {
                 final int gridX = x + 1;
                 final int gridY = y + 1;
 
@@ -258,8 +260,9 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
                                 }
                             }
                         });
-                        plantBtn.setSize(90f, 36f);
-                        plantBtn.setPosition((POT_WIDTH - 90f) / 2f, (POT_HEIGHT - 36f) / 2f);
+                        plantBtn.getLabel().setFontScale(0.75f);
+                        plantBtn.setSize(90f, 35f);
+                        plantBtn.setPosition((POT_WIDTH - 90f) / 2f, (POT_HEIGHT - 10f) / 2f);
                         potContainer.addActor(plantBtn);
                     } else {
                         // ==========================================
@@ -305,23 +308,25 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
                                     }
                                 }
                             });
-                            collectBtn.setSize(100f, 32f);
+                            collectBtn.getLabel().setFontScale(0.75f);
+                            collectBtn.setSize(100f, 35f);
                             collectBtn.setPosition((POT_WIDTH - 100f) / 2f, -38f);
                             potContainer.addActor(collectBtn);
                         } else {
-                            // Timer Box (Placed above the plant head)
+                            // Timer Box (Scaled smaller and shifted to the top-left of the plant)
                             Table timerBox = new Table();
                             TextureRegion boxRegion = textureBank.region(TIMER_BOX_ASSET_ID);
+
                             if (boxRegion != null) {
-                                timerBox.setBackground(new NinePatchDrawable(new NinePatch(boxRegion, 8, 8, 8, 8)));
+                                timerBox.setBackground(new NinePatchDrawable(new NinePatch(boxRegion, 6, 6, 6, 6)));
                             }
+                            timerBox.getBackground().setMinSize(90, 30);
                             Label timeLbl = createLabel(formatRemainingTime(plant.getRemainingHours()), "FBUSV8C5EI_1_outline", Color.WHITE);
-                            timeLbl.setFontScale(0.55f);
+                            timeLbl.setFontScale(0.45f);
                             timerLabels[y][x] = timeLbl;
-                            timerBox.add(timeLbl).pad(3, 8, 3, 8);
+                            timerBox.add(timeLbl).pad(2, 6, 2, 6);
                             timerBox.pack();
-                            float boxW = timerBox.getWidth();
-                            timerBox.setPosition((POT_WIDTH - boxW) / 2f, 125f);
+                            timerBox.setPosition(-70f, 100f);
                             potContainer.addActor(timerBox);
 
                             // Grow Button (Placed below the pot)
@@ -332,8 +337,8 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
                                     openGrowDialog(gridX, gridY, cost);
                                 }
                             });
-                            growBtn.getLabel().setFontScale(0.55f);
-                            growBtn.setSize(110f, 32f);
+                            growBtn.getLabel().setFontScale(0.75f);
+                            growBtn.setSize(110f, 35f);
                             growBtn.setPosition((POT_WIDTH - 110f) / 2f, -38f);
                             potContainer.addActor(growBtn);
                         }
@@ -352,7 +357,7 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
         title.setFontScale(1.1f);
         box.add(title).colspan(2).padBottom(20).row();
 
-        box.add(createBlackLabel("Cost: 50 Gems")).colspan(2).left().padBottom(20).row();
+        box.add(createBlackLabel("Cost: "+ GreenHouseManager.getPotCost() +" Gems")).colspan(2).left().padBottom(20).row();
 
         TextButton buyBtn = createSkinButton("Buy", "green", new ClickListener() {
             @Override

@@ -32,30 +32,43 @@ public class ShopManager {
 
     private void initPermanentItems() {
 
-        permanentItems.add(new ShopItem(1, "Pot", ShopItemType.POT, 2000, WalletType.COIN, 1, 20,
-                "Unlocks a greenhouse slot (max 20)"));
+        permanentItems.add(new ShopItem(1, "Pot", ShopItemType.POT, 2000, WalletType.COIN, 1, 12,
+            "Unlocks a greenhouse slot (max 12)"));
         permanentItems.add(new ShopItem(2, "Plant Food", ShopItemType.PLANT_FOOD, 3, WalletType.DIAMOND, 1, 3,
-                "Used to boost plants (max 3 stored)"));
+            "Used to boost plants (max 3 stored)"));
         permanentItems.add(new ShopItem(3, "Random Seed Packet", ShopItemType.RANDOM_SEED_PACKET, 1000, WalletType.COIN, 5, 0,
-                "Gives 5 seed packets for a random unlocked plant"));
+            "Gives 5 seed packets for a random unlocked plant"));
         permanentItems.add(new ShopItem(4, "Selective Seed Packet", ShopItemType.SELECTIVE_SEED_PACKET, 5, WalletType.DIAMOND, 10, 0,
-                "Gives 10 seed packets for a chosen unlocked plant"));
+            "Gives 10 seed packets for a chosen unlocked plant"));
         permanentItems.add(new ShopItem(5, "Currency Exchange", ShopItemType.CURRENCY_EXCHANGE, 5, WalletType.DIAMOND, 500, 0,
-                "Exchange 5 gems for 500 coins"));
+            "Exchange 5 gems for 500 coins"));
     }
 
+    private static final int DAILY_OFFER_PRICE = 1600;
+    private static final int DAILY_OFFER_SEED_PACKET_COUNT = 10;
+
+    /**
+     * Picks a brand-new random unlocked plant for today and persists it to
+     * the logged-in user's save data, so it stays the same plant across
+     * app restarts and only changes again once the date rolls over.
+     */
     private void generateDailyOffer() {
-
         User user = UsersManager.getInstance().getLoggedInUser();
-        if (user == null) return;
-        List<PlantType> unlocked = new ArrayList<>(user.getUserProgress().getUnlockedPlantsAndTheirLevels().keySet());
-        if (unlocked.isEmpty()) {
-
-            dailyOffer = new DailyOffer(PlantType.SUNFLOWER, 1600, 10, LocalDate.now());
+        if (user == null) {
+            // No logged-in user to persist against (e.g. viewed pre-login) --
+            // fall back to an in-memory-only offer for this session.
+            dailyOffer = new DailyOffer(PlantType.SUNFLOWER, DAILY_OFFER_PRICE, DAILY_OFFER_SEED_PACKET_COUNT, LocalDate.now());
             return;
         }
-        PlantType randomPlant = unlocked.get(new Random().nextInt(unlocked.size()));
-        dailyOffer = new DailyOffer(randomPlant, 1600, 10, LocalDate.now());
+
+        List<PlantType> unlocked = new ArrayList<>(user.getUserProgress().getUnlockedPlantsAndTheirLevels().keySet());
+        PlantType chosenPlant = unlocked.isEmpty()
+            ? PlantType.SUNFLOWER
+            : unlocked.get(new Random().nextInt(unlocked.size()));
+
+        LocalDate today = LocalDate.now();
+        dailyOffer = new DailyOffer(chosenPlant, DAILY_OFFER_PRICE, DAILY_OFFER_SEED_PACKET_COUNT, today);
+        UsersManager.getInstance().saveDailyOffer(chosenPlant, DAILY_OFFER_PRICE, DAILY_OFFER_SEED_PACKET_COUNT, today);
     }
 
     public List<ShopItem> getPermanentItems() {
@@ -63,6 +76,27 @@ public class ShopManager {
     }
 
     public DailyOffer getDailyOffer() {
+        User user = UsersManager.getInstance().getLoggedInUser();
+
+        if (user != null) {
+            UserProgress progress = user.getUserProgress();
+            // Reuse the persisted offer as long as it was generated today
+            // and its plant is still unlocked -- this is what makes the
+            // offer survive an app restart instead of re-rolling every time.
+            if (progress.hasValidPersistedDailyOffer()) {
+                dailyOffer = new DailyOffer(
+                    progress.getDailyOfferPlantType(),
+                    progress.getDailyOfferPrice(),
+                    progress.getDailyOfferSeedPacketCount(),
+                    progress.getDailyOfferGeneratedDate()
+                );
+                return dailyOffer;
+            }
+            // No valid persisted offer for today (first time, day changed,
+            // or the plant somehow got locked again) -- roll a new one.
+            generateDailyOffer();
+            return dailyOffer;
+        }
 
         if (dailyOffer == null || !dailyOffer.isValidForToday()) {
             generateDailyOffer();

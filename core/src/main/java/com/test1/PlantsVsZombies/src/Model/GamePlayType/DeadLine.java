@@ -10,8 +10,10 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.ZombieFactory;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 import com.test1.PlantsVsZombies.src.Model.User.User;
+import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.Model.Wave.FinalWave;
 import com.test1.PlantsVsZombies.src.Model.Wave.Wave;
+import com.test1.PlantsVsZombies.src.View.LibGDXViews.UIManager;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -21,6 +23,8 @@ public class DeadLine extends GamePlay {
     public DeadLine(ChapterType chapterType, int level, int difficulty, User thisUser,
                     ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         super(chapterType, level, difficulty, thisUser, plants, zombies, boosted);
+        setLevelObjectives("Don't let the zombies reach the red line.");
+
     }
 
     @Override
@@ -59,15 +63,21 @@ public class DeadLine extends GamePlay {
         while (z.hasNext()) {
             Zombie zombie = z.next();
 
-            if (!zombie.isAlive() || zombie.getCurrentHP() <= 0) {
+            if (!zombie.isAlive()) {
                 killAward(this.thisUser);
-                //glowingAward(this);
+                if (zombie.isHalated()) {
+                    glowingAward(zombie.getPosition());
+                }
                 Position zPos = Position.getRowAndColumn(zombie.getPosition());
                 System.out.printf("Zombie of type %s is dead at (%d, %d)\n",
-                        zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
+                    zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
+
+                addKilledZombieCost(zombie.getWaveNum(), zombie.getCost());
                 z.remove();
             } else {
-                zombie.update();
+                if (zombie.getCurrentHP() > 0) {
+                    zombie.update();
+                }
             }
         }
         updateZombieTiles();
@@ -100,22 +110,33 @@ public class DeadLine extends GamePlay {
                     if (!thisWave.getStarted()) {
                         if (thisWave instanceof FinalWave) {
                             System.out.println("The final wave has come.");
+                            UIManager.showToast("FINAL WAVE IS APPROACHING!", "IMAGE_UI_GENERIC_TIMER_RIBBON_RED");
                         } else {
                             System.out.printf("Wave %d started.\n", thisWave.getWaveNum());
+                            UIManager.showToast("Wave " + thisWave.getWaveNum() + " has started!", "IMAGE_UI_GENERIC_VTB");
                         }
                         thisWave.setStarted(true);
                     }
                     String nameOfZ = thisWave.spawnNextZombie().getName();
                     Position positionOfZ;
                     int spawnY = getNextRandomY();
-                    if (chapterType != ChapterType.FROSTBITE_CAVES && Math.random() >= 0.9) {
-                        positionOfZ = new Position(spawnX - 200, getRealY(spawnY));
+
+                    if (chapterType == ChapterType.ANCIENT_EGYPT && Math.random() <= 0.12) {
+                        int targetCol = random.nextInt(3) + 5;
+                        positionOfZ = new Position(getRealX(targetCol), getRealY(spawnY));
+                        addSandstormEffect((float) positionOfZ.getX(), (float) positionOfZ.getY());
+                        UIManager.showToast("Sandstorm Inbound! (Lane " + spawnY + ")", "IMAGE_UI_GENERIC_TIMER_RIBBON_RED");
                     } else {
                         positionOfZ = new Position(spawnX, getRealY(spawnY));
                     }
+
                     Zombie newZombie = ZombieFactory.createZombie(nameOfZ, positionOfZ);
                     System.out.printf("Zombie %s spawned at wave %d in lane %d which costed %d.\n",
-                            nameOfZ, thisWave.getWaveNum(), spawnY, newZombie.getCost());
+                        nameOfZ, thisWave.getWaveNum(), spawnY, newZombie.getCost());
+
+                    if (Math.random() <= 0.05) {
+                        newZombie.setHalated(true);
+                    }
 
                     newZombie.setWaveNum(thisWave.getWaveNum());
                     this.gameZombies.add(newZombie);
@@ -128,13 +149,42 @@ public class DeadLine extends GamePlay {
         }
 
         // Checking if the end of the game (Losing + special lose) + Activate Mowers :
+        for (Zombie zombie : gameZombies) {
+            if (!zombie.isAlive()) continue;
 
+            int zRow = zombie.getRow();
+            float zX = (float) zombie.getPosition().getX();
+
+            if (zombie.getPosition().getX() <= 946) {
+                System.out.println("The zombie ate your brain; LOSER!!!");
+                UsersManager.getInstance().addGamesPlayed();
+                endGame(false);
+            }
+
+            Mower currentMower = mowers.stream()
+                .filter(m -> m.getRow() == zRow)
+                .findFirst()
+                .orElse(null);
+
+            if (currentMower != null) {
+                if (!currentMower.isUsed()) {
+                    if (zX <= currentMower.getX() + 40) {
+                        System.out.println("Lawn mower triggered in row: " + zRow);
+                        currentMower.trigger();
+                    }
+                } else if (currentMower.isDone() && zX <= 390) {
+                    System.out.println("The zombie ate your brain; LOSER!!!");
+                    UsersManager.getInstance().addGamesPlayed();
+                    endGame(false);
+                }
+            }
+        }
 
         // Checking if the end of the game (Winning) :
         if (checkingTheEndOfTheGame()) {
             onWin();
             System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
-            this.isPaused = true;
+            endGame(true);
         }
     }
 }
