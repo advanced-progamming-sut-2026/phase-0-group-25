@@ -89,6 +89,11 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     private static final float CARD_WIDTH = 160f;
     private static final float CARD_HEIGHT = 105f;
     private static final float CARD_SPACING = 11f;
+    private ConveyorCard selectedConveyorCard = null;
+    private TextureRegion conveyorTrackRegion;
+    private static final float BELT_SEGMENT_HEIGHT = 20f;
+    private static final float BELT_WIDTH = 175f;
+    private static final float BELT_SCROLL_SPEED = 60f;
     private static final String PF_BANK_SLOT_ASSET_ID = "IMAGE_UI_HUD_INGAME_PLANTFOOD_BANK_FILLED_SLOT";
     private static final String SOS_TILE_ASSET_ID = "IMAGE_BACKGROUNDS_PROTECT_TILE_PROTECT_TILE_112X125";
     private TextureRegion sosTileRegion;
@@ -186,8 +191,8 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
 
         batch = new SpriteBatch();
         viewport = new ScreenViewport();
-        textureBank = new TextureBank("768", Gdx.files.local("Assets"));
-        player = new PamPlayer(textureBank, Gdx.files.local("Assets"));
+        textureBank = new TextureBank("768", Gdx.files.local("assets/Assets"));
+        player = new PamPlayer(textureBank, Gdx.files.local("assets/Assets"));
 
         String bgKey = getBgPath(gamePlay.getChapterType());
         region = textureBank.region(bgKey);
@@ -217,6 +222,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         progressBarFrame = textureBank.region("IMAGE_UI_HUD_INGAME_PROGRESS_METER");
         iceBlockTexture = textureBank.region("IMAGE_EFFECTS_FROSTBITE_ICE_BLOCK_ZOMBIE_FROSTBITE_ICE_BLOCK_ZOMBIE_153X243");
         lowTideRuneRegion = textureBank.region("IMAGE_PLANT_WATERRABBIT_WATERRABBIT_82X82");
+        conveyorTrackRegion = textureBank.region("IMAGE_UI_CONVEYOR_CONVEYOR_BELT");
         for (int i = 0; i < EGYPT_GRAVE_ASSET_IDS.length; i++) {
             egyptGraveRegions[i] = textureBank.region(EGYPT_GRAVE_ASSET_IDS[i]);
         }
@@ -272,8 +278,10 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                     }
                     return true;
                 }
+
                 if (button == com.badlogic.gdx.Input.Buttons.RIGHT) {
                     selectedPlant = null;
+                    selectedConveyorCard = null;
                     isShovelSelected = false;
                     isPlantFoodSelected = false;
                     return true;
@@ -282,9 +290,9 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                 User user = gamePlay.getThisUser();
                 boolean isDebug = user != null && user.isDebugMode();
 
-
                 if (isDebug && button == com.badlogic.gdx.Input.Buttons.LEFT) {
-                    if (mouseWorldPos.x >= SUN_PLUS_X && mouseWorldPos.x <= SUN_PLUS_X + PLUS_BTN_SIZE &&
+                    if (!(gamePlay instanceof ConveyorBelt) &&
+                        mouseWorldPos.x >= SUN_PLUS_X && mouseWorldPos.x <= SUN_PLUS_X + PLUS_BTN_SIZE &&
                         mouseWorldPos.y >= SUN_PLUS_Y && mouseWorldPos.y <= SUN_PLUS_Y + PLUS_BTN_SIZE) {
                         gamePlay.cheatAddSun(100);
                         return true;
@@ -300,17 +308,16 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                     return true;
                 }
 
-
                 if (mouseWorldPos.x >= SHOVEL_BTN_X && mouseWorldPos.x <= SHOVEL_BTN_X + SHOVEL_BTN_SIZE &&
                     mouseWorldPos.y >= SHOVEL_BTN_Y && mouseWorldPos.y <= SHOVEL_BTN_Y + SHOVEL_BTN_SIZE) {
                     isShovelSelected = !isShovelSelected;
                     if (isShovelSelected) {
                         selectedPlant = null;
+                        selectedConveyorCard = null;
                         isPlantFoodSelected = false;
                     }
                     return true;
                 }
-
 
                 if (mouseWorldPos.x >= PF_BTN_X && mouseWorldPos.x <= PF_BTN_X + PF_BTN_SIZE &&
                     mouseWorldPos.y >= PF_BTN_Y && mouseWorldPos.y <= PF_BTN_Y + PF_BTN_SIZE) {
@@ -318,6 +325,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                         isPlantFoodSelected = !isPlantFoodSelected;
                         if (isPlantFoodSelected) {
                             selectedPlant = null;
+                            selectedConveyorCard = null;
                             isShovelSelected = false;
                         }
                     } else {
@@ -325,7 +333,6 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                     }
                     return true;
                 }
-
 
                 if (gamePlay instanceof PlantWhatYouGet) {
                     PlantWhatYouGet pwyb = (PlantWhatYouGet) gamePlay;
@@ -339,30 +346,50 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                 }
 
 
-                ArrayList<BattlePlant> deck = gamePlay.getPlants();
-                for (int i = 0; i < deck.size(); i++) {
-                    float cardX = CARD_X;
-                    float cardY = CARD_START_Y - (i * (CARD_HEIGHT + CARD_SPACING));
+                if (gamePlay instanceof ConveyorBelt) {
+                    ConveyorBelt cb = (ConveyorBelt) gamePlay;
+                    for (ConveyorCard card : cb.getConveyorCards()) {
+                        float cardX = CARD_X;
+                        float cardY = card.getCurrentY();
 
-                    if (mouseWorldPos.x >= cardX && mouseWorldPos.x <= cardX + CARD_WIDTH &&
-                        mouseWorldPos.y >= cardY && mouseWorldPos.y <= cardY + CARD_HEIGHT) {
+                        if (mouseWorldPos.x >= cardX && mouseWorldPos.x <= cardX + CARD_WIDTH &&
+                            mouseWorldPos.y >= cardY && mouseWorldPos.y <= cardY + CARD_HEIGHT) {
 
-                        BattlePlant clickedPlant = deck.get(i);
-                        boolean canAfford = gamePlay.getMySuns() >= clickedPlant.getPlantStats().getCost();
-
-                        boolean isSetupPhase = (gamePlay instanceof PlantWhatYouGet && !((PlantWhatYouGet) gamePlay).isWaveStarted());
-                        boolean isReady = isSetupPhase || (clickedPlant.getCurrentCoolDown() <= 0 || !clickedPlant.getActiveCooldown());
-
-                        if (canAfford && isReady) {
                             isShovelSelected = false;
                             isPlantFoodSelected = false;
-                            selectedPlant = (selectedPlant == clickedPlant) ? null : clickedPlant;
-                        } else if (!canAfford) {
-                            showError("Not enough sun!");
-                        } else if (!isReady) {
-                            showError("Plant is recharging!");
+                            selectedPlant = (selectedPlant == card.getPlant()) ? null : card.getPlant();
+                            selectedConveyorCard = (selectedPlant != null) ? card : null;
+                            return true;
                         }
-                        return true;
+                    }
+                }
+
+
+                if (!(gamePlay instanceof ConveyorBelt)) {
+                    ArrayList<BattlePlant> deck = gamePlay.getPlants();
+                    for (int i = 0; i < deck.size(); i++) {
+                        float cardX = CARD_X;
+                        float cardY = CARD_START_Y - (i * (CARD_HEIGHT + CARD_SPACING));
+
+                        if (mouseWorldPos.x >= cardX && mouseWorldPos.x <= cardX + CARD_WIDTH &&
+                            mouseWorldPos.y >= cardY && mouseWorldPos.y <= cardY + CARD_HEIGHT) {
+
+                            BattlePlant clickedPlant = deck.get(i);
+                            boolean canAfford = gamePlay.getMySuns() >= clickedPlant.getPlantStats().getCost();
+                            boolean isSetupPhase = (gamePlay instanceof PlantWhatYouGet && !((PlantWhatYouGet) gamePlay).isWaveStarted());
+                            boolean isReady = isSetupPhase || (clickedPlant.getCurrentCoolDown() <= 0 || !clickedPlant.getActiveCooldown());
+
+                            if (canAfford && isReady) {
+                                isShovelSelected = false;
+                                isPlantFoodSelected = false;
+                                selectedPlant = (selectedPlant == clickedPlant) ? null : clickedPlant;
+                            } else if (!canAfford) {
+                                showError("Not enough sun!");
+                            } else if (!isReady) {
+                                showError("Plant is recharging!");
+                            }
+                            return true;
+                        }
                     }
                 }
 
@@ -371,7 +398,6 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                 int row = (int) Math.floor((mouseWorldPos.y - 130) / 150) + 1;
 
                 if (col >= 1 && col <= 9 && row >= 1 && row <= 5) {
-
                     if (isShovelSelected) {
                         gamePlay.plucking(new Position(col, row));
                         isShovelSelected = false;
@@ -392,6 +418,12 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
 
                     if (selectedPlant != null) {
                         gamePlay.planting(selectedPlant, new Position(col, row));
+
+                        if (gamePlay instanceof ConveyorBelt && selectedConveyorCard != null) {
+                            ((ConveyorBelt) gamePlay).removeCard(selectedConveyorCard);
+                            selectedConveyorCard = null;
+                        }
+
                         selectedPlant = null;
                         return true;
                     }
@@ -863,17 +895,20 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             }
         }
 
-        batch.draw(bgHud, 20, 1100, 215, 80);
-        batch.draw(sunIcon, 30, 1110, 60, 60);
-        hudFont.draw(batch, String.valueOf(gamePlay.getMySuns()), 95, 1160);
-
+        if (!(gamePlay instanceof ConveyorBelt)) {
+            batch.draw(bgHud, 20, 1100, 215, 80);
+            batch.draw(sunIcon, 30, 1110, 60, 60);
+            hudFont.draw(batch, String.valueOf(gamePlay.getMySuns()), 95, 1160);
+        }
 
         batch.draw(foodBankRegion, 240, 1100, 230, 80);
 
 
         User currentUser = UsersManager.getInstance().getLoggedInUser();
         if (currentUser != null && currentUser.isDebugMode() && plusIcon != null) {
-            batch.draw(plusIcon, SUN_PLUS_X, SUN_PLUS_Y, PLUS_BTN_SIZE, PLUS_BTN_SIZE);
+            if (!(gamePlay instanceof ConveyorBelt)) {
+                batch.draw(plusIcon, SUN_PLUS_X, SUN_PLUS_Y, PLUS_BTN_SIZE, PLUS_BTN_SIZE);
+            }
             batch.draw(plusIcon, PF_PLUS_X, PF_PLUS_Y, PLUS_BTN_SIZE, PLUS_BTN_SIZE);
         }
 
@@ -921,58 +956,57 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             batch.setColor(Color.WHITE);
         }
 
-        ArrayList<BattlePlant> deck = gamePlay.getPlants();
-        for (int i = 0; i < deck.size(); i++) {
-            BattlePlant p = deck.get(i);
-            PlantType pType = PlantType.fromName(p.getName());
-            if (pType == null) continue;
 
-            TextureRegion plantIcon = textureBank.region(pType.getIconAssetId());
-            float cardX = CARD_X;
-            float cardY = CARD_START_Y - (i * (CARD_HEIGHT + CARD_SPACING));
+        if (!(gamePlay instanceof ConveyorBelt)) {
+            ArrayList<BattlePlant> deck = gamePlay.getPlants();
+            for (int i = 0; i < deck.size(); i++) {
+                BattlePlant p = deck.get(i);
+                PlantType pType = PlantType.fromName(p.getName());
+                if (pType == null) continue;
 
-            boolean canAfford = gamePlay.getMySuns() >= p.getPlantStats().getCost();
-            boolean isReady = p.getCurrentCoolDown() <= 0 || !p.getActiveCooldown();
+                TextureRegion plantIcon = textureBank.region(pType.getIconAssetId());
+                float cardX = CARD_X;
+                float cardY = CARD_START_Y - (i * (CARD_HEIGHT + CARD_SPACING));
 
-            if (!canAfford || !isReady) {
-                batch.setColor(0.4f, 0.4f, 0.4f, 0.85f);
-            } else if (selectedPlant == p) {
-                batch.setColor(0.6f, 1f, 0.6f, 1f);
-            } else {
+                boolean canAfford = gamePlay.getMySuns() >= p.getPlantStats().getCost();
+                boolean isReady = p.getCurrentCoolDown() <= 0 || !p.getActiveCooldown();
+
+                if (!canAfford || !isReady) {
+                    batch.setColor(0.4f, 0.4f, 0.4f, 0.85f);
+                } else if (selectedPlant == p) {
+                    batch.setColor(0.6f, 1f, 0.6f, 1f);
+                } else {
+                    batch.setColor(Color.WHITE);
+                }
+
+                boolean isBoosted = gamePlay.isPlantBoosted(p.getName());
+                TextureRegion currentCardBg = (isBoosted && cardBoostedBgRegion != null)
+                    ? cardBoostedBgRegion
+                    : cardBgRegion;
+
+                if (currentCardBg != null) {
+                    batch.draw(currentCardBg, cardX, cardY, CARD_WIDTH, CARD_HEIGHT);
+                }
+
+                if (plantIcon != null) {
+                    float availW = CARD_WIDTH - 20f;
+                    float availH = CARD_HEIGHT - 35f;
+                    float origW = plantIcon.getRegionWidth();
+                    float origH = plantIcon.getRegionHeight();
+                    float scale = Math.min(availW / origW, availH / origH);
+                    float finalW = origW * scale;
+                    float finalH = origH * scale;
+                    float plantDrawX = cardX + (CARD_WIDTH - finalW) / 2f;
+                    float plantDrawY = cardY + 22f + (availH - finalH) / 2f;
+
+                    batch.draw(plantIcon, plantDrawX, plantDrawY, finalW, finalH);
+                }
+
                 batch.setColor(Color.WHITE);
+                hudFont.getData().setScale(0.40f);
+                hudFont.draw(batch, String.valueOf(p.getPlantStats().getCost()), cardX + CARD_WIDTH - 42, cardY + 22);
+                hudFont.getData().setScale(1f);
             }
-
-            boolean isBoosted = gamePlay.isPlantBoosted(p.getName());
-            TextureRegion currentCardBg = (isBoosted && cardBoostedBgRegion != null)
-                ? cardBoostedBgRegion
-                : cardBgRegion;
-
-            if (currentCardBg != null) {
-                batch.draw(currentCardBg, cardX, cardY, CARD_WIDTH, CARD_HEIGHT);
-            }
-
-            if (plantIcon != null) {
-                float availW = CARD_WIDTH - 20f;
-                float availH = CARD_HEIGHT - 35f;
-
-                float origW = plantIcon.getRegionWidth();
-                float origH = plantIcon.getRegionHeight();
-                float scale = Math.min(availW / origW, availH / origH);
-
-                float finalW = origW * scale;
-                float finalH = origH * scale;
-                float plantDrawX = cardX + (CARD_WIDTH - finalW) / 2f;
-                float plantDrawY = cardY + 22f + (availH - finalH) / 2f;
-
-                batch.draw(plantIcon, plantDrawX, plantDrawY, finalW, finalH);
-            }
-
-            batch.setColor(Color.WHITE);
-
-
-            hudFont.getData().setScale(0.40f);
-            hudFont.draw(batch, String.valueOf(p.getPlantStats().getCost()), cardX + CARD_WIDTH - 42, cardY + 22);
-            hudFont.getData().setScale(1f);
         }
 
         if (shovelIcon != null) {
@@ -1029,8 +1063,10 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         }
 
         boolean isSetupPhase = (gamePlay instanceof PlantWhatYouGet && !((PlantWhatYouGet) gamePlay).isWaveStarted());
+        boolean isConveyor = (gamePlay instanceof ConveyorBelt);
 
-        if (!isSetupPhase) {
+        if (!isSetupPhase && !isConveyor) {
+            ArrayList<BattlePlant> deck = gamePlay.getPlants();
             for (int i = 0; i < deck.size(); i++) {
                 BattlePlant p = deck.get(i);
                 double cd = p.getCurrentCoolDown();
@@ -1151,8 +1187,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             hudFont.getData().setScale(1f);
             hudFont.setColor(Color.WHITE);
         }
-
-        if (gamePlay instanceof LoveYourPlants) {
+        else if (gamePlay instanceof LoveYourPlants) {
             LoveYourPlants lyp = (LoveYourPlants) gamePlay;
             int lost = lyp.getNumOfLost();
             int maxAllowed = 5;
@@ -1173,8 +1208,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             hudFont.getData().setScale(1f);
             hudFont.setColor(Color.WHITE);
         }
-
-        if (gamePlay instanceof PlantWhatYouGet) {
+        else if (gamePlay instanceof PlantWhatYouGet) {
             PlantWhatYouGet pwyb = (PlantWhatYouGet) gamePlay;
             if (!pwyb.isWaveStarted()) {
                 float pulse = 0.85f + 0.15f * (float) Math.sin(stateTime * 6f);
@@ -1187,6 +1221,57 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                 hudFont.draw(batch, "LET'S ROCK!", START_WAVE_BTN_X + 28, START_WAVE_BTN_Y + 50);
                 hudFont.getData().setScale(1f);
                 hudFont.setColor(Color.WHITE);
+            }
+        }
+        else if (gamePlay instanceof ConveyorBelt) {
+            for (ConveyorCard card : ((ConveyorBelt) gamePlay).getConveyorCards()) {
+                card.update(effectiveDelta);
+            }
+        }
+
+        if (gamePlay instanceof ConveyorBelt && conveyorTrackRegion != null) {
+            float beltX = CARD_X - 7f;
+            float beltBottom = 120f;
+            float beltTop = 1110f;
+            float scrollOffset = (stateTime * BELT_SCROLL_SPEED) % BELT_SEGMENT_HEIGHT;
+
+            for (float y = beltBottom - BELT_SEGMENT_HEIGHT; y <= beltTop + BELT_SEGMENT_HEIGHT; y += BELT_SEGMENT_HEIGHT) {
+                float drawY = y + scrollOffset;
+                if (drawY >= beltBottom && drawY <= beltTop) {
+                    batch.draw(conveyorTrackRegion, beltX, drawY, BELT_WIDTH, BELT_SEGMENT_HEIGHT);
+                }
+            }
+        }
+
+        if (gamePlay instanceof ConveyorBelt) {
+            for (ConveyorCard card : ((ConveyorBelt) gamePlay).getConveyorCards()) {
+                BattlePlant p = card.getPlant();
+                PlantType pType = PlantType.fromName(p.getName());
+                if (pType == null) continue;
+
+                TextureRegion plantIcon = textureBank.region(pType.getIconAssetId());
+                float cardX = CARD_X;
+                float cardY = card.getCurrentY();
+
+                if (selectedPlant == p) {
+                    batch.setColor(0.6f, 1f, 0.6f, 1f);
+                } else {
+                    batch.setColor(Color.WHITE);
+                }
+
+                if (cardBgRegion != null) {
+                    batch.draw(cardBgRegion, cardX, cardY, CARD_WIDTH, CARD_HEIGHT);
+                }
+
+                if (plantIcon != null) {
+                    float availW = CARD_WIDTH - 20f;
+                    float availH = CARD_HEIGHT - 35f;
+                    float scale = Math.min(availW / plantIcon.getRegionWidth(), availH / plantIcon.getRegionHeight());
+                    float finalW = plantIcon.getRegionWidth() * scale;
+                    float finalH = plantIcon.getRegionHeight() * scale;
+                    batch.draw(plantIcon, cardX + (CARD_WIDTH - finalW) / 2f, cardY + 22f + (availH - finalH) / 2f, finalW, finalH);
+                }
+                batch.setColor(Color.WHITE);
             }
         }
 

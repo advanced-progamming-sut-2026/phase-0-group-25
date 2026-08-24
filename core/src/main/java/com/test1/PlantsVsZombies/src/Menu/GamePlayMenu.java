@@ -11,6 +11,7 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
 import com.test1.PlantsVsZombies.src.View.LibGDXViews.GamePlayScreen;
 import com.test1.PlantsVsZombies.src.View.LibGDXViews.VasebreakerScreen;
+import com.test1.PlantsVsZombies.src.View.LibGDXViews.WallnutBowlingScreen;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.BaseView;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.GamePlayMenuView;
 
@@ -35,9 +36,12 @@ public class GamePlayMenu extends Menu {
         GamePlayMenu.gamePlay = gamePlay;
         if (gamePlay instanceof VaseBreaker) {
             this.gamePlayMenuView = new VasebreakerScreen((VaseBreaker) gamePlay);
+        } else if (gamePlay instanceof  WalnutBowling) {
+            this.gamePlayMenuView = new WallnutBowlingScreen((WalnutBowling) gamePlay);
         } else {
             this.gamePlayMenuView = new GamePlayScreen(gamePlay);
-        }    }
+        }
+    }
 
     public void startSession(GamePlay gamePlay, GamePlayMenuView gamePlayMenuView) {
         if (this.gamePlayMenuView instanceof Screen) {
