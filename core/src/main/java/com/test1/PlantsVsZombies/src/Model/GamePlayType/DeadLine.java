@@ -158,7 +158,7 @@ public class DeadLine extends GamePlay {
             if (zombie.getPosition().getX() <= 946) {
                 System.out.println("The zombie ate your brain; LOSER!!!");
                 UsersManager.getInstance().addGamesPlayed();
-                this.isPaused = true;
+                endGame(false);
             }
 
             Mower currentMower = mowers.stream()
@@ -175,7 +175,7 @@ public class DeadLine extends GamePlay {
                 } else if (currentMower.isDone() && zX <= 390) {
                     System.out.println("The zombie ate your brain; LOSER!!!");
                     UsersManager.getInstance().addGamesPlayed();
-                    this.isPaused = true;
+                    endGame(false);
                 }
             }
         }
@@ -184,7 +184,7 @@ public class DeadLine extends GamePlay {
         if (checkingTheEndOfTheGame()) {
             onWin();
             System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
-            this.isPaused = true;
+            endGame(true);
         }
     }
 }

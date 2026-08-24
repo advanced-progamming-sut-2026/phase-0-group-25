@@ -43,10 +43,10 @@ public class IZombie extends GamePlay {
 
     public void setPlants() {
         String[] plantTypes = {
-                PlantType.PEASHOOTER.getName(),
-                PlantType.SUNFLOWER.getName(),
-                PlantType.WALL_NUT.getName(),
-                PlantType.SNOW_PEA.getName()
+            PlantType.PEASHOOTER.getName(),
+            PlantType.SUNFLOWER.getName(),
+            PlantType.WALL_NUT.getName(),
+            PlantType.SNOW_PEA.getName()
         };
 
         for (int y = 1; y <= 5; y++) {
@@ -121,7 +121,7 @@ public class IZombie extends GamePlay {
                 if (generated > 0) {
                     mySuns += generated;
                     System.out.printf("SunZombie at row %d generated %d suns! Total Suns: %d\n",
-                            (int) sz.getPosition().getY(), generated, mySuns);
+                        (int) sz.getPosition().getY(), generated, mySuns);
                 }
             } else {
                 szIter.remove();
@@ -134,7 +134,7 @@ public class IZombie extends GamePlay {
             if (!z.isAlive() || z.getCurrentHP() <= 0) {
                 Position zPos = Position.getRowAndColumn(z.getPosition());
                 System.out.printf("Zombie of type %s is dead at (%d, %d)\n",
-                        z.getName(), (int) zPos.getX(), (int) zPos.getY());
+                    z.getName(), (int) zPos.getX(), (int) zPos.getY());
                 zIter.remove();
                 continue;
             }
@@ -195,7 +195,7 @@ public class IZombie extends GamePlay {
         if (allBrainsEaten) {
             onWin();
             System.out.println("VICTORY! You ate all 5 brains and defeated the plants!");
-            Pause();
+            endGame(true);
             return;
         }
 
@@ -203,7 +203,7 @@ public class IZombie extends GamePlay {
 
         if (mySuns < minCost && gameZombies.isEmpty()) {
             System.out.println("GAME OVER! You ran out of suns and zombies before eating all brains.");
-            Pause();
+            endGame(false);
         }
     }
 

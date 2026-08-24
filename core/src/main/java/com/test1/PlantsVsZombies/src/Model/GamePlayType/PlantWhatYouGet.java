@@ -162,14 +162,14 @@ public class PlantWhatYouGet extends GamePlay {
                     mower.trigger();
                 } else if (mower.isDone() && zX <= 390) {
                     UsersManager.getInstance().addGamesPlayed();
-                    this.isPaused = true;
+                    endGame(false);
                 }
             }
         }
 
         if (checkingTheEndOfTheGame()) {
             onWin();
-            this.isPaused = true;
+            endGame(true);
         }
     }
 }

@@ -2,13 +2,27 @@ package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
@@ -30,6 +44,7 @@ import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.GamePlayMenuView;
 import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
+import pvz.skin.BorderedTable;
 import com.test1.PlantsVsZombies.src.Model.IcyWindEffect;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -69,7 +84,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     private static final float CARD_HEIGHT = 105f;
     private static final float CARD_SPACING = 11f;
     private static final String PF_BANK_SLOT_ASSET_ID = "IMAGE_UI_HUD_INGAME_PLANTFOOD_BANK_FILLED_SLOT";
-        private static final String SOS_TILE_ASSET_ID = "IMAGE_BACKGROUNDS_PROTECT_TILE_PROTECT_TILE_112X125";
+    private static final String SOS_TILE_ASSET_ID = "IMAGE_BACKGROUNDS_PROTECT_TILE_PROTECT_TILE_112X125";
     private TextureRegion sosTileRegion;
     private static final float DEADLINE_X = 943f;
     private TextureRegion pfBankSlotRegion;
@@ -146,6 +161,12 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     private static final float START_WAVE_BTN_W = 220f;
     private static final float START_WAVE_BTN_H = 75f;
 
+    // ---- Objectives / end-of-game modal system ----
+    private Stage uiStage;
+    private Skin skin;
+    private Stack modalStack;
+    private boolean endModalShown = false;
+
     public GamePlayScreen(GamePlay gamePlay) {
         this.gamePlay = gamePlay;
     }
@@ -208,11 +229,16 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         }
         if (gamePlay.getChapterType() == ChapterType.ANCIENT_EGYPT && gamePlay.getLevel() == 1) {
             introCutscene = new IntroDialogueCutscene(textureBank);
-            gamePlay.Pause();
         }
         necromancyRuneRegion = textureBank.region("IMAGE_EFFECTS_GRIMROSE_UNDERZOMBIE_EFFECT_GRIMROSE_UNDERZOMBIE_EFFECT_167X52");
 
-        Gdx.input.setInputProcessor(new InputAdapter() {
+        skin = Main.getInstance().getSkin();
+        uiStage = new Stage(new ScreenViewport());
+        modalStack = new Stack();
+        modalStack.setFillParent(true);
+        uiStage.addActor(modalStack);
+
+        InputAdapter gameInputAdapter = new InputAdapter() {
             @Override
             public boolean mouseMoved(int screenX, int screenY) {
                 camera.unproject(mouseWorldPos.set(screenX, screenY, 0));
@@ -367,6 +393,48 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
 
                 return false;
             }
+        };
+
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(uiStage);
+        multiplexer.addProcessor(gameInputAdapter);
+        Gdx.input.setInputProcessor(multiplexer);
+
+        showObjectivesModal();
+    }
+
+    // ==========================================================
+    // OBJECTIVES MODAL (beginning of level, before any dialog)
+    // ==========================================================
+    private void showObjectivesModal() {
+        gamePlay.isPaused = true;
+
+        BorderedTable box = new BorderedTable();
+        box.pad(30);
+
+        Label title = createModalLabel("Level Objective", Color.BLACK);
+        title.setFontScale(1.15f);
+        box.add(title).padBottom(16).row();
+
+        String objectives = gamePlay.getLevelObjectives();
+        Label objectiveLabel = createModalLabel(objectives != null ? objectives : "", Color.BLACK);
+        objectiveLabel.setWrap(true);
+        objectiveLabel.setAlignment(Align.center);
+        box.add(objectiveLabel).width(440).padBottom(20).row();
+
+        Label hint = createModalLabel("(tap anywhere to continue)", Color.DARK_GRAY);
+        hint.setFontScale(0.8f);
+        box.add(hint);
+
+        // Clicking anywhere (scrim or the box itself) dismisses this modal
+        // and resumes the game -- unless there's an intro dialogue waiting,
+        // in which case dismissing just reveals it and it stays paused
+        // until the dialogue itself finishes (existing click-to-advance
+        // logic in the gameplay input adapter handles that).
+        showModal(box, () -> {
+            if (introCutscene == null || introCutscene.isFinished()) {
+                gamePlay.isPaused = false;
+            }
         });
     }
 
@@ -390,6 +458,10 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             while (timeAccumulator >= TICK_RATE) {
                 gamePlay.update();
                 timeAccumulator -= TICK_RATE;
+            }
+
+            if (!endModalShown && gamePlay.isGameOver()) {
+                showEndGameModal();
             }
 
             for (Mower mower : gamePlay.getMowers()) {
@@ -1011,6 +1083,9 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             introCutscene.render(batch, shapeRenderer, player, hudFont, stateTime);
         }
 
+        uiStage.act(delta);
+        uiStage.draw();
+
         UIManager.renderToasts(delta);
     }
 
@@ -1019,6 +1094,9 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         viewport.update(width, height, true);
         camera.position.set(1920 / 2f, 1200 / 2f, 0);
         camera.update();
+        if (uiStage != null) {
+            uiStage.getViewport().update(width, height, true);
+        }
         UIManager.resizeToasts(width, height);
     }
 
@@ -1027,6 +1105,12 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         shapeRenderer.dispose();
         batch.dispose();
         hudFont.dispose();
+        if (uiStage != null) {
+            uiStage.dispose();
+        }
+        if (modalScrimTexture != null) {
+            modalScrimTexture.dispose();
+        }
     }
 
     private String getBgPath(ChapterType chapterType) {

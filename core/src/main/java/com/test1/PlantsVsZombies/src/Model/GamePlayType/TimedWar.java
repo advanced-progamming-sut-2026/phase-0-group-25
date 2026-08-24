@@ -172,7 +172,7 @@ public class TimedWar extends GamePlay {
                 } else if (currentMower.isDone() && zX <= 390) {
                     System.out.println("The zombie ate your brain; LOSER!!!");
                     UsersManager.getInstance().addGamesPlayed();
-                    this.isPaused = true;
+                    endGame(false);
                 }
             }
         }
@@ -182,14 +182,14 @@ public class TimedWar extends GamePlay {
             System.out.println("You must kill at least 7 zombies within 60 seconds!!");
             System.out.println("The zombie ate your brain; LOSER!!!");
             UsersManager.getInstance().addGamesPlayed();
-            this.isPaused = true;
+            endGame(false);
         }
 
         // Checking if the end of the game (Winning) :
         if (checkingTheEndOfTheGame()) {
             onWin();
             System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
-            this.isPaused = true;
+            endGame(true);
         }
     }
 

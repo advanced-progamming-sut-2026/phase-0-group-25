@@ -107,7 +107,7 @@ public class WalnutBowling extends GamePlay {
                 //glowingAward(this);
                 Position zPos = Position.getRowAndColumn(zombie.getPosition());
                 System.out.printf("Zombie of type %s is dead at (%d, %d)\n",
-                        zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
+                    zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
                 z.remove();
             } else {
                 zombie.update();
@@ -138,7 +138,7 @@ public class WalnutBowling extends GamePlay {
                     }
                     Zombie newZombie = ZombieFactory.createZombie(nameOfZ, positionOfZ);
                     System.out.printf("Zombie %s spawned at wave %d in lane %d which costed %d.\n",
-                            nameOfZ, thisWave.getWaveNum(), spawnY, newZombie.getCost());
+                        nameOfZ, thisWave.getWaveNum(), spawnY, newZombie.getCost());
                     this.gameZombies.add(newZombie);
                     thisWave.addZombieToSpawned(newZombie);
                 }
@@ -155,7 +155,7 @@ public class WalnutBowling extends GamePlay {
         if (checkingTheEndOfTheGame()) {
             onWin();
             System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
-            this.isPaused = true;
+            endGame(true);
         }
     }
 

@@ -182,7 +182,7 @@ public class SaveOurSeeds extends GamePlay {
                 } else if (currentMower.isDone() && zX <= 390) {
                     System.out.println("The zombie ate your brain; LOSER!!!");
                     UsersManager.getInstance().addGamesPlayed();
-                    this.isPaused = true;
+                    endGame(false);
                 }
             }
         }
@@ -192,14 +192,14 @@ public class SaveOurSeeds extends GamePlay {
             System.out.println("You couldn't save your important plant!!");
             System.out.println("The zombie ate your brain; LOSER!!!");
             UsersManager.getInstance().addGamesPlayed();
-            this.isPaused = true;
+            endGame(false);
         }
 
         // Checking if the end of the game (Winning) :
         if (checkingTheEndOfTheGame()) {
             onWin();
             System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
-            this.isPaused = true;
+            endGame(true);
         }
     }
 

@@ -831,6 +831,37 @@ public abstract class GamePlay {
         return isPaused;
     }
 
+    private boolean gameOver = false;
+    private boolean won = false;
+
+    /**
+     * True once the level has actually ended (won or lost), as opposed to
+     * isPaused, which is also true while e.g. a UI modal has paused the
+     * game. Set exclusively through endGame(...).
+     */
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    /**
+     * Only meaningful once isGameOver() is true.
+     */
+    public boolean hasWon() {
+        return won;
+    }
+
+    /**
+     * Called by GamePlayType subclasses once win/loss-specific business
+     * logic (onWin(), addGamesPlayed(), etc.) has already run, to mark the
+     * level as finished and pause it so the UI can show the end-of-game
+     * modal.
+     */
+    protected void endGame(boolean won) {
+        this.won = won;
+        this.gameOver = true;
+        this.isPaused = true;
+    }
+
     public boolean tryCollectSunByClick(float clickX, float clickY) {
         Sun targetSun = null;
 
