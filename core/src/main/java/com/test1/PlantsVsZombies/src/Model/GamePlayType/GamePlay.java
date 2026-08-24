@@ -263,7 +263,7 @@ public abstract class GamePlay {
                     remainingTime = 0;
                     Position posOfSun = Position.getRowAndColumn(sun.getPosition());
                     System.out.printf("Sun reached the ground at position (%d, %d)\n",
-                            (int) posOfSun.getX(), (int) posOfSun.getY());
+                        (int) posOfSun.getX(), (int) posOfSun.getY());
 
                     if (sun instanceof RadioActiveSun) {
                         Sun regularSun = new Sun(25, sun.getPosition(), 0);
@@ -296,8 +296,8 @@ public abstract class GamePlay {
         }
 
         int sunProducersCount = (int) gamePlants.stream()
-                .filter(p -> p.getCategory() == PlantCategory.SUN_PRODUCER)
-                .count();
+            .filter(p -> p.getCategory() == PlantCategory.SUN_PRODUCER)
+            .count();
 
         boolean[] emptyColumns = new boolean[10];
         boolean[] emptyRows = new boolean[6];
@@ -310,9 +310,9 @@ public abstract class GamePlay {
         }
 
         QuestManager.getInstance().notifyEvent(new LevelWonEvent(
-                lostPlants, mySuns,
-                thisUser.getUserProgress().getGameDifficulty(),
-                sunProducersCount, emptyColumns, emptyRows
+            lostPlants, mySuns,
+            thisUser.getUserProgress().getGameDifficulty(),
+            sunProducersCount, emptyColumns, emptyRows
         ));
     }
 
@@ -425,7 +425,7 @@ public abstract class GamePlay {
             System.out.println("There is no plants in this tile!!");
         } else {
             this.gamePlants.removeIf(p -> p.getRow() == (int) thisPosition.getY()
-                    && p.getColumn() == (int) thisPosition.getX());
+                && p.getColumn() == (int) thisPosition.getX());
             thisTile.removePlant();
             System.out.println("Plunked successfully!");
         }
@@ -446,7 +446,7 @@ public abstract class GamePlay {
             System.out.println("->  " + p.getName() + " | HP : " + p.getCurrentHP());
             PlantStats ps = p.getPlantStats();
             System.out.printf("level: %d | cost: %d | baseHP: %d\n", ps.getLevel(),
-                    ps.getCost(), ps.getBaseHP());
+                ps.getCost(), ps.getBaseHP());
             System.out.println("Abilities :");
             for (String ability : ps.getAbilities()) {
                 System.out.printf(" # %s", ability);
@@ -480,9 +480,9 @@ public abstract class GamePlay {
             final int currentY = y;
 
             Mower currentMower = mowers.stream()
-                    .filter(m -> m.getY() == currentY)
-                    .findFirst()
-                    .orElse(null);
+                .filter(m -> m.getY() == currentY)
+                .findFirst()
+                .orElse(null);
 
             if (currentMower != null && !currentMower.isUsed()) {
                 System.out.print("(M) ");
@@ -521,7 +521,7 @@ public abstract class GamePlay {
             String name = plant.getName();
             int cost = plant.getPlantStats().getCost();
             boolean isPlantable = (this.mySuns >= plant.getPlantStats().getCost())
-                    && (plant.getCurrentCoolDown() == 0 || !plant.getActiveCooldown());
+                && (plant.getCurrentCoolDown() == 0 || !plant.getActiveCooldown());
             int cooldown = (int) plant.getCurrentCoolDown();
 
             System.out.printf("- %s:\n", name);
@@ -716,7 +716,7 @@ public abstract class GamePlay {
 
     public String getKindOfTile(ChapterType thisChapter) {
         if (thisChapter == ChapterType.ANCIENT_EGYPT ||
-                thisChapter == ChapterType.DARK_AGE) {
+            thisChapter == ChapterType.DARK_AGE) {
             return "Grave";
         } else if (thisChapter == ChapterType.FROSTBITE_CAVES) {
             return "Landslide";
@@ -727,10 +727,10 @@ public abstract class GamePlay {
 
     public Tile getTileByPosition(int x, int y) {
         return tiles.stream()
-                .filter(t -> (int) t.getPosition().getX() == x &&
-                        (int) t.getPosition().getY() == y)
-                .findFirst()
-                .orElse(null);
+            .filter(t -> (int) t.getPosition().getX() == x &&
+                (int) t.getPosition().getY() == y)
+            .findFirst()
+            .orElse(null);
     }
 
     public int getRandomTime() {

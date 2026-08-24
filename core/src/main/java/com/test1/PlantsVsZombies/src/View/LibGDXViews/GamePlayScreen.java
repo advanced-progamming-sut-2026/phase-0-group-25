@@ -25,8 +25,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.test1.PlantsVsZombies.Main;
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
+import com.test1.PlantsVsZombies.src.Enums.MenuType;
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
+import com.test1.PlantsVsZombies.src.Menu.MenuManager;
 import com.test1.PlantsVsZombies.src.Model.DroppedPlantFood;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.*;
 import com.test1.PlantsVsZombies.src.Model.Mower;
@@ -180,13 +183,13 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
 
         batch = new SpriteBatch();
         viewport = new ScreenViewport();
-        textureBank = new TextureBank("768", Gdx.files.local("assets/Assets"));
-        player = new PamPlayer(textureBank, Gdx.files.local("assets/Assets"));
+        textureBank = new TextureBank("768", Gdx.files.local("Assets"));
+        player = new PamPlayer(textureBank, Gdx.files.local("Assets"));
 
         String bgKey = getBgPath(gamePlay.getChapterType());
         region = textureBank.region(bgKey);
 
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.local("assets/pvz.ttf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.local("pvz.ttf"));
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
         parameter.size = 48;
         parameter.color = Color.WHITE;
@@ -436,6 +439,115 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                 gamePlay.isPaused = false;
             }
         });
+    }
+
+    // ==========================================================
+    // END OF GAME MODAL (win or loss)
+    // ==========================================================
+    private void showEndGameModal() {
+        endModalShown = true;
+        gamePlay.isPaused = true;
+
+        boolean won = gamePlay.hasWon();
+
+        BorderedTable box = new BorderedTable();
+        box.pad(30);
+
+        Label title = createModalLabel(won ? "Congratulations!" : "You Lost!", Color.BLACK);
+        title.setFontScale(1.25f);
+        box.add(title).colspan(2).padBottom(18).row();
+
+        Label message = createModalLabel(
+            won ? "You beat the level! Great job!" : "The zombies got through. Better luck next time!",
+            Color.BLACK
+        );
+        message.setWrap(true);
+        message.setAlignment(Align.center);
+        box.add(message).width(420).colspan(2).padBottom(24).row();
+
+        TextButton exitButton = createModalButton("Exit", () ->
+            MenuManager.getInstance().changeMenu(MenuType.Game)
+        );
+
+        if (won) {
+            box.add(exitButton).colspan(2);
+        } else {
+            TextButton tryAgainButton = createModalButton("Try Again", () -> {
+                int level = gamePlay.getLevel();
+                MenuManager.getInstance().getGameMenu().startGame(level);
+            });
+
+            Table buttonRow = new Table();
+            buttonRow.add(tryAgainButton).padRight(14);
+            buttonRow.add(exitButton);
+            box.add(buttonRow).colspan(2);
+        }
+
+        // No click-anywhere dismissal here -- only the buttons above
+        // should close this modal.
+        showModal(box, null);
+    }
+
+    // ==========================================================
+    // Shared modal plumbing (self-contained since GamePlayScreen does
+    // not extend AbstractScreen and therefore has no Stage of its own
+    // otherwise).
+    // ==========================================================
+    private Texture modalScrimTexture;
+
+    private void showModal(Table content, Runnable onDismissAnywhere) {
+        modalStack.clearChildren();
+
+        if (modalScrimTexture == null) {
+            Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+            pixmap.setColor(0f, 0f, 0f, 0.6f);
+            pixmap.fill();
+            modalScrimTexture = new Texture(pixmap);
+            pixmap.dispose();
+        }
+
+        Image scrim = new Image(new TextureRegionDrawable(new TextureRegion(modalScrimTexture)));
+        scrim.setFillParent(true);
+        modalStack.addActor(scrim);
+
+        Table centerWrapper = new Table();
+        centerWrapper.setFillParent(true);
+        centerWrapper.add(content);
+        modalStack.addActor(centerWrapper);
+
+        if (onDismissAnywhere != null) {
+            modalStack.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    closeModal();
+                    onDismissAnywhere.run();
+                }
+            });
+        }
+    }
+
+    private void closeModal() {
+        modalStack.clearChildren();
+    }
+
+    private Label createModalLabel(String text, Color color) {
+        BitmapFont font = skin.get("FBUSV8C5EI_2", BitmapFont.class);
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = font;
+        style.fontColor = color;
+        return new Label(text, style);
+    }
+
+    private TextButton createModalButton(String text, Runnable onClick) {
+        TextButton button = new TextButton(text, skin, "green");
+        button.pad(10, 22, 10, 22);
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                onClick.run();
+            }
+        });
+        return button;
     }
 
     @Override
