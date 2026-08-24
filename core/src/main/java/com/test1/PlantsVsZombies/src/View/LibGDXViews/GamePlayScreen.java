@@ -188,8 +188,8 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
 
         batch = new SpriteBatch();
         viewport = new ScreenViewport();
-        textureBank = new TextureBank("768", Gdx.files.local("Assets"));
-        player = new PamPlayer(textureBank, Gdx.files.local("Assets"));
+        textureBank = new TextureBank("768", Gdx.files.local("assets/Assets"));
+        player = new PamPlayer(textureBank, Gdx.files.local("assets/Assets"));
 
         String bgKey = getBgPath(gamePlay.getChapterType());
         region = textureBank.region(bgKey);

@@ -9,16 +9,16 @@ public class BigWalnut extends Walnut {
     }
 
     @Override
-    public void update(WalnutBowling game) {
-        x += speed;
+    public void update(WalnutBowling game, float delta) {
+        x += speed * delta;
 
         for (Zombie z : game.getGameZombies()) {
-            if (z.isAlive() && Math.abs(z.getPosition().getX() - x) < 5 && Math.abs(z.getPosition().getY() - y) < 5) {
-                z.takeDamage(1800);
-                System.out.println("CRUNCH! Big Walnut crushed a zombie!");
+            if (z.isAlive() && Math.abs(z.getPosition().getX() - x) <= 60 && Math.abs(z.getPosition().getY() - y) <= 65) {
+                z.takeDamage(2000);
+                z.setCurrentHP(0);
             }
         }
 
-        if (x > 1800.0) this.isActive = false;
+        if (x > 1950.0) this.isActive = false;
     }
 }
