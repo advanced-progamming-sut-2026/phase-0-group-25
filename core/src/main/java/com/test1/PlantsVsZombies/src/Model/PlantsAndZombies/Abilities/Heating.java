@@ -24,11 +24,13 @@ public class Heating implements Ability {
         for (int i = -range; i <= range; i++) {
             for (int j = -range; j <= range; j++) {
                 Tile tile = GAME.getTileByPosition(column + i, row + j);
-                if (tile != null) {
-                    for (BattlePlant plant1 : tile.getPlants()) {
-                        if (plant.isFrozen()) {
-                            plant1.takeIceDamage(ICE_MELTING_DAMAGE);
-                        }
+                if (tile == null) {
+                    continue;
+                }
+
+                for (BattlePlant plant1 : tile.getPlants()) {
+                    if (plant1.isFrozen()) {
+                        plant1.takeIceDamage(ICE_MELTING_DAMAGE);
                     }
                 }
             }

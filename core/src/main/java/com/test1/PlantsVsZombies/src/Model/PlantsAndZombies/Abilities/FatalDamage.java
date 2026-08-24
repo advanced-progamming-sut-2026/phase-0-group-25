@@ -18,10 +18,8 @@ public class FatalDamage implements Ability {
                 zombie.setCurrentVelocity(zombie.getZombieStats().getVelocity() / 2);
             }
 
-            double fatalTime = (double) zombie.getZombieStats().getAttributes().get("fatalTime");
+            double fatalTime = (double) zombie.getZombieStats().getAttributes().getOrDefault("fatalTime", 0.0);
             float difference = (float) (GAME.getTotalTimePassed() - zombie.getLastActionTime());
-
-            System.out.println(fatalTime + "   " + difference);
 
 
             if (fatalTime < difference) {

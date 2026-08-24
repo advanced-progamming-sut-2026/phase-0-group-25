@@ -35,6 +35,8 @@ import com.test1.PlantsVsZombies.src.Model.GamePlayType.*;
 import com.test1.PlantsVsZombies.src.Model.Mower;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.ProjectileConfig;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 import com.test1.PlantsVsZombies.src.Model.SandstormEffect;
 import com.test1.PlantsVsZombies.src.Model.Sun.Sun;
@@ -49,6 +51,7 @@ import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
 import pvz.skin.BorderedTable;
 import com.test1.PlantsVsZombies.src.Model.IcyWindEffect;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -645,10 +648,9 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                     float tileH = 140f;
 
                     if (tile.getHP() == 0 && iceSliderRegion != null) {
-                        batch.draw(iceSliderRegion, realX - (tileW / 2f) , realY - 47f, tileW, tileH);
-                    }
-                    else if (tile.getHP() > 0 && iceBlockTexture != null) {
-                        batch.draw(iceBlockTexture, realX - (tileW / 2f) , realY - 25f, 130f, 155f);
+                        batch.draw(iceSliderRegion, realX - (tileW / 2f), realY - 47f, tileW, tileH);
+                    } else if (tile.getHP() > 0 && iceBlockTexture != null) {
+                        batch.draw(iceBlockTexture, realX - (tileW / 2f), realY - 25f, 130f, 155f);
                     }
                 }
             }
@@ -727,7 +729,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                     batch.setColor(Color.WHITE);
                 }
 
-                player.draw(batch, p.getPlantStats().getAnimation(), p.getCurrentAnimationName(),
+                player.draw(batch, p.getAnimationPath(), p.getCurrentAnimationName(),
                     stateTime, drawX, drawY, true, p.getVisibilities());
 
                 batch.setColor(Color.WHITE);
@@ -755,19 +757,20 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             batch.draw(getPlantFoodIconInGame, x, y + floatOffset, 65, 65);
         }
 
-        for (Zombie z : gamePlay.getGameZombies()) {
+        for (int i = 0; i < gamePlay.getGameZombies().size(); i++) {
+            Zombie z = gamePlay.getGameZombies().get(i);
             if (z.isAlive() && z.getZombieStats().getAnimation() != null) {
                 float drawX = (float) z.getPosition().getX();
                 float drawY = (float) z.getPosition().getY();
 
-                if (z.isHalated()) {
+                if (z.isHypnotized()) {
                     float pulse = 0.75f + 0.25f * (float) Math.sin(stateTime * 7f);
                     batch.setColor(0.35f * pulse, 1.0f, 0.45f * pulse, 1.0f);
                 } else {
                     batch.setColor(Color.WHITE);
                 }
 
-                player.draw(batch, z.getZombieStats().getAnimation(), z.getCurrentAnimationName(),
+                player.draw(batch, z.getAnimationPath(), z.getCurrentAnimationName(),
                     stateTime, drawX, drawY, true, z.getVisibility());
 
                 batch.setColor(Color.WHITE);
@@ -793,15 +796,21 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             }
         }
 
-        for (Zombie zombie : gamePlay.getGameZombies()) {
-            if (zombie.isAlive()) {
-                float px = (float) zombie.getPosition().getX();
-                float py = (float) zombie.getPosition().getY();
-                batch.setColor(zombie.getColor());
-                player.draw(batch, zombie.getZombieStats().getAnimation(), zombie.getCurrentAnimationName(),
-                    stateTime, px, py, true, zombie.getVisibility());
-                batch.setColor(Color.WHITE);
+
+        for (Projectile projectile : gamePlay.getProjectiles()) {
+            float px = (float) projectile.getPosition().getX();
+            float py = (float) projectile.getPosition().getY();
+            String name = projectile.getName();
+            ProjectileConfig projectileConfig = ProjectileConfig.fromName(name);
+            if (name.equals("pea")) {
+                if (projectile.isIcy()) {
+                    projectileConfig = ProjectileConfig.ICY_PEA;
+                } else if (projectile.isFiring()) {
+                    projectileConfig = ProjectileConfig.FIRING_PEA;
+                }
             }
+            player.draw(batch, projectileConfig.getAnimation(), projectileConfig.getClip(),
+                stateTime, px, py, true);
         }
 
         for (Mower mower : gamePlay.getMowers()) {

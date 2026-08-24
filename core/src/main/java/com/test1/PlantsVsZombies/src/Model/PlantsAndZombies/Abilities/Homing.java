@@ -173,7 +173,7 @@ public class Homing implements Ability {
             LobbedProjectile lobbedProjectile = new LobbedProjectile(plant,
                 plant.getPosition().getX(), plant.getPosition().getY(),
                 target.getPosition().getX(), target.getPosition().getY(),
-                1, 0, 0, damage);
+                1, 0, 0, damage, "pea");
             if (plantTags.contains("hypnotize")) {
                 lobbedProjectile.setHypnotizer(true);
             }
@@ -190,7 +190,7 @@ public class Homing implements Ability {
             LobbedProjectile lobbedProjectile = new LobbedProjectile(plant,
                 plant.getPosition().getX(), plant.getPosition().getY(),
                 target.getPosition().getX(), target.getPosition().getY(),
-                1, 0, 0, damage);
+                1, 0, 0, damage, "193");
 
             GAME.getProjectiles().add(lobbedProjectile);
 
