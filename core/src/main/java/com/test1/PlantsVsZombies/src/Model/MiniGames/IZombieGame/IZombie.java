@@ -23,6 +23,7 @@ public class IZombie extends GamePlay {
     public IZombie(ChapterType chapterType, int level, int difficulty, User thisUser,
                    ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         super(chapterType, level, difficulty, thisUser, plants, zombies, boosted);
+        setLevelObjectives("Reach the house with your zombies");
 
         this.allWaves.clear();
         this.gameZombies.clear();

@@ -22,6 +22,7 @@ public class Simple extends GamePlay {
     public Simple(ChapterType chapterType, int level, int difficulty, User thisUser,
                   ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         super(chapterType, level, difficulty, thisUser, plants, zombies, boosted);
+        setLevelObjectives("Zombies shouldn't reach the house.");
     }
 
     @Override

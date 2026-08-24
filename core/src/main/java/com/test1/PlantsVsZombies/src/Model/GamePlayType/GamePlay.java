@@ -63,6 +63,15 @@ public abstract class GamePlay {
     protected ArrayList<IcyWindEffect> activeIcyWinds = new ArrayList<>();
     protected Set<String> boostedPlants = new HashSet<>();
 
+    private String levelObjectives;
+
+    public String getLevelObjectives() {
+        return levelObjectives;
+    }
+
+    public void setLevelObjectives(String levelObjectives) {
+        this.levelObjectives = levelObjectives;
+    }
 
     public GamePlay(ChapterType chapterType, int level, int difficulty, User thisUser,
                     ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {

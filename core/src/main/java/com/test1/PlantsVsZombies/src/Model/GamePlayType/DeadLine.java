@@ -23,6 +23,8 @@ public class DeadLine extends GamePlay {
     public DeadLine(ChapterType chapterType, int level, int difficulty, User thisUser,
                     ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         super(chapterType, level, difficulty, thisUser, plants, zombies, boosted);
+        setLevelObjectives("Don't let the zombies reach the red line.");
+
     }
 
     @Override

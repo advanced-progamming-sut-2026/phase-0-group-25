@@ -26,6 +26,8 @@ public class WalnutBowling extends GamePlay {
     public WalnutBowling(ChapterType chapterType, int level, int difficulty, User thisUser,
                          ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         super(chapterType, level, difficulty, thisUser, plants, zombies, boosted);
+        setLevelObjectives("User the wall nuts to kill the zombies.");
+
     }
 
     @Override
