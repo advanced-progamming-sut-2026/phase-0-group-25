@@ -25,6 +25,8 @@ public class VaseBreaker extends GamePlay {
         this.allWaves.clear();
         this.gameZombies.clear();
         this.gamePlants.clear();
+        setLevelObjectives("Break the vases.");
+
 
 
         setupJars();

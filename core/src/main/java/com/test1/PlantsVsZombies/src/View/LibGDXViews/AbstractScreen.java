@@ -83,6 +83,17 @@ public abstract class AbstractScreen implements Screen {
     }
 
     public Actor createBackButton(MenuType targetMenu) {
+        return createBackButton(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (targetMenu != null) {
+                    MenuManager.getInstance().changeMenu(targetMenu);
+                }
+            }
+        });
+    }
+
+    public Actor createBackButton(ClickListener clickListener) {
         TextureRegion backRegion = textureBank.region(BACK_BUTTON_ASSET_ID);
         if (backRegion != null) {
             TextureRegionDrawable backDrawable = new TextureRegionDrawable(backRegion);
@@ -91,25 +102,15 @@ public abstract class AbstractScreen implements Screen {
             style.down = backDrawable.tint(new Color(0.7f, 0.7f, 0.7f, 1f));
 
             Button backButton = new Button(style);
-            backButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    if (targetMenu != null) {
-                        MenuManager.getInstance().changeMenu(targetMenu);
-                    }
-                }
-            });
+            if (clickListener != null) {
+                backButton.addListener(clickListener);
+            }
             return backButton;
         } else {
             TextButton fallbackBackButton = new TextButton("Back", skin, "brown");
-            fallbackBackButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    if (targetMenu != null) {
-                        MenuManager.getInstance().changeMenu(targetMenu);
-                    }
-                }
-            });
+            if (clickListener != null) {
+                fallbackBackButton.addListener(clickListener);
+            }
             return fallbackBackButton;
         }
     }
@@ -120,13 +121,6 @@ public abstract class AbstractScreen implements Screen {
         return label;
     }
 
-    /**
-     * Shows content as a modal box: a dimmed scrim behind it (clicking the
-     * scrim, i.e. anywhere outside the content, dismisses it) with the
-     * content centered on top. Uses the modalStack layer that already
-     * sits above the screen's own content and below toasts.
-     * Replaces any modal currently showing.
-     */
     protected void showModal(Actor content) {
         modalStack.clearChildren();
 
@@ -186,11 +180,6 @@ public abstract class AbstractScreen implements Screen {
         return button;
     }
 
-    /**
-     * Builds a button using one of the skin's own registered TextButton
-     * styles (e.g. "default", "brown", "purple", "green", "green_small")
-     * instead of a NinePatch region looked up from textureBank.
-     */
     public TextButton createSkinButton(String text, String skinStyleName, ClickListener listener) {
         TextButton button = new TextButton(text, skin, skinStyleName);
         button.pad(10, 20, 10, 20);
@@ -249,14 +238,12 @@ public abstract class AbstractScreen implements Screen {
         int coins = (user != null && user.getUserProgress() != null) ? user.getUserProgress().getCoinsCount() : 0;
         int gems = (user != null && user.getUserProgress() != null) ? user.getUserProgress().getGemsCount() : 0;
 
-
         Table coinBadge = buildCurrencyBadge(
             COIN_ICON_ASSET_ID,
             String.valueOf(coins),
             true,
             debug
         );
-
 
         Table gemBadge = buildCurrencyBadge(
             GEM_ICON_ASSET_ID,
@@ -356,16 +343,6 @@ public abstract class AbstractScreen implements Screen {
         }
     }
 
-    // ============================================================
-    // SHARED PLANT/ZOMBIE CARD BUILDING
-    // (used by CollectionMenuScreen and ChoosePlantScreen)
-    // ============================================================
-
-    /**
-     * A single-texture button (up/down tint), with a text fallback if the
-     * asset doesn't resolve. Promoted here from GameScreen's own private
-     * copy since TravelLogScreen needs the identical pattern.
-     */
     protected Actor createAssetButton(
         String assetId,
         String fallbackText,
@@ -406,9 +383,6 @@ public abstract class AbstractScreen implements Screen {
         return new TextureRegionDrawable(new TextureRegion(fallbackBoxTexture));
     }
 
-    /**
-     * Builds an icon inside a box button at natural 1:1 scale with customizable left padding.
-     */
     protected Stack buildIconBoxButton(
         String boxAssetId,
         String iconAssetId,
@@ -456,11 +430,6 @@ public abstract class AbstractScreen implements Screen {
         return contentStack;
     }
 
-    /**
-     * Small pill-style badge (plant level, sun cost, etc.) meant to sit in
-     * a corner of a card via Stack + Table alignment. Not touchable, so it
-     * never blocks clicks meant for the card button beneath it.
-     */
     protected Table buildCornerBadge(String text, float fontScale) {
         Table badgeInner = new Table();
         TextureRegion badgeBg = textureBank.region(CURRENCY_BOX_BG_ASSET_ID);
@@ -478,10 +447,6 @@ public abstract class AbstractScreen implements Screen {
         return badgeInner;
     }
 
-    /**
-     * Turns SOME_ENUM_NAME into "Some Enum Name". Used for plant/zombie
-     * names and PlantCategory values alike.
-     */
     protected String formatEnumName(String rawName) {
         if (rawName == null) return "Unknown";
         String[] parts = rawName.split("_");
@@ -495,13 +460,6 @@ public abstract class AbstractScreen implements Screen {
         return sb.toString().trim();
     }
 
-    /**
-     * The name/level/family/cost/health/tags info block shown in a plant's
-     * detail dialog. Fetches PlantStats itself (gracefully handling
-     * missing JSON data), so callers don't need their own PlantFactory
-     * try/catch. Callers append their own button rows onto the returned
-     * Table afterward (upgrade/boost/add-to-selection/close differ per screen).
-     */
     protected Table buildPlantStatsBlock(PlantType type, int level) {
         Table block = new Table();
         block.top().left();
@@ -511,7 +469,6 @@ public abstract class AbstractScreen implements Screen {
             BattlePlant battlePlant = PlantFactory.createBattlePlant(type.getName(), Math.max(level, 1));
             if (battlePlant != null) stats = battlePlant.getPlantStats();
         } catch (Exception ignored) {
-            // Missing JSON data for this plant/level -- fall back to "unavailable" below.
         }
 
         Label nameLabel = createBlackLabel(formatEnumName(type.getName()));
@@ -536,12 +493,6 @@ public abstract class AbstractScreen implements Screen {
         return block;
     }
 
-    /**
-     * Builds a scene2d Actor that plays a PAM animation via PamPlayer.
-     * Tracks its own state time (advanced each frame through act()) and
-     * draws through whatever Batch the Stage passes in -- same call
-     * pattern as GamePlayScreen's own PamPlayer usage.
-     */
     protected Actor createAnimationActor(String animationPath, String stateName) {
         return new PamAnimationActor(Main.getInstance().getPamPlayer(), animationPath, stateName);
     }

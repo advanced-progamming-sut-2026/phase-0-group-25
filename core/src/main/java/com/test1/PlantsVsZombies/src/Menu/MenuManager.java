@@ -75,7 +75,10 @@ public class MenuManager {
         menusAndTheirNames.put(MenuType.Profile, new ProfileMenu(new ProfileMenuTerminalView()));
         menusAndTheirNames.put(MenuType.Quest, new QuestMenu(new QuestMenuTerminalView()));
         menusAndTheirNames.put(MenuType.Setting, new SettingMenu(new SettingMenuTerminalView()));
-        menusAndTheirNames.put(MenuType.Shop, new ShopMenu(new ShopMenuTerminalView()));
+        ShopScreen shopScreen = new ShopScreen();
+        ShopMenu shopMenu = new ShopMenu(shopScreen);
+        shopScreen.setMenuController(shopMenu);
+        menusAndTheirNames.put(MenuType.Shop, shopMenu);
         TravelLogScreen travelLogScreen = new TravelLogScreen();
         TravelLogMenu travelLogMenu = new TravelLogMenu(travelLogScreen);
         travelLogScreen.setMenuController(travelLogMenu);
