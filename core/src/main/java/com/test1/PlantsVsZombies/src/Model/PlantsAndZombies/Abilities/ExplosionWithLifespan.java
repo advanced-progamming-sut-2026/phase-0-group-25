@@ -54,15 +54,20 @@ public class ExplosionWithLifespan implements Ability {
             }
             //todo:
             Tile tile = GAME.getTileByPosition(plant.getColumn(), plant.getRow());
-            tile.setArable(false);
+            tile.setHole(true);
         }
     }
 
     private void fireLine(BattlePlant plant) {
+        if (plant.getPlantStats().getTags().contains("insta-kill")) {
+            Tile tile = GAME.getTileByPosition(plant.getColumn(), plant.getRow());
+           // tile.meltIce();
+            return;
+        }
         int damage = (int) plant.getPlantStats().getAttributes().get("damage");
 
         int row = plant.getRow();
-        for (int i = 0; i < 9; i++) {
+        for (int i = 1; i <= 9; i++) {
             //todo
             Tile tile = GAME.getTileByPosition(i, row);
             for (Zombie zombie : tile.getZombies()) {

@@ -1,5 +1,6 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 
+import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
@@ -30,7 +31,9 @@ public class Shooting implements Ability {
             }
             return;
         }
-        runAbility(plant);
+        if (haveTarget(plant)) {
+            runAbility(plant);
+        }
     }
 
     private void runAbility(BattlePlant plant) {
@@ -51,7 +54,7 @@ public class Shooting implements Ability {
 
         for (int i = 0; i < damageAttributes.size(); i++) {
             Projectile projectile = makeProjectile(plant, directionAttributes,
-                    damageAttributes, pierce, rangeAmount, i);
+                damageAttributes, pierce, rangeAmount, i);
             GAME.getProjectiles().add(projectile);
         }
     }
@@ -69,35 +72,38 @@ public class Shooting implements Ability {
         Position position = findPosition(plant, directionAttributes.get(i).get(0));
 
         Projectile projectile = new Projectile(plant, velocityX, velocityY, position,
-                damage, pierce, rangeAmount);
+            damage, pierce, rangeAmount);
 
-        if (plant.getPlantStats().getTags().contains("ice")) {
-            projectile.setIcy(true);
+        if (plant.getPlantStats().getTags().contains("pea")) {
+            if (plant.getPlantStats().getTags().contains("ice")) {
+                projectile.setIcy(true);
+            }
+            if (plant.getPlantStats().getTags().contains("fire")) {
+                projectile.setFiring(true);
+            }
         }
         if (plant.getPlantStats().getTags().contains("poison")) {
             projectile.setPoisonous(true);
         }
-        if (plant.getPlantStats().getTags().contains("fire")) {
-            projectile.setFiring(true);
-        }
+
 
         return projectile;
     }
 
-    private Position findPosition(BattlePlant plant, int startingPoint) {
+    private Position findPosition(BattlePlant plant, double startingPoint) {
         this.plant = plant;
-        this.startingPoint = startingPoint;
+        this.startingPoint = (int) startingPoint;
         int plantY = (int) plant.getPosition().getY();
 
         if (startingPoint == 1) {
             if (plantY > UPPER_LIMIT) {
                 return new Position(plant.getPosition().getX(),
-                        plant.getPosition().getY() - TILE_Y_LENGTH);
+                    plant.getPosition().getY() - TILE_Y_LENGTH);
             }
         } else if (startingPoint == -1) {
             if (plantY < BOTTOM_LIMIT) {
                 return new Position(plant.getPosition().getX(),
-                        plant.getPosition().getY() + TILE_Y_LENGTH);
+                    plant.getPosition().getY() + TILE_Y_LENGTH);
             }
         }
 
@@ -177,7 +183,7 @@ public class Shooting implements Ability {
 
             for (int i = 0; i < damageAttributes.size(); i++) {
                 Projectile projectile = makeProjectile(plant, directionAttributes,
-                        damageAttributes, pierce, rangeAmount, i);
+                    damageAttributes, pierce, rangeAmount, i);
                 GAME.getProjectiles().add(projectile);
             }
         }
@@ -218,12 +224,33 @@ public class Shooting implements Ability {
 
         for (int i = 0; i < damageAttributes.size(); i++) {
             Projectile projectile = makeProjectile(plant, directionAttributes,
-                    damageAttributes, pierce, rangeAmount, i);
+                damageAttributes, pierce, rangeAmount, i);
             if (plant.getPlantStats().getPlantFoodEffect().containsKey("knockback")) {
                 int knockback = (int) plant.getPlantStats().getPlantFoodEffect().get("knockback");
                 projectile.setKnockback(knockback);
             }
             GAME.getProjectiles().add(projectile);
         }
+    }
+
+    private boolean haveTarget(BattlePlant plant) {
+        int row = plant.getRow();
+        int column = plant.getColumn();
+
+        for (int i = column; i <= 9; i++) {
+            Tile tile = GAME.getTileByPosition(i, row);
+            if (!tile.getZombies().isEmpty()) {
+                return true;
+            }
+
+            if(GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT) ||
+            GAME.getChapterType().equals(ChapterType.DARK_AGE) ||
+            GAME.getChapterType().equals(ChapterType.FROSTBITE_CAVES)){
+                if((!tile.isArable()) && (tile.getHP() > 0)){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

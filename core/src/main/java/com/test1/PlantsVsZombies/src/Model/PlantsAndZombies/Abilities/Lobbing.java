@@ -29,9 +29,11 @@ public class Lobbing implements Ability {
 
         List<Integer> damageAttributes = (List<Integer>) plant.getPlantStats().getAttributes().get("damage");
         List<Double> speedAttributes = (List<Double>) plant.getPlantStats().getAttributes().get("speed");
+        List<String> nameAttributes = (List<String>) plant.getPlantStats().getAttributes().get("projectileName");
 
-        int damage;
-        double speed;
+        int damage = 0;
+        double speed = 0;
+        String name = "";
 
         double targetX = findNearestZombieInRow(plant);
 
@@ -42,21 +44,24 @@ public class Lobbing implements Ability {
             if (roll < probableAttributes.get(0)) {
                 damage = damageAttributes.get(0);
                 speed = speedAttributes.get(0);
+                name = nameAttributes.get(0);
             } else {
                 damage = damageAttributes.get(1);
                 speed = speedAttributes.get(1);
+                name = nameAttributes.get(1);
             }
         } else {
             damage = damageAttributes.get(0);
             speed = speedAttributes.get(0);
+            name = nameAttributes.get(0);
         }
 
         int AoEDamage = (int) plant.getPlantStats().getAttributes().get("AoEDamage");
         int AoERange = (int) plant.getPlantStats().getAttributes().get("AoERange");
 
         LobbedProjectile lobbedProjectile = new LobbedProjectile(plant,
-                plant.getPosition().getX(), plant.getPosition().getY(),
-                targetX, speed, AoEDamage, AoERange, damage
+            plant.getPosition().getX(), plant.getPosition().getY(),
+            targetX, speed, AoEDamage, AoERange, damage, name
         );
 
         if (plant.getPlantStats().getTags().contains("ice")) {
@@ -84,8 +89,8 @@ public class Lobbing implements Ability {
         double distance = 99999;
         double targetX = LOBBING_SHOT;
 
-        for (int i = 0; i < 9; i++) {
-            Tile tile = GAME.getTileByPosition(plantColumn + i, plantRow);
+        for (int i = 1; i <= 9; i++) {
+            Tile tile = GAME.getTileByPosition(i, plantRow);
 
             for (Zombie zombie : tile.getZombies()) {
                 double tempDistance = zombie.getPosition().distance(plant.getPosition());
@@ -102,6 +107,7 @@ public class Lobbing implements Ability {
     private void plantFoodEffect(BattlePlant plant) {
         List<Integer> damageAttributes = (List<Integer>) plant.getPlantStats().getAttributes().get("damage");
         List<Double> speedAttributes = (List<Double>) plant.getPlantStats().getAttributes().get("speed");
+        List<String> nameAttributes = (List<String>) plant.getPlantStats().getAttributes().get("projectileName");
 
         int AoEDamage = (int) plant.getPlantStats().getAttributes().get("AoEDamage");
         int AoERange = (int) plant.getPlantStats().getAttributes().get("AoERange");
@@ -109,11 +115,12 @@ public class Lobbing implements Ability {
         if (plant.getPlantStats().getName().equals("KERNEL_PULT")) {
             int damage = damageAttributes.get(1);
             double speed = speedAttributes.get(1);
+            String name = nameAttributes.get(1);
             for (Zombie zombie : GAME.getGameZombies()) {
                 LobbedProjectile lobbedProjectile = new LobbedProjectile(plant,
-                        plant.getPosition().getX(), plant.getPosition().getY(),
-                        zombie.getPosition().getX(), speed,
-                        AoEDamage, AoERange, damage
+                    plant.getPosition().getX(), plant.getPosition().getY(),
+                    zombie.getPosition().getX(), speed,
+                    AoEDamage, AoERange, damage, name
                 );
                 GAME.getProjectiles().add(lobbedProjectile);
             }
@@ -124,10 +131,11 @@ public class Lobbing implements Ability {
 
                 int damage = damageAttributes.get(0);
                 double speed = speedAttributes.get(0);
+                String name = nameAttributes.get(0);
                 LobbedProjectile lobbedProjectile = new LobbedProjectile(plant,
-                        plant.getPosition().getX(), plant.getPosition().getY(),
-                        zombie.getPosition().getX(), speed,
-                        AoEDamage, AoERange, damage
+                    plant.getPosition().getX(), plant.getPosition().getY(),
+                    zombie.getPosition().getX(), speed,
+                    AoEDamage, AoERange, damage, name
                 );
 
                 GAME.getProjectiles().add(lobbedProjectile);

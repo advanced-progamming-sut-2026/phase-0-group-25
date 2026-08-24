@@ -21,16 +21,28 @@ public class LobbedProjectile extends Projectile {
     private int damage;
     private boolean isFromLobberPlant;
     private GamePlay GAME = GamePlay.activeInstance;
+    private double yVelocity;
+
+
+    private static double X_VELOCITY = 20;
+    private static double Y_VELOCITY = 20;
+    private static double GRAVITY = 9.8;
 
     public LobbedProjectile(BattlePlant plant, double startX, double startY, double targetX, double speed,
-                            int AoEDamage, int AoERange, int damage) {
+                            int AoEDamage, int AoERange, int damage, String name) {
         this.startX = startX;
         this.startY = startY;
         this.targetX = targetX;
         this.targetY = startY;
 
+        this.plant = plant;
+        this.name = name;
+
         this.timeToReach = (targetX - startX) / speed;
         this.elapsedTime = 0;
+        this.yVelocity = Y_VELOCITY;
+
+        this.position = new Position(this.startX, this.startY);
 
         this.AoEDamage = AoEDamage;
         this.AoERange = AoERange;
@@ -43,14 +55,20 @@ public class LobbedProjectile extends Projectile {
     }
 
     public LobbedProjectile(BattlePlant plant, double startX, double startY, double targetX, double targetY, double speed,
-                            int AoEDamage, int AoERange, int damage) {
+                            int AoEDamage, int AoERange, int damage, String name) {
         this.startX = startX;
         this.startY = startY;
         this.targetX = targetX;
         this.targetY = targetY;
 
+        this.plant = plant;
+        this.name = name;
+
         this.timeToReach = Math.hypot((startX - targetX), (startY - targetY)) / speed;
         this.elapsedTime = 0;
+        this.yVelocity = Y_VELOCITY;
+
+        this.position = new Position(this.startX, this.startY);
 
         this.AoEDamage = AoEDamage;
         this.AoERange = AoERange;
@@ -65,10 +83,16 @@ public class LobbedProjectile extends Projectile {
     @Override
     public void update() {
         this.elapsedTime += 1;
+        this.yVelocity -= GRAVITY * 0.02;
+        this.position = new Position((position.getX() + (0.1 * X_VELOCITY)),
+            (position.getY() + (0.1 * this.yVelocity)));
+
+        /*
         if (elapsedTime >= timeToReach) {
             affectTarget();
             this.isActive = false;
         }
+        */
     }
 
     public void affectTarget() {

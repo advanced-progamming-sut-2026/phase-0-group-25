@@ -73,7 +73,9 @@ Throwing implements Ability {
                 int row = RANDOM.nextInt(5) + 1;
                 int column = RANDOM.nextInt(9) + 1;
                 Tile tile = GAME.getTileByPosition(column, row);
+                System.out.println(row + "   " + column);
                 tile.setArable(false);
+                tile.setHP(600);
             }
 
             afterAbility(zombie);

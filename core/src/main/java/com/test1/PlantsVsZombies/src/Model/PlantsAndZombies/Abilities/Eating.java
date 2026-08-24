@@ -47,7 +47,7 @@ public class Eating implements Ability {
 
                 if (zombie.getZombieStats().getName().equals("SNORKEL") &&
                     (zombie.getPosition().getX() >= SNORKEL_X_LIMIT)) {
-                    zombie.getZombieStats().getAttributes().replace("submarine", "on");
+                    zombie.getZombieStats().setSubmarine(true);
                 }
             }
 
