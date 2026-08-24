@@ -70,7 +70,7 @@ public class MeleeAttacking implements Ability {
 
         for (Zombie zombie : tile.getZombies()) {
             if (zombie.getCurrentHP() > 0) {
-                zombie.setCurrentHP(zombie.getCurrentHP() - damage);
+                zombie.takeDamage(plant, damage);
             }
         }
     }

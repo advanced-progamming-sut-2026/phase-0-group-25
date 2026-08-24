@@ -207,11 +207,10 @@ public class Zombie extends Entity {
                 unfreeze();
             }
 
-            if ((!this.zombieStats.getName().equals("IMP_DRAGON")) || (!projectile.isFiring())) {
-                this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
-                if (currentHP <= 0) {
-                    checkKiller(projectile);
-                }
+            boolean wasAlive = (this.currentHP > 0);
+            this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
+            if (wasAlive && this.currentHP <= 0) {
+                checkKiller(projectile);
             }
         }
     }
@@ -265,11 +264,10 @@ public class Zombie extends Entity {
             }
         }
 
-        if (leftoverDamage > 0) {
-            this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
-            if (currentHP <= 0) {
-                checkKiller(plant);
-            }
+        boolean wasAlive = (this.currentHP > 0);
+        this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
+        if (wasAlive && this.currentHP <= 0) {
+            checkKiller(plant);
         }
     }
 
