@@ -48,18 +48,7 @@ public class Simple extends GamePlay {
             this.settedThePlants = true;
             UIManager.showToast("Level Started! Protect your lawn!", "IMAGE_UI_GENERIC_VTB");
 
-            planting(PlantFactory.createBattlePlant("SUNFLOWER", 1,
-                new Position(2, 2)), new Position(2, 2));
-            planting(PlantFactory.createBattlePlant("BONK_CHOY", 1,
-                new Position(1, 2)), new Position(8, 1));
-            planting(PlantFactory.createBattlePlant("BONK_CHOY", 1,
-                new Position(1, 2)), new Position(8, 2));
-            planting(PlantFactory.createBattlePlant("BONK_CHOY", 1,
-                new Position(1, 2)), new Position(8, 3));
-            planting(PlantFactory.createBattlePlant("BONK_CHOY", 1,
-                new Position(1, 2)), new Position(8, 4));
-            planting(PlantFactory.createBattlePlant("BONK_CHOY", 1,
-                new Position(1, 2)), new Position(8, 5));
+
         }
 
         if (this.chapterType != ChapterType.DARK_AGE) {
@@ -74,7 +63,7 @@ public class Simple extends GamePlay {
         while (bp.hasNext()) {
             BattlePlant plant = bp.next();
 
-            if (plant.isAlive() && plant.getCurrentHP() > 0) {
+            if (plant.isAlive()) {
                 plant.update();
                 // passing cooldown
                 plant.setCooldown(Math.max(plant.getCooldown() - 1, 0));
@@ -94,9 +83,7 @@ public class Simple extends GamePlay {
 
             if (!zombie.isAlive()) {
                 killAward(this.thisUser);
-                if (zombie.isHalated()) {
-                    glowingAward(zombie.getPosition());
-                }
+
                 Position zPos = Position.getRowAndColumn(zombie.getPosition());
                 System.out.printf("Zombie of type %s is dead at (%d, %d)\n",
                     zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
@@ -160,13 +147,11 @@ public class Simple extends GamePlay {
                         positionOfZ = new Position(spawnX, getRealY(spawnY));
                     }
 
-                    Zombie newZombie = ZombieFactory.createZombie(nameOfZ, positionOfZ);
+                    Zombie newZombie = ZombieFactory.createZombie("UMBRELLA", positionOfZ);
                     System.out.printf("Zombie %s spawned at wave %d in lane %d which costed %d.\n",
                         nameOfZ, thisWave.getWaveNum(), spawnY, newZombie.getCost());
 
-                    if (Math.random() <= 0.05) {
-                        newZombie.setHalated(true);
-                    }
+
 
                     newZombie.setWaveNum(thisWave.getWaveNum());
                     this.gameZombies.add(newZombie);

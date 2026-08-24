@@ -6,6 +6,8 @@ import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities.*;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Armors.Armor;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
+import com.test1.PlantsVsZombies.src.Model.Tile;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -13,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AnimationDecider {
-    private GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlay.activeInstance;
 
     public String plantDecider(BattlePlant plant, float stateTime) {
         Map<String, String> status = plant.getPlantStats().getStatus();
@@ -54,12 +56,14 @@ public class AnimationDecider {
         }
         if (plant.getPlantStats().getCategory().equals("Explosive")) {
             return getExplosiveAnimation(plant, stateTime);
-        } else {
-            if (isTimeForAction(plant, stateTime)) {
-                return status.get("action");
-            }
-            return status.get("idle");
         }
+        if ((plant.getPlantStats().getCategory().equals("Shooter")) ||
+            (plant.getPlantStats().getCategory().equals("Strike-through")) ||
+            (plant.getPlantStats().getCategory().equals("Lobber"))) {
+            return getShootingAnimation(plant, status);
+        }
+
+        return null;
     }
 
     public HashMap<String, Boolean> plantVisibilities(BattlePlant plant) {
@@ -74,18 +78,16 @@ public class AnimationDecider {
     public String zombieDecider(Zombie zombie) {
         Map<String, String> status = zombie.getZombieStats().getStatus();
         if (zombie.getCurrentHP() <= 0) {
-            System.out.println("hjkjhghjk");
             return handleZombieDeath(zombie, status);
         }
 
         if (zombie.getName().equals("GARGANTUAR")) {
-            String isThrown = (String) zombie.getZombieStats().getAttributes().get("isThrown");
-            if (isThrown.equals("yes")) {
+            if ((zombie.getZombieStats().isThrown()) && (!zombie.getZombieStats().isFinished())) {
                 for (Ability ability : zombie.getOriginalAbilities()) {
                     if (ability instanceof Moving) {
                         ((Moving) ability).setActivated(false);
-                    } else if (ability instanceof Eating) {
-                        ((Eating) ability).setActivated(false);
+                    } else if (ability instanceof FatalDamage) {
+                        ((FatalDamage) ability).setActivated(false);
                     }
                 }
                 return handleGargantuarThrow(zombie, status);
@@ -133,7 +135,7 @@ public class AnimationDecider {
     private String getWrampUpPlantsAnimation(BattlePlant plant, Map<String, String> status, float stateTime) {
         ArrayList<Integer> growthTimeStages = (ArrayList<Integer>) plant.getPlantStats().getAttributes().get("growth_time");
 
-        double differenceTime = plant.getPlantTime();
+        double differenceTime = (double) (GAME.getTotalTimePassed() - plant.getPlantTime());
         String stage = "";
 
         if (differenceTime >= growthTimeStages.get(1)) {
@@ -193,10 +195,10 @@ public class AnimationDecider {
 
     private String getWallNutAnimation(BattlePlant plant) {
         int baseHP = plant.getPlantStats().getBaseHP();
-        double currentHP = plant.getPlantStats().getBaseHP();
+        double currentHP = plant.getCurrentHP();
         Map<String, String> status = plant.getPlantStats().getStatus();
 
-        int armorHP = (int) plant.getPlantStats().getAttributes().getOrDefault("armorHP", 0);
+        double armorHP = plant.getArmorHP();
         if (armorHP != 0) {
             if (plant.getName().equals(PlantType.PUMPKIN.getName())) {
                 return getPumpkinAnimation(armorHP, baseHP);
@@ -218,7 +220,7 @@ public class AnimationDecider {
 
     private HashMap<String, Boolean> wallNutVisibility(BattlePlant plant) {
         HashMap<String, Boolean> visibilities = new HashMap<>();
-        int armorHP = (int) plant.getPlantStats().getAttributes().getOrDefault("armorHP", 0);
+        double armorHP = plant.getArmorHP();
         int armorBaseHP = (int) plant.getPlantStats().getPlantFoodEffect().getOrDefault("armor", 0);
 
         if (armorHP > 0) {
@@ -234,7 +236,7 @@ public class AnimationDecider {
                 visibilities.put(visibilityMap.get("first"), true);
             } else if (HPRatio >= 0.33) {
                 visibilities.put(visibilityMap.get("second"), true);
-            } else {
+            } else if (HPRatio > 0) {
                 visibilities.put(visibilityMap.get("third"), true);
             }
         }
@@ -326,6 +328,20 @@ public class AnimationDecider {
         return plant.getPlantStats().getStatus().get(plant.getStatus());
     }
 
+    private String getShootingAnimation(BattlePlant plant, Map<String, String> status) {
+        int plantRow = plant.getRow();
+        int plantColumn = plant.getColumn();
+        for (int i = plantColumn; i <= 9; i++) {
+            Tile tile = GAME.getTileByPosition(i, plantRow);
+
+            if (!tile.getZombies().isEmpty()) {
+                return status.get("action");
+            }
+        }
+
+        return status.get("idle");
+    }
+
     private void checkArmorVisibility(BattlePlant plant, HashMap<String, Boolean> visibilities) {
         if (plant.getName().equals(PlantType.WALL_NUT.getName())) {
             visibilities.put("_wallnut_armor_states", true);
@@ -346,16 +362,26 @@ public class AnimationDecider {
                 ((Eating) ability).setActivated(false);
             } else if (ability instanceof StealingSun) {
                 ((StealingSun) ability).setActivated(false);
+            } else if (ability instanceof FatalDamage) {
+                ((FatalDamage) ability).setActivated(false);
             }
         }
-
-        double dieSpan = (double) zombie.getZombieStats().getAttributes().get("dieSpan");
+        double dieSpan;
         double difference = GAME.getTotalTimePassed() - zombie.getDieTime();
-        System.out.println(dieSpan + "    " + difference + "   " + zombie.getDieTime());
 
+
+        if (zombie.isDeadByExplosion()) {
+            dieSpan = 3.50;
+        } else {
+            dieSpan = (double) zombie.getZombieStats().getAttributes().get("dieSpan");
+        }
 
         if (difference >= dieSpan / 2) {
             zombie.setAlive(false);
+        }
+
+        if (zombie.isDeadByExplosion()) {
+            return "animation";
         }
 
         return status.get("die");
@@ -398,10 +424,10 @@ public class AnimationDecider {
     }
 
     private String handleGargantuarThrow(Zombie zombie, Map<String, String> status) {
-        float throwTime = (float) zombie.getZombieStats().getAttributes().get("throwTime");
-        float difference = (float) GAME.getTotalTimePassed() - throwTime;
-        float firstThrow = (float) zombie.getZombieStats().getAttributes().get("firstThrow");
-        float secondThrow = (float) zombie.getZombieStats().getAttributes().get("secondThrow");
+        double throwTime = zombie.getZombieStats().getThrownTime();
+        double difference = GAME.getTotalTimePassed() - throwTime;
+        double firstThrow = (double) zombie.getZombieStats().getAttributes().get("firstThrow");
+        double secondThrow = (double) zombie.getZombieStats().getAttributes().get("secondThrow");
 
 
         if (difference <= firstThrow) {
@@ -409,19 +435,19 @@ public class AnimationDecider {
         } else if (difference <= (firstThrow + secondThrow)) {
             return status.get("secondThrow");
         } else {
-            zombie.getZombieStats().getAttributes().put("isThrown", "no");
+            zombie.getZombieStats().setFinished(true);
 
-            Position impPosition = new Position(380.5, ((zombie.getRow() - 1) * 150) + 205);
+            Position impPosition = new Position(820, ((zombie.getRow() - 1) * 150) + 205);
             Zombie imp = ZombieFactory.createZombie("IMP", impPosition);
             GAME.getGameZombies().add(imp);
 
             if ((zombie.getRival() != null) && (zombie.getRival().currentHP > 0)) {
                 for (Ability ability : zombie.getOriginalAbilities()) {
-                    if (ability instanceof Eating) {
-                        ((Eating) ability).setActivated(true);
+                    if (ability instanceof FatalDamage) {
+                        ((FatalDamage) ability).setActivated(true);
                     }
                 }
-                return status.get("eat");
+                return status.get("firstEat");
             } else {
                 for (Ability ability : zombie.getOriginalAbilities()) {
                     if (ability instanceof Moving) {
@@ -448,7 +474,12 @@ public class AnimationDecider {
                 } else if (difference <= (firstEat + secondEat)) {
                     return status.get("secondEat");
                 } else {
-
+                    for (Ability ability1 : zombie.getOriginalAbilities()) {
+                        if (ability1 instanceof Moving) {
+                            ((Moving) ability1).setActivated(true);
+                            break;
+                        }
+                    }
                     return status.get("idle");
                 }
 
@@ -456,7 +487,12 @@ public class AnimationDecider {
                 return status.get("walk");
             }
         }
-
+        for (Ability ability : zombie.getOriginalAbilities()) {
+            if (ability instanceof Moving) {
+                ((Moving) ability).setActivated(true);
+                break;
+            }
+        }
         return status.get("idle");
     }
 

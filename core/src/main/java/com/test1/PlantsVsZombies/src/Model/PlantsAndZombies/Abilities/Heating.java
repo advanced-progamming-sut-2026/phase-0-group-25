@@ -19,13 +19,17 @@ public class Heating implements Ability {
     }
 
     private void rangeHeat(BattlePlant plant, int row, int column) {
-        int range = (int) plant.getPlantStats().getAttributes().get("range");
+        int range = 1;
 
         for (int i = -range; i <= range; i++) {
             for (int j = -range; j <= range; j++) {
                 Tile tile = GAME.getTileByPosition(column + i, row + j);
+                if (tile == null) {
+                    continue;
+                }
+
                 for (BattlePlant plant1 : tile.getPlants()) {
-                    if (plant.isFrozen()) {
+                    if (plant1.isFrozen()) {
                         plant1.takeIceDamage(ICE_MELTING_DAMAGE);
                     }
                 }

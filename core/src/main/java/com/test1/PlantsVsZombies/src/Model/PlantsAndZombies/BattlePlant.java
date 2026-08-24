@@ -16,9 +16,9 @@ import java.util.Map;
 public class BattlePlant extends Plant {
     private static int PLANT_FOOD_EFFECT_TIME = 2;
     private boolean isEffected = false;
-    private double effectedTime;
+    private double effectedTime = 0;
     private double effectedLifeSpan;
-    private double currentCoolDown = 0;
+    private double currentCoolDown;
 
     private double lastActionTime;
     private double plantTime;
@@ -31,6 +31,7 @@ public class BattlePlant extends Plant {
     private double iceHP;
 
     private String status = "idle";
+    private double armorHP = 0.0;
 
     private GamePlay GAME = GamePlay.activeInstance;
 
@@ -49,6 +50,8 @@ public class BattlePlant extends Plant {
         this.plantStats = plantStats;
         this.plantStats.setName(name);
 
+        this.lastActionTime = this.plantTime;
+
         this.name = name;
         this.position = position;
         this.price = this.plantStats.getCost();
@@ -58,12 +61,19 @@ public class BattlePlant extends Plant {
 
     @Override
     public void update() {
+       /* if (!this.getName().equals(PlantType.ENLIGHTEN_MINT.getName())) {
+            System.out.println(this.getName() + "   " + this.isEffected + "   " + this.effectedTime + "   " + this.effectedLifeSpan);
+        }
+*/
+
+        checkEffected();
+
         if (this.plantStats.getAttributes().containsKey("life-span")) {
-            double lifespan = (double) this.plantStats.getAttributes().get("life_span");
+            double lifespan = (double) this.plantStats.getAttributes().get("life-span");
             if ((GAME.getTotalTimePassed() - this.plantTime) >= lifespan) {
-                this.setCurrentHP(0);
+                this.setAlive(false);
+                return;
             }
-            return;
         }
 
         if (this.plantStats.getTags().contains("fire")) {
@@ -75,18 +85,14 @@ public class BattlePlant extends Plant {
         }
 
         if (!this.plantStats.getCategory().equals("Wall-nut") &&
-            !this.plantStats.getCategory().equals("Explosive")) {
+            !this.plantStats.getAbilities().contains("explosion")) {
 
-            checkStatus();
 
             if (this.isEffected) {
                 for (Ability ability : this.originalAbilities) {
                     ability.executeAbility(this);
                 }
-                if ((GAME.getTotalTimePassed() - this.effectedTime) >= this.effectedLifeSpan) {
-                    this.isEffected = false;
-                    return;
-                }
+                return;
             }
 
             if (isTimeForAction()) {
@@ -171,12 +177,25 @@ public class BattlePlant extends Plant {
 
     public void setEffected(boolean effected) {
         isEffected = effected;
+        if (this.isEffected) {
+            this.effectedTime = GAME.getTotalTimePassed();
+            this.effectedLifeSpan = 5;
+        }
     }
 
     public void setEffected(boolean effected, int effectedLifeSpan) {
+        if (this.getName().equals(PlantType.ENLIGHTEN_MINT.getName())) {
+            return;
+        }
         this.isEffected = effected;
         this.effectedLifeSpan = effectedLifeSpan;
+        this.effectedTime = GAME.getTotalTimePassed();
+       /* checkEffected();
+        System.out.println("fhghgiug" + this.getName() + "   " + this.isEffected + "   " + this.effectedTime + "   " + this.effectedLifeSpan + "    " + GAME.getTotalTimePassed());
+        checkEffected();
+    */
     }
+
 
     public double getEffectedTime() {
         return effectedTime;
@@ -256,18 +275,19 @@ public class BattlePlant extends Plant {
     }
 
     public void takeDamage(double damage) {
-        double armorHP = (int) this.plantStats.getAttributes().getOrDefault("armorHP", 0);
-        if (armorHP > 0) {
-            double finalArmorHP = armorHP - damage;
-            if (finalArmorHP < 0) {
-                finalArmorHP = 0;
+        if (this.armorHP > 0) {
+            this.armorHP -= damage;
+            if (this.armorHP < 0) {
+                this.armorHP = 0;
             }
-            this.plantStats.getAttributes().put("armorHP", finalArmorHP);
 
             return;
         }
 
         this.currentHP -= damage;
+        if (this.currentHP <= 0) {
+            this.setAlive(false);
+        }
     }
 
     public String getCurrentAnimationName(float stateTime) {
@@ -312,32 +332,17 @@ public class BattlePlant extends Plant {
         this.lastActionTime = lastActionTime;
     }
 
-    private void checkStatus() {
-        if (this.plantStats.getCategory().equals("Sun Producer")) {
-            checkSunProducer();
-        }
-
-        if (this.plantStats.getCategory().equals("Melee")) {
-            checkMelee();
-        }
-
-        if (this.name.equals(PlantType.SQUASH.getName())) {
-            checkSquash();
-        }
-    }
 
     public void checkSunProducer() {
         float difference = (float) (GAME.getTotalTimePassed() - this.lastActionTime);
         float trigger = this.plantStats.getTrigger();
         float total = difference + trigger;
-        System.out.println(difference + "        " + total + "    sdfsfd" + this.plantStats.getActionInterval());
         if ((total >= this.plantStats.getActionInterval())) {
             this.status = "action";
         } else {
             this.status = "idle";
         }
 
-        System.out.println(this.status);
     }
 
     public void checkMelee() {
@@ -388,5 +393,21 @@ public class BattlePlant extends Plant {
         } else {
             this.status = "idle";
         }
+    }
+
+    private void checkEffected() {
+        float difference = (float) (GAME.getTotalTimePassed() - this.effectedTime);
+
+        if (difference >= this.effectedLifeSpan) {
+            this.isEffected = false;
+        }
+    }
+
+    public double getArmorHP() {
+        return armorHP;
+    }
+
+    public void setArmorHP(double armorHP) {
+        this.armorHP = armorHP;
     }
 }

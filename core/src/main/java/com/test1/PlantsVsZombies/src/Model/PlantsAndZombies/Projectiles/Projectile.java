@@ -20,12 +20,14 @@ public class Projectile {
     private double velocityX;
     private double velocityY;
     private int damage;
-    private Position position;
+    protected Position position;
     private Position basePosition;
     private int pierceAmount;
     private int range;
     private int knockback;
     private boolean isHypnotizer;
+    protected String name;
+
     private GamePlay GAME = GamePlay.activeInstance;
 
     public Projectile() {
@@ -39,6 +41,7 @@ public class Projectile {
         this.velocityY = velocityY;
         this.position = position;
         this.basePosition = position;
+        this.name = (String) plant.getPlantStats().getAttributes().get("projectileName");
 
         this.damage = damage;
         this.knockback = 0;
@@ -59,6 +62,7 @@ public class Projectile {
         this.velocityY = velocityY;
         this.position = position;
         this.basePosition = position;
+        this.name = (String) plant.getPlantStats().getAttributes().get("projectileName");
 
         this.damage = damage;
         this.knockback = 0;
@@ -79,7 +83,7 @@ public class Projectile {
 
     public void update() {
         this.position = new Position((position.getX() + (0.1 * velocityX)),
-                (position.getY() + (0.1 * velocityY)));
+            (position.getY() + (0.1 * velocityY)));
 
         updateActivation();
 
@@ -98,7 +102,7 @@ public class Projectile {
         int baseColumn = (int) baseRowAndColumn.getX();
 
         if (((currentRow - baseRow) > this.range) ||
-                ((currentColumn - baseColumn) > this.range)) {
+            ((currentColumn - baseColumn) > this.range)) {
             this.isActive = false;
         }
 
@@ -134,8 +138,7 @@ public class Projectile {
                             zombie.setColumn(column);
                             GAME.getGameZombies().add(zombie);
                             System.out.println("Ice block broken! Zombie spawned at (" + column + ", " + row + ")!");
-                        }
-                        else if (GAME.getChapterType().equals(ChapterType.DARK_AGE)) {
+                        } else if (GAME.getChapterType().equals(ChapterType.DARK_AGE)) {
                             Position dropPos = new Position(GAME.getRealX(column), GAME.getRealY(row));
                             if (tile.getGraveType() == Tile.GraveType.PLANT_FOOD) {
                                 GAME.glowingAward(dropPos);
@@ -143,8 +146,7 @@ public class Projectile {
                                 GAME.getActiveSuns().add(new Sun(50, dropPos, 0));
                             }
                             System.out.println("Dark Age tomb destroyed!");
-                        }
-                        else {
+                        } else {
                             System.out.println("Tomb destroyed!!!!!");
                         }
                     }
@@ -156,21 +158,24 @@ public class Projectile {
 
     public void checkCollision() {
         for (Zombie zombie : GAME.getGameZombies()) {
-            if (!zombie.isHypnotized()) {
+            if (!zombie.isHypnotized() &&
+            zombie.getCurrentHP() > 0) {
                 if (this.position.equals(zombie.getPosition())) {
                     if ((zombie.getZombieStats().getName().equals("SNORKEL")) &&
-                            (zombie.getZombieStats().getAttributes().get("submarine").equals("on"))) {
+                        (zombie.getZombieStats().isSubmarine())) {
                         continue;
                     }
                     zombie.takeDamage(this, this.damage);
                     zombie.setPosition(new Position(
-                            zombie.getPosition().getX() + this.knockback,
-                            zombie.getPosition().getY()));
+                        zombie.getPosition().getX() + this.knockback,
+                        zombie.getPosition().getY()));
 
                     this.setPierceAmount(this.getPierceAmount() - 1);
                 }
             }
         }
+
+
         for (BattlePlant plant : GAME.getPlants()) {
             if (this.firing) {
                 plant.setFrozen(false);
@@ -180,6 +185,7 @@ public class Projectile {
                 }
             }
         }
+
     }
 
     public void setKnockback(int knockback) {
@@ -225,7 +231,7 @@ public class Projectile {
 
     public void setPierceAmount(int pierceAmount) {
         this.pierceAmount = pierceAmount;
-        if (this.pierceAmount == 0) {
+        if (this.pierceAmount <= 0) {
             this.isActive = false;
         }
     }
@@ -244,5 +250,9 @@ public class Projectile {
 
     public BattlePlant getPlant() {
         return plant;
+    }
+
+    public String getName() {
+        return name;
     }
 }

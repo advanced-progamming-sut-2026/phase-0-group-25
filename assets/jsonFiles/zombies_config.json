@@ -14,7 +14,7 @@
   "KNIGHT": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.185, "waveCost": 550, "armor": ["Crown", "Shoulder Armor"], "abilities": ["moving", "eating"], "attributes": {"dieSpan": 1.83},
     "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC_BRICK/ZOMBIE_DARK_BASIC_BRICK.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "die": "die"}},
 
-  "GARGANTUAR": {"category": "all", "eatdps": 1500, "baseHP":  3600, "velocity": 0.24, "waveCost": 1500, "armor": [], "abilities": ["fatalDamage", "moving"], "attributes": {"firstEat": 1.27, "secondEat": 1.77, "fatalTime": 3.04, "firstThrow": 0.97, "secondThrow": 0.57, "isThrown": "no", "throwTime": 0.00, "dieSpan": 2.63},
+  "GARGANTUAR": {"category": "all", "eatdps": 1500, "baseHP":  3600, "velocity": 0.24, "waveCost": 1500, "armor": [], "abilities": ["fatalDamage", "moving"], "attributes": {"firstEat": 1.27, "secondEat": 1.77, "fatalTime": 3.04, "firstThrow": 0.97, "secondThrow": 0.57, "dieSpan": 2.63},
     "animation": "768/FULL/ZOMBIE/DARK_GARGANTUAR/DARK_GARGANTUAR.PAM", "status": {"idle": "idle", "walk": "walk", "firstEat": "eat", "secondEat": "smash_left", "firstThrow": "fire", "secondThrow": "cannon_fire", "die": "die"}},
 
   "IMP": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.22, "waveCost": 100, "armor": [], "abilities": ["moving", "eating"], "attributes": {"dieSpan": 1.20},
@@ -74,7 +74,7 @@
   "PROSPECTOR": {"category": "all", "eatdps": 100, "baseHP":  190, "velocity": 0.16, "waveCost": 200, "armor": [], "abilities": ["moving", "eating"], "attributes": {"dynamite":  "on", "dieSpan": 2.27},
     "animation": "768/FULL/ZOMBIE/ZOMBIE_PROSPECTOR/ZOMBIE_PROSPECTOR.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "die": "die"}},
 
-  "PIANO": {"category": "all", "eatdps": 4000, "baseHP":  840, "velocity": 0.12, "waveCost": 400, "armor": [], "abilities": ["moving", "fatalDamage"], "attributes": {"dieSpan": 1.00},
+  "PIANO": {"category": "all", "eatdps": 4000, "baseHP":  840, "velocity": 0.12, "waveCost": 400, "armor": [], "abilities": ["fatalDamage", "moving"], "attributes": {"dieSpan": 1.00},
     "animation": "768/FULL/ZOMBIE/ZOMBIE_PIANO/ZOMBIE_PIANO.PAM", "status": {"idle": "idle", "walk": "play", "die": "die"}},
 
   "NEWSPAPER": {"category": "all", "eatdps": 200, "baseHP":  460, "velocity": 0.22, "waveCost": 700, "armor": ["Newspaper"], "abilities": ["moving", "eating"], "attributes": {"dieSpan": 1.83},
