@@ -1,9 +1,13 @@
+// file: core/src/main/java/com/test1/PlantsVsZombies/src/Model/Mower.java
 package com.test1.PlantsVsZombies.src.Model;
 
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 import com.test1.PlantsVsZombies.src.Model.Quests.Events.MowerTriggeredEvent;
 import com.test1.PlantsVsZombies.src.Model.Quests.QuestManager;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class Mower {
     private int row;
@@ -14,6 +18,7 @@ public class Mower {
     private float speed = 750f;
     private String currentAnimState = "idle";
     private final String animationPath = "768/INITIAL/MOWERS/MOWER_TUTORIAL/MOWER_TUTORIAL.PAM";
+    private final Set<Zombie> crushedZombies = new HashSet<>();
 
     public Mower(int row, float startX, float startY) {
         this.row = row;
@@ -35,10 +40,12 @@ public class Mower {
 
         int killedCount = 0;
         for (Zombie z : thisGame.getGameZombies()) {
-            if (z.isAlive() && z.getRow() == this.row) {
+            if (!crushedZombies.contains(z) && z.getRow() == this.row) {
                 if (Math.abs(z.getPosition().getX() - this.x) <= 60 || z.getPosition().getX() < this.x) {
+                    crushedZombies.add(z);
                     z.takeDamage(2000);
                     z.setCurrentHP(0);
+                    z.setAlive(false);
                     killedCount++;
                 }
             }
@@ -51,6 +58,7 @@ public class Mower {
         if (x > 1950) {
             isDone = true;
             isActivated = false;
+            crushedZombies.clear();
         }
     }
 

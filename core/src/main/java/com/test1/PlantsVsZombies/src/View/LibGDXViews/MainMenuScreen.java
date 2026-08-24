@@ -25,6 +25,7 @@ import com.test1.PlantsVsZombies.src.View.ViewInterfaces.MainMenuView;
 import pvz.skin.BorderedTable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MainMenuScreen extends AbstractScreen implements MainMenuView {
 
@@ -510,8 +511,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         } else {
             messagesToShow = UsersManager.getInstance().getAllNews();
         }
-        //messagesToShow = new ArrayList<>(messagesToShow.reversed());
-
+        Collections.reverse(messagesToShow);
         if (messagesToShow.isEmpty()) {
             String text = unreadOnly ? "No unread news" : "No news";
             Label noNews = createLabel(text, "FBUSV8C5EI_1", Color.GRAY);

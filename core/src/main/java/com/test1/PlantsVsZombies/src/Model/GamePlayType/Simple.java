@@ -22,6 +22,7 @@ public class Simple extends GamePlay {
     public Simple(ChapterType chapterType, int level, int difficulty, User thisUser,
                   ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         super(chapterType, level, difficulty, thisUser, plants, zombies, boosted);
+        setLevelObjectives("Zombies shouldn't reach the house.");
     }
 
     @Override
@@ -187,7 +188,7 @@ public class Simple extends GamePlay {
                 } else if (currentMower.isDone() && zX <= 390) {
                     System.out.println("The zombie ate your brain; LOSER!!!");
                     UsersManager.getInstance().addGamesPlayed();
-                    this.isPaused = true;
+                    endGame(false);
                 }
             }
         }
@@ -196,7 +197,7 @@ public class Simple extends GamePlay {
         if (checkingTheEndOfTheGame()) {
             onWin();
             System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
-            this.isPaused = true;
+            endGame(true);
         }
     }
 

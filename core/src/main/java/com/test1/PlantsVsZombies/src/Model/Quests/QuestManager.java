@@ -48,6 +48,16 @@ public class QuestManager {
         LocalDate today = LocalDate.now();
         boolean performedDailyReset = false;
 
+        // allQuests is one shared, in-memory list reused no matter who is
+        // logged in. Wipe every quest back to a pristine state first so a
+        // freshly-switched-to user (especially a brand-new one, whose saved
+        // maps below are empty) never inherits progress/completion/claim
+        // state left behind by whoever was logged in before them.
+        for (Quest q : allQuests) {
+            q.randomizeVariable();
+            q.reset();
+        }
+
         if (lastDailyReset == null || !lastDailyReset.equals(today)) {
             resetDailyQuests();
             UsersManager.getInstance().setLastDailyResetForCurrentUser(today);

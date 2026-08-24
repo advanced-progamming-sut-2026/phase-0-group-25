@@ -23,6 +23,7 @@ public class PlantWhatYouGet extends GamePlay {
     public PlantWhatYouGet(ChapterType chapterType, int level, int difficulty, User thisUser,
                            ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         super(chapterType, level, difficulty, thisUser, plants, zombies, boosted);
+        setLevelObjectives("use the plants that appear for you and don't let the zombies reach the house");
         this.mySuns = INITIAL_SUN_BUDGET;
     }
 
@@ -161,14 +162,14 @@ public class PlantWhatYouGet extends GamePlay {
                     mower.trigger();
                 } else if (mower.isDone() && zX <= 390) {
                     UsersManager.getInstance().addGamesPlayed();
-                    this.isPaused = true;
+                    endGame(false);
                 }
             }
         }
 
         if (checkingTheEndOfTheGame()) {
             onWin();
-            this.isPaused = true;
+            endGame(true);
         }
     }
 }

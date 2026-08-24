@@ -63,6 +63,15 @@ public abstract class GamePlay {
     protected ArrayList<IcyWindEffect> activeIcyWinds = new ArrayList<>();
     protected Set<String> boostedPlants = new HashSet<>();
 
+    private String levelObjectives;
+
+    public String getLevelObjectives() {
+        return levelObjectives;
+    }
+
+    public void setLevelObjectives(String levelObjectives) {
+        this.levelObjectives = levelObjectives;
+    }
 
     public GamePlay(ChapterType chapterType, int level, int difficulty, User thisUser,
                     ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
@@ -820,6 +829,37 @@ public abstract class GamePlay {
 
     public boolean isPaused() {
         return isPaused;
+    }
+
+    private boolean gameOver = false;
+    private boolean won = false;
+
+    /**
+     * True once the level has actually ended (won or lost), as opposed to
+     * isPaused, which is also true while e.g. a UI modal has paused the
+     * game. Set exclusively through endGame(...).
+     */
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    /**
+     * Only meaningful once isGameOver() is true.
+     */
+    public boolean hasWon() {
+        return won;
+    }
+
+    /**
+     * Called by GamePlayType subclasses once win/loss-specific business
+     * logic (onWin(), addGamesPlayed(), etc.) has already run, to mark the
+     * level as finished and pause it so the UI can show the end-of-game
+     * modal.
+     */
+    protected void endGame(boolean won) {
+        this.won = won;
+        this.gameOver = true;
+        this.isPaused = true;
     }
 
     public boolean tryCollectSunByClick(float clickX, float clickY) {
