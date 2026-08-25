@@ -232,9 +232,6 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         lowTideRuneRegion = textureBank.region("IMAGE_PLANT_WATERRABBIT_WATERRABBIT_82X82");
 
         pauseBtnRegion = textureBank.region(PAUSE_BTN_ASSET_ID);
-        if (pauseBtnRegion == null) {
-            pauseBtnRegion = textureBank.region("IMAGE_UI_HUD_INGAME_BACKGROUND_3SLICE");
-        }
 
         for (int i = 0; i < EGYPT_GRAVE_ASSET_IDS.length; i++) {
             egyptGraveRegions[i] = textureBank.region(EGYPT_GRAVE_ASSET_IDS[i]);
@@ -683,6 +680,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             }
         }
 
+        ScreenShake.update(delta, camera);
         camera.update();
 
         batch.setProjectionMatrix(camera.combined);
@@ -709,121 +707,99 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             }
         }
 
-        if (gamePlay.getChapterType() == ChapterType.ANCIENT_EGYPT) {
-            for (Tile tile : gamePlay.getTiles()) {
-                if (!tile.isArable() && tile.getHP() > 0) {
-                    int gridX = (int) tile.getPosition().getX();
-                    int gridY = (int) tile.getPosition().getY();
 
-                    float realX = gamePlay.getRealX(gridX);
-                    float realY = gamePlay.getRealY(gridY);
+        for (int row = 5; row >= 1; row--) {
+            final int currentRow = row;
 
-                    float hpRatio = Math.min(1.0f, tile.getHP() / GRAVE_MAX_HP);
-                    int stageIndex = 4 - (int) Math.min(4, Math.floor(hpRatio * 5));
+            if (gamePlay.getChapterType() == ChapterType.ANCIENT_EGYPT) {
+                for (Tile tile : gamePlay.getTiles()) {
+                    if ((int) tile.getPosition().getY() == currentRow && !tile.isArable() && tile.getHP() > 0) {
+                        float realX = gamePlay.getRealX((int) tile.getPosition().getX());
+                        float realY = gamePlay.getRealY(currentRow);
+                        float hpRatio = Math.min(1.0f, tile.getHP() / GRAVE_MAX_HP);
+                        int stageIndex = 4 - (int) Math.min(4, Math.floor(hpRatio * 5));
+                        TextureRegion graveTexture = egyptGraveRegions[stageIndex];
 
-                    TextureRegion graveTexture = egyptGraveRegions[stageIndex];
-                    if (graveTexture != null) {
-                        float graveW = 115f;
-                        float graveH = 145f;
-                        batch.draw(graveTexture, realX - (graveW / 2f) - 7, realY - 30f, graveW, graveH);
-                    }
-                }
-            }
-        }
-        else if (gamePlay.getChapterType() == ChapterType.FROSTBITE_CAVES) {
-            for (Tile tile : gamePlay.getTiles()) {
-                if (!tile.isArable()) {
-                    int gridX = (int) tile.getPosition().getX();
-                    int gridY = (int) tile.getPosition().getY();
-
-                    float realX = gamePlay.getRealX(gridX);
-                    float realY = gamePlay.getRealY(gridY);
-
-                    float tileW = 145f;
-                    float tileH = 140f;
-
-                    if (tile.getHP() == 0 && iceSliderRegion != null) {
-                        batch.draw(iceSliderRegion, realX - (tileW / 2f), realY - 47f, tileW, tileH);
-                    } else if (tile.getHP() > 0 && iceBlockTexture != null) {
-                        batch.draw(iceBlockTexture, realX - (tileW / 2f), realY - 25f, 130f, 155f);
-                    }
-                }
-            }
-        }
-        else if (gamePlay.getChapterType() == ChapterType.DARK_AGE) {
-            for (Tile tile : gamePlay.getTiles()) {
-                if (!tile.isArable() && tile.getHP() > 0) {
-                    int gridX = (int) tile.getPosition().getX();
-                    int gridY = (int) tile.getPosition().getY();
-
-                    float realX = gamePlay.getRealX(gridX);
-                    float realY = gamePlay.getRealY(gridY);
-
-                    if (tile.isNecromancy() && !tile.isNecromancyTriggered()) {
-                        if (necromancyRuneRegion != null) {
-                            batch.draw(necromancyRuneRegion, realX - 60f, realY - 50f, 120f, 60f);
+                        if (graveTexture != null) {
+                            float graveW = graveTexture.getRegionWidth();
+                            float graveH = graveTexture.getRegionHeight();
+                            batch.draw(graveTexture, realX - (graveW / 2f) - 7f, realY - 30f, graveW*1.4f, graveH*1.4f);
                         }
                     }
+                }
+            } else if (gamePlay.getChapterType() == ChapterType.FROSTBITE_CAVES) {
+                for (Tile tile : gamePlay.getTiles()) {
+                    if ((int) tile.getPosition().getY() == currentRow && !tile.isArable()) {
+                        float realX = gamePlay.getRealX((int) tile.getPosition().getX());
+                        float realY = gamePlay.getRealY(currentRow);
+                        float tileW = 145f;
+                        float tileH = 140f;
+                        if (tile.getHP() == 0 && iceSliderRegion != null) {
+                            batch.draw(iceSliderRegion, realX - (tileW / 2f), realY - 47f, tileW, tileH);
+                        } else if (tile.getHP() > 0 && iceBlockTexture != null) {
+                            batch.draw(iceBlockTexture, realX - (tileW / 2f), realY - 25f, 130f, 155f);
+                        }
+                    }
+                }
+            } else if (gamePlay.getChapterType() == ChapterType.DARK_AGE) {
+                for (Tile tile : gamePlay.getTiles()) {
+                    if ((int) tile.getPosition().getY() == currentRow && !tile.isArable() && tile.getHP() > 0) {
+                        float realX = gamePlay.getRealX((int) tile.getPosition().getX());
+                        float realY = gamePlay.getRealY(currentRow);
 
-                    float hpRatio = Math.max(0f, Math.min(1.0f, (float) tile.getHP() / GRAVE_MAX_HP));
-                    int stageIndex = 4 - (int) Math.min(4, Math.floor(hpRatio * 4.99f));
+                        if (tile.isNecromancy() && !tile.isNecromancyTriggered() && necromancyRuneRegion != null) {
+                            batch.draw(necromancyRuneRegion, realX - 60f, realY - 50f, 120f, 60f);
+                        }
 
-                    TextureRegion graveTex = switch (tile.getGraveType()) {
-                        case PLANT_FOOD -> darkPlantFoodGraveRegions[stageIndex];
-                        case SUN -> darkSunGraveRegions[stageIndex];
-                        default -> darkNormalGraveRegions[stageIndex];
-                    };
+                        float hpRatio = Math.max(0f, Math.min(1.0f, (float) tile.getHP() / GRAVE_MAX_HP));
+                        int stageIndex = 4 - (int) Math.min(4, Math.floor(hpRatio * 4.99f));
+                        TextureRegion graveTex = switch (tile.getGraveType()) {
+                            case PLANT_FOOD -> darkPlantFoodGraveRegions[stageIndex];
+                            case SUN -> darkSunGraveRegions[stageIndex];
+                            default -> darkNormalGraveRegions[stageIndex];
+                        };
 
-                    if (graveTex != null) {
-                        batch.draw(graveTex, realX - 60f - 7f, realY - 30f, 115f, 145f);
+                        if (graveTex != null) {
+                            float graveW = graveTex.getRegionWidth();
+                            float graveH = graveTex.getRegionHeight();
+                            batch.draw(graveTex, realX - (graveW / 2f) - 7f, realY - 30f, graveW*1.4f, graveH*1.4f);
+                        }
+                    }
+                }
+            } else if (gamePlay.getChapterType() == ChapterType.BIG_WAVE_BEACH) {
+                for (Tile tile : gamePlay.getTiles()) {
+                    if ((int) tile.getPosition().getY() == currentRow && !tile.isArable() && tile.isLowTide() && !tile.isLowTideTriggered()) {
+                        float realX = gamePlay.getRealX((int) tile.getPosition().getX());
+                        float realY = gamePlay.getRealY(currentRow);
+                        if (lowTideRuneRegion != null) {
+                            float pulse = 0.6f + 0.4f * (float) Math.sin(stateTime * 4f);
+                            batch.setColor(0.1f, 0.7f, 1f, pulse);
+                            batch.draw(lowTideRuneRegion, realX - 60f, realY - 45f, 120f, 60f);
+                            batch.setColor(Color.WHITE);
+                        }
                     }
                 }
             }
-        }
-        if (gamePlay.getChapterType() == ChapterType.BIG_WAVE_BEACH) {
-            for (Tile tile : gamePlay.getTiles()) {
-                if (!tile.isArable() && tile.isLowTide() && !tile.isLowTideTriggered()) {
-                    int gridX = (int) tile.getPosition().getX();
-                    int gridY = (int) tile.getPosition().getY();
-                    float realX = gamePlay.getRealX(gridX);
-                    float realY = gamePlay.getRealY(gridY);
 
-                    if (lowTideRuneRegion != null) {
-                        float pulse = 0.6f + 0.4f * (float) Math.sin(stateTime * 4f);
-                        batch.setColor(0.1f, 0.7f, 1f, pulse);
-                        batch.draw(lowTideRuneRegion, realX - 60f, realY - 45f, 120f, 60f);
-                        batch.setColor(Color.WHITE);
-                    }
+            ArrayList<BattlePlant> rowPlants = new ArrayList<>();
+            for (BattlePlant p : gamePlay.getGamePlants()) {
+                if (p.isAlive() && p.getPosition() != null && p.getRow() == currentRow) {
+                    rowPlants.add(p);
                 }
             }
+            rowPlants.sort((p1, p2) -> Integer.compare(getPlantLayerPriority(p1), getPlantLayerPriority(p2)));
 
-            float waterOffset = (float) Math.sin(stateTime * 0.8f) * WATER_MOVE_RANGE;
-            float currentWaterX = WATER_BASE_X + waterOffset;
-
-            player.draw(batch, BEACH_WATER_ANIM_PATH, "water", stateTime, currentWaterX, WATER_BASE_Y, true);
-
-            player.draw(batch, BEACH_TIDELINE_ANIM_PATH, "idle", stateTime, TIDELINE_X, TIDELINE_Y, true);
-        }
-
-        for (BattlePlant p : gamePlay.getGamePlants()) {
-            if (p.isAlive() && p.getPosition() != null && p.getPlantStats().getAnimation() != null) {
+            for (BattlePlant p : rowPlants) {
                 float drawX = (float) p.getPosition().getX();
                 float drawY = (float) p.getPosition().getY();
 
                 int iceStage = 0;
-                if (p.isFrozen() || p.getIceTime() >= 3) {
-                    iceStage = 3;
-                } else if (p.getIceTime() == 2) {
-                    iceStage = 2;
-                } else if (p.getIceTime() == 1) {
-                    iceStage = 1;
-                }
+                if (p.isFrozen() || p.getIceTime() >= 3) iceStage = 3;
+                else if (p.getIceTime() == 2) iceStage = 2;
+                else if (p.getIceTime() == 1) iceStage = 1;
 
-                if (iceStage > 0) {
-                    batch.setColor(0.65f, 0.85f, 1.0f, 1.0f);
-                } else {
-                    batch.setColor(Color.WHITE);
-                }
+                if (iceStage > 0) batch.setColor(0.65f, 0.85f, 1.0f, 1.0f);
+                else batch.setColor(Color.WHITE);
 
                 player.draw(batch, p.getAnimationPath(), p.getCurrentAnimationName(),
                     stateTime, drawX, drawY, true, p.getVisibilities());
@@ -835,42 +811,51 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                     if (iceTex != null) {
                         float iceW = (iceStage == 3) ? 140f : 120f;
                         float iceH = (iceStage == 3) ? 160f : 135f;
-                        float offsetX = iceW / 2f;
-                        float offsetY = 50f;
-
-                        batch.draw(iceTex, drawX - offsetX - 2f, drawY - offsetY, iceW, iceH);
+                        batch.draw(iceTex, drawX - (iceW / 2f) - 2f, drawY - 50f, iceW, iceH);
                     }
                 }
             }
+
+            ArrayList<Zombie> rowZombies = new ArrayList<>();
+            for (Zombie z : gamePlay.getGameZombies()) {
+                if (z.isAlive() && z.getRow() == currentRow) {
+                    rowZombies.add(z);
+                }
+            }
+            rowZombies.sort((z1, z2) -> Double.compare(z2.getPosition().getX(), z1.getPosition().getX()));
+
+            for (Zombie z : rowZombies) {
+                if (z.getZombieStats().getAnimation() != null) {
+                    float drawX = (float) z.getPosition().getX();
+                    float drawY = (float) z.getPosition().getY();
+
+                    if (z.isHypnotized()) {
+                        float pulse = 0.75f + 0.25f * (float) Math.sin(stateTime * 7f);
+                        batch.setColor(0.35f * pulse, 1.0f, 0.45f * pulse, 1.0f);
+                    } else {
+                        batch.setColor(Color.WHITE);
+                    }
+
+                    player.draw(batch, z.getAnimationPath(), z.getCurrentAnimationName(),
+                        stateTime, drawX, drawY, true, z.getVisibility());
+
+                    batch.setColor(Color.WHITE);
+                }
+            }
+        }
+
+        if (gamePlay.getChapterType() == ChapterType.BIG_WAVE_BEACH) {
+            float waterOffset = (float) Math.sin(stateTime * 0.8f) * WATER_MOVE_RANGE;
+            float currentWaterX = WATER_BASE_X + waterOffset;
+            player.draw(batch, BEACH_WATER_ANIM_PATH, "water", stateTime, currentWaterX, WATER_BASE_Y, true);
+            player.draw(batch, BEACH_TIDELINE_ANIM_PATH, "idle", stateTime, TIDELINE_X, TIDELINE_Y, true);
         }
 
         for (DroppedPlantFood pf : gamePlay.getActivePlantFoods()) {
             float x = (float) pf.getPosition().getX();
             float y = (float) pf.getPosition().getY();
-
             float floatOffset = (float) Math.sin(stateTime * 5f) * 7f;
-
             batch.draw(getPlantFoodIconInGame, x, y + floatOffset, 65, 65);
-        }
-
-        for (int i = 0; i < gamePlay.getGameZombies().size(); i++) {
-            Zombie z = gamePlay.getGameZombies().get(i);
-            if (z.isAlive() && z.getZombieStats().getAnimation() != null) {
-                float drawX = (float) z.getPosition().getX();
-                float drawY = (float) z.getPosition().getY();
-
-                if (z.isHypnotized()) {
-                    float pulse = 0.75f + 0.25f * (float) Math.sin(stateTime * 7f);
-                    batch.setColor(0.35f * pulse, 1.0f, 0.45f * pulse, 1.0f);
-                } else {
-                    batch.setColor(Color.WHITE);
-                }
-
-                player.draw(batch, z.getAnimationPath(), z.getCurrentAnimationName(),
-                    stateTime, drawX, drawY, true, z.getVisibility());
-
-                batch.setColor(Color.WHITE);
-            }
         }
 
         for (Sun sun : gamePlay.getActiveSuns()) {
@@ -1405,5 +1390,17 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     @Override
     public void showError(String errorMessage) {
         UIManager.showToast(errorMessage, ERROR_BG_ASSET_ID);
+    }
+
+    private int getPlantLayerPriority(BattlePlant plant) {
+        if (plant == null || plant.getName() == null) return 1;
+        String name = plant.getName().toUpperCase();
+        if (name.contains("LILY_PAD")  || name.contains("HOT_POTATO")) {
+            return 0;
+        }
+        if (name.contains("PUMPKIN")) {
+            return 2;
+        }
+        return 1;
     }
 }
