@@ -220,10 +220,12 @@ public class Zombie extends Entity {
             }
 
             if ((!this.zombieStats.getName().equals("IMP_DRAGON")) || (!projectile.isFiring())) {
+                boolean wasAlive = (this.currentHP > 0);
                 this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
-                if (this.getCurrentHP() <= 0) {
+                if (wasAlive && this.currentHP <= 0) {
                     checkKiller(projectile);
                 }
+
             }
         }
     }
@@ -277,15 +279,17 @@ public class Zombie extends Entity {
             }
         }
 
-        if (leftoverDamage > 0) {
-            this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
-            if (this.getCurrentHP() <= 0) {
-                checkKiller(plant);
-                if (plant.getPlantStats().getCategory().equals("Explosive")) {
-                    this.isDeadByExplosion = true;
-                }
+
+
+        boolean wasAlive = (this.currentHP > 0);
+        this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
+        if (wasAlive && this.currentHP <= 0) {
+            checkKiller(plant);
+            if (plant.getPlantStats().getCategory().equals("Explosive")) {
+                this.isDeadByExplosion = true;
             }
         }
+
     }
 
     private void checkKiller(Projectile projectile) {
