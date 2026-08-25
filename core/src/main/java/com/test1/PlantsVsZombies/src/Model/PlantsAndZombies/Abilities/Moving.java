@@ -57,7 +57,7 @@ public class Moving implements Ability {
                         handleExplorerTorch(zombie, plant);
                     } else if ((zombie.getZombieStats().getName().equals("SNORKEL")) &&
                         (zombie.getPosition().getX() < SNORKEL_X_LIMIT)) {
-                        zombie.getZombieStats().setSubmarine(false);
+                        zombie.setSubmarine(false);
                     }
                     return;
                 }

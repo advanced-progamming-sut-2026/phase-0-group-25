@@ -162,7 +162,7 @@ public class Projectile {
             zombie.getCurrentHP() > 0) {
                 if (this.position.equals(zombie.getPosition())) {
                     if ((zombie.getZombieStats().getName().equals("SNORKEL")) &&
-                        (zombie.getZombieStats().isSubmarine())) {
+                        (zombie.isSubmarine())) {
                         continue;
                     }
                     zombie.takeDamage(this, this.damage);

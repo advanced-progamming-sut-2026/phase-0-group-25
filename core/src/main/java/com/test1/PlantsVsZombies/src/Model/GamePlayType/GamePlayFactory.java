@@ -26,6 +26,8 @@ public class GamePlayFactory {
                 return new DeadLine(chapterType, level, difficulty, user, plants, zombies, boosted);
             case LOVE_YOUR_PLANTS:
                 return new LoveYourPlants(chapterType, level, difficulty, user, plants, zombies, boosted);
+            case CONVEYOR_BELT:
+                return new ConveyorBelt(chapterType, level, difficulty, user, plants, zombies, boosted);
             case SIMPLE:
             default:
                 return new Simple(chapterType, level, difficulty, user, plants, zombies, boosted);

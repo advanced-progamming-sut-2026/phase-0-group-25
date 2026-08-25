@@ -134,4 +134,8 @@ public class MenuManager {
         return (GamePlayMenu) menusAndTheirNames.get(MenuType.GamePlay);
     }
 
+    public TravelLogMenu getTravelLogMenu() {
+        return (TravelLogMenu) menusAndTheirNames.get(MenuType.TravelLog);
+    }
+
 }

@@ -3,6 +3,7 @@ package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -12,6 +13,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.test1.PlantsVsZombies.src.Enums.MenuType;
+import com.test1.PlantsVsZombies.src.Enums.MiniGameType;
+import com.test1.PlantsVsZombies.src.Menu.MenuManager;
 import com.test1.PlantsVsZombies.src.Model.MiniGames.WallnutBowlingGame.*;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.GamePlayMenuView;
@@ -60,6 +64,16 @@ public class WallnutBowlingScreen extends ScreenAdapter implements GamePlayMenuV
     private static final String NUT_BIG_ANIM = "768/FULL/EFFECTS/BOWLINGBULB_PROJECTILE3/BOWLINGBULB_PROJECTILE3.PAM";
     private static final String NUT_EXPLODE_ANIM = "768/FULL/EFFECTS/BOWLINGBULB_PLANTFOOD_PROJECTILE/BOWLINGBULB_PLANTFOOD_PROJECTILE.PAM";
 
+    // ---- Pause button (top-right corner, matches GamePlayScreen's) ----
+    public static final String PAUSE_BTN_ASSET_ID = "IMAGE_UI_HUD_INGAME_PAUSE_BUTTON";
+    private TextureRegion pauseBtnRegion;
+    private static final float PAUSE_BTN_X = 1810f;
+    private static final float PAUSE_BTN_Y = 1105f;
+    private static final float PAUSE_BTN_SIZE = 75f;
+
+    // ---- Objectives / pause / end-of-game modal system (shared component) ----
+    private GamePlayModals modals;
+
     public WallnutBowlingScreen(WalnutBowling gamePlay) {
         this.gamePlay = gamePlay;
     }
@@ -86,7 +100,23 @@ public class WallnutBowlingScreen extends ScreenAdapter implements GamePlayMenuV
         flagIcon = textureBank.region("IMAGE_ZOMBIE_ZOMBIE_FEASTIVUS_FLAG_ZOMBIE_FEASTIVUS_FLAG_123X95");
         zombieHeadIcon = textureBank.region("IMAGE_UI_HUD_INGAME_PROGRESS_METER_ZOMBIEHEAD");
 
-        Gdx.input.setInputProcessor(new InputAdapter() {
+        pauseBtnRegion = textureBank.region(PAUSE_BTN_ASSET_ID);
+        if (pauseBtnRegion == null) {
+            pauseBtnRegion = textureBank.region("IMAGE_UI_HUD_INGAME_BACKGROUND_3SLICE");
+        }
+
+        UIManager.resizeToasts(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        // Mini-games exit back to the Travel Log (where they're launched
+        // from), not the chapter/level select screen, and restart via the
+        // exact same entry point a fresh "play" click uses.
+        modals = new GamePlayModals(
+            gamePlay,
+            () -> MenuManager.getInstance().changeMenu(MenuType.TravelLog),
+            () -> MenuManager.getInstance().getTravelLogMenu().startMiniGame(MiniGameType.WALNUT_BOWLING.getDisplayName())
+        );
+
+        InputAdapter gameInputAdapter = new InputAdapter() {
             @Override
             public boolean mouseMoved(int screenX, int screenY) {
                 camera.unproject(mouseWorldPos.set(screenX, screenY, 0));
@@ -102,6 +132,13 @@ public class WallnutBowlingScreen extends ScreenAdapter implements GamePlayMenuV
                     return true;
                 }
 
+                if (mouseWorldPos.x >= PAUSE_BTN_X && mouseWorldPos.x <= PAUSE_BTN_X + PAUSE_BTN_SIZE &&
+                    mouseWorldPos.y >= PAUSE_BTN_Y && mouseWorldPos.y <= PAUSE_BTN_Y + PAUSE_BTN_SIZE) {
+                    if (!gamePlay.isGameOver()) {
+                        modals.showPauseModal();
+                        return true;
+                    }
+                }
 
                 for (BowlingCard card : gamePlay.getConveyorBelt()) {
                     float cardY = card.getCurrentY();
@@ -127,21 +164,31 @@ public class WallnutBowlingScreen extends ScreenAdapter implements GamePlayMenuV
 
                 return false;
             }
-        });
+        };
+
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(modals.getStage());
+        multiplexer.addProcessor(gameInputAdapter);
+        Gdx.input.setInputProcessor(multiplexer);
+
+        modals.showObjectivesModal(null);
     }
 
     @Override
     public void render(float delta) {
-        stateTime += delta;
         textureBank.update();
 
         if (!gamePlay.isPaused()) {
+            stateTime += delta;
+
             timeAccumulator += delta;
             while (timeAccumulator >= TICK_RATE) {
                 gamePlay.update();
                 timeAccumulator -= TICK_RATE;
             }
             gamePlay.updateWithDelta(delta);
+
+            modals.checkAndMaybeShowEndGameModal();
         }
 
         ScreenUtils.clear(0.1f, 0.35f, 0.1f, 1);
@@ -287,8 +334,16 @@ public class WallnutBowlingScreen extends ScreenAdapter implements GamePlayMenuV
         if (zombieHeadIcon != null) {
             batch.draw(zombieHeadIcon, headX - 25, barY - 5, 50, 50);
         }
+
+        if (pauseBtnRegion != null) {
+            batch.draw(pauseBtnRegion, PAUSE_BTN_X, PAUSE_BTN_Y, PAUSE_BTN_SIZE, PAUSE_BTN_SIZE);
+        }
+
         batch.end();
-        
+
+        modals.getStage().act(delta);
+        modals.getStage().draw();
+
         UIManager.renderToasts(delta);
     }
 
@@ -297,6 +352,9 @@ public class WallnutBowlingScreen extends ScreenAdapter implements GamePlayMenuV
         viewport.update(width, height, true);
         camera.position.set(1920 / 2f, 1200 / 2f, 0);
         camera.update();
+        if (modals != null) {
+            modals.resize(width, height);
+        }
         UIManager.resizeToasts(width, height);
     }
 
@@ -304,6 +362,9 @@ public class WallnutBowlingScreen extends ScreenAdapter implements GamePlayMenuV
     public void dispose() {
         batch.dispose();
         shapeRenderer.dispose();
+        if (modals != null) {
+            modals.dispose();
+        }
     }
 
     @Override

@@ -21,6 +21,7 @@ import java.util.Random;
 public class Zombie extends Entity {
     private static int FROZEN_TIME = 3;
     private static int TILE_X_LENGTH = 150;
+    private static int BUTTER_TIME = 3;
     private static Random RANDOM = new Random();
     private GamePlay GAME = GamePlay.activeInstance;
 
@@ -37,6 +38,7 @@ public class Zombie extends Entity {
     private double timeWhenFrozen;
     private int frozenTime;
     private boolean isButtered = false;
+    private double timeWhenButtered;
 
 
     private ArrayList<Armor> activeArmors;
@@ -45,6 +47,13 @@ public class Zombie extends Entity {
     private double dieTime;
     private boolean isDeadByExplosion = false;
 
+    //just for gargantuar zombie
+    private double thrownTime;
+    private boolean isThrown = false;
+    private boolean isFinished = false;
+
+    //just for snorkel zombie
+    private boolean isSubmarine = false;
 
     public Zombie(ZombieStats zombieStats, String name) {
         this.zombieStats = zombieStats;
@@ -113,7 +122,9 @@ public class Zombie extends Entity {
 
 
     public void update() {
-        checkFreeze();
+        checkFreezeAndButter();
+
+        // System.out.println(this.zombieStats.getEatdps());
 
         checkLife();
         if ((this.zombieStats.getName().equals("PROSPECTOR")) &&
@@ -187,8 +198,8 @@ public class Zombie extends Entity {
                     activeArmors.remove(armor);
                     i -= 1;
                     if (this.name.equals("NEWSPAPER")) { //increasing velocity & damage per second of NEWSPAPER_ZOMBIE
-                        this.zombieStats.setVelocity(this.zombieStats.getVelocity() * 2.5);
-                        this.zombieStats.setEatdps(this.zombieStats.getEatdps() * 2.5);
+                        this.currentVelocity = this.zombieStats.getVelocity() * 2.5;
+                        this.getZombieStats().setEatdps(this.zombieStats.getEatdps() * 2.5);
                     }
                 }
                 if (leftoverDamage <= 0) {
@@ -220,8 +231,10 @@ public class Zombie extends Entity {
             }
 
             if ((!this.zombieStats.getName().equals("IMP_DRAGON")) || (!projectile.isFiring())) {
+                boolean wasAlive = this.currentHP > 0;
                 this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
-                if (this.getCurrentHP() <= 0) {
+                if (wasAlive &&
+                    this.getCurrentHP() <= 0) {
                     checkKiller(projectile);
                 }
             }
@@ -240,7 +253,7 @@ public class Zombie extends Entity {
                 activeArmors.remove(armor);
                 i -= 1;
                 if (this.name.equals("NEWSPAPER")) { //increasing velocity & damage per second of NEWSPAPER_ZOMBIE
-                    this.zombieStats.setVelocity(this.zombieStats.getVelocity() * 2.5);
+                    this.currentVelocity = this.zombieStats.getVelocity() * 2.5;
                     this.zombieStats.setEatdps(this.zombieStats.getEatdps() * 2.5);
                 }
             }
@@ -267,7 +280,7 @@ public class Zombie extends Entity {
                 activeArmors.remove(armor);
                 i -= 1;
                 if (this.name.equals("NEWSPAPER")) { //increasing velocity & damage per second of NEWSPAPER_ZOMBIE
-                    this.zombieStats.setVelocity(this.zombieStats.getVelocity() * 2.5);
+                    this.currentVelocity = this.zombieStats.getVelocity() * 2.5;
                     this.zombieStats.setEatdps(this.zombieStats.getEatdps() * 2.5);
                 }
             }
@@ -278,8 +291,10 @@ public class Zombie extends Entity {
         }
 
         if (leftoverDamage > 0) {
+            boolean wasAlive = this.currentHP > 0;
             this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
-            if (this.getCurrentHP() <= 0) {
+            if (wasAlive &&
+                this.getCurrentHP() <= 0) {
                 checkKiller(plant);
                 if (plant.getPlantStats().getCategory().equals("Explosive")) {
                     this.isDeadByExplosion = true;
@@ -301,10 +316,17 @@ public class Zombie extends Entity {
         }
     }
 
-    public void checkFreeze() {
+    public void checkFreezeAndButter() {
         if (this.isFrozen) {
             if ((GAME.getTotalTimePassed() - this.timeWhenFrozen) >= this.frozenTime) {
                 this.isFrozen = false;
+                this.currentVelocity = this.zombieStats.getVelocity();
+            }
+        }
+
+        if (this.isButtered) {
+            if ((GAME.getTotalTimePassed() - this.timeWhenButtered) >= BUTTER_TIME) {
+                this.isButtered = false;
                 this.currentVelocity = this.zombieStats.getVelocity();
             }
         }
@@ -332,9 +354,9 @@ public class Zombie extends Entity {
     public void checkLife() {
         if (this.name.equals("GARGANTUAR")) {
             if (this.currentHP <= (this.zombieStats.getBaseHP() / 2)) {
-                if (!this.zombieStats.isThrown()) {
-                    this.zombieStats.setThrownTime(GAME.getTotalTimePassed());
-                    this.zombieStats.setThrown(true);
+                if (!this.isThrown()) {
+                    this.setThrownTime(GAME.getTotalTimePassed());
+                    this.setThrown(true);
                 }
             }
         }
@@ -474,7 +496,7 @@ public class Zombie extends Entity {
         } else if (this.isHalated) {
             return Color.GREEN;
         } else if (this.name.equals("SNORKEL")) {
-            if (this.zombieStats.isSubmarine()) {
+            if (this.isSubmarine) {
                 return Color.FOREST;
             }
         }
@@ -487,9 +509,12 @@ public class Zombie extends Entity {
     }
 
 
-
     public void setButtered(boolean buttered) {
         isButtered = buttered;
+        if (this.isButtered) {
+            this.currentVelocity = 0;
+            this.timeWhenButtered = GAME.getTotalTimePassed();
+        }
     }
 
     public boolean isDeadByExplosion() {
@@ -500,7 +525,39 @@ public class Zombie extends Entity {
         return isHalated;
     }
 
-    public void setHalated(boolean halated) {
-        isHalated = halated;
+    public void setHalated(boolean isHalated) {
+        this.isHalated = isHalated;
+    }
+
+    public boolean isFinished() {
+        return isFinished;
+    }
+
+    public void setFinished(boolean finished) {
+        isFinished = finished;
+    }
+
+    public boolean isThrown() {
+        return isThrown;
+    }
+
+    public void setThrown(boolean thrown) {
+        this.isThrown = thrown;
+    }
+
+    public double getThrownTime() {
+        return thrownTime;
+    }
+
+    public void setThrownTime(double thrownTime) {
+        this.thrownTime = thrownTime;
+    }
+
+    public boolean isSubmarine() {
+        return isSubmarine;
+    }
+
+    public void setSubmarine(boolean submarine) {
+        this.isSubmarine = submarine;
     }
 }

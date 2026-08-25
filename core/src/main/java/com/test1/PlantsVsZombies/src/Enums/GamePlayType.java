@@ -6,5 +6,6 @@ public enum GamePlayType {
     PLANT_WHAT_YOU_GET,
     TIMED_WAR,
     DEADLINE,
-    LOVE_YOUR_PLANTS
+    LOVE_YOUR_PLANTS,
+    CONVEYOR_BELT
 }

@@ -74,5 +74,7 @@ public class Armor {
         return null;
     }
 
-
+    public int getBaseHP() {
+        return baseHP;
+    }
 }

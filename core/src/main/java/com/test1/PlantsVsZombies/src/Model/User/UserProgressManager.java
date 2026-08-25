@@ -142,6 +142,15 @@ public class UserProgressManager {
         save();
     }
 
+    public void reducePlantFood(int amount) {
+        User user = getLoggedInUser();
+        if (user == null) return;
+        UserProgress progress = user.getUserProgress();
+        int newCount = Math.max(0, progress.getPlantFoodCount() - amount);
+        progress.setPlantFoodCount(newCount);
+        save();
+    }
+
     public void unlockPlant(PlantType plantType) {
         User user = getLoggedInUser();
         if (user == null) return;

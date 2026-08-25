@@ -3,6 +3,7 @@ package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -15,13 +16,18 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.test1.PlantsVsZombies.src.Enums.MenuType;
+import com.test1.PlantsVsZombies.src.Enums.MiniGameType;
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
+import com.test1.PlantsVsZombies.src.Menu.MenuManager;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.MiniGames.VasebreakerGame.*;
+import com.test1.PlantsVsZombies.src.Model.Mower;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.ProjectileConfig;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
+import com.test1.PlantsVsZombies.src.Model.Tile;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.GamePlayMenuView;
 import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
@@ -29,7 +35,7 @@ import pvz.libpvz.textures.TextureBank;
 import java.util.ArrayList;
 
 public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView {
-    private final VaseBreaker gamePlay;
+    private VaseBreaker gamePlay;
     private OrthographicCamera camera;
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
@@ -42,12 +48,24 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
     private TextureRegion greenJarIcon;
     private TextureRegion purpleJarIcon;
     private TextureRegion progressBarFrame;
+    private TextureRegion peaRegion;
     private BitmapFont hudFont;
 
     private float stateTime = 0;
     private float timeAccumulator = 0f;
     private final float TICK_RATE = 0.1f;
-    private final Vector3 mouseWorldPos = new Vector3();
+    private int selectedCardIndex = -1;
+    private Vector3 mouseWorldPos = new Vector3();
+
+    // ---- Pause button (top-right corner, matches GamePlayScreen's) ----
+    public static final String PAUSE_BTN_ASSET_ID = "IMAGE_UI_HUD_INGAME_PAUSE_BUTTON";
+    private TextureRegion pauseBtnRegion;
+    private static final float PAUSE_BTN_X = 1810f;
+    private static final float PAUSE_BTN_Y = 1105f;
+    private static final float PAUSE_BTN_SIZE = 75f;
+
+    // ---- Objectives / pause / end-of-game modal system (shared component) ----
+    private GamePlayModals modals;
 
     public VasebreakerScreen(VaseBreaker gamePlay) {
         this.gamePlay = gamePlay;
@@ -70,6 +88,7 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
         greenJarIcon = textureBank.region("IMAGE_VASEBREAKER_VASE_GREEN_VASE_GREEN_115X150");
         purpleJarIcon = textureBank.region("IMAGE_VASEBREAKER_VASE_GARGANTUAR_VASE_GARGANTUAR_115X150");
         progressBarFrame = textureBank.region("IMAGE_UI_HUD_INGAME_PROGRESS_METER");
+        peaRegion = textureBank.region("IMAGE_PROJECTILES_PEA");
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.local("assets/pvz.ttf"));
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
@@ -80,12 +99,28 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
         hudFont = generator.generateFont(parameter);
         generator.dispose();
 
+        pauseBtnRegion = textureBank.region(PAUSE_BTN_ASSET_ID);
+        if (pauseBtnRegion == null) {
+            pauseBtnRegion = textureBank.region("IMAGE_UI_HUD_INGAME_BACKGROUND_3SLICE");
+        }
+
         UIManager.resizeToasts(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        // Mini-games exit back to the Travel Log (where they're launched
+        // from), not the chapter/level select screen, and restart via the
+        // exact same entry point a fresh "play" click uses.
+        modals = new GamePlayModals(
+            gamePlay,
+            () -> MenuManager.getInstance().changeMenu(MenuType.TravelLog),
+            () -> MenuManager.getInstance().getTravelLogMenu().startMiniGame(MiniGameType.VASEBREAKER.getDisplayName())
+        );
+
         setupInputProcessor();
+        modals.showObjectivesModal(null);
     }
 
     private void setupInputProcessor() {
-        Gdx.input.setInputProcessor(new InputAdapter() {
+        InputAdapter gameInputAdapter = new InputAdapter() {
             @Override
             public boolean mouseMoved(int screenX, int screenY) {
                 camera.unproject(mouseWorldPos.set(screenX, screenY, 0));
@@ -109,17 +144,27 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
                     return true;
                 }
 
+                if (wx >= PAUSE_BTN_X && wx <= PAUSE_BTN_X + PAUSE_BTN_SIZE &&
+                    wy >= PAUSE_BTN_Y && wy <= PAUSE_BTN_Y + PAUSE_BTN_SIZE) {
+                    if (!gamePlay.isGameOver()) {
+                        modals.showPauseModal();
+                        return true;
+                    }
+                }
+
                 int gridX = (int) Math.round((wx - 566.1) / 152.2) + 1;
                 int gridY = (int) Math.round((wy - 205) / 150) + 1;
 
                 if (gridX >= 1 && gridX <= 9 && gridY >= 1 && gridY <= 5) {
                     if (heldPlant != null) {
+
                         if (gamePlay.plantOnTile(heldPlant, gridX, gridY)) {
                             heldPlant = null;
                         } else {
                             UIManager.showToast("Cannot plant here!", "IMAGE_UI_GENERIC_TIMER_RIBBON_RED");
                         }
                     } else {
+
                         BattlePlant releasedPlant = gamePlay.breakJar(gridX, gridY);
                         if (releasedPlant != null) {
                             heldPlant = releasedPlant;
@@ -129,7 +174,12 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
                 }
                 return false;
             }
-        });
+        };
+
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(modals.getStage());
+        multiplexer.addProcessor(gameInputAdapter);
+        Gdx.input.setInputProcessor(multiplexer);
     }
 
     private int getRowFromY(double y) {
@@ -157,16 +207,21 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
         textureBank.update();
 
         if (!gamePlay.isPaused()) {
+            stateTime += delta;
+
             timeAccumulator += delta;
             while (timeAccumulator >= TICK_RATE) {
                 gamePlay.update();
                 timeAccumulator -= TICK_RATE;
             }
+
+            modals.checkAndMaybeShowEndGameModal();
         }
 
         ScreenShake.update(delta, camera);
         camera.update();
         ScreenUtils.clear(0.1f, 0.1f, 0.1f, 1);
+        camera.update();
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -315,7 +370,14 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
                 stateTime, mouseWorldPos.x, mouseWorldPos.y, true);
         }
 
+        if (pauseBtnRegion != null) {
+            batch.draw(pauseBtnRegion, PAUSE_BTN_X, PAUSE_BTN_Y, PAUSE_BTN_SIZE, PAUSE_BTN_SIZE);
+        }
+
         batch.end();
+
+        modals.getStage().act(delta);
+        modals.getStage().draw();
 
         UIManager.renderToasts(delta);
     }
@@ -325,6 +387,9 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
         viewport.update(width, height, true);
         camera.position.set(1920 / 2f, 1200 / 2f, 0);
         camera.update();
+        if (modals != null) {
+            modals.resize(width, height);
+        }
         UIManager.resizeToasts(width, height);
     }
 
@@ -334,6 +399,9 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
         shapeRenderer.dispose();
         if (hudFont != null) {
             hudFont.dispose();
+        }
+        if (modals != null) {
+            modals.dispose();
         }
     }
 
