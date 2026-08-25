@@ -59,6 +59,7 @@ public class LoveYourPlants extends GamePlay {
                     currentTile.getPlants().removeIf(p -> p.getName().equals(plant.getName()));
                 }
                 addNumOfLost();
+                incrementLostPlants();
                 bp.remove();
             }
         }
