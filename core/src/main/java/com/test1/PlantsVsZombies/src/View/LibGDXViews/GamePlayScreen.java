@@ -684,6 +684,26 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             batch.draw(getPlantFoodIconInGame, x, y + floatOffset, 65, 65);
         }
 
+        for (int i = 0; i < gamePlay.getGameZombies().size(); i++) {
+            Zombie z = gamePlay.getGameZombies().get(i);
+            if (z.isAlive() && z.getZombieStats().getAnimation() != null) {
+                float drawX = (float) z.getPosition().getX();
+                float drawY = (float) z.getPosition().getY();
+
+                if (z.isHypnotized()) {
+                    float pulse = 0.75f + 0.25f * (float) Math.sin(stateTime * 7f);
+                    batch.setColor(0.35f * pulse, 1.0f, 0.45f * pulse, 1.0f);
+                } else {
+                    batch.setColor(z.getColor());
+                }
+
+                player.draw(batch, z.getAnimationPath(), z.getCurrentAnimationName(),
+                    stateTime, drawX, drawY, true, z.getVisibility());
+
+                batch.setColor(Color.WHITE);
+            }
+        }
+
         for (Sun sun : gamePlay.getActiveSuns()) {
             if (!sun.isCollected()) {
                 float x = (float) sun.getPosition().getX() + 40;

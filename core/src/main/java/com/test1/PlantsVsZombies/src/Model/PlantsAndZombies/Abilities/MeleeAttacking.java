@@ -1,5 +1,6 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 
+import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
@@ -67,6 +68,14 @@ public class MeleeAttacking implements Ability {
             plant.setStatus("action");
         }
 
+        if(GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT) ||
+            GAME.getChapterType().equals(ChapterType.DARK_AGE) ||
+            GAME.getChapterType().equals(ChapterType.FROSTBITE_CAVES)){
+            if((!tile.isArable()) && (tile.getHP() > 0)){
+                tile.setHP(tile.getHP() - damage);
+            }
+        }
+
 
         for (Zombie zombie : tile.getZombies()) {
             if (zombie.getCurrentHP() > 0) {
@@ -123,7 +132,9 @@ public class MeleeAttacking implements Ability {
 
     private boolean checkTime(BattlePlant plant) {
         double currentTime = GAME.getTotalTimePassed();
-        double timeDifference = (currentTime - plant.getEffectedTime());
+        double timeDifference = 10 *(currentTime - plant.getEffectedTime());
+        timeDifference = Math.floor(timeDifference);
+        timeDifference /= 10;
         if ((timeDifference % 0.8) == 0) {//every 0.8 second, melee attackers execute their special ability
             return true;
         }
