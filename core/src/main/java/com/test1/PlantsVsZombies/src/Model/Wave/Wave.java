@@ -1,7 +1,6 @@
 package com.test1.PlantsVsZombies.src.Model.Wave;
 
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
-
 import java.util.*;
 
 public class Wave {
@@ -28,31 +27,79 @@ public class Wave {
         while (currentBudget > 0) {
             ArrayList<Zombie> affordable = new ArrayList<>();
             for (Zombie z : usableZombies) {
-                double zombieCost = z.getCost();
-                if (zombieCost <= currentBudget) {
+                if (z.getCost() <= currentBudget) {
                     affordable.add(z);
                 }
             }
 
             if (affordable.isEmpty()) break;
 
-            Zombie templateZombie = affordable.get(random.nextInt(affordable.size()));
-            Zombie newZombie = templateZombie;
 
-            tempZombies.add(newZombie);
+            Zombie pickedZombie = pickWeightedZombie(affordable);
+            tempZombies.add(pickedZombie);
 
-            initialTotalHealth += newZombie.getZombieStats().getBaseHP();
-            currentBudget -= newZombie.getCost();
+            initialTotalHealth += pickedZombie.getZombieStats().getBaseHP();
+            currentBudget -= pickedZombie.getCost();
         }
 
-        tempZombies.sort((z1, z2) -> {
-            double cost1 = z1.getCost();
-            double cost2 = z2.getCost();
-            return Double.compare(cost1, cost2);
-        });
+
+        structureWaveOrder(tempZombies);
 
         this.pendingZombies.addAll(tempZombies);
         this.totalZombies = this.pendingZombies.size();
+    }
+
+
+    private Zombie pickWeightedZombie(List<Zombie> affordable) {
+        double totalWeight = 0;
+        double[] weights = new double[affordable.size()];
+
+        for (int i = 0; i < affordable.size(); i++) {
+            Zombie z = affordable.get(i);
+            double cost = z.getCost();
+            double weight;
+
+            if (cost <= 100) {
+                weight = Math.max(15.0, 70.0 - (waveNum * 12.0));
+            } else if (cost <= 250) {
+                weight = 20.0 + (waveNum * 10.0);
+            } else {
+                weight = (waveNum <= 1) ? 2.0 : (waveNum * 15.0);
+            }
+
+            weights[i] = weight;
+            totalWeight += weight;
+        }
+
+        double randomValue = random.nextDouble() * totalWeight;
+        double cumulative = 0;
+        for (int i = 0; i < affordable.size(); i++) {
+            cumulative += weights[i];
+            if (randomValue <= cumulative) {
+                return affordable.get(i);
+            }
+        }
+
+        return affordable.get(0);
+    }
+
+    private void structureWaveOrder(List<Zombie> list) {
+        if (list.size() <= 2) return;
+
+
+        list.sort(Comparator.comparingDouble(Zombie::getCost));
+
+
+        int scoutCount = Math.min(2, Math.max(1, list.size() / 4));
+        List<Zombie> scouts = new ArrayList<>(list.subList(0, scoutCount));
+        List<Zombie> mainAssault = new ArrayList<>(list.subList(scoutCount, list.size()));
+
+
+        Collections.shuffle(mainAssault, random);
+
+        list.clear();
+        list.addAll(scouts);
+        list.addAll(mainAssault);
     }
 
     public boolean isReadyForNextWave() {
