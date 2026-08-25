@@ -17,6 +17,14 @@ public class ZombieStats {
     private String animation;
     private Map<String, String> status;
 
+    //just for gargantuar zombie
+    private double thrownTime;
+    private boolean isThrown = false;
+    private boolean isFinished = false;
+
+    //just for snorkel zombie
+    private boolean isSubmarine = false;
+
     public String getName() {
         return name;
     }
@@ -71,5 +79,40 @@ public class ZombieStats {
 
     public Map<String, String> getStatus() {
         return status;
+    }
+
+    public boolean isFinished() {
+        return isFinished;
+    }
+
+    public void setFinished(boolean finished) {
+        isFinished = finished;
+    }
+
+    public boolean isThrown() {
+        return isThrown;
+    }
+
+    public ZombieStats setThrown(boolean thrown) {
+        isThrown = thrown;
+        return this;
+    }
+
+    public double getThrownTime() {
+        return thrownTime;
+    }
+
+    public ZombieStats setThrownTime(double thrownTime) {
+        this.thrownTime = thrownTime;
+        return this;
+    }
+
+    public boolean isSubmarine() {
+        return isSubmarine;
+    }
+
+    public ZombieStats setSubmarine(boolean submarine) {
+        isSubmarine = submarine;
+        return this;
     }
 }

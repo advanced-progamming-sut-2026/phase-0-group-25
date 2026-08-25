@@ -9,25 +9,26 @@ public class ExplodingWalnut extends Walnut {
     }
 
     @Override
-    public void update(WalnutBowling game) {
-        x += speed;
+    public void update(WalnutBowling game, float delta) {
+        x += speed * delta;
 
         for (Zombie z : game.getGameZombies()) {
-            if (z.isAlive() && Math.abs(z.getPosition().getX() - x) < 5 && Math.abs(z.getPosition().getY() - y) < 5) {
-                Explosion(game);
+            if (z.isAlive() && Math.abs(z.getPosition().getX() - x) <= 60 && Math.abs(z.getPosition().getY() - y) <= 65) {
+                explosion(game);
                 this.isActive = false;
                 return;
             }
         }
 
-        if (x > 1800.0) this.isActive = false;
+        if (x > 1950.0) this.isActive = false;
     }
 
-    public void Explosion(WalnutBowling game) {
-        System.out.println("BOOM! Explode O' Nut triggered!");
+    public void explosion(WalnutBowling game) {
+        game.addExplosionEffect((float) x, (float) y);
         for (Zombie z : game.getGameZombies()) {
-            if (Math.abs(z.getPosition().getX() - x) <= 350 && Math.abs(z.getPosition().getY() - y) <= 350) {
+            if (z.isAlive() && Math.hypot(z.getPosition().getX() - x, z.getPosition().getY() - y) <= 230) {
                 z.takeDamage(1800);
+                z.setCurrentHP(0);
             }
         }
     }

@@ -20,7 +20,7 @@ import java.util.Random;
 
 public class Zombie extends Entity {
     private static int FROZEN_TIME = 3;
-    private static int TILE_X_LENGTH = 200;
+    private static int TILE_X_LENGTH = 150;
     private static Random RANDOM = new Random();
     private GamePlay GAME = GamePlay.activeInstance;
 
@@ -43,6 +43,8 @@ public class Zombie extends Entity {
     private double lastActionTime;
     private double spawnTime;
     private double dieTime;
+    private boolean isDeadByExplosion = false;
+
 
     public Zombie(ZombieStats zombieStats, String name) {
         this.zombieStats = zombieStats;
@@ -73,6 +75,9 @@ public class Zombie extends Entity {
         this.isHalated = false;
         this.isHypnotized = false;
 
+        this.spawnTime = GAME.getTotalTimePassed();
+        this.lastActionTime = this.spawnTime;
+
         addAbilities();
 
         this.activeArmors = new ArrayList<>();
@@ -84,7 +89,6 @@ public class Zombie extends Entity {
             }
         }
 
-        this.spawnTime = GAME.getTotalTimePassed();
     }
 
     private void addAbilities() {
@@ -130,10 +134,18 @@ public class Zombie extends Entity {
 
 
     public void disarmament() {
-        for (Armor armor : this.activeArmors) {
-            if (armor.isMetallic()) {
-                armor.stripArmor();
+        for (int i = 0; i <= activeArmors.size(); i++) {
+            try {
+                Armor armor = activeArmors.get(i);
+                if (armor.isMetallic()) {
+                    armor.stripArmor();
+                    activeArmors.remove(armor);
+                    i -= 1;
+                }
+            } catch (IndexOutOfBoundsException e) {
+
             }
+
         }
     }
 
@@ -154,7 +166,7 @@ public class Zombie extends Entity {
             this.position = new Position(
                 this.position.getX(),
                 this.position.getY() - TILE_X_LENGTH);
-        } else {
+        } else if ((row > 1) && (row < 5)) {
             int randomIndex = RANDOM.nextInt(2);
             int difference = (randomIndex == 1) ? TILE_X_LENGTH : (-1) * TILE_X_LENGTH;
 
@@ -207,10 +219,11 @@ public class Zombie extends Entity {
                 unfreeze();
             }
 
-            boolean wasAlive = (this.currentHP > 0);
-            this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
-            if (wasAlive && this.currentHP <= 0) {
-                checkKiller(projectile);
+            if ((!this.zombieStats.getName().equals("IMP_DRAGON")) || (!projectile.isFiring())) {
+                this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
+                if (this.getCurrentHP() <= 0) {
+                    checkKiller(projectile);
+                }
             }
         }
     }
@@ -264,10 +277,14 @@ public class Zombie extends Entity {
             }
         }
 
-        boolean wasAlive = (this.currentHP > 0);
-        this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
-        if (wasAlive && this.currentHP <= 0) {
-            checkKiller(plant);
+        if (leftoverDamage > 0) {
+            this.setCurrentHP(this.getCurrentHP() - leftoverDamage);
+            if (this.getCurrentHP() <= 0) {
+                checkKiller(plant);
+                if (plant.getPlantStats().getCategory().equals("Explosive")) {
+                    this.isDeadByExplosion = true;
+                }
+            }
         }
     }
 
@@ -297,7 +314,7 @@ public class Zombie extends Entity {
         this.timeWhenFrozen = GAME.getTotalTimePassed();
         this.isFrozen = true;
         this.frozenTime = frozenTime;
-        this.currentVelocity = (this.zombieStats.getVelocity() * 0.7); //decreasing the zombie velocity after collision with icy projectiles
+        this.currentVelocity = (this.zombieStats.getVelocity() * 0.17); //decreasing the zombie velocity after collision with icy projectiles
     }
 
     public void freeze() {
@@ -315,8 +332,10 @@ public class Zombie extends Entity {
     public void checkLife() {
         if (this.name.equals("GARGANTUAR")) {
             if (this.currentHP <= (this.zombieStats.getBaseHP() / 2)) {
-                this.zombieStats.getAttributes().put("isThrown", "yes");
-                this.zombieStats.getAttributes().put("throwTime", GAME.getTotalTimePassed());
+                if (!this.zombieStats.isThrown()) {
+                    this.zombieStats.setThrownTime(GAME.getTotalTimePassed());
+                    this.zombieStats.setThrown(true);
+                }
             }
         }
 
@@ -416,6 +435,13 @@ public class Zombie extends Entity {
         }
     }
 
+    public String getAnimationPath() {
+        if (this.isDeadByExplosion) {
+            return "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM";
+        }
+        return this.zombieStats.getAnimation();
+    }
+
     public String getCurrentAnimationName() {
         AnimationDecider decider = new AnimationDecider();
         return decider.zombieDecider(this);
@@ -448,7 +474,7 @@ public class Zombie extends Entity {
         } else if (this.isHalated) {
             return Color.GREEN;
         } else if (this.name.equals("SNORKEL")) {
-            if ((boolean) this.zombieStats.getAttributes().get("submarine")) {
+            if (this.zombieStats.isSubmarine()) {
                 return Color.FOREST;
             }
         }
@@ -456,11 +482,17 @@ public class Zombie extends Entity {
         return Color.WHITE;
     }
 
-    public boolean isHalated() {
-        return isHalated;
+    public boolean isButtered() {
+        return isButtered;
     }
 
-    public void setHalated(boolean isHalated) {
-        this.isHalated = isHalated;
+
+
+    public void setButtered(boolean buttered) {
+        isButtered = buttered;
+    }
+
+    public boolean isDeadByExplosion() {
+        return isDeadByExplosion;
     }
 }

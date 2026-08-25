@@ -62,7 +62,7 @@ public class Simple extends GamePlay {
         while (bp.hasNext()) {
             BattlePlant plant = bp.next();
 
-            if (plant.isAlive() && plant.getCurrentHP() > 0) {
+            if (plant.isAlive()) {
                 plant.update();
                 // passing cooldown
                 plant.setCooldown(Math.max(plant.getCooldown() - 1, 0));
@@ -83,9 +83,7 @@ public class Simple extends GamePlay {
 
             if (!zombie.isAlive()) {
                 killAward(this.thisUser);
-                if (zombie.isHalated()) {
-                    glowingAward(zombie.getPosition());
-                }
+
                 Position zPos = Position.getRowAndColumn(zombie.getPosition());
                 System.out.printf("Zombie of type %s is dead at (%d, %d)\n",
                     zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
@@ -150,13 +148,11 @@ public class Simple extends GamePlay {
                         positionOfZ = new Position(spawnX, getRealY(spawnY));
                     }
 
-                    Zombie newZombie = ZombieFactory.createZombie(nameOfZ, positionOfZ);
+                    Zombie newZombie = ZombieFactory.createZombie("UMBRELLA", positionOfZ);
                     System.out.printf("Zombie %s spawned at wave %d in lane %d which costed %d.\n",
                         nameOfZ, thisWave.getWaveNum(), spawnY, newZombie.getCost());
 
-                    if (Math.random() <= 0.05) {
-                        newZombie.setHalated(true);
-                    }
+
 
                     newZombie.setWaveNum(thisWave.getWaveNum());
                     this.gameZombies.add(newZombie);
