@@ -495,4 +495,12 @@ public class Zombie extends Entity {
     public boolean isDeadByExplosion() {
         return isDeadByExplosion;
     }
+
+    public boolean isHalated() {
+        return isHalated;
+    }
+
+    public void setHalated(boolean halated) {
+        isHalated = halated;
+    }
 }
