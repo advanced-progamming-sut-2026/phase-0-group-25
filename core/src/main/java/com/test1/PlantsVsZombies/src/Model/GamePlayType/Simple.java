@@ -148,7 +148,7 @@ public class Simple extends GamePlay {
                         positionOfZ = new Position(spawnX, getRealY(spawnY));
                     }
 
-                    Zombie newZombie = ZombieFactory.createZombie("UMBRELLA", positionOfZ);
+                    Zombie newZombie = ZombieFactory.createZombie("NEWSPAPER", positionOfZ);
                     System.out.printf("Zombie %s spawned at wave %d in lane %d which costed %d.\n",
                         nameOfZ, thisWave.getWaveNum(), spawnY, newZombie.getCost());
 

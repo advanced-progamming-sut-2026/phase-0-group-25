@@ -56,7 +56,9 @@ public class ProducingSun implements Ability {
 
     private boolean checkTime(BattlePlant plant) {
         double currentTime = GAME.getTotalTimePassed();
-        double timeDifference = (currentTime - plant.getEffectedTime());
+        double timeDifference = 10 * (currentTime - plant.getEffectedTime());
+        timeDifference = Math.floor(timeDifference);
+        timeDifference /= 10;
         if ((timeDifference % 1) == 0) {//every second, sun producers execute their special ability
             return true;
         }
@@ -80,8 +82,8 @@ public class ProducingSun implements Ability {
         this.isProduced = true;
 
         System.out.println("plant " + plant.getPlantStats().getName() +
-                " produced a sun at (" + plant.getColumn() + ", "
-                + plant.getRow() + ")");
+            " produced a sun at (" + plant.getColumn() + ", "
+            + plant.getRow() + ")");
     }
 
     public boolean isCollected() {

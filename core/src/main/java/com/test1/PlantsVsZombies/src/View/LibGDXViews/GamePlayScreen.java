@@ -689,7 +689,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                     float pulse = 0.75f + 0.25f * (float) Math.sin(stateTime * 7f);
                     batch.setColor(0.35f * pulse, 1.0f, 0.45f * pulse, 1.0f);
                 } else {
-                    batch.setColor(Color.WHITE);
+                    batch.setColor(z.getColor());
                 }
 
                 player.draw(batch, z.getAnimationPath(), z.getCurrentAnimationName(),
