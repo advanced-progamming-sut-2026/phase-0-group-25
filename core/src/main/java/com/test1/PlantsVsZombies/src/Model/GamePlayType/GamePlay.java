@@ -409,15 +409,19 @@ public abstract class GamePlay {
 
             // Checking if this plant has a kind of boost...
             PlantType thisPlantType = PlantType.valueOf(thisPName);
-            if (thisUser.getUserProgress().getGreenhouseBoosts().contains(thisPlantType) || isImitaterBoosted) {
-                thisP.setEffected(true, effectedTime);
-            }
+
             if (UsersManager.getInstance().hasGreenhouseBoost(thisPlantType)) {
                 UsersManager.getInstance().consumeGreenhouseBoost(thisPlantType);
             }
 
             this.gamePlants.add(thisP);
             thisTile.addPlant(thisP);
+
+            if (thisUser.getUserProgress().getGreenhouseBoosts().contains(thisPlantType) || isImitaterBoosted) {
+
+                thisP.setEffected(true, effectedTime);
+            }
+
             thisPlant.setCurrentCoolDown(thisPlant.getPlantStats().getRechargeTime());
             this.mySuns = Math.max(0, this.mySuns - thisPlant.getPlantStats().getCost());
             if(thisPlant.getPlantStats().getCategory().equals("Explosive")){

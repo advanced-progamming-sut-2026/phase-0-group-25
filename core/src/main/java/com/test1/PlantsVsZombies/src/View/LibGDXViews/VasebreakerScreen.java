@@ -20,6 +20,7 @@ import com.test1.PlantsVsZombies.src.Enums.MenuType;
 import com.test1.PlantsVsZombies.src.Enums.MiniGameType;
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Menu.MenuManager;
+import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.MiniGames.VasebreakerGame.*;
 import com.test1.PlantsVsZombies.src.Model.Mower;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
@@ -30,6 +31,8 @@ import com.test1.PlantsVsZombies.src.Model.Tile;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.GamePlayMenuView;
 import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
+
+import java.util.ArrayList;
 
 public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView {
     private VaseBreaker gamePlay;
@@ -66,10 +69,12 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
 
     public VasebreakerScreen(VaseBreaker gamePlay) {
         this.gamePlay = gamePlay;
+        GamePlay.activeInstance = gamePlay;
     }
 
     @Override
     public void show() {
+        GamePlay.activeInstance = gamePlay;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 1920, 1200);
         batch = new SpriteBatch();
@@ -177,8 +182,28 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
         Gdx.input.setInputProcessor(multiplexer);
     }
 
+    private int getRowFromY(double y) {
+        int row = (int) Math.round((y - 205.0) / 150.0) + 1;
+        return Math.max(1, Math.min(5, row));
+    }
+
+    private int getPlantLayerPriority(BattlePlant plant) {
+        if (plant == null || plant.getName() == null) return 1;
+        String name = plant.getName().toUpperCase();
+        if (name.contains("LILY_PAD") || name.contains("HOT_POTATO")) {
+            return 0;
+        }
+        if (name.contains("PUMPKIN")) {
+            return 2;
+        }
+        return 1;
+    }
+
     @Override
     public void render(float delta) {
+        stateTime += delta;
+        gamePlay.setTotalTimePassed(stateTime);
+        GamePlay.activeInstance = gamePlay;
         textureBank.update();
 
         if (!gamePlay.isPaused()) {
@@ -193,62 +218,99 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
             modals.checkAndMaybeShowEndGameModal();
         }
 
+        ScreenShake.update(delta, camera);
+        camera.update();
         ScreenUtils.clear(0.1f, 0.1f, 0.1f, 1);
         camera.update();
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        batch.draw(bgRegion, 0, 0, 1920, 1200);
+        if (bgRegion != null) {
+            batch.draw(bgRegion, 0, 0, 1920, 1200);
+        }
 
-        for (Jar jar : gamePlay.getJars()) {
-            if (!jar.isBroken()) {
-                float jX = (float) jar.getPosition().getX();
-                float jY = (float) jar.getPosition().getY();
 
-                TextureRegion tex = orangeJarIcon;
-                if (jar instanceof GargantuarJar) {
-                    tex = (purpleJarIcon != null) ? purpleJarIcon : orangeJarIcon;
-                } else if (jar instanceof PlantJar) {
-                    tex = (greenJarIcon != null) ? greenJarIcon : orangeJarIcon;
+        for (int row = 5; row >= 1; row--) {
+            final int currentRow = row;
+
+
+            for (Jar jar : gamePlay.getJars()) {
+                if (!jar.isBroken() && jar.getPosition() != null) {
+                    float jY = (float) jar.getPosition().getY();
+                    if (getRowFromY(jY) == currentRow) {
+                        float jX = (float) jar.getPosition().getX();
+                        TextureRegion tex = orangeJarIcon;
+                        if (jar instanceof GargantuarJar) {
+                            tex = (purpleJarIcon != null) ? purpleJarIcon : orangeJarIcon;
+                        } else if (jar instanceof PlantJar) {
+                            tex = (greenJarIcon != null) ? greenJarIcon : orangeJarIcon;
+                        }
+
+                        if (tex != null) {
+                            batch.draw(tex, jX - 60f, jY - 25f, 120f, 150f);
+                        }
+                    }
                 }
+            }
 
-                if (tex != null) {
-                    batch.draw(tex, jX - 60f, jY - 25f, 120f, 150f);
+
+            ArrayList<BattlePlant> rowPlants = new ArrayList<>();
+            for (BattlePlant p : gamePlay.getGamePlants()) {
+                if (p.isAlive() && p.getPosition() != null) {
+                    if (getRowFromY(p.getPosition().getY()) == currentRow) {
+                        rowPlants.add(p);
+                    }
+                }
+            }
+            rowPlants.sort((p1, p2) -> Integer.compare(getPlantLayerPriority(p1), getPlantLayerPriority(p2)));
+
+            for (BattlePlant p : rowPlants) {
+                if (p.getPlantStats().getAnimation() != null) {
+                    player.draw(batch, p.getPlantStats().getAnimation(), p.getCurrentAnimationName(),
+                        stateTime, (float) p.getPosition().getX(), (float) p.getPosition().getY(), true);
+                }
+            }
+
+
+            ArrayList<Zombie> rowZombies = new ArrayList<>();
+            for (Zombie z : gamePlay.getGameZombies()) {
+                if (z.isAlive() && z.getPosition() != null) {
+                    if (getRowFromY(z.getPosition().getY()) == currentRow) {
+                        rowZombies.add(z);
+                    }
+                }
+            }
+            rowZombies.sort((z1, z2) -> Double.compare(z2.getPosition().getX(), z1.getPosition().getX()));
+
+            for (Zombie z : rowZombies) {
+                if (z.getZombieStats().getAnimation() != null) {
+                    player.draw(batch, z.getZombieStats().getAnimation(), z.getCurrentAnimationName(),
+                        stateTime, (float) z.getPosition().getX(), (float) z.getPosition().getY(), true, z.getVisibility());
                 }
             }
         }
 
-        for (BattlePlant p : gamePlay.getGamePlants()) {
-            if (p.isAlive() && p.getPlantStats().getAnimation() != null) {
-                player.draw(batch, p.getPlantStats().getAnimation(), p.getCurrentAnimationName(),
-                    stateTime, (float) p.getPosition().getX(), (float) p.getPosition().getY(), true);
-            }
-        }
-
-        for (Zombie z : gamePlay.getGameZombies()) {
-            if (z.isAlive() && z.getZombieStats().getAnimation() != null) {
-                player.draw(batch, z.getZombieStats().getAnimation(), z.getCurrentAnimationName(),
-                    stateTime, (float) z.getPosition().getX(), (float) z.getPosition().getY(), true, z.getVisibility());
-            }
-        }
 
         for (Projectile projectile : gamePlay.getProjectiles()) {
             float px = (float) projectile.getPosition().getX();
             float py = (float) projectile.getPosition().getY();
             String name = projectile.getName();
             ProjectileConfig projectileConfig = ProjectileConfig.fromName(name);
-            if (name.equals("pea")) {
+            if ("pea".equalsIgnoreCase(name)) {
                 if (projectile.isIcy()) {
                     projectileConfig = ProjectileConfig.ICY_PEA;
                 } else if (projectile.isFiring()) {
                     projectileConfig = ProjectileConfig.FIRING_PEA;
                 }
             }
-            player.draw(batch, projectileConfig.getAnimation(), projectileConfig.getClip(),
-                stateTime, px, py, true);
+            if (projectileConfig != null) {
+                player.draw(batch, projectileConfig.getAnimation(), projectileConfig.getClip(),
+                    stateTime, px, py, true);
+            }
         }
 
         batch.end();
+
 
         int totalJars = gamePlay.getJars().size();
         long brokenJars = gamePlay.getJars().stream().filter(Jar::isBroken).count();
@@ -273,7 +335,7 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
                 float tileY = (float) (205 + (hoverRow - 1) * 150) - 25f;
 
                 shapeRenderer.setColor(new Color(1f, 1f, 1f, 0.35f));
-                shapeRenderer.rect(tileX-13 , tileY-35, 145f, 145f);
+                shapeRenderer.rect(tileX - 13, tileY - 35, 145f, 145f);
             }
         }
 
@@ -289,7 +351,6 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
         Gdx.gl.glDisable(Gdx.gl.GL_BLEND);
 
         batch.begin();
-
         if (progressBarFrame != null) {
             batch.draw(progressBarFrame, barLeftX, barY, barWidth, barHeight);
         }
@@ -304,8 +365,8 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
         }
 
         if (heldPlant != null && heldPlant.getPlantStats().getAnimation() != null) {
-            String strOfidle = PlantType.fromName(heldPlant.getName()).getStateName();
-            player.draw(batch, heldPlant.getPlantStats().getAnimation(), strOfidle,
+            String strOfIdle = PlantType.fromName(heldPlant.getName()).getStateName();
+            player.draw(batch, heldPlant.getPlantStats().getAnimation(), strOfIdle,
                 stateTime, mouseWorldPos.x, mouseWorldPos.y, true);
         }
 
@@ -345,8 +406,7 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
     }
 
     @Override
-    public void showCurrentMenu() {
-    }
+    public void showCurrentMenu() {}
 
     @Override
     public void showError(String errorMessage) {
