@@ -6,7 +6,7 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
 
 public class FatalDamage implements Ability {
     private boolean isActivated = false;
-    private GamePlay GAME = GamePlayMenu.getGamePlay();
+    private GamePlay GAME = GamePlay.activeInstance;
 
     @Override
     public void executeAbility(Entity entity) {

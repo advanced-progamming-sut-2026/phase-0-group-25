@@ -2,13 +2,13 @@ package com.test1.PlantsVsZombies.src.Model.MiniGames.VasebreakerGame;
 
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Enums.MiniGameType;
-import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 import com.test1.PlantsVsZombies.src.Model.User.User;
 import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
+import com.test1.PlantsVsZombies.src.View.LibGDXViews.ScreenShake;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,18 +16,18 @@ import java.util.Set;
 
 public class VaseBreaker extends GamePlay {
     private final MiniGameType miniGameType = MiniGameType.VASEBREAKER;
-    private ArrayList<Jar> jars = new ArrayList<>();
-    private ArrayList<BattlePlant> inventory = new ArrayList<>();
+    private final ArrayList<Jar> jars = new ArrayList<>();
+    private final ArrayList<BattlePlant> inventory = new ArrayList<>();
 
     public VaseBreaker(ChapterType chapterType, int level, int difficulty, User thisUser,
                        ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         super(chapterType, level, difficulty, thisUser, plants, zombies, boosted);
+        activeInstance = this;
         this.allWaves.clear();
         this.gameZombies.clear();
         this.gamePlants.clear();
-        setLevelObjectives("Break the vases.");
-
-
+        setLevelObjectives("Break all jars and defeat all zombies to win.");
+        this.mySuns = 0;
 
         setupJars();
     }
@@ -42,16 +42,13 @@ public class VaseBreaker extends GamePlay {
                 Position pos = new Position(getRealX(x), getRealY(y));
 
                 if (x == 9 && y == 3) {
-
                     Zombie gargantuar = ZombieFactory.createZombie("GARGANTUAR", pos);
                     jars.add(new GargantuarJar(pos, gargantuar));
                 } else if ((x + y) % 4 == 0) {
-
                     String pName = possiblePlants[random.nextInt(possiblePlants.length)];
                     BattlePlant plant = PlantFactory.createBattlePlant(pName, 1, pos);
                     jars.add(new PlantJar(pos, plant));
                 } else {
-
                     if (Math.random() < 0.5) {
                         String pName = possiblePlants[random.nextInt(possiblePlants.length)];
                         BattlePlant plant = PlantFactory.createBattlePlant(pName, 1, pos);
@@ -64,17 +61,18 @@ public class VaseBreaker extends GamePlay {
                 }
             }
         }
-        System.out.println("The jars were placed. Total: " + jars.size());
     }
 
     @Override
-    public void sunMaker() {
-    }
+    public void sunMaker() {}
 
     public BattlePlant breakJar(int x, int y) {
         Jar targetJar = null;
+        float targetX = getRealX(x);
+        float targetY = getRealY(y);
+
         for (Jar j : jars) {
-            if ((int) j.getPosition().getX() == getRealX(x) && (int) j.getPosition().getY() == getRealY(y) && !j.isBroken()) {
+            if (!j.isBroken() && Math.abs(j.getPosition().getX() - targetX) < 20 && Math.abs(j.getPosition().getY() - targetY) < 20) {
                 targetJar = j;
                 break;
             }
@@ -83,20 +81,22 @@ public class VaseBreaker extends GamePlay {
         if (targetJar == null) return null;
 
         targetJar.setBroken(true);
-        System.out.printf("Jar at (%d, %d) broken!\n", x, y);
+
+        if (targetJar instanceof GargantuarJar) {
+            ScreenShake.shake(0.45f, 16f);
+        } else {
+            ScreenShake.shake(0.12f, 5f);
+        }
 
         Entity content = targetJar.getContent();
-        if (content instanceof Zombie) {
-            Zombie z = (Zombie) content;
-            z.setPosition(new Position(getRealX(x), getRealY(y)));
+        if (content instanceof Zombie z) {
+            z.setPosition(new Position(targetX, targetY));
             z.setRow(y);
             z.setColumn(x);
             gameZombies.add(z);
-            System.out.printf("A %s emerged from the jar!\n", z.getName());
+            updateZombieTiles();
             return null;
-        } else if (content instanceof BattlePlant) {
-            BattlePlant plant = (BattlePlant) content;
-            System.out.printf("Plant %s ready to be planted directly!\n", plant.getName());
+        } else if (content instanceof BattlePlant plant) {
             return plant;
         }
         return null;
@@ -105,21 +105,21 @@ public class VaseBreaker extends GamePlay {
     public boolean plantOnTile(BattlePlant plant, int x, int y) {
         if (plant == null) return false;
 
+        float targetX = getRealX(x);
+        float targetY = getRealY(y);
+
         boolean hasJar = jars.stream().anyMatch(j ->
-            !j.isBroken() && (int) j.getPosition().getX() == getRealX(x) &&
-                (int) j.getPosition().getY() == getRealY(y));
+            !j.isBroken() && Math.abs(j.getPosition().getX() - targetX) < 20 && Math.abs(j.getPosition().getY() - targetY) < 20);
 
         Tile targetTile = getTileByPosition(x, y);
 
         if (targetTile != null && targetTile.isArable() && targetTile.getPlants().isEmpty() && !hasJar) {
             plant.setRow(y);
             plant.setColumn(x);
-            plant.setPosition(new Position(getRealX(x), getRealY(y)));
+            plant.setPosition(new Position(targetX, targetY));
 
             this.gamePlants.add(plant);
             targetTile.addPlant(plant);
-
-            System.out.printf("Planted %s at (%d, %d).\n", plant.getName(), x, y);
             return true;
         }
         return false;
@@ -128,7 +128,12 @@ public class VaseBreaker extends GamePlay {
     @Override
     public void update() {
         if (isPaused) return;
+        activeInstance = this;
         totalTicksPassed++;
+
+
+        updateZombieTiles();
+
 
         Iterator<BattlePlant> bp = gamePlants.iterator();
         while (bp.hasNext()) {
@@ -138,18 +143,15 @@ public class VaseBreaker extends GamePlay {
                 plant.update();
                 plant.setCooldown(Math.max(plant.getCooldown() - 1, 0));
             } else {
-                Tile currentTile = tiles.stream()
-                    .filter(t -> (int) t.getPosition().getX() == plant.getColumn() &&
-                        (int) t.getPosition().getY() == plant.getRow())
-                    .findFirst()
-                    .orElse(null);
-
+                Tile currentTile = getTileByPosition(plant.getColumn(), plant.getRow());
                 if (currentTile != null) {
-                    currentTile.getPlants().remove(plant);
+                    currentTile.getPlants().removeIf(p -> p.getName().equals(plant.getName()));
                 }
+                incrementLostPlants();
                 bp.remove();
             }
         }
+
 
         Iterator<Zombie> z = gameZombies.iterator();
         while (z.hasNext()) {
@@ -157,13 +159,12 @@ public class VaseBreaker extends GamePlay {
 
             if (!zombie.isAlive() || zombie.getCurrentHP() <= 0) {
                 killAward(this.thisUser);
-                Position zPos = Position.getRowAndColumn(zombie.getPosition());
-                System.out.printf("Zombie %s is dead at (%d, %d)\n", zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
                 z.remove();
             } else {
                 zombie.update();
             }
         }
+
 
         Iterator<Projectile> pj = projectiles.iterator();
         while (pj.hasNext()) {
@@ -176,12 +177,24 @@ public class VaseBreaker extends GamePlay {
             }
         }
 
-        updateZombieTiles();
+
+        for (Zombie zombie : gameZombies) {
+            if (!zombie.isAlive()) continue;
+
+            float zX = (float) zombie.getPosition().getX();
+            if (zX <= 490f) {
+                System.out.println("The zombie ate your brain; LOSER!!!");
+                UsersManager.getInstance().addGamesPlayed();
+                endGame(false);
+                return;
+            }
+        }
+
 
         if (checkWinCondition()) {
             onWin();
             System.out.println("CONGRATULATIONS! You broke all jars and defeated all zombies!");
-            this.isPaused = true;
+            endGame(true);
         }
     }
 
