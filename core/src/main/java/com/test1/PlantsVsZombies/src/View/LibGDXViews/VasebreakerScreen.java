@@ -24,6 +24,7 @@ import com.test1.PlantsVsZombies.src.Model.MiniGames.VasebreakerGame.*;
 import com.test1.PlantsVsZombies.src.Model.Mower;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.ProjectileConfig;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.GamePlayMenuView;
@@ -231,10 +232,20 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
             }
         }
 
-        for (Projectile proj : gamePlay.getProjectiles()) {
-            if (proj.isActive() && peaRegion != null) {
-                batch.draw(peaRegion, (float) proj.getPosition().getX(), (float) proj.getPosition().getY() + 30f, 32f, 32f);
+        for (Projectile projectile : gamePlay.getProjectiles()) {
+            float px = (float) projectile.getPosition().getX();
+            float py = (float) projectile.getPosition().getY();
+            String name = projectile.getName();
+            ProjectileConfig projectileConfig = ProjectileConfig.fromName(name);
+            if (name.equals("pea")) {
+                if (projectile.isIcy()) {
+                    projectileConfig = ProjectileConfig.ICY_PEA;
+                } else if (projectile.isFiring()) {
+                    projectileConfig = ProjectileConfig.FIRING_PEA;
+                }
             }
+            player.draw(batch, projectileConfig.getAnimation(), projectileConfig.getClip(),
+                stateTime, px, py, true);
         }
 
         batch.end();
