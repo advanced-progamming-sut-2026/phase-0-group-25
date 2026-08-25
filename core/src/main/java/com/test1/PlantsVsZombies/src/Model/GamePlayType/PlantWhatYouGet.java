@@ -82,6 +82,7 @@ public class PlantWhatYouGet extends GamePlay {
                 if (currentTile != null) {
                     currentTile.getPlants().removeIf(p -> p.getName().equals(plant.getName()));
                 }
+                incrementLostPlants();
                 bp.remove();
             }
         }

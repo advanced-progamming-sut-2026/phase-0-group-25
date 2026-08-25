@@ -296,18 +296,30 @@ public abstract class GamePlay {
         }
 
         int sunProducersCount = (int) gamePlants.stream()
-            .filter(p -> p.getCategory() == PlantCategory.SUN_PRODUCER)
+            .filter(p -> p.getPlantStats().getCategory().equals(PlantCategory.SUN_PRODUCER.getString()))
             .count();
+        System.out.println("SUN PRODUCERS: " + sunProducersCount);
 
-        boolean[] emptyColumns = new boolean[10];
-        boolean[] emptyRows = new boolean[6];
+        boolean[] emptyColumns = new boolean[9];
+        boolean[] emptyRows = new boolean[5];
         Arrays.fill(emptyColumns, true);
         Arrays.fill(emptyRows, true);
 
         for (BattlePlant p : gamePlants) {
-            emptyColumns[p.getColumn()] = false;
-            emptyRows[p.getRow()] = false;
+            emptyColumns[p.getColumn()-1] = false;
+            emptyRows[p.getRow()-1] = false;
         }
+        System.out.println("SUNS LEFT:" + mySuns);
+
+        System.out.println("LOST PLANTS: " + lostPlants);
+        System.out.println("EMPTY ROWS");
+        for(int i=1; i<= emptyRows.length; i++)
+            if(emptyRows[i-1])
+                System.out.println(i);
+        System.out.println("EMPTY COLUMNS");
+        for(int i=1; i<= emptyColumns.length; i++)
+            if(emptyColumns[i-1])
+                System.out.println(i);
 
         QuestManager.getInstance().notifyEvent(new LevelWonEvent(
             lostPlants, mySuns,
