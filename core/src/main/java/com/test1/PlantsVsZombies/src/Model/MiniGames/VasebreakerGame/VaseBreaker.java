@@ -182,7 +182,7 @@ public class VaseBreaker extends GamePlay {
             if (!zombie.isAlive()) continue;
 
             float zX = (float) zombie.getPosition().getX();
-            if (zX <= 490f) {
+            if (zX <= 390f) {
                 System.out.println("The zombie ate your brain; LOSER!!!");
                 UsersManager.getInstance().addGamesPlayed();
                 endGame(false);

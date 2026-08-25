@@ -128,8 +128,9 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     private static final float SHOVEL_BTN_X = 1770f;
     private static final float SHOVEL_BTN_Y = 30f;
     private static final float SHOVEL_BTN_SIZE = 100f;
+    private static final String PLANT_FOOD_GLOW_ANIM_PATH = "768/INITIAL/EFFECTS/PLANTFOOD_FX/PLANTFOOD_FX.PAM";
 
-    // ---- Pause Button Configuration ----
+
     public static final String PAUSE_BTN_ASSET_ID = "IMAGE_UI_HUD_INGAME_PAUSE_BUTTON";
     private TextureRegion pauseBtnRegion;
     private static final float PAUSE_BTN_X = 1810f;
@@ -180,7 +181,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     private static final float START_WAVE_BTN_W = 220f;
     private static final float START_WAVE_BTN_H = 75f;
 
-    // ---- Objectives / pause / end-of-game modal system (shared component) ----
+
     private GamePlayModals modals;
 
     public GamePlayScreen(GamePlay gamePlay) {
@@ -477,15 +478,15 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         ScreenUtils.clear(0.1f, 0.4f, 0.1f, 1);
 
         if (!gamePlay.isPaused()) {
-            // stateTime is the canonical animation/game clock: it feeds
-            // gamePlay.setTotalTimePassed(), which GAME.getTotalTimePassed()
-            // throughout the ability/attack/animation-decider code treats
-            // as "now". It's also what every PamPlayer.draw(...) call below
-            // uses as its animation timeline. Only advancing it while not
-            // paused freezes animations (plants, zombies, projectiles,
-            // mowers, suns, decorative pulses) AND prevents a burst of
-            // "catch-up" attacks/timers firing the instant the game
-            // resumes after having sat paused for a while.
+
+
+
+
+
+
+
+
+
             stateTime += effectiveDelta;
             gamePlay.setTotalTimePassed(stateTime);
 
@@ -533,6 +534,12 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             }
         }
 
+        if (gamePlay.getChapterType() == ChapterType.BIG_WAVE_BEACH) {
+            float waterOffset = (float) Math.sin(stateTime * 0.8f) * WATER_MOVE_RANGE;
+            float currentWaterX = WATER_BASE_X + waterOffset;
+            player.draw(batch, BEACH_WATER_ANIM_PATH, "water", stateTime, currentWaterX, WATER_BASE_Y, true);
+            player.draw(batch, BEACH_TIDELINE_ANIM_PATH, "idle", stateTime, TIDELINE_X, TIDELINE_Y, true);
+        }
 
         for (int row = 5; row >= 1; row--) {
             final int currentRow = row;
@@ -627,6 +634,11 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                 if (iceStage > 0) batch.setColor(0.65f, 0.85f, 1.0f, 1.0f);
                 else batch.setColor(Color.WHITE);
 
+                if (p.isEffected()) {
+                    player.draw(batch, PLANT_FOOD_GLOW_ANIM_PATH, "plantfood",
+                        stateTime, drawX, drawY+95, true);
+                }
+
                 player.draw(batch, p.getAnimationPath(), p.getCurrentAnimationName(),
                     stateTime, drawX, drawY, true, p.getVisibilities());
 
@@ -643,11 +655,14 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             }
 
             ArrayList<Zombie> rowZombies = new ArrayList<>();
-            for (Zombie z : gamePlay.getGameZombies()) {
-                if (z.isAlive() && z.getRow() == currentRow) {
-                    rowZombies.add(z);
+            Iterator<Zombie> zb = gamePlay.getGameZombies().iterator();
+            while (zb.hasNext()) {
+                Zombie zbi = zb.next();
+                if (zbi.isAlive() && zbi.getRow() == currentRow) {
+                    rowZombies.add(zbi);
                 }
             }
+
             rowZombies.sort((z1, z2) -> Double.compare(z2.getPosition().getX(), z1.getPosition().getX()));
 
             for (Zombie z : rowZombies) {
@@ -659,49 +674,23 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                         float pulse = 0.75f + 0.25f * (float) Math.sin(stateTime * 7f);
                         batch.setColor(0.35f * pulse, 1.0f, 0.45f * pulse, 1.0f);
                     } else {
-                        batch.setColor(Color.WHITE);
+                        batch.setColor(z.getColor());
                     }
 
                     player.draw(batch, z.getAnimationPath(), z.getCurrentAnimationName(),
-                        stateTime, drawX, drawY, true, z.getVisibility());
+                        stateTime, drawX, drawY+15, true, z.getVisibility());
 
                     batch.setColor(Color.WHITE);
                 }
             }
         }
 
-        if (gamePlay.getChapterType() == ChapterType.BIG_WAVE_BEACH) {
-            float waterOffset = (float) Math.sin(stateTime * 0.8f) * WATER_MOVE_RANGE;
-            float currentWaterX = WATER_BASE_X + waterOffset;
-            player.draw(batch, BEACH_WATER_ANIM_PATH, "water", stateTime, currentWaterX, WATER_BASE_Y, true);
-            player.draw(batch, BEACH_TIDELINE_ANIM_PATH, "idle", stateTime, TIDELINE_X, TIDELINE_Y, true);
-        }
 
         for (DroppedPlantFood pf : gamePlay.getActivePlantFoods()) {
             float x = (float) pf.getPosition().getX();
             float y = (float) pf.getPosition().getY();
             float floatOffset = (float) Math.sin(stateTime * 5f) * 7f;
             batch.draw(getPlantFoodIconInGame, x, y + floatOffset, 65, 65);
-        }
-
-        for (int i = 0; i < gamePlay.getGameZombies().size(); i++) {
-            Zombie z = gamePlay.getGameZombies().get(i);
-            if (z.isAlive() && z.getZombieStats().getAnimation() != null) {
-                float drawX = (float) z.getPosition().getX();
-                float drawY = (float) z.getPosition().getY();
-
-                if (z.isHypnotized()) {
-                    float pulse = 0.75f + 0.25f * (float) Math.sin(stateTime * 7f);
-                    batch.setColor(0.35f * pulse, 1.0f, 0.45f * pulse, 1.0f);
-                } else {
-                    batch.setColor(z.getColor());
-                }
-
-                player.draw(batch, z.getAnimationPath(), z.getCurrentAnimationName(),
-                    stateTime, drawX, drawY, true, z.getVisibility());
-
-                batch.setColor(Color.WHITE);
-            }
         }
 
         for (Sun sun : gamePlay.getActiveSuns()) {
