@@ -56,6 +56,7 @@ public class DeadLine extends GamePlay {
                     System.out.printf("Plant %s at (%d, %d) is destroyed.\n", plant.getName(), plant.getColumn(), plant.getRow());
                     currentTile.getPlants().removeIf(p -> p.getName().equals(plant.getName()));
                 }
+                incrementLostPlants();
                 bp.remove();
             }
         }

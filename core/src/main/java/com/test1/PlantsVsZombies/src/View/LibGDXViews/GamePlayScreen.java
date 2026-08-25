@@ -128,6 +128,14 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     private static final float SHOVEL_BTN_X = 1770f;
     private static final float SHOVEL_BTN_Y = 30f;
     private static final float SHOVEL_BTN_SIZE = 100f;
+
+    // ---- Pause Button Configuration ----
+    public static final String PAUSE_BTN_ASSET_ID = "IMAGE_UI_HUD_INGAME_PAUSE_BUTTON";
+    private TextureRegion pauseBtnRegion;
+    private static final float PAUSE_BTN_X = 1810f;
+    private static final float PAUSE_BTN_Y = 1105f;
+    private static final float PAUSE_BTN_SIZE = 75f;
+
     private static final String[] EGYPT_GRAVE_ASSET_IDS = {
         "IMAGE_GRAVESTONES_EGYPT_HIEROGLYPH_EGYPT_HIEROGLYPH_118X148",
         "IMAGE_GRAVESTONES_EGYPT_HIEROGLYPH_EGYPT_HIEROGLYPH_118X148_2",
@@ -222,7 +230,12 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         progressBarFrame = textureBank.region("IMAGE_UI_HUD_INGAME_PROGRESS_METER");
         iceBlockTexture = textureBank.region("IMAGE_EFFECTS_FROSTBITE_ICE_BLOCK_ZOMBIE_FROSTBITE_ICE_BLOCK_ZOMBIE_153X243");
         lowTideRuneRegion = textureBank.region("IMAGE_PLANT_WATERRABBIT_WATERRABBIT_82X82");
-        conveyorTrackRegion = textureBank.region("IMAGE_UI_CONVEYOR_CONVEYOR_BELT");
+
+        pauseBtnRegion = textureBank.region(PAUSE_BTN_ASSET_ID);
+        if (pauseBtnRegion == null) {
+            pauseBtnRegion = textureBank.region("IMAGE_UI_HUD_INGAME_BACKGROUND_3SLICE");
+        }
+
         for (int i = 0; i < EGYPT_GRAVE_ASSET_IDS.length; i++) {
             egyptGraveRegions[i] = textureBank.region(EGYPT_GRAVE_ASSET_IDS[i]);
         }
@@ -285,6 +298,16 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                     isShovelSelected = false;
                     isPlantFoodSelected = false;
                     return true;
+                }
+
+                if (button == com.badlogic.gdx.Input.Buttons.LEFT) {
+                    if (mouseWorldPos.x >= PAUSE_BTN_X && mouseWorldPos.x <= PAUSE_BTN_X + PAUSE_BTN_SIZE &&
+                        mouseWorldPos.y >= PAUSE_BTN_Y && mouseWorldPos.y <= PAUSE_BTN_Y + PAUSE_BTN_SIZE) {
+                        if (!gamePlay.isGameOver()) {
+                            showPauseModal();
+                            return true;
+                        }
+                    }
                 }
 
                 User user = gamePlay.getThisUser();
@@ -477,6 +500,44 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     }
 
     // ==========================================================
+    // PAUSE MODAL
+    // ==========================================================
+    private void showPauseModal() {
+        gamePlay.isPaused = true;
+
+        BorderedTable box = new BorderedTable();
+        box.pad(35, 45, 35, 45);
+
+        Label title = createModalLabel("Game Paused", Color.BLACK);
+        title.setFontScale(1.35f);
+        box.add(title).colspan(3).padBottom(28).row();
+
+        TextButton resumeButton = createModalButton("Resume", () -> {
+            closeModal();
+            gamePlay.isPaused = false;
+        });
+
+        TextButton restartButton = createModalButton("Restart", () -> {
+            closeModal();
+            int level = gamePlay.getLevel();
+            MenuManager.getInstance().getGameMenu().startGame(level);
+        });
+
+        TextButton exitButton = createModalButton("Exit", () -> {
+            closeModal();
+            MenuManager.getInstance().changeMenu(MenuType.Game);
+        });
+
+        Table buttonRow = new Table();
+        buttonRow.add(resumeButton).padRight(16);
+        buttonRow.add(restartButton).padRight(16);
+        buttonRow.add(exitButton);
+        box.add(buttonRow).colspan(3);
+
+        showModal(box, null);
+    }
+
+    // ==========================================================
     // END OF GAME MODAL (win or loss)
     // ==========================================================
     private void showEndGameModal() {
@@ -532,6 +593,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
 
     private void showModal(Table content, Runnable onDismissAnywhere) {
         modalStack.clearChildren();
+        modalStack.clearListeners();
 
         if (modalScrimTexture == null) {
             Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
@@ -563,6 +625,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
 
     private void closeModal() {
         modalStack.clearChildren();
+        modalStack.clearListeners();
     }
 
     private Label createModalLabel(String text, Color color) {
@@ -692,6 +755,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                 if (!tile.isArable() && tile.getHP() > 0) {
                     int gridX = (int) tile.getPosition().getX();
                     int gridY = (int) tile.getPosition().getY();
+
                     float realX = gamePlay.getRealX(gridX);
                     float realY = gamePlay.getRealY(gridY);
 
@@ -902,6 +966,10 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         }
 
         batch.draw(foodBankRegion, 240, 1100, 230, 80);
+
+        if (pauseBtnRegion != null) {
+            batch.draw(pauseBtnRegion, PAUSE_BTN_X, PAUSE_BTN_Y, PAUSE_BTN_SIZE, PAUSE_BTN_SIZE);
+        }
 
 
         User currentUser = UsersManager.getInstance().getLoggedInUser();

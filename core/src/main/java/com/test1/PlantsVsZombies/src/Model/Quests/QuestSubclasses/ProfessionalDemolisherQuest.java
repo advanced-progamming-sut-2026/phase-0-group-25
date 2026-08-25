@@ -31,11 +31,6 @@ public class ProfessionalDemolisherQuest extends Quest {
         if (event instanceof ExplosiveUsedEvent) {
             incrementProgress(1);
         } else if (event instanceof LevelStartedEvent && !isCompleted()) {
-            // The requirement is 3 explosive plants in ONE level -- without
-            // this, using 1 explosive across 3 separate level attempts
-            // would incorrectly complete the quest. Only reset if not
-            // already completed, so a finished-but-unclaimed quest isn't
-            // silently un-done by starting another level.
             setCurrentProgress(0);
         }
     }
