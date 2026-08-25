@@ -297,6 +297,10 @@ public class UsersManager {
         progressManager.addPlantFood(amount);
     }
 
+    public void reducePlantFood(int amount){
+        progressManager.reducePlantFood(amount);
+    }
+
     public void unlockPlant(PlantType plantType) {
         progressManager.unlockPlant(plantType);
     }

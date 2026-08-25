@@ -180,11 +180,8 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     private static final float START_WAVE_BTN_W = 220f;
     private static final float START_WAVE_BTN_H = 75f;
 
-    // ---- Objectives / end-of-game modal system ----
-    private Stage uiStage;
-    private Skin skin;
-    private Stack modalStack;
-    private boolean endModalShown = false;
+    // ---- Objectives / pause / end-of-game modal system (shared component) ----
+    private GamePlayModals modals;
 
     public GamePlayScreen(GamePlay gamePlay) {
         this.gamePlay = gamePlay;
@@ -230,6 +227,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         progressBarFrame = textureBank.region("IMAGE_UI_HUD_INGAME_PROGRESS_METER");
         iceBlockTexture = textureBank.region("IMAGE_EFFECTS_FROSTBITE_ICE_BLOCK_ZOMBIE_FROSTBITE_ICE_BLOCK_ZOMBIE_153X243");
         lowTideRuneRegion = textureBank.region("IMAGE_PLANT_WATERRABBIT_WATERRABBIT_82X82");
+        conveyorTrackRegion = textureBank.region("IMAGE_UI_CONVEYOR_CONVEYOR_BELT");
 
         pauseBtnRegion = textureBank.region(PAUSE_BTN_ASSET_ID);
 
@@ -254,11 +252,11 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         }
         necromancyRuneRegion = textureBank.region("IMAGE_EFFECTS_GRIMROSE_UNDERZOMBIE_EFFECT_GRIMROSE_UNDERZOMBIE_EFFECT_167X52");
 
-        skin = Main.getInstance().getSkin();
-        uiStage = new Stage(new ScreenViewport());
-        modalStack = new Stack();
-        modalStack.setFillParent(true);
-        uiStage.addActor(modalStack);
+        modals = new GamePlayModals(
+            gamePlay,
+            () -> MenuManager.getInstance().changeMenu(MenuType.Game),
+            () -> MenuManager.getInstance().getGameMenu().startGame(gamePlay.getLevel())
+        );
 
         InputAdapter gameInputAdapter = new InputAdapter() {
             @Override
@@ -301,7 +299,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                     if (mouseWorldPos.x >= PAUSE_BTN_X && mouseWorldPos.x <= PAUSE_BTN_X + PAUSE_BTN_SIZE &&
                         mouseWorldPos.y >= PAUSE_BTN_Y && mouseWorldPos.y <= PAUSE_BTN_Y + PAUSE_BTN_SIZE) {
                         if (!gamePlay.isGameOver()) {
-                            showPauseModal();
+                            modals.showPauseModal();
                             return true;
                         }
                     }
@@ -454,195 +452,15 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         };
 
         InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(uiStage);
+        multiplexer.addProcessor(modals.getStage());
         multiplexer.addProcessor(gameInputAdapter);
         Gdx.input.setInputProcessor(multiplexer);
 
-        showObjectivesModal();
-    }
-
-    // ==========================================================
-    // OBJECTIVES MODAL (beginning of level, before any dialog)
-    // ==========================================================
-    private void showObjectivesModal() {
-        gamePlay.isPaused = true;
-
-        BorderedTable box = new BorderedTable();
-        box.pad(30);
-
-        Label title = createModalLabel("Level Objective", Color.BLACK);
-        title.setFontScale(1.15f);
-        box.add(title).padBottom(16).row();
-
-        String objectives = gamePlay.getLevelObjectives();
-        Label objectiveLabel = createModalLabel(objectives != null ? objectives : "", Color.BLACK);
-        objectiveLabel.setWrap(true);
-        objectiveLabel.setAlignment(Align.center);
-        box.add(objectiveLabel).width(440).padBottom(20).row();
-
-        Label hint = createModalLabel("(tap anywhere to continue)", Color.DARK_GRAY);
-        hint.setFontScale(0.8f);
-        box.add(hint);
-
-        // Clicking anywhere (scrim or the box itself) dismisses this modal
-        // and resumes the game -- unless there's an intro dialogue waiting,
-        // in which case dismissing just reveals it and it stays paused
-        // until the dialogue itself finishes (existing click-to-advance
-        // logic in the gameplay input adapter handles that).
-        showModal(box, () -> {
+        modals.showObjectivesModal(() -> {
             if (introCutscene == null || introCutscene.isFinished()) {
                 gamePlay.isPaused = false;
             }
         });
-    }
-
-    // ==========================================================
-    // PAUSE MODAL
-    // ==========================================================
-    private void showPauseModal() {
-        gamePlay.isPaused = true;
-
-        BorderedTable box = new BorderedTable();
-        box.pad(35, 45, 35, 45);
-
-        Label title = createModalLabel("Game Paused", Color.BLACK);
-        title.setFontScale(1.35f);
-        box.add(title).colspan(3).padBottom(28).row();
-
-        TextButton resumeButton = createModalButton("Resume", () -> {
-            closeModal();
-            gamePlay.isPaused = false;
-        });
-
-        TextButton restartButton = createModalButton("Restart", () -> {
-            closeModal();
-            int level = gamePlay.getLevel();
-            MenuManager.getInstance().getGameMenu().startGame(level);
-        });
-
-        TextButton exitButton = createModalButton("Exit", () -> {
-            closeModal();
-            MenuManager.getInstance().changeMenu(MenuType.Game);
-        });
-
-        Table buttonRow = new Table();
-        buttonRow.add(resumeButton).padRight(16);
-        buttonRow.add(restartButton).padRight(16);
-        buttonRow.add(exitButton);
-        box.add(buttonRow).colspan(3);
-
-        showModal(box, null);
-    }
-
-    // ==========================================================
-    // END OF GAME MODAL (win or loss)
-    // ==========================================================
-    private void showEndGameModal() {
-        endModalShown = true;
-        gamePlay.isPaused = true;
-
-        boolean won = gamePlay.hasWon();
-
-        BorderedTable box = new BorderedTable();
-        box.pad(30);
-
-        Label title = createModalLabel(won ? "Congratulations!" : "You Lost!", Color.BLACK);
-        title.setFontScale(1.25f);
-        box.add(title).colspan(2).padBottom(18).row();
-
-        Label message = createModalLabel(
-            won ? "You beat the level! Great job!" : "The zombies got through. Better luck next time!",
-            Color.BLACK
-        );
-        message.setWrap(true);
-        message.setAlignment(Align.center);
-        box.add(message).width(420).colspan(2).padBottom(24).row();
-
-        TextButton exitButton = createModalButton("Exit", () ->
-            MenuManager.getInstance().changeMenu(MenuType.Game)
-        );
-
-        if (won) {
-            box.add(exitButton).colspan(2);
-        } else {
-            TextButton tryAgainButton = createModalButton("Try Again", () -> {
-                int level = gamePlay.getLevel();
-                MenuManager.getInstance().getGameMenu().startGame(level);
-            });
-
-            Table buttonRow = new Table();
-            buttonRow.add(tryAgainButton).padRight(14);
-            buttonRow.add(exitButton);
-            box.add(buttonRow).colspan(2);
-        }
-
-        // No click-anywhere dismissal here -- only the buttons above
-        // should close this modal.
-        showModal(box, null);
-    }
-
-    // ==========================================================
-    // Shared modal plumbing (self-contained since GamePlayScreen does
-    // not extend AbstractScreen and therefore has no Stage of its own
-    // otherwise).
-    // ==========================================================
-    private Texture modalScrimTexture;
-
-    private void showModal(Table content, Runnable onDismissAnywhere) {
-        modalStack.clearChildren();
-        modalStack.clearListeners();
-
-        if (modalScrimTexture == null) {
-            Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-            pixmap.setColor(0f, 0f, 0f, 0.6f);
-            pixmap.fill();
-            modalScrimTexture = new Texture(pixmap);
-            pixmap.dispose();
-        }
-
-        Image scrim = new Image(new TextureRegionDrawable(new TextureRegion(modalScrimTexture)));
-        scrim.setFillParent(true);
-        modalStack.addActor(scrim);
-
-        Table centerWrapper = new Table();
-        centerWrapper.setFillParent(true);
-        centerWrapper.add(content);
-        modalStack.addActor(centerWrapper);
-
-        if (onDismissAnywhere != null) {
-            modalStack.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    closeModal();
-                    onDismissAnywhere.run();
-                }
-            });
-        }
-    }
-
-    private void closeModal() {
-        modalStack.clearChildren();
-        modalStack.clearListeners();
-    }
-
-    private Label createModalLabel(String text, Color color) {
-        BitmapFont font = skin.get("FBUSV8C5EI_2", BitmapFont.class);
-        Label.LabelStyle style = new Label.LabelStyle();
-        style.font = font;
-        style.fontColor = color;
-        return new Label(text, style);
-    }
-
-    private TextButton createModalButton(String text, Runnable onClick) {
-        TextButton button = new TextButton(text, skin, "green");
-        button.pad(10, 22, 10, 22);
-        button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                onClick.run();
-            }
-        });
-        return button;
     }
 
     @Override
@@ -654,22 +472,30 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         }
         float effectiveDelta = delta * gameSpeed;
 
-        stateTime += effectiveDelta;
-        gamePlay.setTotalTimePassed(stateTime);
         textureBank.update();
 
         ScreenUtils.clear(0.1f, 0.4f, 0.1f, 1);
 
         if (!gamePlay.isPaused()) {
+            // stateTime is the canonical animation/game clock: it feeds
+            // gamePlay.setTotalTimePassed(), which GAME.getTotalTimePassed()
+            // throughout the ability/attack/animation-decider code treats
+            // as "now". It's also what every PamPlayer.draw(...) call below
+            // uses as its animation timeline. Only advancing it while not
+            // paused freezes animations (plants, zombies, projectiles,
+            // mowers, suns, decorative pulses) AND prevents a burst of
+            // "catch-up" attacks/timers firing the instant the game
+            // resumes after having sat paused for a while.
+            stateTime += effectiveDelta;
+            gamePlay.setTotalTimePassed(stateTime);
+
             timeAccumulator += effectiveDelta;
             while (timeAccumulator >= TICK_RATE) {
                 gamePlay.update();
                 timeAccumulator -= TICK_RATE;
             }
 
-            if (!endModalShown && gamePlay.isGameOver()) {
-                showEndGameModal();
-            }
+            modals.checkAndMaybeShowEndGameModal();
 
             for (Mower mower : gamePlay.getMowers()) {
                 mower.update(effectiveDelta, gamePlay);
@@ -904,7 +730,9 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         Iterator<SandstormEffect> it = gamePlay.getActiveSandstorms().iterator();
         while (it.hasNext()) {
             SandstormEffect storm = it.next();
-            storm.update(delta);
+            if (!gamePlay.isPaused()) {
+                storm.update(delta);
+            }
 
             if (storm.isFinished()) {
                 it.remove();
@@ -925,7 +753,9 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             Iterator<IcyWindEffect> windIt = gamePlay.getActiveIcyWinds().iterator();
             while (windIt.hasNext()) {
                 IcyWindEffect wind = windIt.next();
-                wind.update(delta);
+                if (!gamePlay.isPaused()) {
+                    wind.update(delta);
+                }
 
                 if (wind.isFinished()) {
                     windIt.remove();
@@ -1342,8 +1172,8 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             introCutscene.render(batch, shapeRenderer, player, hudFont, stateTime);
         }
 
-        uiStage.act(delta);
-        uiStage.draw();
+        modals.getStage().act(delta);
+        modals.getStage().draw();
 
         UIManager.renderToasts(delta);
     }
@@ -1353,8 +1183,8 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         viewport.update(width, height, true);
         camera.position.set(1920 / 2f, 1200 / 2f, 0);
         camera.update();
-        if (uiStage != null) {
-            uiStage.getViewport().update(width, height, true);
+        if (modals != null) {
+            modals.resize(width, height);
         }
         UIManager.resizeToasts(width, height);
     }
@@ -1364,11 +1194,8 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         shapeRenderer.dispose();
         batch.dispose();
         hudFont.dispose();
-        if (uiStage != null) {
-            uiStage.dispose();
-        }
-        if (modalScrimTexture != null) {
-            modalScrimTexture.dispose();
+        if (modals != null) {
+            modals.dispose();
         }
     }
 

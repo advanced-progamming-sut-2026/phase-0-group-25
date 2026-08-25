@@ -181,7 +181,7 @@ public class VaseBreaker extends GamePlay {
         if (checkWinCondition()) {
             onWin();
             System.out.println("CONGRATULATIONS! You broke all jars and defeated all zombies!");
-            this.isPaused = true;
+            endGame(true);
         }
     }
 

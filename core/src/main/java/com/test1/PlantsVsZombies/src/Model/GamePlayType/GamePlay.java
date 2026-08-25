@@ -11,6 +11,7 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities.ProducingS
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Dynamite;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
 import com.test1.PlantsVsZombies.src.Model.PlayGroundType.PlayGround;
+import com.test1.PlantsVsZombies.src.Model.Quests.Events.ExplosiveUsedEvent;
 import com.test1.PlantsVsZombies.src.Model.Quests.Events.LevelStartedEvent;
 import com.test1.PlantsVsZombies.src.Model.Quests.Events.LevelWonEvent;
 import com.test1.PlantsVsZombies.src.Model.Quests.Events.SunCollectedEvent;
@@ -419,6 +420,11 @@ public abstract class GamePlay {
             thisTile.addPlant(thisP);
             thisPlant.setCurrentCoolDown(thisPlant.getPlantStats().getRechargeTime());
             this.mySuns = Math.max(0, this.mySuns - thisPlant.getPlantStats().getCost());
+            if(thisPlant.getPlantStats().getCategory().equals("Explosive")){
+                QuestManager.getInstance().notifyEvent(new ExplosiveUsedEvent(thisPName));
+                System.out.println("EXPLOSIVE USED");
+            }
+
 
             System.out.printf("%s was planted in (%d, %d)\n", thisPName, thisPX, thisPY);
         } else {
@@ -445,6 +451,7 @@ public abstract class GamePlay {
 
     public void addPlantFood() {
         this.numOfPlantFood = Math.min(this.numOfPlantFood + 1, 3);
+        UsersManager.getInstance().addPlantFood(1);
     }
 
     public void addSun(Sun sun) {
@@ -764,7 +771,9 @@ public abstract class GamePlay {
 
     public int getLevelOfPlant(String plantName) {
         PlantType thisPlantType = PlantType.valueOf(plantName);
-        return thisUser.getUserProgress().getUnlockedPlantsAndTheirLevels().get(thisPlantType);
+        if(thisUser.getUserProgress().getUnlockedPlantsAndTheirLevels().get(thisPlantType) != null)
+            return thisUser.getUserProgress().getUnlockedPlantsAndTheirLevels().get(thisPlantType);
+        return 1;
     }
 
     public int getRealX(int gridX) {
@@ -1010,6 +1019,7 @@ public abstract class GamePlay {
         if (tile != null && !tile.getPlants().isEmpty()) {
             applyPlantFood(gridX, gridY);
             this.numOfPlantFood--;
+            UsersManager.getInstance().reducePlantFood(1);
             System.out.printf("Plant food applied on plant at (%d, %d). Remaining: %d\n", gridX, gridY, this.numOfPlantFood);
             return true;
         }
