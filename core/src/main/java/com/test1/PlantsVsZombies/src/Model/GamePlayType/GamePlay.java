@@ -300,15 +300,16 @@ public abstract class GamePlay {
             .count();
         System.out.println("SUN PRODUCERS: " + sunProducersCount);
 
-        boolean[] emptyColumns = new boolean[10];
-        boolean[] emptyRows = new boolean[6];
+        boolean[] emptyColumns = new boolean[9];
+        boolean[] emptyRows = new boolean[5];
         Arrays.fill(emptyColumns, true);
         Arrays.fill(emptyRows, true);
 
         for (BattlePlant p : gamePlants) {
-            emptyColumns[p.getColumn()] = false;
-            emptyRows[p.getRow()] = false;
+            emptyColumns[p.getColumn()-1] = false;
+            emptyRows[p.getRow()-1] = false;
         }
+        System.out.println("SUNS LEFT:" + mySuns);
 
         System.out.println("LOST PLANTS: " + lostPlants);
         System.out.println("EMPTY ROWS");
