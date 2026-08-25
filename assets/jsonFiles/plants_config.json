@@ -300,25 +300,25 @@
   ],
 
   "POTATO_MINE": [
-    { "category": "Explosive", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 25, "abilities": ["explosion"], "tags": ["Trap", "charge"], "attributes": {"armTime": 15, "damage": 1800}, "plantFoodEffect": {"number": 2},
-      "animation": "768/INITIAL/PLANT/POTATOMINE/POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "plantfood": "plantfood"} },
-    { "category": "Explosive", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 25, "abilities": ["explosion"], "tags": ["Trap", "charge"], "attributes": {"armTime": 12, "damage": 1800}, "plantFoodEffect": {"number": 2},
-      "animation": "768/INITIAL/PLANT/POTATOMINE/POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "plantfood": "plantfood"} },
-    { "category": "Explosive", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 20, "abilities": ["explosion"], "tags": ["Trap", "charge"], "attributes": {"armTime": 12, "damage": 1800}, "plantFoodEffect": {"number": 2},
-      "animation": "768/INITIAL/PLANT/POTATOMINE/POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "plantfood": "plantfood"} },
-    { "category": "Explosive", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 20, "abilities": ["explosion"], "tags": ["Trap", "charge"], "attributes": {"armTime": 12, "damage": 2400}, "plantFoodEffect": {"number": 2},
-      "animation": "768/INITIAL/PLANT/POTATOMINE/POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "plantfood": "plantfood"} }
+    { "category": "Explosive", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 25, "abilities": ["explosion"], "tags": ["Trap", "charge"], "attributes": {"armTime": 15, "damage": 1800, "explosionAnimation": "768/INITIAL/EFFECTS/POTATOMINE_EXPLOSION/POTATOMINE_EXPLOSION.PAM"}, "plantFoodEffect": {"number": 2},
+      "animation": "768/INITIAL/PLANT/POTATOMINE/POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "explosion": "animation", "plantfood": "plantfood"} },
+    { "category": "Explosive", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 25, "abilities": ["explosion"], "tags": ["Trap", "charge"], "attributes": {"armTime": 12, "damage": 1800, "explosionAnimation": "768/INITIAL/EFFECTS/POTATOMINE_EXPLOSION/POTATOMINE_EXPLOSION.PAM"}, "plantFoodEffect": {"number": 2},
+      "animation": "768/INITIAL/PLANT/POTATOMINE/POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "explosion": "animation", "plantfood": "plantfood"} },
+    { "category": "Explosive", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 20, "abilities": ["explosion"], "tags": ["Trap", "charge"], "attributes": {"armTime": 12, "damage": 1800, "explosionAnimation": "768/INITIAL/EFFECTS/POTATOMINE_EXPLOSION/POTATOMINE_EXPLOSION.PAM"}, "plantFoodEffect": {"number": 2},
+      "animation": "768/INITIAL/PLANT/POTATOMINE/POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "explosion": "animation", "plantfood": "plantfood"} },
+    { "category": "Explosive", "baseHP": 300, "cost": 25, "actionInterval": 0, "rechargeTime": 20, "abilities": ["explosion"], "tags": ["Trap", "charge"], "attributes": {"armTime": 12, "damage": 2400, "explosionAnimation": "768/INITIAL/EFFECTS/POTATOMINE_EXPLOSION/POTATOMINE_EXPLOSION.PAM"}, "plantFoodEffect": {"number": 2},
+      "animation": "768/INITIAL/PLANT/POTATOMINE/POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "explosion": "animation", "plantfood": "plantfood"} }
   ],
 
   "PRIMAL_POTATO_MINE": [
-    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 5, "abilities": ["explosion"], "tags": ["Trap", "charge", "AoE"], "attributes": {"armTime": 5, "damage": 2400, "range": 1}, "plantFoodEffect": {"number": 2},
-      "animation": "768/FULL/PLANT/PRIMAL_POTATOMINE/PRIMAL_POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "plantfood": "plantfood"} },
-    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 5, "abilities": ["explosion"], "tags": ["Trap", "charge", "AoE"], "attributes": {"armTime": 4, "damage": 2400, "range": 1}, "plantFoodEffect": {"number": 2},
-      "animation": "768/FULL/PLANT/PRIMAL_POTATOMINE/PRIMAL_POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "plantfood": "plantfood"} },
-    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 2, "abilities": ["explosion"], "tags": ["Trap", "charge", "AoE"], "attributes": {"armTime": 4, "damage": 2400, "range": 1}, "plantFoodEffect": {"number": 2},
-      "animation": "768/FULL/PLANT/PRIMAL_POTATOMINE/PRIMAL_POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "plantfood": "plantfood"} },
-    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 2, "abilities": ["explosion"], "tags": ["Trap", "charge", "AoE"], "attributes": {"armTime": 4, "damage": 2800, "range": 1}, "plantFoodEffect": {"number": 2},
-      "animation": "768/FULL/PLANT/PRIMAL_POTATOMINE/PRIMAL_POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "plantfood": "plantfood"} }
+    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 5, "abilities": ["explosion"], "tags": ["Trap", "charge", "AoE"], "attributes": {"armTime": 5, "damage": 2400, "range": 1, "explosionAnimation": "768/INITIAL/EFFECTS/PRIMAL_POTATOMINE_EXPLOSION/PRIMAL_POTATOMINE_EXPLOSION.PAM"}, "plantFoodEffect": {"number": 2},
+      "animation": "768/FULL/PLANT/PRIMAL_POTATOMINE/PRIMAL_POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "explosion": "animation", "plantfood": "plantfood"} },
+    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 5, "abilities": ["explosion"], "tags": ["Trap", "charge", "AoE"], "attributes": {"armTime": 4, "damage": 2400, "range": 1, "explosionAnimation": "768/INITIAL/EFFECTS/PRIMAL_POTATOMINE_EXPLOSION/PRIMAL_POTATOMINE_EXPLOSION.PAM"}, "plantFoodEffect": {"number": 2},
+      "animation": "768/FULL/PLANT/PRIMAL_POTATOMINE/PRIMAL_POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "explosion": "animation", "plantfood": "plantfood"} },
+    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 2, "abilities": ["explosion"], "tags": ["Trap", "charge", "AoE"], "attributes": {"armTime": 4, "damage": 2400, "range": 1, "explosionAnimation": "768/INITIAL/EFFECTS/PRIMAL_POTATOMINE_EXPLOSION/PRIMAL_POTATOMINE_EXPLOSION.PAM"}, "plantFoodEffect": {"number": 2},
+      "animation": "768/FULL/PLANT/PRIMAL_POTATOMINE/PRIMAL_POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "explosion": "animation", "plantfood": "plantfood"} },
+    { "category": "Explosive", "baseHP": 300, "cost": 50, "actionInterval": 0, "rechargeTime": 2, "abilities": ["explosion"], "tags": ["Trap", "charge", "AoE"], "attributes": {"armTime": 4, "damage": 2800, "range": 1, "explosionAnimation": "768/INITIAL/EFFECTS/PRIMAL_POTATOMINE_EXPLOSION/PRIMAL_POTATOMINE_EXPLOSION.PAM"}, "plantFoodEffect": {"number": 2},
+      "animation": "768/FULL/PLANT/PRIMAL_POTATOMINE/PRIMAL_POTATOMINE.PAM", "status": {"disarmed": "plant_idle", "armed": "idle", "explosion": "animation", "plantfood": "plantfood"} }
   ],
 
   "CHERRY_BOMB": [

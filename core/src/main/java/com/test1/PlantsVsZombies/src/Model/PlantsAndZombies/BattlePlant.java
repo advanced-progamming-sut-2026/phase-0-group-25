@@ -1,5 +1,6 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies;
 
+import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Enums.PlantCategory;
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
@@ -32,6 +33,7 @@ public class BattlePlant extends Plant {
 
     private String status = "idle";
     private double armorHP = 0.0;
+    private double dieTime;
 
     private GamePlay GAME = GamePlay.activeInstance;
 
@@ -255,7 +257,7 @@ public class BattlePlant extends Plant {
     @Override
     public void setCurrentHP(double currentHP) {
         super.setCurrentHP(currentHP);
-        if (currentHP <= 0) {
+        if (currentHP < 0) {
             this.isAlive = false;
         }
         if (!this.isAlive) {
@@ -309,6 +311,16 @@ public class BattlePlant extends Plant {
             }
 
             return this.plantStats.getAnimation();
+        } else if ((this.name.equals(PlantType.POTATO_MINE.getName())) ||
+            (this.name.equals(PlantType.PRIMAL_POTATO_MINE.getName()))) {
+            if (this.getCurrentHP() <= 0) {
+                double difference = GAME.getTotalTimePassed() - this.dieTime;
+
+                if (difference <= 1.17) {
+                    return (String) this.plantStats.getAttributes().get("explosionAnimation");
+                }
+                return this.plantStats.getAnimation();
+            }
         }
 
         return this.plantStats.getAnimation();
@@ -351,6 +363,14 @@ public class BattlePlant extends Plant {
                 Tile tile = GAME.getTileByPosition(this.column + i, this.row);
                 if (tile == null) {
                     continue;
+                }
+                if (GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT) ||
+                    GAME.getChapterType().equals(ChapterType.DARK_AGE) ||
+                    GAME.getChapterType().equals(ChapterType.FROSTBITE_CAVES)) {
+                    if ((!tile.isArable()) && (tile.getHP() > 0)) {
+                        this.status = "action";
+                        return;
+                    }
                 }
                 zombiesInRange.addAll(tile.getZombies());
             }
@@ -408,5 +428,14 @@ public class BattlePlant extends Plant {
 
     public void setArmorHP(double armorHP) {
         this.armorHP = armorHP;
+    }
+
+    public double getDieTime() {
+        return dieTime;
+    }
+
+    public BattlePlant setDieTime(double dieTime) {
+        this.dieTime = dieTime;
+        return this;
     }
 }

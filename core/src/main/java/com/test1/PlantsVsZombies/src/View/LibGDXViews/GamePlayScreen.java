@@ -186,8 +186,8 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
 
         batch = new SpriteBatch();
         viewport = new ScreenViewport();
-        textureBank = new TextureBank("768", Gdx.files.local("Assets"));
-        player = new PamPlayer(textureBank, Gdx.files.local("Assets"));
+        textureBank = new TextureBank("768", Gdx.files.local("assets/Assets"));
+        player = new PamPlayer(textureBank, Gdx.files.local("assets/Assets"));
 
         String bgKey = getBgPath(gamePlay.getChapterType());
         region = textureBank.region(bgKey);
@@ -767,7 +767,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                     float pulse = 0.75f + 0.25f * (float) Math.sin(stateTime * 7f);
                     batch.setColor(0.35f * pulse, 1.0f, 0.45f * pulse, 1.0f);
                 } else {
-                    batch.setColor(Color.WHITE);
+                    batch.setColor(z.getColor());
                 }
 
                 player.draw(batch, z.getAnimationPath(), z.getCurrentAnimationName(),

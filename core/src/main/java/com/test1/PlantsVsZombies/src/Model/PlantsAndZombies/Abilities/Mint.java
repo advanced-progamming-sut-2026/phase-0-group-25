@@ -14,9 +14,9 @@ public class Mint implements Ability {
         String category = plant.getPlantStats().getCategory();
         int duration = (int) plant.getPlantStats().getAttributes().get("duration");
 
-        for (BattlePlant plant1 : GAME.getPlants()) {
+        for (BattlePlant plant1 : GAME.getGamePlants()) {
             if (plant1.getPlantStats().getCategory().equals(category)) {
-                plant1.setEffected(true);
+                plant1.setEffected(true, 7);
             }
         }
 

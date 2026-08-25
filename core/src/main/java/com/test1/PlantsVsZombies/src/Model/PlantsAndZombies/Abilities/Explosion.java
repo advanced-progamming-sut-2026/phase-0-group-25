@@ -42,9 +42,10 @@ public class Explosion implements Ability {
             AoEDamage(plant, plant.getRow(), plant.getColumn());
         }
 
-        if (!plant.getName().equals(PlantType.SQUASH.getName()) &&
-            !plant.getName().equals(PlantType.TANGLE_KELP.getName())) {
+        if (plant.getName().equals(PlantType.POTATO_MINE.getName()) ||
+            plant.getName().equals(PlantType.PRIMAL_POTATO_MINE.getName())) {
             plant.setCurrentHP(0);
+            plant.setDieTime(GAME.getTotalTimePassed());
         }
 
         if (plant.getPlantStats().getAttributes().containsKey("damage")) {

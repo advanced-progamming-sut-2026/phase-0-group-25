@@ -6,6 +6,7 @@ import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities.*;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Armors.Armor;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Armors.ArmorConfig;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 
@@ -82,7 +83,7 @@ public class AnimationDecider {
         }
 
         if (zombie.getName().equals("GARGANTUAR")) {
-            if ((zombie.getZombieStats().isThrown()) && (!zombie.getZombieStats().isFinished())) {
+            if ((zombie.isThrown()) && (!zombie.isFinished())) {
                 for (Ability ability : zombie.getOriginalAbilities()) {
                     if (ability instanceof Moving) {
                         ((Moving) ability).setActivated(false);
@@ -117,6 +118,16 @@ public class AnimationDecider {
 
     public HashMap<String, Boolean> zombieVisibilities(Zombie zombie) {
         HashMap<String, Boolean> visibility = new HashMap<>();
+        if ((zombie.getName().equals("NEWSPAPER")) &&
+            zombie.getActiveArmors().isEmpty()) {
+
+            Armor armor = ArmorConfig.NEWSPAPER.createArmor();
+            visibility.put(armor.getAnimations().get(0), false);
+            visibility.put(armor.getAnimations().get(1), false);
+            visibility.put(armor.getAnimations().get(2), false);
+
+            return visibility;
+        }
 
         for (Armor armor : zombie.getActiveArmors()) {
             String currentArmorStage = armor.getCurrentAnimation();
@@ -124,6 +135,19 @@ public class AnimationDecider {
                 visibility.put("zombie_shoulder_armor", true);
             } else if (armor.getType().equals("Crown")) {
                 visibility.put("_zombie_armor_crown_states", true);
+            } else if (armor.getType().equals("Newspaper")) {
+                float HPRatio = (float) armor.getCurrentHP() / armor.getBaseHP();
+
+                if (HPRatio >= 0.67) {
+                    return visibility;
+                } else if (HPRatio >= 0.33) {
+                    visibility.put(armor.getAnimations().get(0), false);
+                    return visibility;
+                } else {
+                    visibility.put(armor.getAnimations().get(0), false);
+                    visibility.put(armor.getAnimations().get(1), false);
+                    return visibility;
+                }
             }
             visibility.put(currentArmorStage, true);
         }
@@ -150,6 +174,17 @@ public class AnimationDecider {
     }
 
     private String getChargePlantsAnimation(BattlePlant plant, Map<String, String> status, float stateTime) {
+        if ((plant.getName().equals(PlantType.POTATO_MINE.getName())) ||
+            (plant.getName().equals(PlantType.PRIMAL_POTATO_MINE.getName()))) {
+            if (plant.getCurrentHP() <= 0) {
+                double difference = GAME.getTotalTimePassed() - plant.getDieTime();
+                if (difference >= 1.00) {
+                    plant.setAlive(false);
+                }
+                return status.get("explosion");
+            }
+        }
+
         int armTime = (int) plant.getPlantStats().getAttributes().get("armTime");
         if ((stateTime - plant.getPlantTime()) < armTime) {
             return status.get("disarmed");
@@ -308,6 +343,7 @@ public class AnimationDecider {
             return getSquashAnimation(plant);
         }
 
+
         return "idle";
     }
 
@@ -424,7 +460,7 @@ public class AnimationDecider {
     }
 
     private String handleGargantuarThrow(Zombie zombie, Map<String, String> status) {
-        double throwTime = zombie.getZombieStats().getThrownTime();
+        double throwTime = zombie.getThrownTime();
         double difference = GAME.getTotalTimePassed() - throwTime;
         double firstThrow = (double) zombie.getZombieStats().getAttributes().get("firstThrow");
         double secondThrow = (double) zombie.getZombieStats().getAttributes().get("secondThrow");
@@ -435,7 +471,7 @@ public class AnimationDecider {
         } else if (difference <= (firstThrow + secondThrow)) {
             return status.get("secondThrow");
         } else {
-            zombie.getZombieStats().setFinished(true);
+            zombie.setFinished(true);
 
             Position impPosition = new Position(820, ((zombie.getRow() - 1) * 150) + 205);
             Zombie imp = ZombieFactory.createZombie("IMP", impPosition);

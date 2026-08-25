@@ -113,7 +113,9 @@ public class Shooting implements Ability {
     private boolean checkTime(BattlePlant plant) {
 
         double currentTime = GAME.getTotalTimePassed();
-        double timeDifference = (currentTime - plant.getEffectedTime());
+        double timeDifference = 10 *(currentTime - plant.getEffectedTime());
+        timeDifference = Math.floor(timeDifference);
+        timeDifference /= 10;
         if ((timeDifference % 0.5) == 0) {//every 0.5 second, shooters & strike-throughs execute their special ability
             return true;
         }
