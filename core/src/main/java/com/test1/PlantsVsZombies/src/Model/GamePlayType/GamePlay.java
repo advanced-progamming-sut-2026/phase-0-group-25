@@ -451,6 +451,7 @@ public abstract class GamePlay {
 
     public void addPlantFood() {
         this.numOfPlantFood = Math.min(this.numOfPlantFood + 1, 3);
+        UsersManager.getInstance().addPlantFood(1);
     }
 
     public void addSun(Sun sun) {
@@ -1018,6 +1019,7 @@ public abstract class GamePlay {
         if (tile != null && !tile.getPlants().isEmpty()) {
             applyPlantFood(gridX, gridY);
             this.numOfPlantFood--;
+            UsersManager.getInstance().reducePlantFood(1);
             System.out.printf("Plant food applied on plant at (%d, %d). Remaining: %d\n", gridX, gridY, this.numOfPlantFood);
             return true;
         }

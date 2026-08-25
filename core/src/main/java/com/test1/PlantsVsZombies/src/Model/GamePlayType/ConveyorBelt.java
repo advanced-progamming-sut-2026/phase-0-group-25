@@ -183,6 +183,7 @@ public class ConveyorBelt extends GamePlay {
                 } else if (mower.isDone() && zX <= 390) {
                     UsersManager.getInstance().addGamesPlayed();
                     this.isPaused = true;
+                    endGame(false);
                 }
             }
         }
@@ -190,6 +191,7 @@ public class ConveyorBelt extends GamePlay {
         if (checkingTheEndOfTheGame()) {
             onWin();
             this.isPaused = true;
+            endGame(true);
         }
     }
 
