@@ -397,40 +397,36 @@ public abstract class GamePlay {
             int thisPX = (int) thisPosition.getX();
             int thisPY = (int) thisPosition.getY();
             String thisPName = thisPlant.getName();
+
             if (thisPName.equals("IMITATER")) {
                 int number = new Random().nextInt(plants.size());
                 thisPName = this.plants.get(number).getName();
                 isImitaterBoosted = getLevelOfPlant("IMITATER") == 4;
             }
+
             Position thisPPosition = new Position(getRealX(thisPX), getRealY(thisPY));
             BattlePlant thisP = PlantFactory.createBattlePlant(thisPName, getLevelOfPlant(thisPName), thisPPosition);
             thisP.setRow((int) thisPosition.getY());
             thisP.setColumn((int) thisPosition.getX());
 
-            // Checking if this plant has a kind of boost...
-            PlantType thisPlantType = PlantType.valueOf(thisPName);
+            boolean isBoosted = isPlantBoosted(thisPName) || isImitaterBoosted;
 
-            if (UsersManager.getInstance().hasGreenhouseBoost(thisPlantType)) {
+            if (isBoosted) {
+                thisP.setEffected(true, effectedTime);
+                thisP.setLastActionTime(this.getTotalTimePassed());
+            }
+
+            PlantType thisPlantType = PlantType.fromName(thisPName);
+            if (thisPlantType != null && UsersManager.getInstance().hasGreenhouseBoost(thisPlantType)) {
                 UsersManager.getInstance().consumeGreenhouseBoost(thisPlantType);
             }
 
             this.gamePlants.add(thisP);
             thisTile.addPlant(thisP);
-
-            if (thisUser.getUserProgress().getGreenhouseBoosts().contains(thisPlantType) || isImitaterBoosted) {
-
-                thisP.setEffected(true, effectedTime);
-            }
-
             thisPlant.setCurrentCoolDown(thisPlant.getPlantStats().getRechargeTime());
             this.mySuns = Math.max(0, this.mySuns - thisPlant.getPlantStats().getCost());
-            if(thisPlant.getPlantStats().getCategory().equals("Explosive")){
-                QuestManager.getInstance().notifyEvent(new ExplosiveUsedEvent(thisPName));
-                System.out.println("EXPLOSIVE USED");
-            }
 
-
-            System.out.printf("%s was planted in (%d, %d)\n", thisPName, thisPX, thisPY);
+            System.out.printf("%s was planted in (%d, %d) [Boosted: %b]\n", thisPName, thisPX, thisPY, isBoosted);
         } else {
             if (!thisTile.isArable()) {
                 System.out.println("This tile is not arable! Try another one...!");
