@@ -65,16 +65,16 @@ public class TravelLogMenu extends Menu {
             return;
         }
 
-        ArrayList<String> plantsStr = MenuManager.getInstance().getGameMenu().getPlantsStr();
-        if (
-            plantsStr == null
-                || plantsStr.isEmpty()
-        ) {
-            getView().showError(
-                "No plants selected! Please select plants in choose plant menu first."
-            );
-            return;
-        }
+//        ArrayList<String> plantsStr = MenuManager.getInstance().getGameMenu().getPlantsStr();
+//        if (
+//            plantsStr == null
+//                || plantsStr.isEmpty()
+//        ) {
+//            getView().showError(
+//                "No plants selected! Please select plants in choose plant menu first."
+//            );
+//            return;
+//        }
 
         MiniGameType type = MiniGameType.fromDisplayName(miniGameName);
         if (type == null) {

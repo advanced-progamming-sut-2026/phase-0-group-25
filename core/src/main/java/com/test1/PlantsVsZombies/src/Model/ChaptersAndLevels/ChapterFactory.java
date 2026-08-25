@@ -38,7 +38,7 @@ public class ChapterFactory {
                 Level l3 = new Level(type, 3, GamePlayType.PLANT_WHAT_YOU_GET);
                 l3.addPlantReward(PlantType.FUME_SHROOM);
 
-                Level l4 = new Level(type, 4, GamePlayType.SIMPLE);
+                Level l4 = new Level(type, 4, GamePlayType.CONVEYOR_BELT);
                 l4.addPlantReward(PlantType.MAGNET_SHROOM);
 
                 chapter.addLevel(l1);
