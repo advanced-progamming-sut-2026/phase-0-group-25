@@ -620,6 +620,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             }
         }
 
+        ScreenShake.update(delta, camera);
         camera.update();
 
         batch.setProjectionMatrix(camera.combined);
