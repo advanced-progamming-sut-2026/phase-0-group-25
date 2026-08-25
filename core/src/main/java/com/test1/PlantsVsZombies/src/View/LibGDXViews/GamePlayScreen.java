@@ -1395,7 +1395,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     private int getPlantLayerPriority(BattlePlant plant) {
         if (plant == null || plant.getName() == null) return 1;
         String name = plant.getName().toUpperCase();
-        if (name.contains("LILY_PAD")  || name.contains("HOT_POTATO")) {
+        if (name.contains("LILY_PAD")  || name.contains("HOT_POTATO"))  {
             return 0;
         }
         if (name.contains("PUMPKIN")) {
