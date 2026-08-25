@@ -658,8 +658,11 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                         float hpRatio = Math.min(1.0f, tile.getHP() / GRAVE_MAX_HP);
                         int stageIndex = 4 - (int) Math.min(4, Math.floor(hpRatio * 5));
                         TextureRegion graveTexture = egyptGraveRegions[stageIndex];
+
                         if (graveTexture != null) {
-                            batch.draw(graveTexture, realX - (115f / 2f) - 7, realY - 30f, 115f, 145f);
+                            float graveW = graveTexture.getRegionWidth();
+                            float graveH = graveTexture.getRegionHeight();
+                            batch.draw(graveTexture, realX - (graveW / 2f) - 7f, realY - 30f, graveW*1.4f, graveH*1.4f);
                         }
                     }
                 }
@@ -682,9 +685,11 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                     if ((int) tile.getPosition().getY() == currentRow && !tile.isArable() && tile.getHP() > 0) {
                         float realX = gamePlay.getRealX((int) tile.getPosition().getX());
                         float realY = gamePlay.getRealY(currentRow);
+
                         if (tile.isNecromancy() && !tile.isNecromancyTriggered() && necromancyRuneRegion != null) {
                             batch.draw(necromancyRuneRegion, realX - 60f, realY - 50f, 120f, 60f);
                         }
+
                         float hpRatio = Math.max(0f, Math.min(1.0f, (float) tile.getHP() / GRAVE_MAX_HP));
                         int stageIndex = 4 - (int) Math.min(4, Math.floor(hpRatio * 4.99f));
                         TextureRegion graveTex = switch (tile.getGraveType()) {
@@ -692,8 +697,11 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                             case SUN -> darkSunGraveRegions[stageIndex];
                             default -> darkNormalGraveRegions[stageIndex];
                         };
+
                         if (graveTex != null) {
-                            batch.draw(graveTex, realX - 67f, realY - 30f, 115f, 145f);
+                            float graveW = graveTex.getRegionWidth();
+                            float graveH = graveTex.getRegionHeight();
+                            batch.draw(graveTex, realX - (graveW / 2f) - 7f, realY - 30f, graveW*1.4f, graveH*1.4f);
                         }
                     }
                 }
