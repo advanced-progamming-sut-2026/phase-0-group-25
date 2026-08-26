@@ -41,7 +41,7 @@ public class DefenselessRowQuest extends Quest {
     public void check(Event e) {
         if (e instanceof LevelWonEvent) {
             boolean[] emptyRows = ((LevelWonEvent) e).getEmptyRows();
-            if (emptyRows != null && emptyRows.length > targetRow && emptyRows[targetRow]) incrementProgress(1);
+            if (emptyRows != null && emptyRows.length > targetRow && emptyRows[targetRow-1]) incrementProgress(1);
         }
     }
 

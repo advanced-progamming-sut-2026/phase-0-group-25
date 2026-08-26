@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
+import com.test1.PlantsVsZombies.src.Audio.SoundManager;
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Enums.MenuType;
 import com.test1.PlantsVsZombies.src.Menu.MainMenu;
@@ -311,6 +312,70 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         Label title = createLabel("SETTINGS", "FBUSV8C5EI_2", Color.BLACK);
         box.add(title).colspan(2).center().padBottom(20).row();
 
+        // ----------------- AUDIO SETTINGS -----------------
+        SoundManager sm = SoundManager.getInstance();
+
+        // Music Volume Slider (0.0 to 1.0)
+        box.add(createBlackLabel("Music Volume:")).left().padRight(20).row();
+        Table musicVolRow = new Table();
+        final Slider musicVolSlider = new Slider(0f, 1f, 0.05f, false, skin, "default-horizontal");
+        musicVolSlider.setValue(sm.getMusicVolume());
+        final Label musicVolValueLabel = createBlackLabel((int) (musicVolSlider.getValue() * 100) + "%");
+        musicVolSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                float val = musicVolSlider.getValue();
+                sm.setMusicVolume(val);
+                musicVolValueLabel.setText((int) (val * 100) + "%");
+            }
+        });
+        musicVolRow.add(musicVolSlider).width(200).padRight(10);
+        musicVolRow.add(musicVolValueLabel).width(50);
+        box.add(musicVolRow).left().padBottom(10).row();
+
+        // Music Toggle CheckBox
+        final CheckBox musicCheckBox = new CheckBox(" Enable Music", skin);
+        musicCheckBox.getLabel().setColor(Color.BLACK);
+        musicCheckBox.setChecked(sm.isMusicEnabled());
+        musicCheckBox.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                sm.setMusicEnabled(musicCheckBox.isChecked());
+            }
+        });
+        box.add(musicCheckBox).left().padBottom(15).row();
+
+        // SFX Volume Slider (0.0 to 1.0)
+        box.add(createBlackLabel("SFX Volume:")).left().padRight(20).row();
+        Table sfxVolRow = new Table();
+        final Slider sfxVolSlider = new Slider(0f, 1f, 0.05f, false, skin, "default-horizontal");
+        sfxVolSlider.setValue(sm.getSfxVolume());
+        final Label sfxVolValueLabel = createBlackLabel((int) (sfxVolSlider.getValue() * 100) + "%");
+        sfxVolSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                float val = sfxVolSlider.getValue();
+                sm.setSfxVolume(val);
+                sfxVolValueLabel.setText((int) (val * 100) + "%");
+            }
+        });
+        sfxVolRow.add(sfxVolSlider).width(200).padRight(10);
+        sfxVolRow.add(sfxVolValueLabel).width(50);
+        box.add(sfxVolRow).left().padBottom(10).row();
+
+        // SFX Toggle CheckBox
+        final CheckBox sfxCheckBox = new CheckBox(" Enable SFX", skin);
+        sfxCheckBox.getLabel().setColor(Color.BLACK);
+        sfxCheckBox.setChecked(sm.isSfxEnabled());
+        sfxCheckBox.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                sm.setSfxEnabled(sfxCheckBox.isChecked());
+            }
+        });
+        box.add(sfxCheckBox).left().padBottom(20).row();
+
+        // ----------------- GAMEPLAY SETTINGS -----------------
         // Difficulty slider (1-5)
         box.add(createBlackLabel("Difficulty:")).left().padRight(20).row();
         Table diffRow = new Table();
@@ -390,6 +455,13 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         TextButton okButton = createSkinButton("OK", "green", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                // Save audio preferences
+                sm.setMusicVolume(musicVolSlider.getValue());
+                sm.setMusicEnabled(musicCheckBox.isChecked());
+                sm.setSfxVolume(sfxVolSlider.getValue());
+                sm.setSfxEnabled(sfxCheckBox.isChecked());
+
+                // Save game configurations
                 int diff = (int) diffSlider.getValue();
                 um.changeDifficulty(String.valueOf(diff));
 
@@ -416,12 +488,9 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         buttonRow.add(cancelButton);
         box.add(buttonRow).colspan(2).center();
 
-        ScrollPane scrollPane = new ScrollPane(box);
-        scrollPane.setScrollingDisabled(true, false);
-        scrollPane.setFadeScrollBars(true);
-
         Table wrapper = new Table();
-        wrapper.add(scrollPane).size(480, 500);
+        // Height increased to 720 to cleanly fit all settings vertically without scrolling
+        wrapper.add(box).size(480, 720);
         showModal(wrapper);
     }
 

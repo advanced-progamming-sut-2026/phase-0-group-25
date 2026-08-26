@@ -42,7 +42,7 @@ public class DefenselessCrossQuest extends Quest {
         if (e instanceof LevelWonEvent) {
             boolean[] emptyCols = ((LevelWonEvent) e).getEmptyColumns();
             boolean[] emptyRows = ((LevelWonEvent) e).getEmptyRows();
-            if (emptyCols != null && emptyRows != null && emptyCols.length > target && emptyRows.length > target && emptyCols[target] && emptyRows[target]) {
+            if (emptyCols != null && emptyRows != null && emptyCols.length > target && emptyRows.length > target && emptyCols[target-1] && emptyRows[target-1]) {
                 incrementProgress(1);
             }
         }
