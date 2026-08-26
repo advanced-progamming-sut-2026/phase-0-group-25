@@ -1,10 +1,13 @@
 package com.test1.PlantsVsZombies.src.Menu;
 
 import com.badlogic.gdx.Screen;
+import com.test1.PlantsVsZombies.src.Audio.SoundManager;
+import com.test1.PlantsVsZombies.src.Enums.AudioType;
 import com.test1.PlantsVsZombies.src.Enums.MenuType;
 import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.View.ConcreteViews.*;
 import com.test1.PlantsVsZombies.src.View.LibGDXViews.*;
+
 import java.util.HashMap;
 
 public class MenuManager {
@@ -109,6 +112,8 @@ public class MenuManager {
     }
 
     public void initInitialScreen() {
+        SoundManager.getInstance().playBackGroundMusic(AudioType.MENU_MUSIC);
+
         if (currentMenu != null && currentMenu.getView() instanceof Screen) {
             UIManager.changeScreen((Screen) currentMenu.getView());
         }
@@ -119,6 +124,12 @@ public class MenuManager {
     }
 
     public void changeMenu(MenuType menuType) {
+        if (menuType == MenuType.GamePlay) {
+            SoundManager.getInstance().playBackGroundMusic(AudioType.GAME_MUSIC);
+        } else {
+            SoundManager.getInstance().playBackGroundMusic(AudioType.MENU_MUSIC);
+        }
+
         this.currentMenu = menusAndTheirNames.get(menuType);
         this.currentMenu.onEnter();
         if (this.currentMenu.getView() instanceof Screen) {

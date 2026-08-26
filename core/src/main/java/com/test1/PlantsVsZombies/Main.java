@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.test1.PlantsVsZombies.src.Audio.SoundManager;
 import com.test1.PlantsVsZombies.src.Menu.MenuManager;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.GameDataLoader;
 import com.test1.PlantsVsZombies.src.View.LibGDXViews.UIManager;
@@ -24,9 +25,10 @@ public class Main extends Game {
         instance = this;
         batch = new SpriteBatch();
         skin = PvzSkin.get();
+        textureBank = new TextureBank("768", Gdx.files.internal("Assets"));
+        pamPlayer = new PamPlayer(textureBank, Gdx.files.internal("Assets"));
 
-        textureBank = new TextureBank("768", Gdx.files.internal("assets/Assets"));
-        pamPlayer = new PamPlayer(textureBank, Gdx.files.internal("assets/Assets"));
+        SoundManager.getInstance().initSound();
 
         GameDataLoader.loadGameData();
         UIManager.init(this);
@@ -69,6 +71,7 @@ public class Main extends Game {
     @Override
     public void dispose() {
         if (batch != null) batch.dispose();
+        SoundManager.getInstance().dispose();
         super.dispose();
     }
 }
