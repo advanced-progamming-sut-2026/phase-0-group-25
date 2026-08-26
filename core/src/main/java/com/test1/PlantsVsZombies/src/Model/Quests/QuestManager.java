@@ -8,6 +8,7 @@ import com.test1.PlantsVsZombies.src.Model.Quests.Events.Event;
 import com.test1.PlantsVsZombies.src.Model.User.User;
 import com.test1.PlantsVsZombies.src.Model.User.UserProgress;
 import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
+import com.test1.PlantsVsZombies.src.View.LibGDXViews.UIManager;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -173,18 +174,23 @@ public class QuestManager {
             case SEED_PACKETS:
                 PlantType pt = reward.getPlantType() != null ? reward.getPlantType() : PlantType.SUNFLOWER;
                 um.addSeedPackets(pt, reward.getAmount());
+                UIManager.showToast("got " + reward.getAmount() + "seed packets for " + reward.getPlantType().getName(), "IMAGE_UI_GENERIC_VTB");
                 break;
             case UNLOCK_PLANT:
-                if (reward.getPlantType() != null) {
-                    um.unlockPlant(reward.getPlantType());
-                } else {
-                    for (PlantType type : PlantType.values()) {
-                        if (!um.getLoggedInUser().getUserProgress().getUnlockedPlantsAndTheirLevels().containsKey(type)) {
-                            um.unlockPlant(type);
-                            break;
-                        }
+                PlantType plantToUnlock = null;
+                for (PlantType type : PlantType.values()) {
+                    if (!um.getLoggedInUser().getUserProgress().getUnlockedPlantsAndTheirLevels().containsKey(type)) {
+                        plantToUnlock = type;
+                        break;
                     }
                 }
+                if(plantToUnlock == null)
+                    UIManager.showToast("no plant to unlock!", "IMAGE_UI_GENERIC_TIMER_RIBBON_RED");
+                else {
+                    um.unlockPlant(plantToUnlock);
+                    UIManager.showToast(plantToUnlock.getName() + " unlocked!", "IMAGE_UI_GENERIC_VTB");
+                }
+
                 break;
             case UNLOCK_CHAPTER:
                 if (reward.getChapterType() != null) um.unlockChapter(reward.getChapterType());

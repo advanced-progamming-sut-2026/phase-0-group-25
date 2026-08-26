@@ -41,7 +41,7 @@ public class OneColumnLessQuest extends Quest {
     public void check(Event e) {
         if (e instanceof LevelWonEvent) {
             boolean[] emptyCols = ((LevelWonEvent) e).getEmptyColumns();
-            if (emptyCols != null && emptyCols.length > targetColumn && emptyCols[targetColumn]) incrementProgress(1);
+            if (emptyCols != null && emptyCols.length > targetColumn && emptyCols[targetColumn-1]) incrementProgress(1);
         }
     }
 

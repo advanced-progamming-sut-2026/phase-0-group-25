@@ -21,7 +21,7 @@ public class ChapterHunterQuest extends Quest {
     @Override
     public void randomizeVariable() {
         ChapterType[] chapters = ChapterType.values();
-        this.targetChapter = chapters[new Random().nextInt(chapters.length)];
+        this.targetChapter = chapters[1 + new Random().nextInt(chapters.length - 1)];
         updateDetails();
     }
 
