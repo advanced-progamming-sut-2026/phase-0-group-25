@@ -15,6 +15,7 @@ import com.test1.PlantsVsZombies.src.View.LibGDXViews.UIManager;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 public class Simple extends GamePlay {
@@ -77,11 +78,12 @@ public class Simple extends GamePlay {
                 bp.remove();
             }
         }
+        List<Zombie> pendingNewZombies = new ArrayList<>();
         Iterator<Zombie> z = gameZombies.iterator();
         while (z.hasNext()) {
             Zombie zombie = z.next();
 
-            if (!zombie.isAlive()) {
+            if (!zombie.isAlive() || zombie.getCurrentHP() <= 0) {
                 killAward(this.thisUser);
 
                 Position zPos = Position.getRowAndColumn(zombie.getPosition());
@@ -91,10 +93,11 @@ public class Simple extends GamePlay {
                 addKilledZombieCost(zombie.getWaveNum(), zombie.getCost());
                 z.remove();
             } else {
-                if (zombie.getCurrentHP() > 0) {
-                    zombie.update();
-                }
+                zombie.update();
             }
+        }
+        if (!pendingNewZombies.isEmpty()) {
+            gameZombies.addAll(pendingNewZombies);
         }
         updateZombieTiles();
         Iterator<Projectile> pj = projectiles.iterator();
