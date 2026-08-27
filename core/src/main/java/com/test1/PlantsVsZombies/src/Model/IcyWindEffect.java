@@ -18,5 +18,6 @@ public class IcyWindEffect {
     }
 
     public int getRow() { return row; }
+
     public float getAnimTime() { return animTime; }
 }
