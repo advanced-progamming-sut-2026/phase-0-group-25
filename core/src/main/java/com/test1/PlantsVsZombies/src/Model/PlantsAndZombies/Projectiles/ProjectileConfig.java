@@ -5,6 +5,8 @@ import com.test1.PlantsVsZombies.src.Enums.PlantType;
 public enum ProjectileConfig {
     PEA("pea",
         "768/INITIAL/EFFECTS/T_PEA_PROJECTILE/T_PEA_PROJECTILE.PAM", "animation"),
+    MEGA_PEA("mega pea",
+        "768/FULL/EFFECTS/PEAPOD_PLANTFOOD_GIANTPEA/PEAPOD_PLANTFOOD_GIANTPEA.PAM", "animation"),
     ICY_PEA("icy_pea",
         "768/INITIAL/EFFECTS/T_SNOW_PEA/T_SNOW_PEA.PAM", "animation"),
     FIRING_PEA("firing_pea",

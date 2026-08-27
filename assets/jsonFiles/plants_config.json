@@ -78,13 +78,13 @@
 
   "THREEPEATER": [
     { "category": "Shooter", "baseHP": 300, "cost": 300, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["pea"], "attributes": {"projectileName": "pea", "damage":  [20, 20, 20], "direction":  [[-1, 1, 0], [0, 1, 0], [1, 1, 0]]}, "plantFoodEffect": {},
-      "animation": "768/INITIAL/PLANT/REPEATER/REPEATER.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood"} },
+      "animation": "768/INITIAL/PLANT/THREEPEATER/THREEPEATER.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood"} },
     { "category": "Shooter", "baseHP": 300, "cost": 275, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["pea"], "attributes": {"projectileName": "pea", "damage":  [20, 20, 20], "direction":  [[-1, 1, 0], [0, 1, 0], [1, 1, 0]]}, "plantFoodEffect": {},
-      "animation": "768/INITIAL/PLANT/REPEATER/REPEATER.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood"} },
+      "animation": "768/INITIAL/PLANT/THREEPEATER/THREEPEATER.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood"} },
     { "category": "Shooter", "baseHP": 300, "cost": 275, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["pea"], "attributes": {"projectileName": "pea", "damage":  [30, 30, 30], "direction":  [[-1, 1, 0], [0, 1, 0], [1, 1, 0]]}, "plantFoodEffect": {},
-      "animation": "768/INITIAL/PLANT/REPEATER/REPEATER.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood"} },
+      "animation": "768/INITIAL/PLANT/THREEPEATER/THREEPEATER.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood"} },
     { "category": "Shooter", "baseHP": 500, "cost": 275, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["pea"], "attributes": {"projectileName": "pea", "damage":  [30, 30, 30], "direction":  [[-1, 1, 0], [0, 1, 0], [1, 1, 0]]}, "plantFoodEffect": {},
-      "animation": "768/INITIAL/PLANT/REPEATER/REPEATER.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood"} }
+      "animation": "768/INITIAL/PLANT/THREEPEATER/THREEPEATER.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood"} }
   ],
 
   "SNOW_PEA": [
@@ -100,13 +100,13 @@
 
   "ROTOBAGA": [
     { "category": "Shooter", "baseHP": 300, "cost": 150, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": [], "attributes": {"projectileName": "rotobaga", "damage":  [10, 10, 10, 10], "direction":  [[0, 1, 1], [0, 1, -1], [0, -1, 1], [0, -1, -1]]}, "plantFoodEffect": {},
-      "animation": "768/FULL/PLANT/ROTORUTABAGA/ROTORUTABAGA.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood"} },
+      "animation": "768/FULL/PLANT/ROTORUTABAGA/ROTORUTABAGA.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood_on"} },
     { "category": "Shooter", "baseHP": 300, "cost": 150, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": [], "attributes": {"projectileName": "rotobaga", "damage":  [20, 20, 20, 20], "direction":  [[0, 1, 1], [0, 1, -1], [0, -1, 1], [0, -1, -1]]}, "plantFoodEffect": {},
-      "animation": "768/FULL/PLANT/ROTORUTABAGA/ROTORUTABAGA.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood"} },
+      "animation": "768/FULL/PLANT/ROTORUTABAGA/ROTORUTABAGA.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood_on"} },
     { "category": "Shooter", "baseHP": 450, "cost": 150, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": [], "attributes": {"projectileName": "rotobaga", "damage":  [20, 20, 20, 20], "direction":  [[0, 1, 1], [0, 1, -1], [0, -1, 1], [0, -1, -1]]}, "plantFoodEffect": {},
-      "animation": "768/FULL/PLANT/ROTORUTABAGA/ROTORUTABAGA.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood"} },
+      "animation": "768/FULL/PLANT/ROTORUTABAGA/ROTORUTABAGA.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood_on"} },
     { "category": "Shooter", "baseHP": 450, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": [], "attributes": {"projectileName": "rotobaga", "damage":  [20, 20, 20, 20], "direction":  [[0, 1, 1], [0, 1, -1], [0, -1, 1], [0, -1, -1]]}, "plantFoodEffect": {},
-      "animation": "768/FULL/PLANT/ROTORUTABAGA/ROTORUTABAGA.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood"} }
+      "animation": "768/FULL/PLANT/ROTORUTABAGA/ROTORUTABAGA.PAM", "status": {"idle": "idle", "action": "attack", "plantfood": "plantfood_on"} }
   ],
 
   "PEA_POD": [
@@ -128,10 +128,14 @@
   ],
 
   "CITRON": [
-    { "category": "Shooter", "baseHP": 300, "cost": 350, "actionInterval": 9, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["charge"], "attributes": {"damage":  [800], "direction":  [[0, 1, 0]]}, "plantFoodEffect": {} },
-    { "category": "Shooter", "baseHP": 300, "cost": 350, "actionInterval": 8, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["charge"], "attributes": {"damage":  [800], "direction":  [[0, 1, 0]]}, "plantFoodEffect": {} },
-    { "category": "Shooter", "baseHP": 300, "cost": 350, "actionInterval": 8, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["charge"], "attributes": {"damage":  [950], "direction":  [[0, 1, 0]]}, "plantFoodEffect": {} },
-    { "category": "Shooter", "baseHP": 300, "cost": 300, "actionInterval": 8, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["charge"], "attributes": {"damage":  [950], "direction":  [[0, 1, 0]]}, "plantFoodEffect": {} }
+    { "category": "Shooter", "baseHP": 300, "cost": 350, "actionInterval": 9, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["charge"], "attributes": {"projectileName": "citron", "damage":  [800], "direction":  [[0, 1, 0]]}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/CITRON/CITRON.PAM", "status": {"charge": "charge", "idle": "idle2", "attack": "attack", "plantfood": "plantfood"} },
+    { "category": "Shooter", "baseHP": 300, "cost": 350, "actionInterval": 8, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["charge"], "attributes": {"projectileName": "citron", "damage":  [800], "direction":  [[0, 1, 0]]}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/CITRON/CITRON.PAM", "status": {"charge": "charge", "idle": "idle2", "attack": "attack", "plantfood": "plantfood"} },
+    { "category": "Shooter", "baseHP": 300, "cost": 350, "actionInterval": 8, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["charge"], "attributes": {"projectileName": "citron", "damage":  [950], "direction":  [[0, 1, 0]]}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/CITRON/CITRON.PAM", "status": {"charge": "charge", "idle": "idle2", "attack": "attack", "plantfood": "plantfood"} },
+    { "category": "Shooter", "baseHP": 300, "cost": 300, "actionInterval": 8, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["charge"], "attributes": {"projectileName": "citron", "damage":  [950], "direction":  [[0, 1, 0]]}, "plantFoodEffect": {},
+      "animation": "768/FULL/PLANT/CITRON/CITRON.PAM", "status": {"charge": "charge", "idle": "idle2", "attack": "attack", "plantfood": "plantfood"} }
   ],
 
   "CAULIPOWER": [
@@ -234,13 +238,13 @@
   ],
 
   "FUME_SHROOM": [
-    { "category": "Strike-through", "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["shroom","ranged"], "attributes": {"projectileName": "fume_shroom", "damage": [30], "direction": [[0, 1, 0]], "range": 4, "pierce":  -1}, "plantFoodEffect": {"damage": [50], "direction": [[0, 1, 0]], "range": 4, "pierce":  -1, "knockback": 100},
+    { "category": "Strike-through", "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["shroom","ranged"], "attributes": {"projectileName": "fume_shroom", "damage": [30], "direction": [[0, 1, 0]], "range": 2, "pierce":  -1}, "plantFoodEffect": {"damage": [50], "direction": [[0, 1, 0]], "range": 4, "pierce":  -1, "knockback": 100},
       "animation": "768/INITIAL/PLANT/FUMESHROOM/FUMESHROOM.PAM", "status": {"idle": "idle", "action": "special", "plantfood": "plantfood"} },
-    { "category": "Strike-through", "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["shroom","ranged"], "attributes": {"projectileName": "fume_shroom", "damage": [30], "direction": [[0, 1, 0]], "range": 5, "pierce":  -1}, "plantFoodEffect": {"damage": [30], "direction": [[0, 1, 0]], "range": 4, "pierce":  -1, "knockback": 100},
+    { "category": "Strike-through", "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["shroom","ranged"], "attributes": {"projectileName": "fume_shroom", "damage": [30], "direction": [[0, 1, 0]], "range": 3, "pierce":  -1}, "plantFoodEffect": {"damage": [30], "direction": [[0, 1, 0]], "range": 4, "pierce":  -1, "knockback": 100},
       "animation": "768/INITIAL/PLANT/FUMESHROOM/FUMESHROOM.PAM", "status": {"idle": "idle", "action": "special", "plantfood": "plantfood"} },
-    { "category": "Strike-through", "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["shroom","ranged"], "attributes": {"projectileName": "fume_shroom", "damage": [40], "direction": [[0, 1, 0]], "range": 5, "pierce":  -1}, "plantFoodEffect": {"damage": [30], "direction": [[0, 1, 0]], "range": 4, "pierce":  -1, "knockback": 100},
+    { "category": "Strike-through", "baseHP": 300, "cost": 125, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["shroom","ranged"], "attributes": {"projectileName": "fume_shroom", "damage": [40], "direction": [[0, 1, 0]], "range": 3, "pierce":  -1}, "plantFoodEffect": {"damage": [30], "direction": [[0, 1, 0]], "range": 4, "pierce":  -1, "knockback": 100},
       "animation": "768/INITIAL/PLANT/FUMESHROOM/FUMESHROOM.PAM", "status": {"idle": "idle", "action": "special", "plantfood": "plantfood"} },
-    { "category": "Strike-through", "baseHP": 300, "cost": 100, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["shroom","ranged"], "attributes": {"projectileName": "fume_shroom", "damage": [40], "direction": [[0, 1, 0]], "range": 5, "pierce":  -1}, "plantFoodEffect": {"damage": [30], "direction": [[0, 1, 0]], "range": 4, "pierce":  -1, "knockback": 100},
+    { "category": "Strike-through", "baseHP": 300, "cost": 100, "actionInterval": 1.5, "rechargeTime": 5, "abilities": ["shooting"], "tags": ["shroom","ranged"], "attributes": {"projectileName": "fume_shroom", "damage": [40], "direction": [[0, 1, 0]], "range": 3, "pierce":  -1}, "plantFoodEffect": {"damage": [30], "direction": [[0, 1, 0]], "range": 4, "pierce":  -1, "knockback": 100},
       "animation": "768/INITIAL/PLANT/FUMESHROOM/FUMESHROOM.PAM", "status": {"idle": "idle", "action": "special", "plantfood": "plantfood"} }
   ],
 
@@ -652,24 +656,24 @@
   ],
 
   "APPEASE_MINT": [
-    { "category": "Shooter","baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 85, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.23, "loop": 1.43, "life-span": 4.49, "duration": 2}, "plantFoodEffect": {},
+    { "category": "Shooter","baseHP": 0, "cost": 0, "actionInterval": 2.50, "rechargeTime": 85, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.23, "loop": 1.43, "life-span": 4.49, "duration": 2}, "plantFoodEffect": {},
       "animation": "768/INITIAL/EMPOWERMINTS/PLANT/APPEASEMINT/APPEASEMINT.PAM", "status": {"intro": "intro", "loop": "loop", "outro": "outro"}},
-    { "category": "Shooter","baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 85, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.23, "loop": 1.43, "life-span": 4.49, "duration": 3}, "plantFoodEffect": {},
+    { "category": "Shooter","baseHP": 0, "cost": 0, "actionInterval": 2.50, "rechargeTime": 85, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.23, "loop": 1.43, "life-span": 4.49, "duration": 3}, "plantFoodEffect": {},
       "animation": "768/INITIAL/EMPOWERMINTS/PLANT/APPEASEMINT/APPEASEMINT.PAM", "status": {"intro": "intro", "loop": "loop", "outro": "outro"}},
-    { "category": "Shooter","baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 80, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.23, "loop": 1.43, "life-span": 4.49, "duration": 3}, "plantFoodEffect": {},
+    { "category": "Shooter","baseHP": 0, "cost": 0, "actionInterval": 2.50, "rechargeTime": 80, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.23, "loop": 1.43, "life-span": 4.49, "duration": 3}, "plantFoodEffect": {},
       "animation": "768/INITIAL/EMPOWERMINTS/PLANT/APPEASEMINT/APPEASEMINT.PAM", "status": {"intro": "intro", "loop": "loop", "outro": "outro"}},
-    { "category": "Shooter","baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 80, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.23, "loop": 1.43, "life-span": 4.49, "duration": 3, "resetFamilyCooldown": "on"}, "plantFoodEffect": {},
+    { "category": "Shooter","baseHP": 0, "cost": 0, "actionInterval": 2.50, "rechargeTime": 80, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.23, "loop": 1.43, "life-span": 4.49, "duration": 3, "resetFamilyCooldown": "on"}, "plantFoodEffect": {},
       "animation": "768/INITIAL/EMPOWERMINTS/PLANT/APPEASEMINT/APPEASEMINT.PAM", "status": {"intro": "intro", "loop": "loop", "outro": "outro"}}
   ],
 
   "ARMA_MINT": [
-    { "category": "Lobber","baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 85, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.97, "loop": 3.33, "life-span": 7.7, "duration": 2}, "plantFoodEffect": {},
+    { "category": "Lobber","baseHP": 0, "cost": 0, "actionInterval": 4.00, "rechargeTime": 85, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.97, "loop": 3.33, "life-span": 7.7, "duration": 2}, "plantFoodEffect": {},
       "animation": "768/INITIAL/EMPOWERMINTS/PLANT/ARMAMINT/ARMAMINT.PAM", "status": {"intro": "intro", "loop": "loop", "outro": "outro"}},
-    { "category": "Lobber","baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 85, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.97, "loop": 3.33, "life-span": 7.7, "duration": 3}, "plantFoodEffect": {},
+    { "category": "Lobber","baseHP": 0, "cost": 0, "actionInterval": 4.00, "rechargeTime": 85, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.97, "loop": 3.33, "life-span": 7.7, "duration": 3}, "plantFoodEffect": {},
       "animation": "768/INITIAL/EMPOWERMINTS/PLANT/ARMAMINT/ARMAMINT.PAM", "status": {"intro": "intro", "loop": "loop", "outro": "outro"}},
-    { "category": "Lobber","baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 80, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.97, "loop": 3.33, "life-span": 7.7, "duration": 3}, "plantFoodEffect": {},
+    { "category": "Lobber","baseHP": 0, "cost": 0, "actionInterval": 4.00, "rechargeTime": 80, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.97, "loop": 3.33, "life-span": 7.7, "duration": 3}, "plantFoodEffect": {},
       "animation": "768/INITIAL/EMPOWERMINTS/PLANT/ARMAMINT/ARMAMINT.PAM", "status": {"intro": "intro", "loop": "loop", "outro": "outro"}},
-    { "category": "Lobber","baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 80, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.97, "loop": 3.33, "life-span": 7.7, "duration": 3, "resetFamilyCooldown": "on"}, "plantFoodEffect": {},
+    { "category": "Lobber","baseHP": 0, "cost": 0, "actionInterval": 4.00, "rechargeTime": 80, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.97, "loop": 3.33, "life-span": 7.7, "duration": 3, "resetFamilyCooldown": "on"}, "plantFoodEffect": {},
       "animation": "768/INITIAL/EMPOWERMINTS/PLANT/ARMAMINT/ARMAMINT.PAM", "status": {"intro": "intro", "loop": "loop", "outro": "outro"} }
   ],
 
@@ -718,13 +722,13 @@
   ],
 
   "PIERCE_MINT": [
-    { "category": "Strike-through","baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 85, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.33, "loop": 1.34, "life-span": 6, "duration": 2}, "plantFoodEffect": {},
+    { "category": "Strike-through","baseHP": 0, "cost": 0, "actionInterval": 3.00, "rechargeTime": 85, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.33, "loop": 1.34, "life-span": 6.00, "duration": 2}, "plantFoodEffect": {},
       "animation": "768/INITIAL/EMPOWERMINTS/PLANT/AILMINT/AILMINT.PAM", "status": {"intro": "intro", "loop": "loop", "outro": "outro"}},
-    { "category": "Strike-through","baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 85, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.33, "loop": 1.34, "life-span": 6, "duration": 3}, "plantFoodEffect": {},
+    { "category": "Strike-through","baseHP": 0, "cost": 0, "actionInterval": 3.00, "rechargeTime": 85, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.33, "loop": 1.34, "life-span": 6.00, "duration": 3}, "plantFoodEffect": {},
       "animation": "768/INITIAL/EMPOWERMINTS/PLANT/AILMINT/AILMINT.PAM", "status": {"intro": "intro", "loop": "loop", "outro": "outro"}},
-    { "category": "Strike-through","baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 80, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.33, "loop": 1.34, "life-span": 6, "duration": 3}, "plantFoodEffect": {},
+    { "category": "Strike-through","baseHP": 0, "cost": 0, "actionInterval": 3.00, "rechargeTime": 80, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.33, "loop": 1.34, "life-span": 6.00, "duration": 3}, "plantFoodEffect": {},
       "animation": "768/INITIAL/EMPOWERMINTS/PLANT/AILMINT/AILMINT.PAM", "status": {"intro": "intro", "loop": "loop", "outro": "outro"}},
-    { "category": "Strike-through","baseHP": 0, "cost": 0, "actionInterval": 0, "rechargeTime": 80, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.33, "loop": 1.34, "life-span": 6, "resetFamilyCooldown": "on"}, "plantFoodEffect": {},
+    { "category": "Strike-through","baseHP": 0, "cost": 0, "actionInterval": 3.00, "rechargeTime": 80, "abilities": ["mint"], "tags": [], "attributes": {"intro": 2.33, "loop": 1.34, "life-span": 6.00, "resetFamilyCooldown": "on"}, "plantFoodEffect": {},
       "animation": "768/INITIAL/EMPOWERMINTS/PLANT/AILMINT/AILMINT.PAM", "status": {"intro": "intro", "loop": "loop", "outro": "outro"}}
   ],
 

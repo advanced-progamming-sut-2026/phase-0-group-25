@@ -74,6 +74,7 @@ public class WallNutAbility implements Ability {
     private void plantFoodEffect(Zombie attacker, BattlePlant plant) {
         if (plant.getPlantStats().getTags().contains("shroom")) {
             makeGargantuar(attacker, plant);
+            return;
         }
 
         if (!plant.getPlantStats().getTags().contains("moveZombies")) {
@@ -106,7 +107,7 @@ public class WallNutAbility implements Ability {
 
     private void makeGargantuar(Zombie attacker, BattlePlant plant) {
         Position attackerPosition = attacker.getPosition();
-        attacker.setCurrentHP(0);
+        attacker.setAlive(false);
 
         Zombie newGargantuar = ZombieFactory.createZombie("GARGANTUAR", attackerPosition);
         newGargantuar.setHypnotized(true);
