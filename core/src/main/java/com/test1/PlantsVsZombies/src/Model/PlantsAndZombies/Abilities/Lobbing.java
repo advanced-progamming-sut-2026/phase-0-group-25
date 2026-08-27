@@ -1,5 +1,7 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 
+import com.test1.PlantsVsZombies.src.Enums.ChapterType;
+import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
@@ -24,6 +26,10 @@ public class Lobbing implements Ability {
             if (checkTime(plant)) {
                 plantFoodEffect(plant);
             }
+            return;
+        }
+
+        if (!haveTarget(plant)) {
             return;
         }
 
@@ -76,7 +82,7 @@ public class Lobbing implements Ability {
 
     private boolean checkTime(BattlePlant plant) {
         double currentTime = GAME.getTotalTimePassed();
-        double timeDifference = 10 *(currentTime - plant.getEffectedTime());
+        double timeDifference = 10 * (currentTime - plant.getEffectedTime());
         timeDifference = Math.floor(timeDifference);
         timeDifference /= 10;
         if ((timeDifference % 0.6) == 0) {//every 0.6 second, lobbers execute their special ability
@@ -121,13 +127,16 @@ public class Lobbing implements Ability {
             for (Zombie zombie : GAME.getGameZombies()) {
                 LobbedProjectile lobbedProjectile = new LobbedProjectile(plant,
                     plant.getPosition().getX(), plant.getPosition().getY(),
-                    zombie.getPosition().getX(), speed,
+                    zombie.getPosition().getX(), zombie.getPosition().getY(), speed,
                     AoEDamage, AoERange, damage, name
                 );
                 GAME.getProjectiles().add(lobbedProjectile);
             }
         } else {
             for (int i = 0; i < 3; i++) {
+                if (GAME.getGameZombies().isEmpty()) {
+                    return;
+                }
                 int randomIndex = RANDOM.nextInt(GAME.getGameZombies().size());
                 Zombie zombie = GAME.getGameZombies().get(randomIndex);
 
@@ -136,12 +145,34 @@ public class Lobbing implements Ability {
                 String name = nameAttributes.get(0);
                 LobbedProjectile lobbedProjectile = new LobbedProjectile(plant,
                     plant.getPosition().getX(), plant.getPosition().getY(),
-                    zombie.getPosition().getX(), speed,
+                    zombie.getPosition().getX(), zombie.getPosition().getY(), speed,
                     AoEDamage, AoERange, damage, name
                 );
 
                 GAME.getProjectiles().add(lobbedProjectile);
             }
         }
+    }
+
+    private boolean haveTarget(BattlePlant plant) {
+
+        int row = plant.getRow();
+        int column = plant.getColumn();
+
+        for (int i = column; i <= 9; i++) {
+            Tile tile = GAME.getTileByPosition(i, row);
+            if (!tile.getZombies().isEmpty()) {
+                return true;
+            }
+
+            if (GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT) ||
+                GAME.getChapterType().equals(ChapterType.DARK_AGE) ||
+                GAME.getChapterType().equals(ChapterType.FROSTBITE_CAVES)) {
+                if ((!tile.isArable()) && (tile.getHP() > 0)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

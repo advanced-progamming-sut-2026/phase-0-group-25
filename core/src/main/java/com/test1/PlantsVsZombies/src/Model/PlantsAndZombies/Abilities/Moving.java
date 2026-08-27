@@ -44,13 +44,13 @@ public class Moving implements Ability {
                 Position plantPosition = plant.getPosition();
 
                 if (zombie.getPosition().equals(plantPosition)) {
-                    zombie.setRival(plant);
                     if (zombie.getZombieStats().getName().equals("DODO")) {
                         if (isFlyable(plant)) {
                             makeFlyingActivated(zombie);
                             return;
                         }
                     }
+                    zombie.setRival(plant);
 
                     makeEatingActivated(zombie);
                     if (zombie.getZombieStats().getName().equals("EXPLORER")) {

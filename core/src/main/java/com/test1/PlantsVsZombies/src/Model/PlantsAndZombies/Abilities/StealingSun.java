@@ -4,6 +4,7 @@ import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 import com.test1.PlantsVsZombies.src.Model.Sun.Sun;
 import com.test1.PlantsVsZombies.src.Model.Tile;
@@ -76,6 +77,24 @@ public class StealingSun implements Ability {
                         try {
                             Sun sun = GAME.getActiveSuns().get(i);
                             sun.setCollected(true);
+                            if (!sun.isFromSky()) {
+                                Position sunPosition = Position.getRowAndColumn(sun.getPosition().getX() - 20, sun.getPosition().getY() - 20);
+                                Tile tile = GAME.getTileByPosition((int) sunPosition.getX(), (int) sunPosition.getY());
+
+
+                                BattlePlant sunProducer = null;
+                                for (BattlePlant plant : tile.getPlants()) {
+                                    if (plant.getPlantStats().getCategory().equals("Sun Producer")) {
+                                        sunProducer = plant;
+                                        break;
+                                    }
+                                }
+                                Ability ability = tile.getPlants().get(0).getOriginalAbilities().get(0);
+                                if (ability instanceof ProducingSun) {
+                                    ((ProducingSun) ability).setCollected(false);
+                                    ((ProducingSun) ability).setProduced(false);
+                                }
+                            }
                             this.stolenSun += sun.getNumberOfSun();
                             GAME.getActiveSuns().remove(i);
                             i -= 1;

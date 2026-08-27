@@ -3,7 +3,6 @@ package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies;
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Enums.PlantCategory;
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
-import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities.*;
 import com.test1.PlantsVsZombies.src.Model.Quests.Events.ExplosiveUsedEvent;
@@ -12,7 +11,6 @@ import com.test1.PlantsVsZombies.src.Model.Tile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class BattlePlant extends Plant {
     private static int PLANT_FOOD_EFFECT_TIME = 2;
@@ -35,7 +33,10 @@ public class BattlePlant extends Plant {
     private double armorHP = 0.0;
     private double dieTime;
 
+    private boolean attackTime;
+
     private GamePlay GAME = GamePlay.activeInstance;
+    private final AnimationState animationState = new AnimationState();
 
     public BattlePlant(PlantStats plantStats, String name) {
         this.plantStats = plantStats;
@@ -98,15 +99,28 @@ public class BattlePlant extends Plant {
             }
 
             if (isTimeForAction()) {
+
                 for (Ability ability : this.originalAbilities) {
                     ability.executeAbility(this);
                 }
-                if ((this.plantStats.getCategory().equals("Sun Producer")) ||
-                    (this.name.equals(PlantType.CHOMPER.getName()))) {
+
+                if (this.name.equals(PlantType.CITRON.getName())) {
+
+                    this.lastActionTime =
+                        GAME.getTotalTimePassed();
+
+                    this.status = "charge";
+
                     return;
                 }
 
-                this.lastActionTime = GAME.getTotalTimePassed();
+                if (this.plantStats.getCategory().equals("Sun Producer") ||
+                    this.name.equals(PlantType.CHOMPER.getName())) {
+                    return;
+                }
+
+                this.lastActionTime =
+                    GAME.getTotalTimePassed();
             } else {
                 this.status = "idle";
             }
@@ -225,7 +239,7 @@ public class BattlePlant extends Plant {
                 abilities.add(new ExplosionWithLifespan());
             } else if (ability.equals("wall-nut")) {
                 abilities.add(new WallNutAbility());
-            } else if (ability.equals("modifier")) {
+            } else if (ability.equals("Modifier")) {
                 abilities.add(new Modifier());
             } else if (ability.equals("mint")) {
                 abilities.add(new Mint());
@@ -272,7 +286,14 @@ public class BattlePlant extends Plant {
     }
 
     public boolean isTimeForAction() {
-        return ((GAME.getTotalTimePassed() - this.lastActionTime) >= this.plantStats.getActionInterval());
+        boolean actionIntervalBoolean = ((GAME.getTotalTimePassed() - this.lastActionTime) >= this.plantStats.getActionInterval());
+      /*  if (this.name.equals(PlantType.CITRON.getName())) {
+            boolean citronTime = (Math.abs(GAME.getTotalTimePassed() - this.attackTime) <= 0.1);
+            return (actionIntervalBoolean && citronTime);
+        }
+
+       */
+        return actionIntervalBoolean;
     }
 
     public void takeDamage(double damage) {
@@ -437,5 +458,21 @@ public class BattlePlant extends Plant {
     public BattlePlant setDieTime(double dieTime) {
         this.dieTime = dieTime;
         return this;
+    }
+
+    public double getEffectedLifeSpan() {
+        return effectedLifeSpan;
+    }
+
+    public boolean isAttackTime() {
+        return attackTime;
+    }
+
+    public void setAttackTime(boolean attackTime) {
+        this.attackTime = attackTime;
+    }
+
+    public AnimationState getAnimationState() {
+        return animationState;
     }
 }

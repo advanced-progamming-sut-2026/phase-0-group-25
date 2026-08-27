@@ -1,9 +1,12 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 
+import com.test1.PlantsVsZombies.src.Enums.ChapterType;
+import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.PlantFactory;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 import com.test1.PlantsVsZombies.src.Model.Tile;
@@ -36,8 +39,6 @@ public class Modifier implements Ability {
         }
 
 
-
-
     }
 
     private void plantFoodEffect(BattlePlant plant, ArrayList<String> tags) {
@@ -45,7 +46,20 @@ public class Modifier implements Ability {
             //todo
             for (Projectile projectile : GAME.getProjectiles()) {
                 if (projectile.getPosition().equals(plant.getPosition())) {
-                    projectile.setDamage(projectile.getDamage() * 3);
+                    projectile.setBlueFiring(true);
+                }
+            }
+        }
+
+        if (tags.contains("Water")) {
+            if (GAME.getChapterType().equals(ChapterType.BIG_WAVE_BEACH)) {
+                int number = (int) plant.getPlantStats().getPlantFoodEffect().get("number");
+                while (number > 0) {
+                    for (Tile tile : GAME.getTiles()) {
+                        if (!tile.isArable()) {
+
+                        }
+                    }
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies;
 
+import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Enums.PlantCategory;
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
@@ -183,6 +184,10 @@ public class AnimationDecider {
                 }
                 return status.get("explosion");
             }
+        }
+
+        if (plant.getName().equals(PlantType.CITRON.getName())) {
+            return getCitronAnimation(plant, status);
         }
 
         int armTime = (int) plant.getPlantStats().getAttributes().get("armTime");
@@ -373,6 +378,13 @@ public class AnimationDecider {
             if (!tile.getZombies().isEmpty()) {
                 return status.get("action");
             }
+            if (GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT) ||
+                GAME.getChapterType().equals(ChapterType.DARK_AGE) ||
+                GAME.getChapterType().equals(ChapterType.FROSTBITE_CAVES)) {
+                if ((!tile.isArable()) && (tile.getHP() > 0)) {
+                    return status.get("action");
+                }
+            }
         }
 
         return status.get("idle");
@@ -552,5 +564,107 @@ public class AnimationDecider {
         }
 
         return status.get("idle");
+    }
+
+    private boolean haveTarget(BattlePlant plant) {
+        int plantRow = plant.getRow();
+        int plantColumn = plant.getColumn();
+        for (int i = plantColumn; i <= 9; i++) {
+            Tile tile = GAME.getTileByPosition(i, plantRow);
+
+            if (!tile.getZombies().isEmpty()) {
+                return true;
+            }
+            if (GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT) ||
+                GAME.getChapterType().equals(ChapterType.DARK_AGE) ||
+                GAME.getChapterType().equals(ChapterType.FROSTBITE_CAVES)) {
+                if ((!tile.isArable()) && (tile.getHP() > 0)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private String getCitronAnimation(
+        BattlePlant plant,
+        Map<String, String> status) {
+
+        double now = GAME.getTotalTimePassed();
+
+
+        // =========================
+        // CHARGE
+        // =========================
+
+        if (plant.getStatus().equals("charge")) {
+
+            double chargeTime =
+                now - plant.getLastActionTime();
+
+            if (chargeTime < 7.0) {
+                return status.get("charge");
+            }
+
+            plant.setStatus("idle");
+        }
+
+
+        // =========================
+        // IDLE
+        // =========================
+
+        if (plant.getStatus().equals("idle")) {
+
+            if (haveTarget(plant)) {
+                plant.setStatus("attack");
+
+                /*
+                 * The animation system will automatically
+                 * restart because the clip changes:
+                 *
+                 * idle -> attack
+                 */
+                return status.get("attack");
+            }
+
+            return status.get("idle");
+        }
+
+
+        // =========================
+        // ATTACK
+        // =========================
+
+        if (plant.getStatus().equals("attack")) {
+
+            /*
+             * Don't interrupt the attack animation.
+             */
+            if (!isCitronAttackFinished(plant)) {
+                return status.get("attack");
+            }
+
+            /*
+             * Attack finished.
+             *
+             * Start a new 7-second charge.
+             */
+            plant.setLastActionTime(now);
+            plant.setStatus("charge");
+
+            return status.get("charge");
+        }
+
+
+        return status.get("idle");
+    }
+
+    private boolean isCitronAttackFinished(
+        BattlePlant plant) {
+
+        return plant.getAnimationState()
+            .getStateTime() >= 1.0f;
     }
 }

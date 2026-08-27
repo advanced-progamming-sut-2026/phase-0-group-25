@@ -24,6 +24,7 @@ public class Zombie extends Entity {
     private static int BUTTER_TIME = 3;
     private static Random RANDOM = new Random();
     private GamePlay GAME = GamePlay.activeInstance;
+    private final AnimationState animationState = new AnimationState();
 
     private ZombieStats zombieStats;
     private Entity rival;
@@ -333,6 +334,10 @@ public class Zombie extends Entity {
     }
 
     public void freeze(int frozenTime) {
+        if (this.zombieStats.getCategory().equals("frostbite caves")) {
+            return;
+        }
+
         this.timeWhenFrozen = GAME.getTotalTimePassed();
         this.isFrozen = true;
         this.frozenTime = frozenTime;
@@ -340,6 +345,10 @@ public class Zombie extends Entity {
     }
 
     public void freeze() {
+        if (this.zombieStats.getCategory().equals("frostbite caves")) {
+            return;
+        }
+
         this.timeWhenFrozen = GAME.getTotalTimePassed();
         this.isFrozen = true;
         this.frozenTime = FROZEN_TIME;
@@ -559,5 +568,9 @@ public class Zombie extends Entity {
 
     public void setSubmarine(boolean submarine) {
         this.isSubmarine = submarine;
+    }
+
+    public AnimationState getAnimationState() {
+        return animationState;
     }
 }

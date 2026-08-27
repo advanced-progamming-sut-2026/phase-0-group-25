@@ -13,7 +13,11 @@ import com.test1.PlantsVsZombies.src.Model.Sun.Sun;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 
 public class Projectile {
-    private static int X_RIGHT_LIMIT = 1820;
+    private static int X_RIGHT_LIMIT = 1860;
+    private static int Y_UP_LIMIT = 880;
+    private static int Y_DOWN_LIMIT = 130;
+    private static int X_LEFT_LIMIT = 490;
+
     protected boolean isActive;
     protected boolean icy;
     protected boolean firing;
@@ -29,6 +33,8 @@ public class Projectile {
     private int knockback;
     private boolean isHypnotizer;
     protected String name;
+    private boolean blueFiring = false;
+
 
     private GamePlay GAME = GamePlay.activeInstance;
 
@@ -44,6 +50,7 @@ public class Projectile {
         this.position = position;
         this.basePosition = position;
         this.name = (String) plant.getPlantStats().getAttributes().get("projectileName");
+
 
         this.damage = damage;
         this.knockback = 0;
@@ -66,6 +73,29 @@ public class Projectile {
         this.position = position;
         this.basePosition = position;
         this.name = (String) plant.getPlantStats().getAttributes().get("projectileName");
+
+
+        this.damage = damage;
+        this.knockback = 0;
+
+        this.pierceAmount = pierceAmount;
+        this.range = range;
+        this.isActive = true;
+        this.icy = false;
+        this.firing = false;
+        this.poisonous = false;
+        this.isHypnotizer = false;
+    }
+
+    public Projectile(BattlePlant plant, double velocityX, double velocityY, Position position,
+                      int damage, int pierceAmount, int range, String name) {
+        this.plant = plant;
+        this.velocityX = velocityX;
+        this.velocityY = velocityY;
+        this.position = position;
+        this.basePosition = position;
+        this.name = name;
+
 
         this.damage = damage;
         this.knockback = 0;
@@ -110,7 +140,13 @@ public class Projectile {
             this.isActive = false;
         }
 
-        if (this.position.getX() >= X_RIGHT_LIMIT) {
+        if (this.position.getX() >= X_RIGHT_LIMIT ||
+            this.position.getX() <= X_LEFT_LIMIT) {
+            this.isActive = false;
+        }
+
+        if (this.position.getY() >= Y_UP_LIMIT ||
+            this.position.getY() <= Y_DOWN_LIMIT) {
             this.isActive = false;
         }
     }
@@ -163,7 +199,7 @@ public class Projectile {
     public void checkCollision() {
         for (Zombie zombie : GAME.getGameZombies()) {
             if (!zombie.isHypnotized() &&
-            zombie.getCurrentHP() > 0) {
+                zombie.getCurrentHP() > 0) {
                 if (this.position.equals(zombie.getPosition())) {
                     if ((zombie.getZombieStats().getName().equals("SNORKEL")) &&
                         (zombie.isSubmarine())) {
@@ -220,6 +256,13 @@ public class Projectile {
 
     public void setFiring(boolean firing) {
         this.firing = firing;
+        if (this.firing) {
+            if (this.damage == 20) {
+                this.damage = 40;
+            }
+            this.icy = false;
+        }
+
     }
 
     public boolean isPoisonous() {
@@ -259,5 +302,18 @@ public class Projectile {
 
     public String getName() {
         return name;
+    }
+
+    public boolean isBlueFiring() {
+        return blueFiring;
+    }
+
+    public void setBlueFiring(boolean blueFiring) {
+        this.blueFiring = blueFiring;
+        if (this.firing) {
+            this.damage *= 1.5;
+            this.firing = false;
+        }
+        this.icy = false;
     }
 }
