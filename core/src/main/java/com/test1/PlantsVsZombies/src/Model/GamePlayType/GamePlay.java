@@ -390,9 +390,23 @@ public abstract class GamePlay {
         }
     }
 
+    private boolean hasFrozen (Tile thisTile) {
+        for (BattlePlant p : thisTile.getPlants()) {
+            if (p.isFrozen()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void planting(BattlePlant thisPlant, Position thisPosition) {
         Tile thisTile = getTileByPosition((int) thisPosition.getX(), (int) thisPosition.getY());
-        if (thisPlant.checkingPlantable(this.mySuns, thisTile) && thisTile.isArable()) {
+        boolean hasWater = thisPlant.getPlantStats().getTags().contains("Water") || thisPlant.getPlantStats().getTags().contains("water");
+        boolean canPlant = (chapterType == ChapterType.BIG_WAVE_BEACH)? hasWater ^ thisTile.isArable() : thisTile.isArable();
+        boolean isHotPotato = thisPlant.getName().equals("HOT_POTATO");
+        boolean checkingPlantable = (chapterType == ChapterType.FROSTBITE_CAVES && isHotPotato)?
+                                              hasFrozen(thisTile) : thisPlant.checkingPlantable(this.mySuns, thisTile);
+        if (checkingPlantable && canPlant) {
             boolean isImitaterBoosted = false;
             int thisPX = (int) thisPosition.getX();
             int thisPY = (int) thisPosition.getY();
@@ -695,6 +709,21 @@ public abstract class GamePlay {
             if (chapterType == ChapterType.ANCIENT_EGYPT || chapterType == ChapterType.DARK_AGE) {
                 if (tile.getHP() <= 0 && !tile.isArable() && !tile.isHole()) {
                     tile.setArable(true);
+                }
+            } else if (chapterType == ChapterType.BIG_WAVE_BEACH) {
+                if ((int)tile.getPosition().getX() == 8 || (int)tile.getPosition().getX() == 9) {
+                    boolean hasLilyPad = false;
+                    for (BattlePlant p : tile.getPlants()) {
+                        if (p.getName().equals("LILY_PAD")) {
+                            hasLilyPad = true;
+                            break;
+                        }
+                    }
+                    if (hasLilyPad) {
+                        tile.setArable(true);
+                    } else {
+                        tile.setArable(false);
+                    }
                 }
             }
         }
