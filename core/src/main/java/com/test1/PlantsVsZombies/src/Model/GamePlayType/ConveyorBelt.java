@@ -86,7 +86,6 @@ public class ConveyorBelt extends GamePlay {
 
             this.gamePlants.add(plant);
             targetTile.addPlant(plant);
-            System.out.printf("Conveyor: Planted %s at (%d, %d)\n", plant.getName(), col, row);
         }
     }
 

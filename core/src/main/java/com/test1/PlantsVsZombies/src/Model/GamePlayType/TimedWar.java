@@ -55,7 +55,6 @@ public class TimedWar extends GamePlay {
                 Tile currentTile = getTileByPosition(plant.getColumn(), plant.getRow());
 
                 if (currentTile != null) {
-                    System.out.printf("Plant %s at (%d, %d) is destroyed.\n", plant.getName(), plant.getColumn(), plant.getRow());
                     currentTile.getPlants().removeIf(p -> p.getName().equals(plant.getName()));
                 }
                 incrementLostPlants();
@@ -73,8 +72,6 @@ public class TimedWar extends GamePlay {
                     glowingAward(zombie.getPosition());
                 }
                 Position zPos = Position.getRowAndColumn(zombie.getPosition());
-                System.out.printf("Zombie of type %s is dead at (%d, %d)\n",
-                    zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
 
                 addKilledZombieCost(zombie.getWaveNum(), zombie.getCost());
                 z.remove();
@@ -113,10 +110,8 @@ public class TimedWar extends GamePlay {
                 if (thisWave.hasZombiesLeftToSpawn()) {
                     if (!thisWave.getStarted()) {
                         if (thisWave instanceof FinalWave) {
-                            System.out.println("The final wave has come.");
                             UIManager.showToast("FINAL WAVE IS APPROACHING!", "IMAGE_UI_GENERIC_TIMER_RIBBON_RED");
                         } else {
-                            System.out.printf("Wave %d started.\n", thisWave.getWaveNum());
                             UIManager.showToast("Wave " + thisWave.getWaveNum() + " has started!", "IMAGE_UI_GENERIC_VTB");
                         }
                         thisWave.setStarted(true);
@@ -135,8 +130,6 @@ public class TimedWar extends GamePlay {
                     }
 
                     Zombie newZombie = ZombieFactory.createZombie(nameOfZ, positionOfZ);
-                    System.out.printf("Zombie %s spawned at wave %d in lane %d which costed %d.\n",
-                        nameOfZ, thisWave.getWaveNum(), spawnY, newZombie.getCost());
 
                     if (Math.random() <= 0.05) {
                         newZombie.setHalated(true);
@@ -167,11 +160,9 @@ public class TimedWar extends GamePlay {
             if (currentMower != null) {
                 if (!currentMower.isUsed()) {
                     if (zX <= currentMower.getX() + 40) {
-                        System.out.println("Lawn mower triggered in row: " + zRow);
                         currentMower.trigger();
                     }
                 } else if (currentMower.isDone() && zX <= 390) {
-                    System.out.println("The zombie ate your brain; LOSER!!!");
                     UsersManager.getInstance().addGamesPlayed();
                     endGame(false);
                 }
@@ -180,8 +171,6 @@ public class TimedWar extends GamePlay {
 
         // Another condition for losing (in this game) :
         if (totalTicksPassed >= 600 && numOfDeadZombies < 7) {
-            System.out.println("You must kill at least 7 zombies within 60 seconds!!");
-            System.out.println("The zombie ate your brain; LOSER!!!");
             UsersManager.getInstance().addGamesPlayed();
             endGame(false);
         }
@@ -189,7 +178,6 @@ public class TimedWar extends GamePlay {
         // Checking if the end of the game (Winning) :
         if (checkingTheEndOfTheGame()) {
             onWin();
-            System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
             endGame(true);
         }
     }

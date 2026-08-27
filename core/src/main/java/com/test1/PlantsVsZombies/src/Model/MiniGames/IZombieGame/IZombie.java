@@ -211,39 +211,4 @@ public class IZombie extends GamePlay {
     public void onWin() {
         UsersManager.getInstance().handleMiniGameWin(miniGameType, this.level);
     }
-
-
-    @Override
-    public void showMap() {
-        System.out.println("=== I, ZOMBIE BOARD ===");
-        System.out.println("Suns: " + mySuns);
-        System.out.print("Brains status: ");
-        for (int i = 0; i < 5; i++) {
-            System.out.printf("[Row %d: %s] ", i + 1, brainsEaten[i] ? "EATEN" : "OK");
-        }
-        System.out.println("\n------------------------------------------------");
-        for (int y = 1; y <= 5; y++) {
-            System.out.printf("Row %d: ", y);
-            for (int x = 1; x <= 9; x++) {
-                if (x == RED_LINE_X) System.out.print("|| ");
-
-                Tile t = getTileByPosition(x, y);
-                boolean hasPlant = t != null && !t.getPlants().isEmpty();
-                boolean hasZombie = t != null && !t.getZombies().isEmpty();
-
-                char p = hasPlant ? 'P' : ' ';
-                char z = hasZombie ? 'Z' : ' ';
-                System.out.printf("[%c%c] ", p, z);
-            }
-            System.out.println();
-        }
-        System.out.println("------------------------------------------------");
-    }
-
-    public void showPlantStatus() {
-        System.out.println("=== Available Zombies to Buy ===");
-        for (Map.Entry<String, Integer> entry : availableZombies.entrySet()) {
-            System.out.printf("- %s : %d Suns\n", entry.getKey(), entry.getValue());
-        }
-    }
 }
