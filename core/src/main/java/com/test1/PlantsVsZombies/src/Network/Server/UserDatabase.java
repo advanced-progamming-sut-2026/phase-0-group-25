@@ -299,6 +299,8 @@ public class UserDatabase {
     // ==========================================================
     public String saveProgress(String username, String sessionToken, User updatedUser) {
         if (!isSessionValid(username, sessionToken)) {
+            System.err.println("[Server] Rejected SAVE_PROGRESS for " + username
+                + ": session token invalid or expired.");
             return "Session expired. Please log in again.";
         }
         try {
@@ -306,6 +308,7 @@ public class UserDatabase {
             try {
                 userCache.put(username, updatedUser);
                 persistToDisk();
+                System.out.println("[Server] Saved progress for " + username);
                 return null;
             } finally {
                 lock.unlockWrite();

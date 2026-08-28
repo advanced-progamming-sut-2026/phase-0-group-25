@@ -90,14 +90,21 @@ public class UsersManager {
                     return;
                 }
                 String token = sessionToken;
-                if (token == null) continue; // logged out before this snapshot went out; drop it
+                if (token == null) {
+                    System.err.println("[Client] Dropping a progress snapshot for "
+                        + snapshot.getUserName() + ": not logged in (no session token).");
+                    continue;
+                }
                 NetworkMessage request = NetworkMessage.request(0, MessageType.SAVE_PROGRESS)
                     .put("username", snapshot.getUserName())
                     .put("sessionToken", token)
                     .put("user", snapshot);
                 NetworkMessage response = ServerConnection.getInstance().sendRequest(request);
                 if (!response.isSuccess()) {
-                    System.err.println("[Client] Failed to save progress: " + response.getErrorMessage());
+                    System.err.println("[Client] Failed to save progress for "
+                        + snapshot.getUserName() + ": " + response.getErrorMessage());
+                } else {
+                    System.out.println("[Client] Saved progress for " + snapshot.getUserName());
                 }
             }
         }, "progress-sync-thread");
@@ -169,6 +176,7 @@ public class UsersManager {
 
             this.loggedInUser = mapper.convertValue(response.getData().get("user"), User.class);
             this.sessionToken = savedToken;
+            QuestManager.getInstance().loadProgress();
             return true;
         } catch (Exception e) {
             return false;
