@@ -352,9 +352,9 @@
     "userProgress" : {
       "unlockedChaptersAndLevels" : {
         "ANCIENT_EGYPT" : 1,
-        "DARK_AGE" : 1,
         "FROSTBITE_CAVES" : 1,
-        "BIG_WAVE_BEACH" : 1
+        "BIG_WAVE_BEACH" : 1,
+        "DARK_AGE" : 1
       },
       "unlockedZombies" : [ "DEFAULT" ],
       "unlockedPlantsAndTheirLevels" : {
@@ -792,81 +792,81 @@
     "userProgress" : {
       "unlockedChaptersAndLevels" : {
         "ANCIENT_EGYPT" : 2,
-        "DARK_AGE" : 1,
         "FROSTBITE_CAVES" : 0,
-        "BIG_WAVE_BEACH" : 0
+        "BIG_WAVE_BEACH" : 0,
+        "DARK_AGE" : 1
       },
       "unlockedZombies" : [ "DEFAULT", "CONE_HEAD", "BUCKET_HEAD", "BRICK_HEAD", "KNIGHT", "GARGANTUAR", "IMP", "RA", "EXPLORER", "TOMB_RAISER", "ALL_STAR", "ARCADE", "UMBRELLA", "TURQUOISE", "PROSPECTOR", "PIANO", "NEWSPAPER", "JUGGLER", "WIZARD", "KING", "IMP_DRAGON", "DODO", "HUNTER", "TROGLOBITE", "FISHERMAN", "OCTOPUS", "SNORKEL" ],
       "unlockedPlantsAndTheirLevels" : {
-        "APPEASE_MINT" : 1,
-        "PIERCE_MINT" : 1,
-        "WASABI_WHIP" : 1,
-        "SUN_SHROOM" : 1,
-        "PRIMAL_POTATO_MINE" : 1,
-        "SPLIT_PEA" : 1,
-        "SUN_BEAN" : 1,
-        "WINTER_MELON" : 1,
-        "LILY_PAD" : 1,
-        "SUNFLOWER" : 3,
-        "PRIMAL_SUNFLOWER" : 1,
-        "IMITATER" : 1,
-        "TALL_NUT" : 1,
-        "SEA_SHROOM" : 1,
-        "SNOW_PEA" : 1,
-        "THREEPEATER" : 1,
-        "ELECTRIC_BLUEBERRY" : 1,
-        "ICEBERG_LETTUCE" : 1,
-        "WALL_NUT" : 1,
-        "CABBAGE_PULT" : 1,
         "GOO_PEASHOOTER" : 1,
-        "PEASHOOTER" : 1,
+        "MEGA_GATLING_PEA" : 1,
+        "CATTAIL_MINT" : 1,
+        "SUN_SHROOM" : 1,
         "KERNEL_PULT" : 1,
-        "JALAPENO" : 1,
-        "CAULIPOWER" : 1,
-        "CHERRY_BOMB" : 1,
-        "ENFORCE_MINT" : 1,
-        "ENCHANT_MINT" : 1,
-        "CACTUS" : 1,
-        "HOT_POTATO" : 1,
-        "CITRON" : 1,
-        "GRAPESHOT" : 1,
-        "SQUASH" : 1,
-        "TANGLE_KELP" : 1,
-        "MELON_PULT" : 1,
-        "HYPNO_SHROOM" : 1,
-        "ARMA_MINT" : 1,
+        "THREEPEATER" : 1,
+        "SNOW_PEA" : 1,
+        "BOMBARD_MINT" : 1,
+        "SUNFLOWER" : 3,
+        "SEA_SHROOM" : 1,
         "PEA_POD" : 1,
         "MAGNET_SHROOM" : 1,
-        "FIRE_PEASHOOTER" : 1,
-        "FUME_SHROOM" : 1,
-        "CATTAIL_MINT" : 1,
-        "GRAVE_BUSTER" : 1,
-        "GARLIC" : 1,
-        "TWIN_SUNFLOWER" : 1,
-        "REPEATER" : 1,
-        "BOMBARD_MINT" : 1,
-        "TORCHWOOD" : 1,
-        "REINFORCE_MINT" : 1,
-        "ROTOBAGA" : 1,
-        "PEPPER_PULT" : 1,
-        "PUFF_SHROOM" : 1,
-        "EXPLODE_O_NUT" : 1,
-        "BONK_CHOY" : 1,
-        "MEGA_GATLING_PEA" : 1,
-        "ENLIGHTEN_MINT" : 1,
-        "PHAT_BEET" : 1,
-        "PUMPKIN" : 1,
-        "DOOM_SHROOM" : 1,
-        "BOWLING_BULB" : 1,
-        "STARFRUIT" : 1,
         "KIWIBEAST" : 1,
-        "HOMING_THISTLE" : 1,
-        "POTATO_MINE" : 1,
+        "JALAPENO" : 1,
+        "STARFRUIT" : 1,
+        "ENCHANT_MINT" : 1,
         "ENDURIAN" : 1,
-        "SWEET_POTATO" : 1,
+        "PUMPKIN" : 1,
+        "CACTUS" : 1,
         "ICE_SHROOM" : 1,
+        "ARMA_MINT" : 1,
+        "PEASHOOTER" : 1,
+        "BONK_CHOY" : 1,
+        "SWEET_POTATO" : 1,
+        "WASABI_WHIP" : 1,
+        "APPEASE_MINT" : 1,
+        "WINTER_MELON" : 1,
+        "CAULIPOWER" : 1,
         "CHOMPER" : 1,
-        "GOLD_BLOOM" : 1
+        "CABBAGE_PULT" : 1,
+        "IMITATER" : 1,
+        "SPLIT_PEA" : 1,
+        "GRAPESHOT" : 1,
+        "MELON_PULT" : 1,
+        "WALL_NUT" : 1,
+        "LILY_PAD" : 1,
+        "PHAT_BEET" : 1,
+        "REPEATER" : 1,
+        "TANGLE_KELP" : 1,
+        "GOLD_BLOOM" : 1,
+        "SQUASH" : 1,
+        "ELECTRIC_BLUEBERRY" : 1,
+        "PEPPER_PULT" : 1,
+        "FUME_SHROOM" : 1,
+        "HOMING_THISTLE" : 1,
+        "PRIMAL_SUNFLOWER" : 1,
+        "CITRON" : 1,
+        "PRIMAL_POTATO_MINE" : 1,
+        "TALL_NUT" : 1,
+        "GRAVE_BUSTER" : 1,
+        "HOT_POTATO" : 1,
+        "BOWLING_BULB" : 1,
+        "POTATO_MINE" : 1,
+        "REINFORCE_MINT" : 1,
+        "ENLIGHTEN_MINT" : 1,
+        "EXPLODE_O_NUT" : 1,
+        "DOOM_SHROOM" : 1,
+        "CHERRY_BOMB" : 1,
+        "ROTOBAGA" : 1,
+        "HYPNO_SHROOM" : 1,
+        "SUN_BEAN" : 1,
+        "FIRE_PEASHOOTER" : 1,
+        "GARLIC" : 1,
+        "PUFF_SHROOM" : 1,
+        "ICEBERG_LETTUCE" : 1,
+        "PIERCE_MINT" : 1,
+        "ENFORCE_MINT" : 1,
+        "TORCHWOOD" : 1,
+        "TWIN_SUNFLOWER" : 1
       },
       "gemsCount" : 685,
       "coinsCount" : 87952130,
@@ -922,6 +922,299 @@
       "nonDailyQuestsCompleted" : 4,
       "unlockedPots" : [ [ true, true, true, true, true ], [ true, true, true, true, false ], [ true, true, true, true, false ], [ false, false, false, false, false ] ],
       "potPlants" : [ [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ], [ null, null, null, null, null ] ],
+      "greenhouseBoosts" : [ ],
+      "dailyOfferBoughtToday" : false
+    },
+    "securityQuestion" : "FAVORITE_COLOR",
+    "securityAnswer" : "blue",
+    "debugMode" : true
+  },
+  "AMIR2" : {
+    "userName" : "AMIR2",
+    "nickName" : "amir",
+    "password" : "1234$AbCd",
+    "email" : "amir@gmail.com",
+    "newsManager" : {
+      "news" : [ {
+        "message" : "chapter ancient egypt unlocked!",
+        "read" : true
+      }, {
+        "message" : "level 1 of ancient egypt unlocked!",
+        "read" : true
+      }, {
+        "message" : "chapter dark age unlocked!",
+        "read" : true
+      }, {
+        "message" : "level 1 of dark age unlocked!",
+        "read" : true
+      }, {
+        "message" : "chapter frostbite caves unlocked!",
+        "read" : true
+      }, {
+        "message" : "level 1 of frostbite caves unlocked!",
+        "read" : true
+      }, {
+        "message" : "chapter big wave beach unlocked!",
+        "read" : true
+      }, {
+        "message" : "level 1 of big wave beach unlocked!",
+        "read" : true
+      }, {
+        "message" : "plant SUNFLOWER unlocked!",
+        "read" : true
+      }, {
+        "message" : "plant PEASHOOTER unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie DEFAULT unlocked!",
+        "read" : true
+      }, {
+        "message" : "plant GRAPESHOT unlocked!",
+        "read" : true
+      }, {
+        "message" : "plant JALAPENO unlocked!",
+        "read" : true
+      }, {
+        "message" : "plant DOOM_SHROOM unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie CONE_HEAD unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie BUCKET_HEAD unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie BRICK_HEAD unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie KNIGHT unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie GARGANTUAR unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie IMP unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie RA unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie EXPLORER unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie TOMB_RAISER unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie ALL_STAR unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie ARCADE unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie UMBRELLA unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie TURQUOISE unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie PROSPECTOR unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie PIANO unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie NEWSPAPER unlocked!",
+        "read" : true
+      }, {
+        "message" : "Quest completed: Professional Demolisher! Claim your rewards in Travel Log.",
+        "read" : true
+      } ]
+    },
+    "genderType" : "Male",
+    "userProgress" : {
+      "unlockedChaptersAndLevels" : {
+        "ANCIENT_EGYPT" : 0,
+        "FROSTBITE_CAVES" : 0,
+        "BIG_WAVE_BEACH" : 0,
+        "DARK_AGE" : 0
+      },
+      "unlockedZombies" : [ "DEFAULT", "CONE_HEAD", "BUCKET_HEAD", "BRICK_HEAD", "KNIGHT", "GARGANTUAR", "IMP", "RA", "EXPLORER", "TOMB_RAISER", "ALL_STAR", "ARCADE", "UMBRELLA", "TURQUOISE", "PROSPECTOR", "PIANO", "NEWSPAPER" ],
+      "unlockedPlantsAndTheirLevels" : {
+        "JALAPENO" : 1,
+        "GRAPESHOT" : 1,
+        "DOOM_SHROOM" : 1,
+        "SUNFLOWER" : 1,
+        "PEASHOOTER" : 1
+      },
+      "gemsCount" : 0,
+      "coinsCount" : 2100,
+      "gameDifficulty" : 3,
+      "gamesPlayed" : 0,
+      "questVariables" : {
+        "one_column_less" : "9",
+        "defenseless_row" : "2",
+        "thrifty_farmer" : "0",
+        "chapter_hunter" : "BIG_WAVE_BEACH",
+        "mower_time" : "10",
+        "daily_sun_collector" : "5000",
+        "defenseless_cross" : "4",
+        "professional_killer" : "CACTUS"
+      },
+      "gameSpeed" : 1,
+      "showTileGrid" : false,
+      "miniGameLevels" : {
+        "WALNUT_BOWLING" : 1,
+        "I_ZOMBIE" : 1,
+        "VASEBREAKER" : 1
+      },
+      "questProgress" : {
+        "one_column_less" : 0,
+        "defenseless_row" : 0,
+        "thrifty_farmer" : 0,
+        "speed_demon" : 1,
+        "chapter_hunter" : 0,
+        "mower_time" : 0,
+        "defenseless_cross" : 0,
+        "only_cactus" : 0,
+        "daily_sun_collector" : 0,
+        "master_defense" : 0,
+        "professional_demolisher" : 3,
+        "win_streak" : 0,
+        "cloudy_day" : 0,
+        "professional_killer" : 0
+      },
+      "completedQuestIds" : [ "professional_demolisher" ],
+      "claimedQuestIds" : [ "professional_demolisher" ],
+      "lastDailyReset" : [ 2026, 8, 28 ],
+      "plantFoodCount" : 0,
+      "seedPackets" : { },
+      "dailyOfferPurchaseDate" : null,
+      "dailyOfferPlantType" : null,
+      "dailyOfferPrice" : 0,
+      "dailyOfferSeedPacketCount" : 0,
+      "dailyOfferGeneratedDate" : null,
+      "miniGamesCompleted" : 0,
+      "dailyQuestsCompleted" : 1,
+      "nonDailyQuestsCompleted" : 0,
+      "unlockedPots" : [ [ true, true, true, true ], [ false, false, false, false ], [ false, false, false, false ] ],
+      "potPlants" : [ [ null, null, null, null ], [ null, null, null, null ], [ null, null, null, null ] ],
+      "greenhouseBoosts" : [ ],
+      "dailyOfferBoughtToday" : false
+    },
+    "securityQuestion" : "FAVORITE_COLOR",
+    "securityAnswer" : "blue",
+    "debugMode" : true
+  },
+  "AMIR3" : {
+    "userName" : "AMIR3",
+    "nickName" : "amir",
+    "password" : "1234$AbCd",
+    "email" : "amir@gmail.com",
+    "newsManager" : {
+      "news" : [ {
+        "message" : "chapter ancient egypt unlocked!",
+        "read" : true
+      }, {
+        "message" : "level 1 of ancient egypt unlocked!",
+        "read" : true
+      }, {
+        "message" : "chapter dark age unlocked!",
+        "read" : true
+      }, {
+        "message" : "level 1 of dark age unlocked!",
+        "read" : true
+      }, {
+        "message" : "chapter frostbite caves unlocked!",
+        "read" : true
+      }, {
+        "message" : "level 1 of frostbite caves unlocked!",
+        "read" : true
+      }, {
+        "message" : "chapter big wave beach unlocked!",
+        "read" : true
+      }, {
+        "message" : "level 1 of big wave beach unlocked!",
+        "read" : true
+      }, {
+        "message" : "plant SUNFLOWER unlocked!",
+        "read" : true
+      }, {
+        "message" : "plant PEASHOOTER unlocked!",
+        "read" : true
+      }, {
+        "message" : "zombie DEFAULT unlocked!",
+        "read" : true
+      }, {
+        "message" : "plant CACTUS unlocked!",
+        "read" : false
+      } ]
+    },
+    "genderType" : "Male",
+    "userProgress" : {
+      "unlockedChaptersAndLevels" : {
+        "ANCIENT_EGYPT" : 0,
+        "FROSTBITE_CAVES" : 0,
+        "BIG_WAVE_BEACH" : 0,
+        "DARK_AGE" : 0
+      },
+      "unlockedZombies" : [ "DEFAULT" ],
+      "unlockedPlantsAndTheirLevels" : {
+        "CACTUS" : 1,
+        "SUNFLOWER" : 1,
+        "PEASHOOTER" : 1
+      },
+      "gemsCount" : 400,
+      "coinsCount" : 2000,
+      "gameDifficulty" : 3,
+      "gamesPlayed" : 0,
+      "questVariables" : {
+        "one_column_less" : "6",
+        "defenseless_row" : "4",
+        "thrifty_farmer" : "3",
+        "chapter_hunter" : "FROSTBITE_CAVES",
+        "mower_time" : "20",
+        "daily_sun_collector" : "4000",
+        "defenseless_cross" : "5",
+        "professional_killer" : "REPEATER"
+      },
+      "gameSpeed" : 1,
+      "showTileGrid" : false,
+      "miniGameLevels" : {
+        "VASEBREAKER" : 2,
+        "I_ZOMBIE" : 1,
+        "WALNUT_BOWLING" : 1
+      },
+      "questProgress" : {
+        "one_column_less" : 0,
+        "defenseless_row" : 0,
+        "thrifty_farmer" : 0,
+        "speed_demon" : 0,
+        "chapter_hunter" : 0,
+        "mower_time" : 0,
+        "defenseless_cross" : 0,
+        "only_cactus" : 0,
+        "daily_sun_collector" : 0,
+        "master_defense" : 0,
+        "professional_demolisher" : 0,
+        "win_streak" : 0,
+        "cloudy_day" : 0,
+        "professional_killer" : 3
+      },
+      "completedQuestIds" : [ ],
+      "claimedQuestIds" : [ ],
+      "lastDailyReset" : [ 2026, 8, 28 ],
+      "plantFoodCount" : 0,
+      "seedPackets" : { },
+      "dailyOfferPurchaseDate" : null,
+      "dailyOfferPlantType" : null,
+      "dailyOfferPrice" : 0,
+      "dailyOfferSeedPacketCount" : 0,
+      "dailyOfferGeneratedDate" : null,
+      "miniGamesCompleted" : 1,
+      "dailyQuestsCompleted" : 0,
+      "nonDailyQuestsCompleted" : 0,
+      "unlockedPots" : [ [ true, true, true, true ], [ false, false, false, false ], [ false, false, false, false ] ],
+      "potPlants" : [ [ null, null, null, null ], [ null, null, null, null ], [ null, null, null, null ] ],
       "greenhouseBoosts" : [ ],
       "dailyOfferBoughtToday" : false
     },
@@ -1042,9 +1335,9 @@
     "userProgress" : {
       "unlockedChaptersAndLevels" : {
         "ANCIENT_EGYPT" : 1,
-        "DARK_AGE" : 1,
         "FROSTBITE_CAVES" : 1,
-        "BIG_WAVE_BEACH" : 1
+        "BIG_WAVE_BEACH" : 1,
+        "DARK_AGE" : 1
       },
       "unlockedZombies" : [ "DEFAULT" ],
       "unlockedPlantsAndTheirLevels" : {
@@ -1155,9 +1448,9 @@
     "userProgress" : {
       "unlockedChaptersAndLevels" : {
         "ANCIENT_EGYPT" : 1,
-        "DARK_AGE" : 1,
         "FROSTBITE_CAVES" : 1,
-        "BIG_WAVE_BEACH" : 1
+        "BIG_WAVE_BEACH" : 1,
+        "DARK_AGE" : 1
       },
       "unlockedZombies" : [ "DEFAULT" ],
       "unlockedPlantsAndTheirLevels" : {
@@ -1385,21 +1678,21 @@
     "userProgress" : {
       "unlockedChaptersAndLevels" : {
         "ANCIENT_EGYPT" : 0,
-        "DARK_AGE" : 3,
         "FROSTBITE_CAVES" : 1,
-        "BIG_WAVE_BEACH" : 0
+        "BIG_WAVE_BEACH" : 0,
+        "DARK_AGE" : 3
       },
       "unlockedZombies" : [ "DEFAULT", "CONE_HEAD", "BUCKET_HEAD", "BRICK_HEAD", "KNIGHT", "GARGANTUAR", "IMP", "RA", "EXPLORER", "TOMB_RAISER", "ALL_STAR", "ARCADE", "UMBRELLA", "TURQUOISE", "PROSPECTOR", "PIANO", "NEWSPAPER", "JUGGLER", "WIZARD", "KING", "IMP_DRAGON", "DODO", "HUNTER", "TROGLOBITE" ],
       "unlockedPlantsAndTheirLevels" : {
+        "JALAPENO" : 1,
         "GRAPESHOT" : 1,
+        "CACTUS" : 1,
+        "DOOM_SHROOM" : 1,
         "TWIN_SUNFLOWER" : 1,
         "REPEATER" : 1,
-        "CACTUS" : 1,
-        "HOT_POTATO" : 1,
-        "DOOM_SHROOM" : 1,
         "SUNFLOWER" : 1,
         "PEASHOOTER" : 1,
-        "JALAPENO" : 1
+        "HOT_POTATO" : 1
       },
       "gemsCount" : 517,
       "coinsCount" : 1000,
@@ -1523,9 +1816,9 @@
     "userProgress" : {
       "unlockedChaptersAndLevels" : {
         "ANCIENT_EGYPT" : 1,
-        "DARK_AGE" : 1,
         "FROSTBITE_CAVES" : 1,
-        "BIG_WAVE_BEACH" : 1
+        "BIG_WAVE_BEACH" : 1,
+        "DARK_AGE" : 1
       },
       "unlockedZombies" : [ "DEFAULT" ],
       "unlockedPlantsAndTheirLevels" : {

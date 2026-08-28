@@ -5,24 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * The envelope every message -- request or response -- is wrapped in
- * before being written as a single line of JSON to a socket.
- *
- * requestId ties a response back to whichever call is blocked waiting
- * for it (see ServerConnection.sendRequest). The server always echoes
- * the same requestId AND the same type it received on a given request.
- *
- * The payload itself is a loosely-typed Map<String,Object> rather than
- * a rigid per-message-type class hierarchy: it keeps this one envelope
- * class usable for every message type -- including ones reserved for
- * later phases (matchmaking, reactions) -- without needing a new DTO
- * class or Jackson polymorphic-type configuration for each one. Nested
- * POJOs (like a User) stored in the map deserialize back into a
- * LinkedHashMap by default because of type erasure; use
- * objectMapper.convertValue(data.get("key"), TargetClass.class) to get
- * the real type back out.
- */
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NetworkMessage {
     private long requestId;
@@ -32,7 +15,7 @@ public class NetworkMessage {
     private Map<String, Object> data = new HashMap<>();
 
     public NetworkMessage() {
-        // Jackson needs a no-arg constructor.
+
     }
 
     public static NetworkMessage request(long requestId, MessageType type) {
@@ -59,7 +42,7 @@ public class NetworkMessage {
         return message;
     }
 
-    /** Fluent setter so callers can build a response inline: ok(id, type).put("user", user). */
+
     public NetworkMessage put(String key, Object value) {
         this.data.put(key, value);
         return this;

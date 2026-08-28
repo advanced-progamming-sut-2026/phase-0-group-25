@@ -15,26 +15,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * Owns exactly one persistent connection to the game server for the
- * lifetime of this game process. The client cannot run at all without
- * successfully connecting first (see connect()).
- *
- * Outgoing requests are correlated to their response through a small
- * "mailbox" per pending request: the calling thread registers a
- * mailbox, sends the request, then wait()s on that specific mailbox
- * until the one background reader thread reads the matching response
- * off the socket and notify()s it. This lets many callers have requests
- * in flight at once over the single shared socket, none of them
- * blocking each other, with no polling anywhere.
- *
- * The same persistent-connection + reader-thread design is what a later
- * phase needs for server-initiated pushes (a match was found, an
- * opponent sent a reaction, ...): those arrive as NetworkMessages with
- * no pending mailbox waiting for their requestId, so readLoop() below
- * already has a clearly marked spot to dispatch them to listeners once
- * that's implemented -- nothing about this class needs to change to add it.
- */
+
 public class ServerConnection {
     private static ServerConnection instance;
 
@@ -63,12 +44,7 @@ public class ServerConnection {
         readerThread.start();
     }
 
-    /**
-     * Must be called exactly once, before anything else touches the
-     * network layer -- Main.create() does this first, before
-     * MenuManager/UsersManager are touched. Throws if the server isn't
-     * reachable; by design the game cannot proceed without it.
-     */
+
     public static synchronized void connect(String host, int port) throws IOException {
         if (instance == null) {
             instance = new ServerConnection(host, port);
@@ -103,19 +79,16 @@ public class ServerConnection {
                         mailbox.notifyAll();
                     }
                 }
-                // else: a server-initiated push with no matching pending
-                // request (reserved for later phases -- match found,
-                // incoming reaction, etc). Nothing consumes these yet.
+
+
+
             }
         } catch (IOException e) {
             System.err.println("[Client] Lost connection to server: " + e.getMessage());
         }
     }
 
-    /**
-     * Sends a request and blocks the calling thread until the matching
-     * response arrives, or RESPONSE_TIMEOUT_MS elapses.
-     */
+
     public NetworkMessage sendRequest(NetworkMessage request) {
         long id = nextRequestId.getAndIncrement();
         request.setRequestId(id);

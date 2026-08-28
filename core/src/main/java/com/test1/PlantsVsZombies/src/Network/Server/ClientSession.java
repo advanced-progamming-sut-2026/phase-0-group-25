@@ -16,17 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Handles one connected client's requests for the entire lifetime of its
- * socket connection. One instance runs on one thread pulled from
- * GameServer's thread pool. All the actual database work is delegated to
- * the single, shared UserDatabase instance, which is internally
- * synchronized -- so many ClientSessions can safely run concurrently.
- *
- * Protocol: newline-delimited JSON. Each line the client sends is one
- * NetworkMessage request; this replies with exactly one NetworkMessage
- * response per line read, then goes back to waiting for the next line.
- */
+
 public class ClientSession implements Runnable {
     private final Socket socket;
     private final UserDatabase database;

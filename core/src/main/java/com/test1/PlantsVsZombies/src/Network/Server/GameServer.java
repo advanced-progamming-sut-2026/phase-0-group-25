@@ -8,19 +8,7 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Entry point for the SERVER program. Run this first, before starting
- * any client -- it is the only process that ever touches users.json.
- * Every connected client's requests are handled on a thread borrowed
- * from a fixed-size thread pool, so many clients can be served at once,
- * while UserDatabase's internal ReadWriteLock keeps every read/write of
- * the shared JSON file correctly synchronized regardless of how many
- * client processes are hitting the server at the same time.
- *
- * This class has no LibGDX/graphics dependency at all -- it's a plain
- * Java program. Run it directly (e.g. right-click -> Run in your IDE,
- * or `java -cp <classpath> com.test1.PlantsVsZombies.src.Network.Server.GameServer`).
- */
+
 public class GameServer {
     private static final int THREAD_POOL_SIZE = 32;
 

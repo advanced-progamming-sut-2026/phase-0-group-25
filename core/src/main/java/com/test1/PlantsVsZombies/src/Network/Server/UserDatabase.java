@@ -10,27 +10,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
-/**
- * The single, exclusive owner of users.json. Nothing outside this class
- * -- and specifically nothing running in a client process -- ever reads
- * or writes that file. Clients only ever see User data that travels
- * back over the network as part of a NetworkMessage response.
- *
- * This is the server-side home of the validation/business logic that
- * used to live directly in the client's UsersManager (registration
- * rules, credential checks, etc) -- moved here rather than rewritten,
- * since only the server has the authoritative, complete user list a lot
- * of it depends on (e.g. the duplicate-username check).
- *
- * Every method that touches userCache and/or the file takes the
- * ReadWriteLock appropriately: read-only lookups (leaderboard, login
- * credential check) take a read lock so many can run concurrently;
- * anything that mutates the cache and/or writes the file takes the
- * write lock for the whole operation, so it's atomic with respect to
- * every other client's concurrent request -- this is what makes it safe
- * for many clients (potentially from separate machines/processes) to
- * hit the same server at once without racing on the JSON file.
- */
+
 public class UserDatabase {
     private static final String FILE_PATH = "assets/jsonFiles/users.json";
 
@@ -48,7 +28,7 @@ public class UserDatabase {
     private final ObjectMapper mapper = new ObjectMapper();
     private final ReadWriteLock lock = new ReadWriteLock();
     private final Map<String, User> userCache;
-    /** username -> currently-valid session token, issued at login. */
+
     private final Map<String, String> activeSessions = new ConcurrentHashMap<>();
 
     public UserDatabase() {
@@ -70,7 +50,7 @@ public class UserDatabase {
         }
     }
 
-    /** Caller must already hold the write lock. */
+
     private void persistToDisk() {
         try {
             mapper.writerWithDefaultPrettyPrinter().writeValue(new File(FILE_PATH), userCache);
@@ -89,9 +69,9 @@ public class UserDatabase {
         }
     }
 
-    // ==========================================================
-    // REGISTER
-    // ==========================================================
+
+
+
     public String register(User pendingUser) {
         if (pendingUser == null || pendingUser.getUserName() == null) {
             return "Malformed registration request.";
@@ -114,7 +94,7 @@ public class UserDatabase {
         }
     }
 
-    /** Caller must already hold the write lock (needs the authoritative userCache for the duplicate check). */
+
     private String validateNewAccount(User user) {
         String username = user.getUserName();
         String password = user.getPassword();
@@ -158,9 +138,9 @@ public class UserDatabase {
         return null;
     }
 
-    // ==========================================================
-    // LOGIN / SESSION
-    // ==========================================================
+
+
+
     public LoginResult login(String username, String password) {
         try {
             lock.lockRead();
@@ -206,15 +186,15 @@ public class UserDatabase {
         activeSessions.remove(username, token);
     }
 
-    /** True if the given username/token pair is currently a valid, logged-in session. */
+
     private boolean isSessionValid(String username, String token) {
         String activeToken = activeSessions.get(username);
         return activeToken != null && activeToken.equals(token);
     }
 
-    // ==========================================================
-    // CHANGE USERNAME
-    // ==========================================================
+
+
+
     public String changeUsername(String currentUsername, String sessionToken, String newUsername) {
         if (!isSessionValid(currentUsername, sessionToken)) {
             return "Session expired. Please log in again.";
@@ -248,9 +228,9 @@ public class UserDatabase {
         }
     }
 
-    // ==========================================================
-    // FORGOT / RESET PASSWORD
-    // ==========================================================
+
+
+
     public String checkForgotPassword(String username, String email, String answer) {
         try {
             lock.lockRead();
@@ -294,9 +274,9 @@ public class UserDatabase {
         }
     }
 
-    // ==========================================================
-    // SAVE PROGRESS (general sync point for all in-game mutations)
-    // ==========================================================
+
+
+
     public String saveProgress(String username, String sessionToken, User updatedUser) {
         if (!isSessionValid(username, sessionToken)) {
             System.err.println("[Server] Rejected SAVE_PROGRESS for " + username
@@ -319,9 +299,9 @@ public class UserDatabase {
         }
     }
 
-    // ==========================================================
-    // LEADERBOARD
-    // ==========================================================
+
+
+
     public List<User> getAllUsersSanitized() {
         try {
             lock.lockRead();
