@@ -61,7 +61,11 @@ public class SignUpMenu extends Menu {
         }
         pendingUser.setSecurityQuestion(chosenQuestion);
         pendingUser.setSecurityAnswer(answer);
-        usersManager.addUser(pendingUser);
+        String registrationError = usersManager.addUser(pendingUser);
+        if (registrationError != null) {
+            getView().showError(registrationError);
+            return;
+        }
         pendingUser = null;
         signUpMenuView.showRegistrationSuccess();
         MenuManager.getInstance().changeMenu(MenuType.Login);
