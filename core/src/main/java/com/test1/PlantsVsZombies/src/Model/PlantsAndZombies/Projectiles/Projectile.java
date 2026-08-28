@@ -1,5 +1,7 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles;
 
+import com.test1.PlantsVsZombies.src.Audio.SoundManager;
+import com.test1.PlantsVsZombies.src.Enums.AudioType;
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
@@ -31,7 +33,7 @@ public class Projectile {
     private GamePlay GAME = GamePlay.activeInstance;
 
     public Projectile() {
-
+        SoundManager.getInstance().playSound(AudioType.PROJECTILE_SHOOT);
     }
 
     public Projectile(BattlePlant plant, double velocityX, double velocityY, Position position,
@@ -53,6 +55,7 @@ public class Projectile {
         this.firing = false;
         this.poisonous = false;
         this.isHypnotizer = false;
+        SoundManager.getInstance().playSound(AudioType.PROJECTILE_SHOOT);
     }
 
     public Projectile(BattlePlant plant, double velocityX, double velocityY, Position position,
@@ -74,6 +77,7 @@ public class Projectile {
         this.firing = false;
         this.poisonous = false;
         this.isHypnotizer = false;
+        SoundManager.getInstance().playSound(AudioType.PROJECTILE_SHOOT);
     }
 
 
@@ -166,6 +170,7 @@ public class Projectile {
                         continue;
                     }
                     zombie.takeDamage(this, this.damage);
+                    SoundManager.getInstance().playSound(AudioType.PROJECTILE_HIT);
                     zombie.setPosition(new Position(
                         zombie.getPosition().getX() + this.knockback,
                         zombie.getPosition().getY()));

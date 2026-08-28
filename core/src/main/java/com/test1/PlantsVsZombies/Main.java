@@ -4,12 +4,17 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.test1.PlantsVsZombies.src.Audio.SoundManager;
 import com.test1.PlantsVsZombies.src.Menu.MenuManager;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.GameDataLoader;
+import com.test1.PlantsVsZombies.src.Network.Client.ServerConnection;
+import com.test1.PlantsVsZombies.src.Network.NetworkConfig;
 import com.test1.PlantsVsZombies.src.View.LibGDXViews.UIManager;
 import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
 import pvz.skin.PvzSkin;
+
+import java.io.IOException;
 
 public class Main extends Game {
     private static Main instance;
@@ -20,13 +25,28 @@ public class Main extends Game {
 
     @Override
     public void create() {
+        try {
+            ServerConnection.connect(NetworkConfig.SERVER_HOST, NetworkConfig.SERVER_PORT);
+        } catch (IOException e) {
+            System.err.println("==========================================================");
+            System.err.println("[Client] Could not connect to the game server at "
+                + NetworkConfig.SERVER_HOST + ":" + NetworkConfig.SERVER_PORT);
+            System.err.println("[Client] Start GameServer (Network.Server.GameServer) first,");
+            System.err.println("[Client] then launch the game again.");
+            System.err.println("[Client] Details: " + e.getMessage());
+            System.err.println("==========================================================");
+            Gdx.app.exit();
+            return;
+        }
+
         GameDataLoader.loadGameData();
         instance = this;
         batch = new SpriteBatch();
         skin = PvzSkin.get();
+        textureBank = new TextureBank("768", Gdx.files.internal("Assets"));
+        pamPlayer = new PamPlayer(textureBank, Gdx.files.internal("Assets"));
 
-        textureBank = new TextureBank("768", Gdx.files.internal("assets/Assets"));
-        pamPlayer = new PamPlayer(textureBank, Gdx.files.internal("assets/Assets"));
+        SoundManager.getInstance().initSound();
 
         GameDataLoader.loadGameData();
         UIManager.init(this);
@@ -69,6 +89,7 @@ public class Main extends Game {
     @Override
     public void dispose() {
         if (batch != null) batch.dispose();
+        SoundManager.getInstance().dispose();
         super.dispose();
     }
 }

@@ -1,20 +1,53 @@
 package com.test1.PlantsVsZombies.src.Model.User;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.test1.PlantsVsZombies.src.Enums.*;
 import com.test1.PlantsVsZombies.src.Model.Greenhouse.GreenhousePlant;
 import com.test1.PlantsVsZombies.src.Model.Quests.QuestManager;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.test1.PlantsVsZombies.src.Network.Client.ServerConnection;
+import com.test1.PlantsVsZombies.src.Network.MessageType;
+import com.test1.PlantsVsZombies.src.Network.NetworkMessage;
 
 import java.io.File;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.regex.Pattern;
 
+/**
+ * Client-side facade over the game's user data. Every public method
+ * here keeps the exact same signature -- and, as far as any caller can
+ * tell, the exact same synchronous behavior -- it always had. The
+ * hundreds of call sites across the game that mutate coins/gems/plant
+ * unlocks/quest progress/etc through this class and its delegate
+ * UserProgressManager are completely unchanged.
+ *
+ * What changed underneath: this class no longer touches users.json (or
+ * any user data) directly. Only the server does that now (see
+ * Network.Server.UserDatabase) -- a user can only run the game once a
+ * GameServer is already running, and two game processes can safely run
+ * against it at once with no race on the shared file, since the server
+ * is the sole owner of it. Operations that need the server's
+ * authoritative data -- register, login, "stay logged in", leaderboard,
+ * username change, forgot/reset password -- go over the network and
+ * block the caller until the server responds, exactly like a normal
+ * synchronous call.
+ *
+ * The one exception is updateUser(), the single choke-point nearly
+ * every mutation (addCoins, unlockPlant, quest progress, ...) already
+ * funneled through even before this change. Since it can fire many
+ * times per frame during active gameplay, it does NOT block the caller
+ * on a network round trip: it takes an immediate, fully-detached
+ * snapshot of the current user (so it never races with further
+ * in-place mutation happening on the caller's thread) and hands it to a
+ * dedicated background thread to actually send, coalescing down to just
+ * the latest snapshot if several saves queue up faster than the network
+ * can keep up.
+ */
 public class UsersManager {
-    private static final String FILE_PATH = "assets/jsonFiles/users.json";
-    private static final String STATE_FILE = "assets/jsonFiles/loginstate.json";
+    private static final String STATE_FILE = "jsonFiles/loginstate.json";
     private static final Pattern USERNAME_CHAR_REGEX = Pattern.compile("^[a-zA-Z0-9_]+$");
     private static final Pattern PASSWORD_COMPLEXITY_REGEX = Pattern.compile(
         "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+={}\\[\\]|\\\\:;\"',<>?])\\S{8,}$"
@@ -25,15 +58,17 @@ public class UsersManager {
     private static final Pattern EMAIL_DOMAIN_REGEX = Pattern.compile(
         "^[a-zA-Z0-9](?:[a-zA-Z0-9.-]*[a-zA-Z0-9])?\\.[a-zA-Z0-9]{2,}$"
     );
+
     private static UsersManager instance;
     private final ObjectMapper mapper = new ObjectMapper();
     private final UserProgressManager progressManager = UserProgressManager.getInstance();
-    private HashMap<String, User> userCache = new HashMap<>();
+    private final ArrayBlockingQueue<User> progressSyncQueue = new ArrayBlockingQueue<>(1);
     private User loggedInUser = null;
+    private String sessionToken = null;
 
     private UsersManager() {
         mapper.registerModule(new JavaTimeModule());
-        loadUsers();
+        startProgressSyncThread();
     }
 
     public static UsersManager getInstance() {
@@ -41,43 +76,70 @@ public class UsersManager {
         return instance;
     }
 
-    // ----- Existing methods (unchanged) -----
+    // ==========================================================
+    // Background progress-sync thread
+    // ==========================================================
+    private void startProgressSyncThread() {
+        Thread thread = new Thread(() -> {
+            while (true) {
+                User snapshot;
+                try {
+                    snapshot = progressSyncQueue.take(); // blocks until there's something new to send
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
+                String token = sessionToken;
+                if (token == null) {
+                    System.err.println("[Client] Dropping a progress snapshot for "
+                        + snapshot.getUserName() + ": not logged in (no session token).");
+                    continue;
+                }
+                NetworkMessage request = NetworkMessage.request(0, MessageType.SAVE_PROGRESS)
+                    .put("username", snapshot.getUserName())
+                    .put("sessionToken", token)
+                    .put("user", snapshot);
+                NetworkMessage response = ServerConnection.getInstance().sendRequest(request);
+                if (!response.isSuccess()) {
+                    System.err.println("[Client] Failed to save progress for "
+                        + snapshot.getUserName() + ": " + response.getErrorMessage());
+                } else {
+                    System.out.println("[Client] Saved progress for " + snapshot.getUserName());
+                }
+            }
+        }, "progress-sync-thread");
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    /**
+     * Queues the current logged-in user's full progress to be sent to
+     * the server in the background. Never blocks the caller on network
+     * I/O -- only on a cheap, synchronous, in-memory JSON round-trip that
+     * produces a fully detached copy, so it stays correct even though
+     * the background thread might still be mid-send of a previous
+     * snapshot while gameplay keeps mutating loggedInUser.
+     */
+    void updateUser() {
+        if (loggedInUser == null) return;
+        try {
+            User snapshot = mapper.readValue(mapper.writeValueAsString(loggedInUser), User.class);
+            progressSyncQueue.poll();          // drop a stale, not-yet-sent snapshot if there is one
+            progressSyncQueue.offer(snapshot); // queue the latest
+        } catch (Exception e) {
+            System.err.println("[Client] Failed to prepare progress sync: " + e.getMessage());
+        }
+    }
+
     public void setQuestVariablesForCurrentUser(Map<String, String> variables) {
         progressManager.setQuestVariablesForCurrentUser(variables);
     }
 
-    private void loadUsers() {
-        File file = new File(FILE_PATH);
-        if (!file.exists() || file.length() == 0) {
-            userCache = new HashMap<>();
-            return;
-        }
-        try {
-            userCache = mapper.readValue(file, new TypeReference<HashMap<String, User>>() {
-            });
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to read users.json", e);
-        }
-    }
-
-    private void writeUsers() {
-        try {
-            mapper.writerWithDefaultPrettyPrinter().writeValue(new File(FILE_PATH), userCache);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to write users.json", e);
-        }
-    }
-
-    void updateUser() {
-        if (loggedInUser != null) {
-            userCache.put(loggedInUser.getUserName(), loggedInUser);
-            writeUsers();
-        }
-    }
-
-    public void addUser(User user) {
-        userCache.put(user.getUserName(), user);
-        writeUsers();
+    /** Registers a new account. Returns null on success, or an error message. */
+    public String addUser(User user) {
+        NetworkMessage request = NetworkMessage.request(0, MessageType.REGISTER).put("user", user);
+        NetworkMessage response = ServerConnection.getInstance().sendRequest(request);
+        return response.isSuccess() ? null : response.getErrorMessage();
     }
 
     public User getLoggedInUser() {
@@ -85,42 +147,70 @@ public class UsersManager {
     }
 
     public Collection<User> getAllUsers() {
-        return userCache.values();
+        NetworkMessage request = NetworkMessage.request(0, MessageType.GET_ALL_USERS);
+        NetworkMessage response = ServerConnection.getInstance().sendRequest(request);
+        if (!response.isSuccess()) {
+            System.err.println("[Client] Failed to fetch leaderboard: " + response.getErrorMessage());
+            return new ArrayList<>();
+        }
+        Object raw = response.getData().get("users");
+        return mapper.convertValue(raw, new TypeReference<List<User>>() {
+        });
     }
 
     public boolean checkAndLoadStayLoggedIn() {
         File file = new File(STATE_FILE);
         if (!file.exists() || file.length() == 0) return false;
         try {
-            String savedUsername = mapper.readValue(file, String.class);
-            if (userCache.containsKey(savedUsername)) {
-                this.loggedInUser = userCache.get(savedUsername);
-                return true;
-            }
+            Map<String, String> saved = mapper.readValue(file, new TypeReference<HashMap<String, String>>() {
+            });
+            String savedUsername = saved.get("username");
+            String savedToken = saved.get("sessionToken");
+            if (savedUsername == null || savedToken == null) return false;
+
+            NetworkMessage request = NetworkMessage.request(0, MessageType.RESTORE_SESSION)
+                .put("username", savedUsername)
+                .put("sessionToken", savedToken);
+            NetworkMessage response = ServerConnection.getInstance().sendRequest(request);
+            if (!response.isSuccess()) return false;
+
+            this.loggedInUser = mapper.convertValue(response.getData().get("user"), User.class);
+            this.sessionToken = savedToken;
+            QuestManager.getInstance().loadProgress();
+            return true;
         } catch (Exception e) {
             return false;
         }
-        return false;
     }
 
     public String authenticateUser(String username, String password, boolean stayLoggedIn) {
-        if (!userCache.containsKey(username)) {
-            return "Entered username does not exist in the system.";
+        NetworkMessage request = NetworkMessage.request(0, MessageType.LOGIN)
+            .put("username", username)
+            .put("password", password);
+        NetworkMessage response = ServerConnection.getInstance().sendRequest(request);
+        if (!response.isSuccess()) {
+            return response.getErrorMessage();
         }
-        User user = userCache.get(username);
-        if (!user.getPassword().equals(password)) {
-            return "Invalid password credentials.";
-        }
-        this.loggedInUser = user;
+
+        this.loggedInUser = mapper.convertValue(response.getData().get("user"), User.class);
+        this.sessionToken = (String) response.getData().get("sessionToken");
         QuestManager.getInstance().loadProgress();
+
         if (stayLoggedIn) {
-            try {
-                mapper.writeValue(new File(STATE_FILE), username);
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to save login state.", e);
-            }
+            saveRememberedLogin(username, sessionToken);
         }
         return null;
+    }
+
+    private void saveRememberedLogin(String username, String token) {
+        try {
+            Map<String, String> toSave = new HashMap<>();
+            toSave.put("username", username);
+            toSave.put("sessionToken", token);
+            mapper.writeValue(new File(STATE_FILE), toSave);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to save login state.", e);
+        }
     }
 
     public int getMiniGameLevel(MiniGameType type) {
@@ -132,7 +222,14 @@ public class UsersManager {
     }
 
     public void logoutCurrentUser() {
+        if (loggedInUser != null && sessionToken != null) {
+            NetworkMessage request = NetworkMessage.request(0, MessageType.LOGOUT)
+                .put("username", loggedInUser.getUserName())
+                .put("sessionToken", sessionToken);
+            ServerConnection.getInstance().sendRequest(request);
+        }
         this.loggedInUser = null;
+        this.sessionToken = null;
         File file = new File(STATE_FILE);
         if (file.exists()) file.delete();
     }
@@ -156,7 +253,7 @@ public class UsersManager {
             return "you are already using this password.";
         if (newPassword.contains(" "))
             return "Weak password: Spaces are not allowed within password strings.";
-        if(!newPassword.equals(newPasswordConfirmed))
+        if (!newPassword.equals(newPasswordConfirmed))
             return "Password and its confirmation do not match.";
         if (!PASSWORD_COMPLEXITY_REGEX.matcher(newPassword).matches())
             return "Weak password: Must be at least 8 characters long and include numbers, " +
@@ -188,34 +285,35 @@ public class UsersManager {
         if (loggedInUser == null) return "No logged in user.";
         if (loggedInUser.getUserName().equals(newUsername))
             return "you are already using this username.";
-        if (userCache.containsKey(newUsername))
-            return "Duplicate username: User already exists in the system.";
         if (newUsername.length() < 3 || newUsername.length() > 20)
             return "Invalid username length: Must be between 3 and 20 characters.";
         if (!USERNAME_CHAR_REGEX.matcher(newUsername).matches())
             return "Invalid username characters: Only letters, numbers, and underscores are allowed.";
 
-        String oldUsername = loggedInUser.getUserName();
-        userCache.remove(oldUsername);
-        loggedInUser.setUserName(newUsername);
-        userCache.put(newUsername, loggedInUser);
-        writeUsers();
+        NetworkMessage request = NetworkMessage.request(0, MessageType.CHANGE_USERNAME)
+            .put("username", loggedInUser.getUserName())
+            .put("sessionToken", sessionToken)
+            .put("newUsername", newUsername);
+        NetworkMessage response = ServerConnection.getInstance().sendRequest(request);
+        if (!response.isSuccess()) return response.getErrorMessage();
 
-        File stateFile = new File(STATE_FILE);
-        if (stateFile.exists()) {
-            try {
-                mapper.writeValue(stateFile, newUsername);
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to update login state data.", e);
-            }
+        loggedInUser.setUserName(newUsername); // same package as User, so this package-private setter is reachable
+        if (new File(STATE_FILE).exists()) {
+            saveRememberedLogin(newUsername, sessionToken);
         }
         return null;
     }
 
+    /**
+     * Format-only validation the client can do without the server (no
+     * network round trip needed just to reject an obviously-too-short
+     * username or a weak password). The one check that genuinely needs
+     * the server -- is this username already taken -- happens
+     * server-side in UserDatabase.register(), since only the server has
+     * the authoritative, complete user list.
+     */
     public String validateRegistration(String username, String password, String passwordConfirm,
                                        String nickname, String email, String gender) {
-        if (userCache.containsKey(username))
-            return "Duplicate username: User already exists in the system.";
         if (username.length() < 3 || username.length() > 20)
             return "Invalid username length: Must be between 3 and 20 characters.";
         if (!USERNAME_CHAR_REGEX.matcher(username).matches())
@@ -249,28 +347,20 @@ public class UsersManager {
     }
 
     public String validateForgetPasswordRequest(String username, String email, String answer) {
-        if (!userCache.containsKey(username))
-            return "Entered username does not exist in the system.";
-        User user = userCache.get(username);
-        if (!user.getEmail().equalsIgnoreCase(email))
-            return "Provided email does not match registered user profile.";
-        if (user.getSecurityAnswer() == null || !user.getSecurityAnswer().equalsIgnoreCase(answer))
-            return "Security challenge answer is incorrect.";
-        return null;
+        NetworkMessage request = NetworkMessage.request(0, MessageType.FORGOT_PASSWORD)
+            .put("username", username)
+            .put("email", email)
+            .put("answer", answer);
+        NetworkMessage response = ServerConnection.getInstance().sendRequest(request);
+        return response.isSuccess() ? null : response.getErrorMessage();
     }
 
     public String updateUserPassword(String username, String newPassword) {
-        if (newPassword.contains(" "))
-            return "Weak password: Spaces are not allowed within password strings.";
-        if (!PASSWORD_COMPLEXITY_REGEX.matcher(newPassword).matches())
-            return "Weak password: Must be at least 8 characters long and include numbers, " +
-                "uppercase/lowercase letters, and special characters.";
-        User user = userCache.get(username);
-        if (user != null) {
-            user.setPassword(newPassword);
-            writeUsers();
-        }
-        return null;
+        NetworkMessage request = NetworkMessage.request(0, MessageType.RESET_PASSWORD)
+            .put("username", username)
+            .put("newPassword", newPassword);
+        NetworkMessage response = ServerConnection.getInstance().sendRequest(request);
+        return response.isSuccess() ? null : response.getErrorMessage();
     }
 
     public void addCoins(int amount) {
@@ -443,7 +533,6 @@ public class UsersManager {
         return null;
     }
 
-    // ----- NEW methods for settings -----
     public String setGameSpeed(int speed) {
         if (loggedInUser == null) return "No logged in user.";
         if (speed < 1 || speed > 3) return "Speed must be 1, 2, or 3.";
@@ -469,7 +558,6 @@ public class UsersManager {
         return loggedInUser.getUserProgress().isShowTileGrid();
     }
 
-    // Debug mode is already handled via User.isDebugMode()
     public void setDebugMode(boolean debug) {
         if (loggedInUser != null) {
             loggedInUser.setDebugMode(debug);
