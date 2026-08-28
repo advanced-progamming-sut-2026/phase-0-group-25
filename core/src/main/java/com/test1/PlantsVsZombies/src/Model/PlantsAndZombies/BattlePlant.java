@@ -260,11 +260,11 @@ public class BattlePlant extends Plant {
         if (currentHP < 0) {
             this.isAlive = false;
         }
-        if (!this.isAlive) {
-            if (this.plantStats.getCategory().equals(PlantCategory.EXPLOSIVE.name())) {
-                QuestManager.getInstance().notifyEvent(new ExplosiveUsedEvent(this.name));
-            }
-        }
+////        if (!this.isAlive) {
+//            if (this.plantStats.getCategory().equals(PlantCategory.EXPLOSIVE.name())) {
+//                QuestManager.getInstance().notifyEvent(new ExplosiveUsedEvent(this.name));
+//            }
+//        }
     }
 
     public double getLastActionTime() {
