@@ -21,6 +21,8 @@ public class ClientSession implements Runnable {
     private final Socket socket;
     private final UserDatabase database;
     private final ObjectMapper mapper = new ObjectMapper();
+    private String loggedInUsername;
+    private String sessionToken;
 
     public ClientSession(Socket socket, UserDatabase database) {
         this.socket = socket;
@@ -52,10 +54,14 @@ public class ClientSession implements Runnable {
         } catch (IOException e) {
             System.out.println("[Server] Client disconnected: " + remote);
         } finally {
+            if (loggedInUsername != null && sessionToken != null) {
+                database.logout(loggedInUsername, sessionToken);
+            }
             try {
                 socket.close();
             } catch (IOException ignored) {
             }
+            System.out.println("[Server] Client session closed: " + remote);
         }
     }
 
@@ -104,8 +110,24 @@ public class ClientSession implements Runnable {
 
     private NetworkMessage handleLogin(NetworkMessage req) {
         Map<String, Object> d = req.getData();
-        UserDatabase.LoginResult result = database.login(str(d, "username"), str(d, "password"));
-        if (!result.success()) return NetworkMessage.error(req.getRequestId(), req.getType(), result.errorMessage());
+
+        String username = str(d, "username");
+        String password = str(d, "password");
+
+        UserDatabase.LoginResult result =
+            database.login(username, password);
+
+        if (!result.success()) {
+            return NetworkMessage.error(
+                req.getRequestId(),
+                req.getType(),
+                result.errorMessage()
+            );
+        }
+
+        loggedInUsername = username;
+        sessionToken = result.sessionToken();
+
         return NetworkMessage.ok(req.getRequestId(), req.getType())
             .put("user", result.user())
             .put("sessionToken", result.sessionToken());
@@ -120,7 +142,11 @@ public class ClientSession implements Runnable {
 
     private NetworkMessage handleLogout(NetworkMessage req) {
         Map<String, Object> d = req.getData();
-        database.logout(str(d, "username"), str(d, "sessionToken"));
+        String username = str(d, "username");
+        String token = str(d, "sessionToken");
+        database.logout(username, token);
+        loggedInUsername = null;
+        sessionToken = null;
         return NetworkMessage.ok(req.getRequestId(), req.getType());
     }
 

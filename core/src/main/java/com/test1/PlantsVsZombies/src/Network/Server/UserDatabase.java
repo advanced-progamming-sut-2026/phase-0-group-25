@@ -143,21 +143,39 @@ public class UserDatabase {
 
     public LoginResult login(String username, String password) {
         try {
-            lock.lockRead();
+            lock.lockWrite();
             try {
                 User user = userCache.get(username);
-                if (user == null) return LoginResult.error("Entered username does not exist in the system.");
-                if (!user.getPassword().equals(password)) return LoginResult.error("Invalid password credentials.");
+
+                if (user == null) {
+                    return LoginResult.error(
+                        "Entered username does not exist in the system."
+                    );
+                }
+
+                if (!user.getPassword().equals(password)) {
+                    return LoginResult.error(
+                        "Invalid password credentials."
+                    );
+                }
+
+                if (activeSessions.containsKey(username)) {
+                    return LoginResult.error(
+                        "This user is already logged in."
+                    );
+                }
 
                 String token = UUID.randomUUID().toString();
                 activeSessions.put(username, token);
                 return LoginResult.ok(user, token);
             } finally {
-                lock.unlockRead();
+                lock.unlockWrite();
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            return LoginResult.error("Server interrupted while processing request.");
+            return LoginResult.error(
+                "Server interrupted while processing request."
+            );
         }
     }
 

@@ -16,36 +16,7 @@ import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.regex.Pattern;
 
-/**
- * Client-side facade over the game's user data. Every public method
- * here keeps the exact same signature -- and, as far as any caller can
- * tell, the exact same synchronous behavior -- it always had. The
- * hundreds of call sites across the game that mutate coins/gems/plant
- * unlocks/quest progress/etc through this class and its delegate
- * UserProgressManager are completely unchanged.
- *
- * What changed underneath: this class no longer touches users.json (or
- * any user data) directly. Only the server does that now (see
- * Network.Server.UserDatabase) -- a user can only run the game once a
- * GameServer is already running, and two game processes can safely run
- * against it at once with no race on the shared file, since the server
- * is the sole owner of it. Operations that need the server's
- * authoritative data -- register, login, "stay logged in", leaderboard,
- * username change, forgot/reset password -- go over the network and
- * block the caller until the server responds, exactly like a normal
- * synchronous call.
- *
- * The one exception is updateUser(), the single choke-point nearly
- * every mutation (addCoins, unlockPlant, quest progress, ...) already
- * funneled through even before this change. Since it can fire many
- * times per frame during active gameplay, it does NOT block the caller
- * on a network round trip: it takes an immediate, fully-detached
- * snapshot of the current user (so it never races with further
- * in-place mutation happening on the caller's thread) and hands it to a
- * dedicated background thread to actually send, coalescing down to just
- * the latest snapshot if several saves queue up faster than the network
- * can keep up.
- */
+
 public class UsersManager {
     private static final String STATE_FILE = "jsonFiles/loginstate.json";
     private static final Pattern USERNAME_CHAR_REGEX = Pattern.compile("^[a-zA-Z0-9_]+$");
@@ -76,15 +47,15 @@ public class UsersManager {
         return instance;
     }
 
-    // ==========================================================
-    // Background progress-sync thread
-    // ==========================================================
+
+
+
     private void startProgressSyncThread() {
         Thread thread = new Thread(() -> {
             while (true) {
                 User snapshot;
                 try {
-                    snapshot = progressSyncQueue.take(); // blocks until there's something new to send
+                    snapshot = progressSyncQueue.take();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     return;
@@ -112,20 +83,13 @@ public class UsersManager {
         thread.start();
     }
 
-    /**
-     * Queues the current logged-in user's full progress to be sent to
-     * the server in the background. Never blocks the caller on network
-     * I/O -- only on a cheap, synchronous, in-memory JSON round-trip that
-     * produces a fully detached copy, so it stays correct even though
-     * the background thread might still be mid-send of a previous
-     * snapshot while gameplay keeps mutating loggedInUser.
-     */
+
     void updateUser() {
         if (loggedInUser == null) return;
         try {
             User snapshot = mapper.readValue(mapper.writeValueAsString(loggedInUser), User.class);
-            progressSyncQueue.poll();          // drop a stale, not-yet-sent snapshot if there is one
-            progressSyncQueue.offer(snapshot); // queue the latest
+            progressSyncQueue.poll();
+            progressSyncQueue.offer(snapshot);
         } catch (Exception e) {
             System.err.println("[Client] Failed to prepare progress sync: " + e.getMessage());
         }
@@ -135,7 +99,7 @@ public class UsersManager {
         progressManager.setQuestVariablesForCurrentUser(variables);
     }
 
-    /** Registers a new account. Returns null on success, or an error message. */
+
     public String addUser(User user) {
         NetworkMessage request = NetworkMessage.request(0, MessageType.REGISTER).put("user", user);
         NetworkMessage response = ServerConnection.getInstance().sendRequest(request);
@@ -297,21 +261,14 @@ public class UsersManager {
         NetworkMessage response = ServerConnection.getInstance().sendRequest(request);
         if (!response.isSuccess()) return response.getErrorMessage();
 
-        loggedInUser.setUserName(newUsername); // same package as User, so this package-private setter is reachable
+        loggedInUser.setUserName(newUsername);
         if (new File(STATE_FILE).exists()) {
             saveRememberedLogin(newUsername, sessionToken);
         }
         return null;
     }
 
-    /**
-     * Format-only validation the client can do without the server (no
-     * network round trip needed just to reject an obviously-too-short
-     * username or a weak password). The one check that genuinely needs
-     * the server -- is this username already taken -- happens
-     * server-side in UserDatabase.register(), since only the server has
-     * the authoritative, complete user list.
-     */
+
     public String validateRegistration(String username, String password, String passwordConfirm,
                                        String nickname, String email, String gender) {
         if (username.length() < 3 || username.length() > 20)

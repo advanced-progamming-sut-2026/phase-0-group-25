@@ -16,6 +16,9 @@ import com.test1.PlantsVsZombies.src.Menu.TravelLogMenu;
 import com.test1.PlantsVsZombies.src.Model.Quests.Quest;
 import com.test1.PlantsVsZombies.src.Model.Quests.QuestManager;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.TravelLogMenuView;
+import pvz.libpvz.textures.TextureBank;
+import pvz.skin.BorderedTable;
+import pvz.skin.PvzSkin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +51,9 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
     private ScrollPane questsScrollPane;
     private Actor goToMinigamesButton;
     private Actor backToQuestsButton;
+
+    // Overlay for BorderedTable pop-ups
+    private Table activePopupOverlay;
 
     public void setMenuController(TravelLogMenu menuController) {
         this.menuController = menuController;
@@ -417,14 +423,185 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
         TextButton playButton = createSkinButton("Play", "green", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (menuController != null) {
-                    menuController.startMiniGame(type.getDisplayName());
+                if (type == MiniGameType.I_ZOMBIE) {
+                    showIZombieMatchmakingDialog();
+                } else {
+                    if (menuController != null) {
+                        menuController.startMiniGame(type.getDisplayName());
+                    }
                 }
             }
         });
         card.add(playButton).width(110);
 
         return card;
+    }
+
+
+    private void showPopup(Table popupTable) {
+        closePopup();
+
+        activePopupOverlay = new Table();
+        activePopupOverlay.setFillParent(true);
+        activePopupOverlay.center();
+
+        activePopupOverlay.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Prevent click events from reaching widgets underneath the modal
+            }
+        });
+
+        activePopupOverlay.add(popupTable).center();
+        stage.addActor(activePopupOverlay);
+    }
+
+    public void closePopup() {
+        if (activePopupOverlay != null) {
+            activePopupOverlay.remove();
+            activePopupOverlay = null;
+        }
+    }
+
+
+    private void showIZombieMatchmakingDialog() {
+        BorderedTable popup = new BorderedTable();
+        popup.pad(25);
+
+        Label titleLabel = createBlackLabel("I, Zombie Matchmaking");
+        popup.add(titleLabel).padBottom(15).row();
+
+        Label promptLabel = createBlackLabel("Choose matchmaking mode:");
+        promptLabel.setFontScale(0.85f);
+        popup.add(promptLabel).padBottom(35).row();
+
+        Table buttonsRow = new Table();
+
+        TextButton randomButton = createSkinButton("Random", "green", new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                showSearchingPopup();
+            }
+        });
+        buttonsRow.add(randomButton).size(150, 45).padRight(15);
+
+        TextButton specificUserButton = createSkinButton("Specific User", "green", new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                showSpecificUserInputDialog();
+            }
+        });
+        buttonsRow.add(specificUserButton).size(150, 45).row();
+
+        popup.add(buttonsRow).padBottom(20).row();
+
+        TextButton cancelButton = createSkinButton("Cancel", "brown", new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                closePopup();
+            }
+        });
+        popup.add(cancelButton).size(110, 40);
+
+        showPopup(popup);
+    }
+
+    /**
+     * Dialog 2: Text input for challenging a specific user by username
+     */
+    private void showSpecificUserInputDialog() {
+        BorderedTable popup = new BorderedTable();
+        popup.pad(25);
+
+        Label titleLabel = createBlackLabel("Play with Specific User");
+        titleLabel.setFontScale(1.05f);
+        popup.add(titleLabel).padBottom(15).row();
+
+        Label promptLabel = createBlackLabel("Enter Opponent Username:");
+        promptLabel.setFontScale(0.85f);
+        popup.add(promptLabel).padBottom(15).row();
+
+        TextField usernameField = new TextField("", skin);
+        usernameField.setMessageText("Username...");
+        popup.add(usernameField).width(280).height(45).padBottom(20).row();
+
+        Table actionRow = new Table();
+
+        TextButton sendInviteButton = createSkinButton("Send Invite", "green", new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                String targetUsername = usernameField.getText().trim();
+                if (targetUsername.isEmpty()) {
+                    showError("Please enter a username.");
+                    return;
+                }
+                showWaitingForUserPopup(targetUsername);
+            }
+        });
+        actionRow.add(sendInviteButton).size(140, 45).padRight(12);
+
+        TextButton backButton = createSkinButton("Back", "green", new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                showIZombieMatchmakingDialog();
+            }
+        });
+        actionRow.add(backButton).size(110, 45).row();
+
+        popup.add(actionRow);
+
+        showPopup(popup);
+    }
+
+    private void showSearchingPopup() {
+        BorderedTable popup = new BorderedTable();
+        popup.pad(25);
+
+        Label titleLabel = createBlackLabel("Matchmaking");
+        titleLabel.setFontScale(1.05f);
+        popup.add(titleLabel).padBottom(15).row();
+
+        Label statusLabel = createBlackLabel("Searching for an opponent in queue...");
+        statusLabel.setFontScale(0.85f);
+        statusLabel.setWrap(true);
+        popup.add(statusLabel).width(300).padBottom(20).row();
+
+        TextButton cancelButton = createSkinButton("Cancel", "green", new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                closePopup();
+                showToast("Matchmaking canceled.", ERROR_BG_ASSET_ID);
+            }
+        });
+        popup.add(cancelButton).size(110, 40);
+
+        showPopup(popup);
+    }
+
+
+    private void showWaitingForUserPopup(String targetUsername) {
+        BorderedTable popup = new BorderedTable();
+        popup.pad(25);
+
+        Label titleLabel = createBlackLabel("Invitation Sent");
+        titleLabel.setFontScale(1.05f);
+        popup.add(titleLabel).padBottom(15).row();
+
+        Label statusLabel = createBlackLabel("Waiting for " + targetUsername + " to respond...");
+        statusLabel.setFontScale(0.85f);
+        statusLabel.setWrap(true);
+        popup.add(statusLabel).width(300).padBottom(20).row();
+
+        TextButton cancelButton = createSkinButton("Cancel", "green", new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                closePopup();
+                showToast("Challenge canceled.", ERROR_BG_ASSET_ID);
+            }
+        });
+        popup.add(cancelButton).size(110, 40);
+
+        showPopup(popup);
     }
 
     // ============================================================
