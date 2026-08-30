@@ -26,7 +26,8 @@ public class Modifier implements Ability {
         }
 
         if (tags.contains("fire")) {
-            if (!plant.isAlive()) {
+            float HPRatio = (float) plant.getCurrentHP() / plant.getPlantStats().getBaseHP();
+            if (HPRatio <= 0.1) {
                 AoEDamage(plant, plant.getRow(), plant.getColumn());
                 return;
             }
@@ -53,12 +54,18 @@ public class Modifier implements Ability {
 
         if (tags.contains("Water")) {
             if (GAME.getChapterType().equals(ChapterType.BIG_WAVE_BEACH)) {
-                int number = (int) plant.getPlantStats().getPlantFoodEffect().get("number");
-                while (number > 0) {
-                    for (Tile tile : GAME.getTiles()) {
-                        if (!tile.isArable()) {
+                ArrayList<Tile> nonArableTiles = new ArrayList<>();
+                for (Tile tile : GAME.getTiles()) {
+                    if (!tile.isArable()) {
+                        nonArableTiles.add(tile);
+                    }
+                }
 
-                        }
+                if (nonArableTiles.size() > 2) {
+
+                } else {
+                    for (Tile tile : nonArableTiles) {
+                        BattlePlant newLilyPad;
                     }
                 }
             }
@@ -81,5 +88,8 @@ public class Modifier implements Ability {
                 }
             }
         }
+
+        plant.setCurrentHP(0);
+        plant.setAlive(false);
     }
 }

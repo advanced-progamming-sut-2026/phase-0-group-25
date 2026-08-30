@@ -42,8 +42,8 @@ public class Position {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Position position = (Position) o;
-        return (Math.abs(this.x - position.getX()) <= 5) &&
-                (Math.abs(this.y - position.getY()) <= 5);
+        return (Math.abs(this.x - position.getX()) <= 20) &&
+                (Math.abs(this.y - position.getY()) <= 20);
     }
 
     public double distance(Position position) {

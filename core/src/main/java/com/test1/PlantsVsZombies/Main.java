@@ -25,8 +25,8 @@ public class Main extends Game {
         instance = this;
         batch = new SpriteBatch();
         skin = PvzSkin.get();
-        textureBank = new TextureBank("768", Gdx.files.internal("Assets"));
-        pamPlayer = new PamPlayer(textureBank, Gdx.files.internal("Assets"));
+        textureBank = new TextureBank("768", Gdx.files.internal("assets/Assets"));
+        pamPlayer = new PamPlayer(textureBank, Gdx.files.internal("assets/Assets"));
 
         SoundManager.getInstance().initSound();
 

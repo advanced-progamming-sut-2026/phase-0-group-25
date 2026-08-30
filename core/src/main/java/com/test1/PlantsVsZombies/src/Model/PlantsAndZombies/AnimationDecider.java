@@ -21,6 +21,10 @@ public class AnimationDecider {
 
     public String plantDecider(BattlePlant plant, float stateTime) {
         Map<String, String> status = plant.getPlantStats().getStatus();
+        if (plant.checkOctopusAndIced()) {
+            return status.get("idle");
+        }
+
         if (plant.isEffected()) {
             return status.get("plantfood");
         }
@@ -82,6 +86,10 @@ public class AnimationDecider {
         if (zombie.getCurrentHP() <= 0) {
             return handleZombieDeath(zombie, status);
         }
+        if (zombie.isButtered() ||
+            zombie.isFrozen()) {
+            return status.get("idle");
+        }
 
         if (zombie.getName().equals("GARGANTUAR")) {
             if ((zombie.isThrown()) && (!zombie.isFinished())) {
@@ -119,6 +127,11 @@ public class AnimationDecider {
 
     public HashMap<String, Boolean> zombieVisibilities(Zombie zombie) {
         HashMap<String, Boolean> visibility = new HashMap<>();
+        if (zombie.getName().equals("PROSPECTOR")) {
+            visibility.put("_dynamite_burning_01", true);
+            visibility.put("coconut_fuse_spark_01", false);
+        }
+
         if ((zombie.getName().equals("NEWSPAPER")) &&
             zombie.getActiveArmors().isEmpty()) {
 
@@ -171,12 +184,17 @@ public class AnimationDecider {
             stage += "1";
         }
 
+        if (plant.getName().equals(PlantType.KIWIBEAST.getName())) {
+            plant.checkMelee();
+        }
+
         return status.get(plant.getStatus() + stage);
     }
 
     private String getChargePlantsAnimation(BattlePlant plant, Map<String, String> status, float stateTime) {
         if ((plant.getName().equals(PlantType.POTATO_MINE.getName())) ||
-            (plant.getName().equals(PlantType.PRIMAL_POTATO_MINE.getName()))) {
+            (plant.getName().equals(PlantType.PRIMAL_POTATO_MINE.getName())) ||
+            (plant.getName().equals(PlantType.ICEBERG_LETTUCE.getName()))) {
             if (plant.getCurrentHP() <= 0) {
                 double difference = GAME.getTotalTimePassed() - plant.getDieTime();
                 if (difference >= 1.00) {
@@ -198,25 +216,6 @@ public class AnimationDecider {
         return status.get("armed");
     }
 
-    private boolean isTimeForAction(BattlePlant plant, float stateTime) {
-        float difference = (float) (stateTime - plant.getLastActionTime());
-        float triggerTime = plant.getPlantStats().getTrigger();
-        boolean goodTime = plant.isTimeForAction();
-        boolean finalAction = false;
-
-        if (goodTime) {
-            finalAction = true;
-        }
-        if (finalAction) {
-            if (difference <= triggerTime) {
-                return true;
-            } else {
-                finalAction = false;
-            }
-        }
-
-        return false;
-    }
 
     private String getMintAnimation(BattlePlant plant, float stateTime) {
         double introTime = (double) plant.getPlantStats().getAttributes().get("intro");
@@ -270,6 +269,10 @@ public class AnimationDecider {
                 return getPumpkinVisibilities(armorHP, armorBaseHP);
             } else {
                 checkArmorVisibility(plant, visibilities);
+            }
+
+            if (plant.getName().equals(PlantType.SUN_BEAN.getName())) {
+                return visibilities;
             }
 
             if (HPRatio >= 0.67) {
@@ -348,6 +351,15 @@ public class AnimationDecider {
             return getSquashAnimation(plant);
         }
 
+        if ((plant.getName().equals(PlantType.ICEBERG_LETTUCE.getName()))) {
+            if (plant.getCurrentHP() <= 0) {
+                double difference = GAME.getTotalTimePassed() - plant.getDieTime();
+                if (difference >= 1.00) {
+                    plant.setAlive(false);
+                }
+                return "attack";
+            }
+        }
 
         return "idle";
     }
@@ -356,7 +368,9 @@ public class AnimationDecider {
         double attackTime = (double) plant.getPlantStats().getAttributes().get("attackTime");
         Map<String, String> status = plant.getPlantStats().getStatus();
 
-        double timeDifference = stateTime - plant.getPlantTime();
+        double timeDifference = GAME.getTotalTimePassed() - plant.getPlantTime();
+
+        System.out.println(timeDifference + "   " + attackTime);
         if (timeDifference >= attackTime) {
             return status.get("explosion");
         } else {
@@ -383,6 +397,13 @@ public class AnimationDecider {
                 GAME.getChapterType().equals(ChapterType.FROSTBITE_CAVES)) {
                 if ((!tile.isArable()) && (tile.getHP() > 0)) {
                     return status.get("action");
+                }
+            }
+            if (!plant.getPlantStats().getCategory().equals("Lobber")) {
+                for (BattlePlant plant1 : tile.getPlants()) {
+                    if (plant.checkOctopusAndIced()) {
+                        return status.get("action");
+                    }
                 }
             }
         }

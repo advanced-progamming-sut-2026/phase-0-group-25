@@ -18,10 +18,9 @@ public class RepelLobbers implements Ability {
             Projectile projectile = GAME.getProjectiles().get(i);
 
             if (projectile instanceof LobbedProjectile) {
-                if (((LobbedProjectile) projectile).isFromLobberPlant()) {
-                    projectile.setActive(false);
-                    GAME.getProjectiles().remove(projectile);
-                }
+
+                projectile.setActive(false);
+                GAME.getProjectiles().remove(projectile);
             }
         }
 

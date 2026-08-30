@@ -35,6 +35,7 @@ import com.test1.PlantsVsZombies.src.Model.GamePlayType.*;
 import com.test1.PlantsVsZombies.src.Model.Mower;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.LobbedProjectile;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.ProjectileConfig;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
@@ -480,13 +481,6 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         if (!gamePlay.isPaused()) {
 
 
-
-
-
-
-
-
-
             stateTime += effectiveDelta;
             gamePlay.setTotalTimePassed(stateTime);
 
@@ -516,7 +510,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         batch.draw(region, 0, 0, 1920, 1200);
 
 
-        if (gamePlay instanceof SaveOurSeeds){
+        if (gamePlay instanceof SaveOurSeeds) {
             int[][] protectedCoords = {{5, 2}, {5, 4}};
             float pulse = 0.75f + 0.25f * (float) Math.sin(stateTime * 5f);
 
@@ -556,7 +550,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                         if (graveTexture != null) {
                             float graveW = graveTexture.getRegionWidth();
                             float graveH = graveTexture.getRegionHeight();
-                            batch.draw(graveTexture, realX - (graveW / 2f) - 7f, realY - 30f, graveW*1.4f, graveH*1.4f);
+                            batch.draw(graveTexture, realX - (graveW / 2f) - 7f, realY - 30f, graveW * 1.4f, graveH * 1.4f);
                         }
                     }
                 }
@@ -595,7 +589,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                         if (graveTex != null) {
                             float graveW = graveTex.getRegionWidth();
                             float graveH = graveTex.getRegionHeight();
-                            batch.draw(graveTex, realX - (graveW / 2f) - 7f, realY - 30f, graveW*1.4f, graveH*1.4f);
+                            batch.draw(graveTex, realX - (graveW / 2f) - 7f, realY - 30f, graveW * 1.4f, graveH * 1.4f);
                         }
                     }
                 }
@@ -636,11 +630,13 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
 
                 if (p.isEffected()) {
                     player.draw(batch, PLANT_FOOD_GLOW_ANIM_PATH, "plantfood",
-                        stateTime, drawX, drawY+95, true);
+                        stateTime, drawX, drawY + 95, true);
                 }
 
+                p.getAnimationState().update(p.getCurrentAnimationName(), delta);
+
                 player.draw(batch, p.getAnimationPath(), p.getCurrentAnimationName(),
-                    stateTime, drawX, drawY, true, p.getVisibilities());
+                    p.getAnimationState().getStateTime(), drawX, drawY, true, p.getVisibilities());
 
                 batch.setColor(Color.WHITE);
 
@@ -677,8 +673,10 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                         batch.setColor(z.getColor());
                     }
 
+                    z.getAnimationState().update(z.getCurrentAnimationName(), delta);
+
                     player.draw(batch, z.getAnimationPath(), z.getCurrentAnimationName(),
-                        stateTime, drawX, drawY+15, true, z.getVisibility());
+                        z.getAnimationState().getStateTime(), drawX, drawY + 15, true, z.getVisibility());
 
                     batch.setColor(Color.WHITE);
                 }
@@ -714,8 +712,17 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
 
 
         for (Projectile projectile : gamePlay.getProjectiles()) {
-            float px = (float) projectile.getPosition().getX();
-            float py = (float) projectile.getPosition().getY();
+            double offsetX = 0;
+            double offsetY = 0;
+            if (projectile instanceof LobbedProjectile) {
+                offsetX = 0;
+                offsetY = 50;
+            } else {
+                offsetX = 0;
+                offsetY = projectile.getOffset().getY();
+            }
+            float px = (float) (projectile.getPosition().getX() + offsetX);
+            float py = (float) (projectile.getPosition().getY() + offsetY);
             String name = projectile.getName();
             ProjectileConfig projectileConfig = ProjectileConfig.fromName(name);
             if (name.equals("pea")) {
@@ -723,6 +730,8 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                     projectileConfig = ProjectileConfig.ICY_PEA;
                 } else if (projectile.isFiring()) {
                     projectileConfig = ProjectileConfig.FIRING_PEA;
+                } else if (projectile.isBlueFiring()) {
+                    projectileConfig = ProjectileConfig.BLUE_FIRING_PEA;
                 }
             }
             player.draw(batch, projectileConfig.getAnimation(), projectileConfig.getClip(),
@@ -989,8 +998,6 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         boolean showGrid = (user != null && user.getUserProgress() != null && user.getUserProgress().isShowTileGrid());
 
 
-
-
         boolean isDeadLineMode = (gamePlay instanceof DeadLine);
 
         if (showGrid || isDeadLineMode) {
@@ -1078,8 +1085,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
 
             hudFont.getData().setScale(1f);
             hudFont.setColor(Color.WHITE);
-        }
-        else if (gamePlay instanceof LoveYourPlants) {
+        } else if (gamePlay instanceof LoveYourPlants) {
             LoveYourPlants lyp = (LoveYourPlants) gamePlay;
             int lost = lyp.getNumOfLost();
             int maxAllowed = 5;
@@ -1099,8 +1105,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
             hudFont.draw(batch, "Plants Lost: " + lost + " / " + maxAllowed, boxX + 20, boxY + 48);
             hudFont.getData().setScale(1f);
             hudFont.setColor(Color.WHITE);
-        }
-        else if (gamePlay instanceof PlantWhatYouGet) {
+        } else if (gamePlay instanceof PlantWhatYouGet) {
             PlantWhatYouGet pwyb = (PlantWhatYouGet) gamePlay;
             if (!pwyb.isWaveStarted()) {
                 float pulse = 0.85f + 0.15f * (float) Math.sin(stateTime * 6f);
@@ -1114,8 +1119,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
                 hudFont.getData().setScale(1f);
                 hudFont.setColor(Color.WHITE);
             }
-        }
-        else if (gamePlay instanceof ConveyorBelt) {
+        } else if (gamePlay instanceof ConveyorBelt) {
             for (ConveyorCard card : ((ConveyorBelt) gamePlay).getConveyorCards()) {
                 card.update(effectiveDelta);
             }
@@ -1231,10 +1235,10 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     private int getPlantLayerPriority(BattlePlant plant) {
         if (plant == null || plant.getName() == null) return 1;
         String name = plant.getName().toUpperCase();
-        if (name.contains("LILY_PAD"))  {
+        if (name.contains("LILY_PAD")) {
             return 0;
         }
-        if (name.contains("PUMPKIN")  || name.contains("HOT_POTATO")) {
+        if (name.contains("PUMPKIN") || name.contains("HOT_POTATO")) {
             return 2;
         }
         return 1;

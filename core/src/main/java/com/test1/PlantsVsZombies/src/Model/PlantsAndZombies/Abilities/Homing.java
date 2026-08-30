@@ -1,5 +1,6 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 
+import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
@@ -33,7 +34,7 @@ public class Homing implements Ability {
 
     private boolean checkTime(BattlePlant plant) {
         double currentTime = GAME.getTotalTimePassed();
-        double timeDifference = 10 *(currentTime - plant.getEffectedTime());
+        double timeDifference = 10 * (currentTime - plant.getEffectedTime());
         timeDifference = Math.floor(timeDifference);
         timeDifference /= 10;
         if ((timeDifference % 0.4) == 0) {//every 0.4 second, homings execute their special ability
@@ -73,7 +74,7 @@ public class Homing implements Ability {
 
     public Zombie findTheNearestZombie(Position plantPosition) {
         Zombie target = null;
-        double distance = 1000000000;
+        double distance = 5000;
 
         if (GAME.getGameZombies().isEmpty()) {
             return null;
@@ -82,12 +83,15 @@ public class Homing implements Ability {
         for (Zombie zombie : GAME.getGameZombies()) {
             if (target == null) {
                 target = zombie;
+                double tempDistance = findDistance(plantPosition, zombie.getPosition());
+                distance = tempDistance;
             } else {
                 Position zombiePosition = zombie.getPosition();
                 double tempDistance = findDistance(plantPosition, zombiePosition);
 
                 if (tempDistance <= distance) {
                     target = zombie;
+                    distance = tempDistance;
                 }
             }
         }
@@ -96,24 +100,24 @@ public class Homing implements Ability {
     }
 
     public double findDistance(Position plantPosition, Position zombiePosition) {
-        double xDistance = Math.pow((plantPosition.getX() - zombiePosition.getX()), 2);
-        double yDistance = Math.pow((plantPosition.getY() - zombiePosition.getY()), 2);
+        double xDistance = Math.abs((plantPosition.getX() - zombiePosition.getX()));
+        double yDistance = Math.abs((plantPosition.getY() - zombiePosition.getY()));
 
-        return xDistance + yDistance;
+        return Math.hypot(xDistance, yDistance);
     }
 
     public Position findVelocity(Position plantPosition, Position targetPosition) {
-        double xDistance = plantPosition.getX() - targetPosition.getX();
-        double yDistance = plantPosition.getY() - targetPosition.getY();
+        double xDistance = targetPosition.getX() - plantPosition.getX();
+        double yDistance = targetPosition.getY() - plantPosition.getY();
 
         if (xDistance == 0) {
-            return new Position(0, 1);
+            return new Position(0, 50);
         } else if (yDistance == 0) {
-            return new Position(1, 0);
+            return new Position(50, 0);
         } else {
             double hypotenuse = Math.hypot(xDistance, yDistance);
 
-            return new Position((xDistance / hypotenuse), (yDistance / hypotenuse));
+            return new Position((xDistance / hypotenuse) * 50, (yDistance / hypotenuse) * 50);
         }
 
     }
@@ -172,10 +176,11 @@ public class Homing implements Ability {
 
             int damage = (int) plant.getPlantStats().getAttributes().get("damage");
             Position velocity = findVelocity(plant.getPosition(), target.getPosition());
+            String projectileName = (String) plant.getPlantStats().getAttributes().get("projectileName");
             LobbedProjectile lobbedProjectile = new LobbedProjectile(plant,
                 plant.getPosition().getX(), plant.getPosition().getY(),
                 target.getPosition().getX(), target.getPosition().getY(),
-                1, 0, 0, damage, "pea");
+                1, 0, 0, damage, projectileName);
             if (plantTags.contains("hypnotize")) {
                 lobbedProjectile.setHypnotizer(true);
             }
@@ -189,11 +194,14 @@ public class Homing implements Ability {
 
             int damage = (int) plant.getPlantStats().getAttributes().get("damage");
             Position velocity = findVelocity(plant.getPosition(), target.getPosition());
+            String projectileName = (String) plant.getPlantStats().getAttributes().get("projectileName");
             LobbedProjectile lobbedProjectile = new LobbedProjectile(plant,
                 plant.getPosition().getX(), plant.getPosition().getY(),
                 target.getPosition().getX(), target.getPosition().getY(),
-                1, 0, 0, damage, "193");
-
+                1, 0, 0, damage, projectileName);
+            if (plantTags.contains("hypnotize")) {
+                lobbedProjectile.setHypnotizer(true);
+            }
             GAME.getProjectiles().add(lobbedProjectile);
 
         } else if (plantTags.contains("directed")) {
@@ -204,10 +212,17 @@ public class Homing implements Ability {
             int damage = (int) plant.getPlantStats().getAttributes().get("damage");
             Position velocity = findVelocity(plant.getPosition(), target.getPosition());
             Projectile projectile = new Projectile(plant, velocity.getX(), velocity.getY(),
-                plant.getPosition(), damage, 1);
+                plant.getPosition(), damage, 1, 0, 0);
 
             GAME.getProjectiles().add(projectile);
         } else if (plantTags.contains("disarmament")) {
+            if (plant.isEffected()) {
+                for (Tile tile : GAME.getTiles()) {
+                    for (Zombie zombie : tile.getZombies()) {
+                        zombie.disarmament();
+                    }
+                }
+            }
             int range = (int) plant.getPlantStats().getAttributes().get("front-range");
 
             int plantRow = plant.getRow();

@@ -14,6 +14,7 @@ import java.util.HashMap;
 
 public class BattlePlant extends Plant {
     private static int PLANT_FOOD_EFFECT_TIME = 2;
+    private static int OCTOPUS_BASE_HP = 100;
     private boolean isEffected = false;
     private double effectedTime = 0;
     private double effectedLifeSpan;
@@ -29,11 +30,14 @@ public class BattlePlant extends Plant {
     private int iceTime;
     private double iceHP;
 
+    private boolean isOctopusated = false;
+    private double octopusHP;
+
     private String status = "idle";
     private double armorHP = 0.0;
     private double dieTime;
 
-    private boolean attackTime;
+    private double attackTime;
 
     private GamePlay GAME = GamePlay.activeInstance;
     private final AnimationState animationState = new AnimationState();
@@ -64,10 +68,9 @@ public class BattlePlant extends Plant {
 
     @Override
     public void update() {
-       /* if (!this.getName().equals(PlantType.ENLIGHTEN_MINT.getName())) {
-            System.out.println(this.getName() + "   " + this.isEffected + "   " + this.effectedTime + "   " + this.effectedLifeSpan);
+        if (checkOctopusAndIced()) {
+            return;
         }
-*/
 
         checkEffected();
 
@@ -86,6 +89,30 @@ public class BattlePlant extends Plant {
                 }
             }
         }
+
+        if ((this.plantStats.getCategory().equals("Wall-nut") ||
+            this.plantStats.getAbilities().contains("explosion") &&
+                (!this.name.equals(PlantType.HYPNO_SHROOM.getName())))) {
+            if (this.isEffected) {
+                double difference = GAME.getTotalTimePassed() - this.effectedTime;
+                if (difference >= (this.effectedLifeSpan / 2)) {
+
+                    PlantFood plantFood = new PlantFood();
+                    plantFood.plantFoodEffect(this, this.plantStats.getTags());
+
+                    this.isEffected = false;
+                }
+            }
+
+            if (this.plantStats.getAbilities().contains("mint")) {
+                if (isTimeForAction()) {
+                    for (Ability ability : this.originalAbilities) {
+                        ability.executeAbility(this);
+                    }
+                }
+            }
+        }
+
 
         if (!this.plantStats.getCategory().equals("Wall-nut") &&
             !this.plantStats.getAbilities().contains("explosion")) {
@@ -172,6 +199,9 @@ public class BattlePlant extends Plant {
 
     public void takeIceDamage(int damage) {
         this.iceHP -= damage;
+        if (this.iceHP <= 0) {
+            this.setFrozen(false);
+        }
     }
 
     public int getIceTime() {
@@ -402,10 +432,19 @@ public class BattlePlant extends Plant {
                 this.status = "idle";
             }
         } else {
-            Tile tile = GAME.getTileByPosition(this.column, this.row);
-            ArrayList<Zombie> zombiesInRange = new ArrayList<>();
-            for (Zombie zombie : tile.getZombies()) {
-                if (zombie.getPosition().distance(this.position) <= 20) {
+            double difference = GAME.getTotalTimePassed() - this.lastActionTime;
+            if (difference >= this.plantStats.getActionInterval()) {
+                ArrayList<Zombie> zombiesInRange = findZombies();
+
+                if (!zombiesInRange.isEmpty()) {
+                    this.attackTime = GAME.getTotalTimePassed();
+                    this.status = "action";
+                } else {
+                    this.status = "idle";
+                }
+            } else {
+                double attackDifference = GAME.getTotalTimePassed() - this.attackTime;
+                if (attackDifference <= 0.75) {
                     this.status = "action";
                 } else {
                     this.status = "idle";
@@ -455,24 +494,65 @@ public class BattlePlant extends Plant {
         return dieTime;
     }
 
-    public BattlePlant setDieTime(double dieTime) {
+    public void setDieTime(double dieTime) {
         this.dieTime = dieTime;
-        return this;
     }
 
     public double getEffectedLifeSpan() {
         return effectedLifeSpan;
     }
 
-    public boolean isAttackTime() {
+    public double getAttackTime() {
         return attackTime;
     }
 
-    public void setAttackTime(boolean attackTime) {
+    public void setAttackTime(double attackTime) {
         this.attackTime = attackTime;
     }
 
     public AnimationState getAnimationState() {
         return animationState;
+    }
+
+    private ArrayList<Zombie> findZombies() {
+        int plantRow = this.getRow();
+        int plantColumn = this.getColumn();
+
+
+        ArrayList<Zombie> properZombies = new ArrayList<>();
+        for (int i = 0; i <= 1; i++) {
+            Tile tile = GAME.getTileByPosition(plantColumn + i, plantRow);
+            properZombies.addAll(tile.getZombies());
+        }
+        return properZombies;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public boolean isOctopusated() {
+        return isOctopusated;
+    }
+
+    public void setOctopusated(boolean octopusated) {
+        isOctopusated = octopusated;
+    }
+
+    public double getOctopusHp() {
+        return octopusHP;
+    }
+
+    public void setOctopusHP(double octopusHp) {
+        this.octopusHP = octopusHp;
+    }
+
+    public boolean checkOctopusAndIced() {
+        boolean condition = ((this.frozen) || (this.isOctopusated));
+        if (condition) {
+            this.lastActionTime = GAME.getTotalTimePassed();
+        }
+
+        return condition;
     }
 }
