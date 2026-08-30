@@ -7,10 +7,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.test1.PlantsVsZombies.src.Audio.SoundManager;
 import com.test1.PlantsVsZombies.src.Menu.MenuManager;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.GameDataLoader;
+import com.test1.PlantsVsZombies.src.Network.Client.ServerConnection;
+import com.test1.PlantsVsZombies.src.Network.NetworkConfig;
 import com.test1.PlantsVsZombies.src.View.LibGDXViews.UIManager;
 import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
 import pvz.skin.PvzSkin;
+
+import java.io.IOException;
 
 public class Main extends Game {
     private static Main instance;
@@ -21,6 +25,20 @@ public class Main extends Game {
 
     @Override
     public void create() {
+        try {
+            ServerConnection.connect(NetworkConfig.SERVER_HOST, NetworkConfig.SERVER_PORT);
+        } catch (IOException e) {
+            System.err.println("==========================================================");
+            System.err.println("[Client] Could not connect to the game server at "
+                + NetworkConfig.SERVER_HOST + ":" + NetworkConfig.SERVER_PORT);
+            System.err.println("[Client] Start GameServer (Network.Server.GameServer) first,");
+            System.err.println("[Client] then launch the game again.");
+            System.err.println("[Client] Details: " + e.getMessage());
+            System.err.println("==========================================================");
+            Gdx.app.exit();
+            return;
+        }
+
         GameDataLoader.loadGameData();
         instance = this;
         batch = new SpriteBatch();

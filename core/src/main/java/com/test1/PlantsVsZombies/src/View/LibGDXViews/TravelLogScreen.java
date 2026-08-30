@@ -417,8 +417,12 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
         TextButton playButton = createSkinButton("Play", "green", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (menuController != null) {
-                    menuController.startMiniGame(type.getDisplayName());
+                if (type == MiniGameType.I_ZOMBIE) {
+                    showModal(new IZombieLobbyDialog(skin, () -> closeModal()));
+                } else {
+                    if (menuController != null) {
+                        menuController.startMiniGame(type.getDisplayName());
+                    }
                 }
             }
         });

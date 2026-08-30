@@ -7,6 +7,8 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
+import com.test1.PlantsVsZombies.src.Model.Quests.Events.ExplosiveUsedEvent;
+import com.test1.PlantsVsZombies.src.Model.Quests.QuestManager;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ public class ExplosionWithLifespan implements Ability {
 
     @Override
     public void executeAbility(Entity entity) {
+        QuestManager.getInstance().notifyEvent(new ExplosiveUsedEvent(entity.getName()));
         BattlePlant plant = (BattlePlant) entity;
         ArrayList<String> tags = plant.getPlantStats().getTags();
 

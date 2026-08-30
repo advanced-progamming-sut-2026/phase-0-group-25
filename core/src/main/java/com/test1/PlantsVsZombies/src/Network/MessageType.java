@@ -1,0 +1,38 @@
+package com.test1.PlantsVsZombies.src.Network;
+
+
+public enum MessageType {
+
+
+
+    REGISTER,
+
+    LOGIN,
+
+    RESTORE_SESSION,
+
+    LOGOUT,
+
+    CHANGE_USERNAME,
+
+    FORGOT_PASSWORD,
+
+    RESET_PASSWORD,
+
+    SAVE_PROGRESS,
+
+    GET_ALL_USERS,
+
+
+
+    JOIN_MATCHMAKING_QUEUE,
+    CANCEL_MATCHMAKING,
+    CHALLENGE_USER,
+    RESPOND_TO_CHALLENGE,
+    MATCH_FOUND,
+    OPPONENT_GAME_STATE,
+    OPPONENT_DISCONNECTED,
+
+    SEND_REACTION,
+    REACTION_RECEIVED
+}
