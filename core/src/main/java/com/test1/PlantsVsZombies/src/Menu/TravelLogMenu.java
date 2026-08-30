@@ -2,6 +2,7 @@ package com.test1.PlantsVsZombies.src.Menu;
 
 import com.test1.PlantsVsZombies.src.Enums.*;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
+import com.test1.PlantsVsZombies.src.Model.MiniGames.IZombieGame.Faction;
 import com.test1.PlantsVsZombies.src.Model.MiniGames.IZombieGame.IZombie;
 import com.test1.PlantsVsZombies.src.Model.MiniGames.VasebreakerGame.VaseBreaker;
 import com.test1.PlantsVsZombies.src.Model.MiniGames.WallnutBowlingGame.WalnutBowling;
@@ -105,8 +106,16 @@ public class TravelLogMenu extends Menu {
                     selectedPlants, zombies, boostedSet);
                 break;
             case I_ZOMBIE:
-                gamePlay = new IZombie(ChapterType.MINI_GAME, level, difficulty, currentUser,
-                    selectedPlants, zombies, boostedSet);
+                ArrayList<String> pDeck = (selectedPlants != null && !selectedPlants.isEmpty())
+                    ? new ArrayList<>(selectedPlants)
+                    : new ArrayList<>(List.of("PEASHOOTER", "SUNFLOWER", "WALL_NUT"));
+                ArrayList<String> zDeck = new ArrayList<>(List.of(
+                    ZombieType.DEFAULT.getName(),
+                    ZombieType.CONE_HEAD.getName(),
+                    ZombieType.BUCKET_HEAD.getName(),
+                    ZombieType.NEWSPAPER.getName()
+                ));
+                gamePlay = new IZombie(currentUser, Faction.PLANT, false, pDeck, zDeck);
                 break;
             default:
                 getView().showError("Unhandled mini-game type.");
