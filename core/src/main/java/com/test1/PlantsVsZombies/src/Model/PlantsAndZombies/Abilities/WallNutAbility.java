@@ -1,5 +1,6 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 
+import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
@@ -15,8 +16,10 @@ public class WallNutAbility implements Ability {
     public void executeAbility(Entity entity) {
         Zombie attacker = (Zombie) entity;
         BattlePlant plant = (BattlePlant) attacker.getRival();
-        if (plant.isEffected()) {
-            plantFoodEffect(attacker, plant);
+        if (plant.getName().equals(PlantType.HYPNO_SHROOM.getName())) {
+            if (plant.isEffected()) {
+                plantFoodEffect(attacker, plant);
+            }
         }
 
         ArrayList<String> tags = plant.getPlantStats().getTags();
@@ -25,8 +28,7 @@ public class WallNutAbility implements Ability {
             int damage = checkEffected(plant);
 
             attacker.setCurrentHP(attacker.getCurrentHP() - damage);
-            plant.setCurrentHP(plant.getCurrentHP()
-                + attacker.getZombieStats().getEatdps());
+
         }
         if (tags.contains("move-zombies")) {
             if ((int) plant.getPlantStats().getAttributes().get("move") == 1) {
@@ -41,20 +43,25 @@ public class WallNutAbility implements Ability {
         }
 
         if (tags.contains("explosion")) {
-            if (!plant.isAlive()) {
+            if (plant.getCurrentHP() <= 30) {
                 Position plantRowAndColumn = Position.getRowAndColumn(plant.getPosition().getX(), plant.getPosition().getY());
                 int range = (int) plant.getPlantStats().getAttributes().get("range");
                 int damage = checkEffected(plant);
 
-                for (Tile tile : GAME.getTiles()) {
-                    int distanceX = Math.abs((int) tile.getPosition().getX() - (int) plantRowAndColumn.getX());
-                    int distanceY = Math.abs((int) tile.getPosition().getY() - (int) plantRowAndColumn.getY());
-                    if ((distanceX <= range) && (distanceY <= range)) {
+                for (int i = -1; i <= 1; i++) {
+                    for (int j = -1; j <= 1; j++) {
+                        Tile tile = GAME.getTileByPosition(plant.getColumn(), plant.getRow());
+                        if (tile == null) {
+                            continue;
+                        }
                         for (Zombie zombie : tile.getZombies()) {
-                            zombie.setCurrentHP(zombie.getCurrentHP() - damage);
+                            zombie.setCurrentHP(0);
                         }
                     }
                 }
+
+                plant.setCurrentHP(0);
+                plant.setAlive(false);
             }
         }
 
@@ -74,6 +81,7 @@ public class WallNutAbility implements Ability {
     private void plantFoodEffect(Zombie attacker, BattlePlant plant) {
         if (plant.getPlantStats().getTags().contains("shroom")) {
             makeGargantuar(attacker, plant);
+            return;
         }
 
         if (!plant.getPlantStats().getTags().contains("moveZombies")) {
@@ -106,12 +114,14 @@ public class WallNutAbility implements Ability {
 
     private void makeGargantuar(Zombie attacker, BattlePlant plant) {
         Position attackerPosition = attacker.getPosition();
-        attacker.setCurrentHP(0);
+        Zombie newZombie = ZombieFactory.createZombie("GARGANTUAR", attackerPosition);
+        newZombie.setHypnotized(true);
 
-        Zombie newGargantuar = ZombieFactory.createZombie("GARGANTUAR", attackerPosition);
-        newGargantuar.setHypnotized(true);
-        //todo
-        GAME.getGameZombies().add(newGargantuar);
+
+        int index = GAME.getGameZombies().indexOf(attacker);
+
+
+        GAME.getGameZombies().set(index, newZombie);
     }
 
     private void hypnotizeZombie(Zombie attacker, BattlePlant plant) {

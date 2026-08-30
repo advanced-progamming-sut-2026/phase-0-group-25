@@ -19,30 +19,34 @@ import java.util.Random;
 
 
 public class Zombie extends Entity {
-    private static int FROZEN_TIME = 3;
+    private static int FROZEN_TIME = 8;
     private static int TILE_X_LENGTH = 150;
-    private static int BUTTER_TIME = 3;
+    private static int BUTTER_TIME = 8;
+    private static int CHILL_TIME = 3;
     private static Random RANDOM = new Random();
     private GamePlay GAME = GamePlay.activeInstance;
+    private final AnimationState animationState = new AnimationState();
 
-    private ZombieStats zombieStats;
+    protected ZombieStats zombieStats;
     private Entity rival;
     private int waveNum;
 
-    private double currentVelocity;
+    protected double currentVelocity;
     private ArrayList<Ability> originalAbilities = new ArrayList<>();
 
     private boolean isHalated;
-    private boolean isHypnotized;
+    private boolean isHypnotized = false;
     private boolean isFrozen;
     private double timeWhenFrozen;
     private int frozenTime;
     private boolean isButtered = false;
     private double timeWhenButtered;
+    private boolean isChilled = false;
+    private double timeWhenChilled;
 
 
     private ArrayList<Armor> activeArmors;
-    private double lastActionTime;
+    protected double lastActionTime;
     private double spawnTime;
     private double dieTime;
     private boolean isDeadByExplosion = false;
@@ -81,8 +85,7 @@ public class Zombie extends Entity {
         this.position = position;
         this.currentHP = zombieStats.getBaseHP();
         this.currentVelocity = zombieStats.getVelocity();
-        this.isHalated = false;
-        this.isHypnotized = false;
+
 
         this.spawnTime = GAME.getTotalTimePassed();
         this.lastActionTime = this.spawnTime;
@@ -125,6 +128,10 @@ public class Zombie extends Entity {
         checkFreezeAndButter();
 
         // System.out.println(this.zombieStats.getEatdps());
+        if (this.isFrozen ||
+            this.isButtered) {
+            return;
+        }
 
         checkLife();
         if ((this.zombieStats.getName().equals("PROSPECTOR")) &&
@@ -188,6 +195,10 @@ public class Zombie extends Entity {
     }
 
     public void takeDamage(Projectile projectile, int damage) {
+        if (projectile.getName().equals("butter")) {
+            this.setButtered(true);
+        }
+
         int leftoverDamage = damage;
         if (!projectile.isPoisonous()) {
             for (int i = 0; i < activeArmors.size(); i++) {
@@ -224,7 +235,7 @@ public class Zombie extends Entity {
             if (projectile.isIcy()) {
                 if ((!this.zombieStats.getName().equals("IMP_DRAGON")) &&
                     !(this.zombieStats.getCategory().equals(ChapterType.DARK_AGE.getName()))) {
-                    freeze();
+                    chill();
                 }
             } else if (projectile.isFiring()) {
                 unfreeze();
@@ -330,25 +341,55 @@ public class Zombie extends Entity {
                 this.currentVelocity = this.zombieStats.getVelocity();
             }
         }
+
+        if (this.isChilled) {
+            if ((GAME.getTotalTimePassed() - this.timeWhenChilled) >= CHILL_TIME) {
+                this.isChilled = false;
+                this.currentVelocity = this.zombieStats.getVelocity();
+            }
+        }
     }
 
     public void freeze(int frozenTime) {
+        if (this.zombieStats.getCategory().equals("frostbite caves")) {
+            return;
+        }
+
         this.timeWhenFrozen = GAME.getTotalTimePassed();
         this.isFrozen = true;
         this.frozenTime = frozenTime;
-        this.currentVelocity = (this.zombieStats.getVelocity() * 0.17); //decreasing the zombie velocity after collision with icy projectiles
+        this.currentVelocity = 0; //decreasing the zombie velocity after collision with icy projectiles
     }
 
     public void freeze() {
+        if (this.zombieStats.getCategory().equals("frostbite caves")) {
+            return;
+        }
+
         this.timeWhenFrozen = GAME.getTotalTimePassed();
         this.isFrozen = true;
         this.frozenTime = FROZEN_TIME;
-        this.currentVelocity = (this.zombieStats.getVelocity() * 0.7); //decreasing the zombie velocity after collision with icy projectiles
+        this.currentVelocity = 0; //decreasing the zombie velocity after collision with icy projectiles
+    }
+
+    public void chill() {
+        if (this.zombieStats.getCategory().equals("frostbite caves")) {
+            return;
+        }
+
+        this.timeWhenChilled = GAME.getTotalTimePassed();
+        this.setChilled(true);
+
     }
 
     public void unfreeze() {
         this.isFrozen = false;
-        this.currentVelocity = (this.zombieStats.getVelocity()); //setting the velocity to its base
+        this.isChilled = false;
+        this.currentVelocity = this.zombieStats.getVelocity(); //setting the velocity to its base
+    }
+
+    public boolean isFrozen() {
+        return isFrozen;
     }
 
     public void checkLife() {
@@ -491,6 +532,8 @@ public class Zombie extends Entity {
             return Color.BLUE;
         } else if (this.isButtered) {
             return Color.YELLOW;
+        } else if (this.isChilled) {
+            return Color.SKY;
         } else if (this.column <= 2) {
             return Color.RED;
         } else if (this.isHalated) {
@@ -559,5 +602,31 @@ public class Zombie extends Entity {
 
     public void setSubmarine(boolean submarine) {
         this.isSubmarine = submarine;
+    }
+
+    public AnimationState getAnimationState() {
+        return animationState;
+    }
+
+    public boolean isChilled() {
+        return isChilled;
+    }
+
+    public void setChilled(boolean chilled) {
+        isChilled = chilled;
+        if (this.isChilled) {
+            this.currentVelocity = this.zombieStats.getVelocity() * 0.35;
+            this.timeWhenChilled = GAME.getTotalTimePassed();
+        } else {
+            this.currentVelocity = this.zombieStats.getVelocity();
+        }
+    }
+
+    public double getTimeWhenChilled() {
+        return timeWhenChilled;
+    }
+
+    public void setTimeWhenChilled(double timeWhenChilled) {
+        this.timeWhenChilled = timeWhenChilled;
     }
 }

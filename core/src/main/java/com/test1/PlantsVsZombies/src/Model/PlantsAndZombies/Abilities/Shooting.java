@@ -1,6 +1,7 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
+import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
@@ -13,9 +14,11 @@ import com.test1.PlantsVsZombies.src.Model.Tile;
 import java.util.List;
 
 public class Shooting implements Ability {
-    private static int TILE_Y_LENGTH = 200;
-    private static int UPPER_LIMIT = 240;
-    private static int BOTTOM_LIMIT = 1740;
+    private static int TILE_Y_LENGTH = 150;
+    private static int X_RIGHT_LIMIT = 1860;
+    private static int Y_UP_LIMIT = 880;
+    private static int Y_DOWN_LIMIT = 130;
+    private static int X_LEFT_LIMIT = 490;
 
     private GamePlay GAME = GamePlay.activeInstance;
     private BattlePlant plant;
@@ -39,6 +42,8 @@ public class Shooting implements Ability {
     private void runAbility(BattlePlant plant) {
         List<Integer> damageAttributes = (List<Integer>) (Object) plant.getPlantStats().getAttributes().get("damage");
         List<List<Integer>> directionAttributes = (List<List<Integer>>) (Object) plant.getPlantStats().getAttributes().get("direction");
+        List<List<Double>> offsetAttributes = (List<List<Double>>) plant.getPlantStats().getAttributes().get("offset");
+
         int rangeAmount;
         int pierce = 1;
 
@@ -54,25 +59,77 @@ public class Shooting implements Ability {
 
         for (int i = 0; i < damageAttributes.size(); i++) {
             Projectile projectile = makeProjectile(plant, directionAttributes,
-                damageAttributes, pierce, rangeAmount, i);
-            GAME.getProjectiles().add(projectile);
+                damageAttributes, offsetAttributes, pierce, rangeAmount, i);
+            if (projectile != null) {
+                GAME.getProjectiles().add(projectile);
+            }
         }
     }
 
     private Projectile makeProjectile(BattlePlant plant, List<List<Integer>> directionAttributes,
-                                      List<Integer> damageAttributes, int pierce,
+                                      List<Integer> damageAttributes,
+                                      List<List<Double>> offsetAttributes, int pierce,
                                       int rangeAmount, int i) {
 
         double velocityX = directionAttributes.get(i).get(1) * 50;//todo
         double velocityY = directionAttributes.get(i).get(2) * 50;//todo
         int damage = damageAttributes.get(i);
+
+        double offsetX = offsetAttributes.get(i).get(0);
+        double offsetY = offsetAttributes.get(i).get(1);
+
+        Position position = findPosition(plant, directionAttributes.get(i).get(0));
+        if ((position.getX() <= X_LEFT_LIMIT) ||
+            (position.getX() >= X_RIGHT_LIMIT) ||
+            (position.getY() <= Y_DOWN_LIMIT) ||
+            (position.getY() >= Y_UP_LIMIT)) {
+            return null;
+        }
+
+        Projectile projectile = new Projectile(plant, velocityX, velocityY, position,
+            damage, pierce, rangeAmount, offsetX, offsetY);
+
+        if (plant.getPlantStats().getTags().contains("pea")) {
+            if (plant.getPlantStats().getTags().contains("ice")) {
+                projectile.setIcy(true);
+            }
+            if (plant.getPlantStats().getTags().contains("fire")) {
+                projectile.setFiring(true);
+            }
+        }
+        if (plant.getPlantStats().getTags().contains("poison")) {
+            projectile.setPoisonous(true);
+        }
+
+
+        return projectile;
+    }
+
+    private Projectile makeProjectile(BattlePlant plant, List<List<Integer>> directionAttributes,
+                                      List<Integer> damageAttributes,
+                                      List<List<Double>> offsetAttributes, int pierce,
+                                      int rangeAmount, int i, String name) {
+
+        double velocityX = directionAttributes.get(i).get(1) * 50;//todo
+        double velocityY = directionAttributes.get(i).get(2) * 50;//todo
+        int damage = damageAttributes.get(i);
+
+        double offsetX = offsetAttributes.get(i).get(0);
+        double offsetY = offsetAttributes.get(i).get(1);
+
         if (plant.isEffected()) {
             damage *= 20;
         }
         Position position = findPosition(plant, directionAttributes.get(i).get(0));
+        if ((position.getX() <= X_LEFT_LIMIT) ||
+            (position.getX() >= X_RIGHT_LIMIT) ||
+            (position.getY() <= Y_DOWN_LIMIT) ||
+            (position.getY() >= Y_UP_LIMIT)) {
+            return null;
+        }
 
         Projectile projectile = new Projectile(plant, velocityX, velocityY, position,
-            damage, pierce, rangeAmount);
+            damage, pierce, rangeAmount, name, offsetX, offsetY);
 
         if (plant.getPlantStats().getTags().contains("pea")) {
             if (plant.getPlantStats().getTags().contains("ice")) {
@@ -91,20 +148,15 @@ public class Shooting implements Ability {
     }
 
     private Position findPosition(BattlePlant plant, double startingPoint) {
-        this.plant = plant;
-        this.startingPoint = (int) startingPoint;
-        int plantY = (int) plant.getPosition().getY();
+        // this.plant = plant;
+        //this.startingPoint = (int) startingPoint;
 
         if (startingPoint == 1) {
-            if (plantY > UPPER_LIMIT) {
-                return new Position(plant.getPosition().getX(),
-                    plant.getPosition().getY() - TILE_Y_LENGTH);
-            }
+            return new Position(plant.getPosition().getX(),
+                plant.getPosition().getY() + TILE_Y_LENGTH);
         } else if (startingPoint == -1) {
-            if (plantY < BOTTOM_LIMIT) {
-                return new Position(plant.getPosition().getX(),
-                    plant.getPosition().getY() + TILE_Y_LENGTH);
-            }
+            return new Position(plant.getPosition().getX(),
+                plant.getPosition().getY() - TILE_Y_LENGTH);
         }
 
         return plant.getPosition();
@@ -113,7 +165,7 @@ public class Shooting implements Ability {
     private boolean checkTime(BattlePlant plant) {
 
         double currentTime = GAME.getTotalTimePassed();
-        double timeDifference = 10 *(currentTime - plant.getEffectedTime());
+        double timeDifference = 10 * (currentTime - plant.getEffectedTime());
         timeDifference = Math.floor(timeDifference);
         timeDifference /= 10;
         if ((timeDifference % 0.5) == 0) {//every 0.5 second, shooters & strike-throughs execute their special ability
@@ -128,22 +180,30 @@ public class Shooting implements Ability {
             return;
         }
 
+        if (plant.getName().equals(PlantType.THREEPEATER.getName())) {
+            effectedThreepeter(plant);
+            return;
+        }
+
         runAbility(plant);
 
-        checkMegaProjectile(plant);
-        checkResetting(plant);
+        double difference = GAME.getTotalTimePassed() - plant.getEffectedTime();
+        if (Math.abs(difference - (plant.getEffectedLifeSpan() / 2)) <= 0.1) {
+            checkMegaProjectile(plant);
+            checkResetting(plant);
+        }
 
         if (plant.getPlantStats().getTags().contains("ice")) {
 
             int plantRow = plant.getRow();
             for (int i = 1; i <= 9; i++) {
                 Tile tile = GAME.getTileByPosition(i, plantRow);
-                if (tile == null) {
-                    return;
-                }
 
                 for (Zombie zombie : tile.getZombies()) {
                     zombie.freeze();
+                }
+                for (BattlePlant plant1 : tile.getPlants()) {
+                    plant1.setFrozen(true);
                 }
             }
         }
@@ -158,6 +218,10 @@ public class Shooting implements Ability {
 
                 for (Zombie zombie : tile.getZombies()) {
                     zombie.unfreeze();
+                }
+
+                for (BattlePlant plant1 : tile.getPlants()) {
+                    plant1.setFrozen(false);
                 }
             }
         }
@@ -180,16 +244,20 @@ public class Shooting implements Ability {
         if (plant.getPlantStats().getPlantFoodEffect().containsKey("megaProjectile")) {
             List<Integer> damageAttributes = (List<Integer>) (Object) plant.getPlantStats().getAttributes().get("damage");
             List<List<Integer>> directionAttributes = (List<List<Integer>>) (Object) plant.getPlantStats().getAttributes().get("direction");
+            List<List<Double>> offsetAttributes = (List<List<Double>>) plant.getPlantStats().getAttributes().get("offset");
+
             int rangeAmount = 11;
             int pierce = 1;
 
-            for (int i = 0; i < damageAttributes.size(); i++) {
-                Projectile projectile = makeProjectile(plant, directionAttributes,
-                    damageAttributes, pierce, rangeAmount, i);
+
+            Projectile projectile = makeProjectile(plant, directionAttributes,
+                damageAttributes, offsetAttributes, pierce, rangeAmount, 0, "mega pea");
+            if (projectile != null) {
                 GAME.getProjectiles().add(projectile);
             }
         }
     }
+
 
     private void checkResetting(BattlePlant plant) {
         if (plant.getPlantStats().getName().equals("SEA_SHROOM")) {
@@ -210,6 +278,8 @@ public class Shooting implements Ability {
     private void strike_throughPlantFoodEffect(BattlePlant plant) {
         List<Integer> damageAttributes = (List<Integer>) (Object) plant.getPlantStats().getPlantFoodEffect().get("damage");
         List<List<Integer>> directionAttributes = (List<List<Integer>>) (Object) plant.getPlantStats().getPlantFoodEffect().get("direction");
+        List<List<Double>> offsetAttributes = (List<List<Double>>) (Object) plant.getPlantStats().getAttributes().get("offset");
+
         int rangeAmount;
         int pierce = 1;
 
@@ -226,16 +296,22 @@ public class Shooting implements Ability {
 
         for (int i = 0; i < damageAttributes.size(); i++) {
             Projectile projectile = makeProjectile(plant, directionAttributes,
-                damageAttributes, pierce, rangeAmount, i);
-            if (plant.getPlantStats().getPlantFoodEffect().containsKey("knockback")) {
-                int knockback = (int) plant.getPlantStats().getPlantFoodEffect().get("knockback");
-                projectile.setKnockback(knockback);
+                damageAttributes, offsetAttributes, pierce, rangeAmount, i);
+            if (projectile != null) {
+                if (plant.getPlantStats().getPlantFoodEffect().containsKey("knockback")) {
+                    int knockback = (int) plant.getPlantStats().getPlantFoodEffect().get("knockback");
+                    projectile.setKnockback(knockback);
+                }
+                GAME.getProjectiles().add(projectile);
             }
-            GAME.getProjectiles().add(projectile);
         }
     }
 
     private boolean haveTarget(BattlePlant plant) {
+        if (plant.getName().equals(PlantType.CITRON.getName())) {
+            return true;
+        }
+
         int row = plant.getRow();
         int column = plant.getColumn();
 
@@ -245,14 +321,28 @@ public class Shooting implements Ability {
                 return true;
             }
 
-            if(GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT) ||
-            GAME.getChapterType().equals(ChapterType.DARK_AGE) ||
-            GAME.getChapterType().equals(ChapterType.FROSTBITE_CAVES)){
-                if((!tile.isArable()) && (tile.getHP() > 0)){
+            for (BattlePlant plant1 : tile.getPlants()) {
+                if (plant.checkOctopusAndIced()) {
+                    return true;
+                }
+            }
+
+            if (GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT) ||
+                GAME.getChapterType().equals(ChapterType.DARK_AGE) ||
+                GAME.getChapterType().equals(ChapterType.FROSTBITE_CAVES)) {
+                if ((!tile.isArable()) && (tile.getHP() > 0)) {
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    private void effectedThreepeter(BattlePlant plant) {
+        for (int i = 1; i <= 5; i++) {
+            Position position = new Position(plant.getPosition().getX(), (i - 1) * 150 + 205);
+            Projectile projectile = new Projectile(plant, 50, 0, position, 20, 1, 0, 0);
+            GAME.getProjectiles().add(projectile);
+        }
     }
 }
