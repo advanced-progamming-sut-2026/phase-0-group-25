@@ -150,7 +150,8 @@ public class UsersManager {
     public String authenticateUser(String username, String password, boolean stayLoggedIn) {
         NetworkMessage request = NetworkMessage.request(0, MessageType.LOGIN)
             .put("username", username)
-            .put("password", password);
+            .put("password", password)
+            .put("stayLoggedIn", stayLoggedIn);
         NetworkMessage response = ServerConnection.getInstance().sendRequest(request);
         if (!response.isSuccess()) {
             return response.getErrorMessage();

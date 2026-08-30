@@ -23,6 +23,7 @@ public class ClientSession implements Runnable {
     private final ObjectMapper mapper = new ObjectMapper();
     private String loggedInUsername;
     private String sessionToken;
+    private boolean stayLoggedIn;
 
     public ClientSession(Socket socket, UserDatabase database) {
         this.socket = socket;
@@ -54,13 +55,18 @@ public class ClientSession implements Runnable {
         } catch (IOException e) {
             System.out.println("[Server] Client disconnected: " + remote);
         } finally {
-            if (loggedInUsername != null && sessionToken != null) {
+            if (loggedInUsername != null
+                && sessionToken != null
+                && !stayLoggedIn) {
+
                 database.logout(loggedInUsername, sessionToken);
             }
+
             try {
                 socket.close();
             } catch (IOException ignored) {
             }
+
             System.out.println("[Server] Client session closed: " + remote);
         }
     }
@@ -128,6 +134,11 @@ public class ClientSession implements Runnable {
         loggedInUsername = username;
         sessionToken = result.sessionToken();
 
+        Object stayLoggedInValue = d.get("stayLoggedIn");
+        stayLoggedIn =
+            stayLoggedInValue != null &&
+                Boolean.parseBoolean(stayLoggedInValue.toString());
+
         return NetworkMessage.ok(req.getRequestId(), req.getType())
             .put("user", result.user())
             .put("sessionToken", result.sessionToken());
@@ -135,19 +146,49 @@ public class ClientSession implements Runnable {
 
     private NetworkMessage handleRestoreSession(NetworkMessage req) {
         Map<String, Object> d = req.getData();
-        UserDatabase.LoginResult result = database.restoreSession(str(d, "username"), str(d, "sessionToken"));
-        if (!result.success()) return NetworkMessage.error(req.getRequestId(), req.getType(), result.errorMessage());
-        return NetworkMessage.ok(req.getRequestId(), req.getType()).put("user", result.user());
+
+        String username = str(d, "username");
+        String token = str(d, "sessionToken");
+
+        UserDatabase.LoginResult result =
+            database.restoreSession(username, token);
+
+        if (!result.success()) {
+            return NetworkMessage.error(
+                req.getRequestId(),
+                req.getType(),
+                result.errorMessage()
+            );
+        }
+
+        loggedInUsername = username;
+        sessionToken = token;
+
+        // A successfully restored session is a remembered session.
+        stayLoggedIn = true;
+
+        return NetworkMessage.ok(
+            req.getRequestId(),
+            req.getType()
+        ).put("user", result.user());
     }
 
     private NetworkMessage handleLogout(NetworkMessage req) {
         Map<String, Object> d = req.getData();
+
         String username = str(d, "username");
         String token = str(d, "sessionToken");
+
         database.logout(username, token);
+
         loggedInUsername = null;
         sessionToken = null;
-        return NetworkMessage.ok(req.getRequestId(), req.getType());
+        stayLoggedIn = false;
+
+        return NetworkMessage.ok(
+            req.getRequestId(),
+            req.getType()
+        );
     }
 
     private NetworkMessage handleChangeUsername(NetworkMessage req) {
