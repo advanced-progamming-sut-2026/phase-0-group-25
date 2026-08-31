@@ -19,6 +19,7 @@ import com.test1.PlantsVsZombies.src.View.ViewInterfaces.TravelLogMenuView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView {
 
@@ -417,12 +418,8 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
         TextButton playButton = createSkinButton("Play", "green", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (type == MiniGameType.I_ZOMBIE) {
-                    showModal(new IZombieLobbyDialog(skin, () -> closeModal()));
-                } else {
-                    if (menuController != null) {
-                        menuController.startMiniGame(type.getDisplayName());
-                    }
+                if (menuController != null) {
+                    menuController.startMiniGame(type.getDisplayName());
                 }
             }
         });

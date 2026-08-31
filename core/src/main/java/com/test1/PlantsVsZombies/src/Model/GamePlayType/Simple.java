@@ -58,14 +58,15 @@ public class Simple extends GamePlay {
 
         checkingSunMakers();
 
-        // Updating Zombies, Plant and Projectile and Dynamite (Deleting them if they're dead) :
+
+        List<BattlePlant> pendingNewPlants = new ArrayList<>();
         Iterator<BattlePlant> bp = gamePlants.iterator();
         while (bp.hasNext()) {
             BattlePlant plant = bp.next();
 
-            if (plant.isAlive()) {
+            if (plant.isAlive() && plant.getCurrentHP() > 0) {
                 plant.update();
-                // passing cooldown
+
                 plant.setCooldown(Math.max(plant.getCooldown() - 1, 0));
             } else {
                 Tile currentTile = getTileByPosition(plant.getColumn(), plant.getRow());
@@ -77,6 +78,10 @@ public class Simple extends GamePlay {
                 bp.remove();
             }
         }
+        if (!pendingNewPlants.isEmpty()) {
+            gamePlants.addAll(pendingNewPlants);
+        }
+
         List<Zombie> pendingNewZombies = new ArrayList<>();
         Iterator<Zombie> z = gameZombies.iterator();
         while (z.hasNext()) {
@@ -94,7 +99,9 @@ public class Simple extends GamePlay {
         if (!pendingNewZombies.isEmpty()) {
             gameZombies.addAll(pendingNewZombies);
         }
+
         updateZombieTiles();
+
         Iterator<Projectile> pj = projectiles.iterator();
         while (pj.hasNext()) {
             Projectile thisProjectile = pj.next();
@@ -116,7 +123,7 @@ public class Simple extends GamePlay {
             battlePlant.setCurrentCoolDown(Math.max(battlePlant.getCurrentCoolDown() - 1, 0));
         }
 
-        // Spawning zombies :
+
         if (timeToSpawn == 0) {
             timeToSpawn = getRandomTime();
             for (Wave thisWave : allWaves) {
@@ -156,7 +163,7 @@ public class Simple extends GamePlay {
             }
         }
 
-        // Checking if the end of the game (Losing) + Activate Mowers :
+
         for (Zombie zombie : gameZombies) {
             if (!zombie.isAlive()) continue;
 
@@ -180,7 +187,7 @@ public class Simple extends GamePlay {
             }
         }
 
-        // Checking if the end of the game (Winning) :
+
         if (checkingTheEndOfTheGame()) {
             onWin();
             endGame(true);

@@ -11,6 +11,7 @@ import com.test1.PlantsVsZombies.src.Model.GamePlayType.SaveOurSeeds;
 import com.test1.PlantsVsZombies.src.Model.IcyWindEffect;
 import com.test1.PlantsVsZombies.src.Model.Mower;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.LobbedProjectile;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.ProjectileConfig;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
@@ -144,16 +145,30 @@ public class GamePlayWorldRenderer {
 
 
         for (Projectile projectile : gamePlay.getProjectiles()) {
+            double offsetX = 0;
+            double offsetY = 0;
+            if (projectile instanceof LobbedProjectile) {
+                offsetX = 0;
+                offsetY = 50;
+            } else {
+                offsetX = 0;
+                offsetY = projectile.getOffset().getY();
+            }
+            float px = (float) (projectile.getPosition().getX() + offsetX);
+            float py = (float) (projectile.getPosition().getY() + offsetY);
             String name = projectile.getName();
             ProjectileConfig projectileConfig = ProjectileConfig.fromName(name);
-            if ("pea".equals(name)) {
-                if (projectile.isIcy()) projectileConfig = ProjectileConfig.ICY_PEA;
-                else if (projectile.isFiring()) projectileConfig = ProjectileConfig.FIRING_PEA;
+            if (name.equals("pea")) {
+                if (projectile.isIcy()) {
+                    projectileConfig = ProjectileConfig.ICY_PEA;
+                } else if (projectile.isFiring()) {
+                    projectileConfig = ProjectileConfig.FIRING_PEA;
+                } else if (projectile.isBlueFiring()) {
+                    projectileConfig = ProjectileConfig.BLUE_FIRING_PEA;
+                }
             }
-            if (projectileConfig != null) {
-                player.draw(batch, projectileConfig.getAnimation(), projectileConfig.getClip(), stateTime,
-                    (float) projectile.getPosition().getX(), (float) projectile.getPosition().getY(), true);
-            }
+            player.draw(batch, projectileConfig.getAnimation(), projectileConfig.getClip(),
+                stateTime, px, py, true);
         }
 
 

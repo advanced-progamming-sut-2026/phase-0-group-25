@@ -1,6 +1,8 @@
 package com.test1.PlantsVsZombies.src.Model.MiniGames.IZombieGame;
 
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
+import com.test1.PlantsVsZombies.src.Enums.PlantType;
+import com.test1.PlantsVsZombies.src.Enums.ZombieType;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.PlantFactory;
@@ -11,28 +13,76 @@ import com.test1.PlantsVsZombies.src.Model.Tile;
 import com.test1.PlantsVsZombies.src.Model.User.User;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class IZombie extends GamePlay {
-    private final Faction myFaction;
-    private final boolean isNetworkGame;
-    private float matchTimeRemaining = 120.0f;
-    private final List<Brain> brains = new ArrayList<>();
-    private int zombieSunBudget = 1500;
+    public static final int MATCH_DURATION_SECONDS = 120;
 
-    public IZombie(User thisUser, Faction myFaction, boolean isNetworkGame,
-                   ArrayList<String> plantDeck, ArrayList<String> zombieDeck) {
-        super(ChapterType.MINI_GAME, 1, 3, thisUser, plantDeck, zombieDeck, null);
+    private final Faction myFaction;
+    private final boolean isLocalCouchPlay;
+    private final String opponentUsername;
+    private final long roomSeed;
+    private final long startTimeMillis;
+
+    private int zombieBrainPoints = 1500;
+    private float matchTimeRemaining = MATCH_DURATION_SECONDS;
+    private final Brain[] brains = new Brain[5];
+    private final Map<String, Integer> zombieDeck = new LinkedHashMap<>();
+
+    private boolean matchOver = false;
+    private boolean matchWon = false;
+
+    public IZombie(ChapterType chapterType, int level, int difficulty, User thisUser,
+                   Faction myFaction, boolean isLocalCouchPlay, String opponentUsername,
+                   long roomSeed, long startTimeMillis) {
+        super(chapterType, level, difficulty, thisUser, new ArrayList<>(), new ArrayList<>(), new HashSet<>());
         this.myFaction = myFaction;
-        this.isNetworkGame = isNetworkGame;
+        this.isLocalCouchPlay = isLocalCouchPlay;
+        this.opponentUsername = opponentUsername;
+        this.roomSeed = roomSeed;
+        this.startTimeMillis = startTimeMillis;
+
+
         this.mySuns = 800;
 
 
         this.mowers.clear();
-        for (int row = 1; row <= 5; row++) {
-            brains.add(new Brain(row, 430f, getRealY(row) + 15f));
+        for (int i = 0; i < 5; i++) {
+            int row = i + 1;
+            brains[i] = new Brain(row, 430f, getRealY(row) + 15f);
         }
+
+
+        zombieDeck.put(ZombieType.DEFAULT.getName(), 50);
+        zombieDeck.put(ZombieType.CONE_HEAD.getName(), 75);
+        zombieDeck.put(ZombieType.BUCKET_HEAD.getName(), 125);
+        zombieDeck.put(ZombieType.NEWSPAPER.getName(), 100);
+
+
+        this.plants.clear();
+        this.plants.add(PlantFactory.createBattlePlant(PlantType.PEASHOOTER.getName(), 1));
+        this.plants.add(PlantFactory.createBattlePlant(PlantType.SUNFLOWER.getName(), 1));
+        this.plants.add(PlantFactory.createBattlePlant(PlantType.WALL_NUT.getName(), 1));
+        this.plants.add(PlantFactory.createBattlePlant(PlantType.REPEATER.getName(), 1));
+    }
+
+    public IZombie(User currentUser, Faction myFaction, boolean isNetworkGame,
+                   ArrayList<String> pDeck, ArrayList<String> zDeck) {
+        this(
+            ChapterType.MINI_GAME,
+            1,
+            (currentUser != null && currentUser.getUserProgress() != null)
+                ? currentUser.getUserProgress().getGameDifficulty() : 1,
+            currentUser,
+            myFaction,
+            !isNetworkGame,
+            null,
+            new java.util.Random().nextLong(),
+            System.currentTimeMillis()
+        );
     }
 
     @Override
@@ -91,42 +141,34 @@ public class IZombie extends GamePlay {
 
     private void checkMatchEndConditions() {
 
-        boolean allBrainsEaten = brains.stream().allMatch(Brain::isEaten);
+        boolean allBrainsEaten = true;
+        for (Brain b : brains) {
+            if (!b.isEaten()) {
+                allBrainsEaten = false;
+                break;
+            }
+        }
         if (allBrainsEaten) {
-            endGame(myFaction == Faction.ZOMBIE);
+            endMatch(Faction.ZOMBIE);
             return;
         }
 
 
         if (matchTimeRemaining <= 0.0f) {
-            endGame(myFaction == Faction.PLANT);
+            endMatch(Faction.PLANT);
         }
     }
 
-    public boolean spawnZombieAction(String zombieName, int row) {
-        Zombie sample = ZombieFactory.createZombie(zombieName);
-        if (sample == null) return false;
-        int cost = sample.getCost();
 
-        if (zombieSunBudget < cost) return false;
 
-        zombieSunBudget -= cost;
-        Position spawnPos = new Position(1800f, getRealY(row));
-        Zombie newZombie = ZombieFactory.createZombie(zombieName, spawnPos);
-        newZombie.setRow(row);
-        newZombie.setColumn(9);
-        gameZombies.add(newZombie);
-        return true;
-    }
-
-    public boolean plantDefenseAction(BattlePlant plant, int col, int row) {
+    public boolean placePlant(BattlePlant plant, int col, int row) {
         Tile tile = getTileByPosition(col, row);
         if (tile == null || !tile.isArable() || !tile.getPlants().isEmpty()) return false;
         if (mySuns < plant.getPlantStats().getCost()) return false;
 
         mySuns -= plant.getPlantStats().getCost();
         Position pos = new Position(getRealX(col), getRealY(row));
-        BattlePlant newPlant = PlantFactory.createBattlePlant(plant.getName(), getLevelOfPlant(plant.getName()), pos);
+        BattlePlant newPlant = PlantFactory.createBattlePlant(plant.getName(), 1, pos);
         newPlant.setRow(row);
         newPlant.setColumn(col);
         this.gamePlants.add(newPlant);
@@ -134,9 +176,108 @@ public class IZombie extends GamePlay {
         return true;
     }
 
-    public float getMatchTimeRemaining() { return matchTimeRemaining; }
-    public List<Brain> getBrains() { return brains; }
-    public Faction getMyFaction() { return myFaction; }
-    public int getZombieSunBudget() { return zombieSunBudget; }
-    public boolean isNetworkGame() { return isNetworkGame; }
+    public void applyRemotePlacePlant(String plantName, int col, int row) {
+        Tile tile = getTileByPosition(col, row);
+        if (tile == null) return;
+        Position pos = new Position(getRealX(col), getRealY(row));
+        BattlePlant newPlant = PlantFactory.createBattlePlant(plantName, 1, pos);
+        newPlant.setRow(row);
+        newPlant.setColumn(col);
+        this.gamePlants.add(newPlant);
+        tile.addPlant(newPlant);
+    }
+
+
+
+    public boolean spawnZombie(String zombieName, int row) {
+        int cost = zombieDeck.getOrDefault(zombieName, 50);
+        if (zombieBrainPoints < cost) return false;
+
+        zombieBrainPoints -= cost;
+        Position spawnPos = new Position(1800f, getRealY(row));
+        Zombie newZombie = ZombieFactory.createZombie(zombieName, spawnPos);
+        if (newZombie != null) {
+            newZombie.setRow(row);
+            newZombie.setColumn(9);
+            this.gameZombies.add(newZombie);
+            return true;
+        }
+        return false;
+    }
+
+    public void applyRemoteSpawnZombie(String zombieName, int row) {
+        Position spawnPos = new Position(1800f, getRealY(row));
+        Zombie newZombie = ZombieFactory.createZombie(zombieName, spawnPos);
+        if (newZombie != null) {
+            newZombie.setRow(row);
+            newZombie.setColumn(9);
+            this.gameZombies.add(newZombie);
+        }
+    }
+
+    public void endMatch(Faction winnerFaction) {
+        this.matchOver = true;
+        this.matchWon = (this.myFaction == winnerFaction);
+        this.isPaused = true;
+    }
+
+    @Override
+    public boolean isGameOver() {
+        return matchOver;
+    }
+
+    @Override
+    public boolean hasWon() {
+        return matchWon;
+    }
+
+
+
+    public int getSecondsRemaining() {
+        return (int) Math.ceil(matchTimeRemaining);
+    }
+
+    public Brain[] getBrains() {
+        return brains;
+    }
+
+    public Map<String, Integer> getZombieDeck() {
+        return zombieDeck;
+    }
+
+    public int getZombieBrainPoints() {
+        return zombieBrainPoints;
+    }
+
+    public Faction getMyFaction() {
+        return myFaction;
+    }
+
+    public boolean isLocalCouchPlay() {
+        return isLocalCouchPlay;
+    }
+
+    public boolean isNetworkGame() {
+        return !isLocalCouchPlay;
+    }
+
+    public String getOpponentUsername() {
+        return opponentUsername;
+    }
+
+    public long getRoomSeed() {
+        return roomSeed;
+    }
+
+    public long getStartTimeMillis() {
+        return startTimeMillis;
+    }
+
+    public boolean plantDefenseAction(BattlePlant plant, int col, int row) {
+        return placePlant(plant, col, row);
+    }
+
+    public boolean spawnZombieAction(String zombieName, int row) {
+        return spawnZombie(zombieName, row);
+    }
 }
