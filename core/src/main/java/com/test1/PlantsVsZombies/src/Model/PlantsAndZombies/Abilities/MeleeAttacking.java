@@ -35,10 +35,15 @@ public class MeleeAttacking implements Ability {
                 return;
             }
 
-            int randomIndex = RANDOM.nextInt(GAME.getGameZombies().size());
-            Zombie target = GAME.getGameZombies().get(randomIndex);
-            target.setCurrentHP(0);
-            plant.setLastActionTime(GAME.getTotalTimePassed());
+            ArrayList<Zombie> zombiesInRange = findZombies(plant);
+            if (!zombiesInRange.isEmpty()) {
+                int i = RANDOM.nextInt(zombiesInRange.size());
+                Zombie target = zombiesInRange.get(i);
+                target.setCurrentHP(0);
+
+                plant.setAttackTime(GAME.getTotalTimePassed());
+                plant.setLastActionTime(GAME.getTotalTimePassed());
+            }
         } else if (tags.contains("wramp-up")) {
             handleWramp_Up(plant);
         } else {
@@ -68,10 +73,10 @@ public class MeleeAttacking implements Ability {
             plant.setStatus("action");
         }
 
-        if(GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT) ||
+        if (GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT) ||
             GAME.getChapterType().equals(ChapterType.DARK_AGE) ||
-            GAME.getChapterType().equals(ChapterType.FROSTBITE_CAVES)){
-            if((!tile.isArable()) && (tile.getHP() > 0)){
+            GAME.getChapterType().equals(ChapterType.FROSTBITE_CAVES)) {
+            if ((!tile.isArable()) && (tile.getHP() > 0)) {
                 tile.setHP(tile.getHP() - damage);
             }
         }
@@ -88,6 +93,14 @@ public class MeleeAttacking implements Ability {
         for (Zombie zombie : tile.getZombies()) {
             zombie.setCurrentHP(zombie.getCurrentHP() - damage);
         }
+        if (GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT) ||
+            GAME.getChapterType().equals(ChapterType.DARK_AGE) ||
+            GAME.getChapterType().equals(ChapterType.FROSTBITE_CAVES)) {
+            if ((!tile.isArable()) && (tile.getHP() > 0)) {
+                tile.setHP(tile.getHP() - damage);
+            }
+        }
+
     }
 
     private void rangeDamage(int plantRow, int plantColumn, int range, int damage) {
@@ -132,7 +145,7 @@ public class MeleeAttacking implements Ability {
 
     private boolean checkTime(BattlePlant plant) {
         double currentTime = GAME.getTotalTimePassed();
-        double timeDifference = 10 *(currentTime - plant.getEffectedTime());
+        double timeDifference = 10 * (currentTime - plant.getEffectedTime());
         timeDifference = Math.floor(timeDifference);
         timeDifference /= 10;
         if ((timeDifference % 0.8) == 0) {//every 0.8 second, melee attackers execute their special ability
@@ -153,15 +166,30 @@ public class MeleeAttacking implements Ability {
             return;
         }
 
+        if (tags.contains("wramp-up")) {
+            handleWramp_Up(plant);
+            return;
+        }
+
         int damage = (int) plantFoodEffect.get("damage");
         if (plantFoodEffect.containsKey("range")) {
             int range = (int) plantFoodEffect.get("range");
             rangeDamage(plant.getPosition(), range, damage);
             return;
         }
-        if (tags.contains("wramp-up")) {
-            handleWramp_Up(plant);
-            return;
+
+    }
+
+    private ArrayList<Zombie> findZombies(BattlePlant plant) {
+        int plantRow = plant.getRow();
+        int plantColumn = plant.getColumn();
+
+
+        ArrayList<Zombie> properZombies = new ArrayList<>();
+        for (int i = 0; i <= 1; i++) {
+            Tile tile = GAME.getTileByPosition(plantColumn + i, plantRow);
+            properZombies.addAll(tile.getZombies());
         }
+        return properZombies;
     }
 }

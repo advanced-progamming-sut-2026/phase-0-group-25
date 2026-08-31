@@ -1,5 +1,6 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies;
 
+import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Enums.PlantCategory;
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
@@ -20,6 +21,10 @@ public class AnimationDecider {
 
     public String plantDecider(BattlePlant plant, float stateTime) {
         Map<String, String> status = plant.getPlantStats().getStatus();
+        if (plant.checkOctopusAndIced()) {
+            return status.get("idle");
+        }
+
         if (plant.isEffected()) {
             return status.get("plantfood");
         }
@@ -81,6 +86,10 @@ public class AnimationDecider {
         if (zombie.getCurrentHP() <= 0) {
             return handleZombieDeath(zombie, status);
         }
+        if (zombie.isButtered() ||
+            zombie.isFrozen()) {
+            return status.get("idle");
+        }
 
         if (zombie.getName().equals("GARGANTUAR")) {
             if ((zombie.isThrown()) && (!zombie.isFinished())) {
@@ -118,6 +127,11 @@ public class AnimationDecider {
 
     public HashMap<String, Boolean> zombieVisibilities(Zombie zombie) {
         HashMap<String, Boolean> visibility = new HashMap<>();
+        if (zombie.getName().equals("PROSPECTOR")) {
+            visibility.put("_dynamite_burning_01", true);
+            visibility.put("coconut_fuse_spark_01", false);
+        }
+
         if ((zombie.getName().equals("NEWSPAPER")) &&
             zombie.getActiveArmors().isEmpty()) {
 
@@ -170,12 +184,17 @@ public class AnimationDecider {
             stage += "1";
         }
 
+        if (plant.getName().equals(PlantType.KIWIBEAST.getName())) {
+            plant.checkMelee();
+        }
+
         return status.get(plant.getStatus() + stage);
     }
 
     private String getChargePlantsAnimation(BattlePlant plant, Map<String, String> status, float stateTime) {
         if ((plant.getName().equals(PlantType.POTATO_MINE.getName())) ||
-            (plant.getName().equals(PlantType.PRIMAL_POTATO_MINE.getName()))) {
+            (plant.getName().equals(PlantType.PRIMAL_POTATO_MINE.getName())) ||
+            (plant.getName().equals(PlantType.ICEBERG_LETTUCE.getName()))) {
             if (plant.getCurrentHP() <= 0) {
                 double difference = GAME.getTotalTimePassed() - plant.getDieTime();
                 if (difference >= 1.00) {
@@ -183,6 +202,10 @@ public class AnimationDecider {
                 }
                 return status.get("explosion");
             }
+        }
+
+        if (plant.getName().equals(PlantType.CITRON.getName())) {
+            return getCitronAnimation(plant, status);
         }
 
         int armTime = (int) plant.getPlantStats().getAttributes().get("armTime");
@@ -193,25 +216,6 @@ public class AnimationDecider {
         return status.get("armed");
     }
 
-    private boolean isTimeForAction(BattlePlant plant, float stateTime) {
-        float difference = (float) (stateTime - plant.getLastActionTime());
-        float triggerTime = plant.getPlantStats().getTrigger();
-        boolean goodTime = plant.isTimeForAction();
-        boolean finalAction = false;
-
-        if (goodTime) {
-            finalAction = true;
-        }
-        if (finalAction) {
-            if (difference <= triggerTime) {
-                return true;
-            } else {
-                finalAction = false;
-            }
-        }
-
-        return false;
-    }
 
     private String getMintAnimation(BattlePlant plant, float stateTime) {
         double introTime = (double) plant.getPlantStats().getAttributes().get("intro");
@@ -265,6 +269,10 @@ public class AnimationDecider {
                 return getPumpkinVisibilities(armorHP, armorBaseHP);
             } else {
                 checkArmorVisibility(plant, visibilities);
+            }
+
+            if (plant.getName().equals(PlantType.SUN_BEAN.getName())) {
+                return visibilities;
             }
 
             if (HPRatio >= 0.67) {
@@ -343,6 +351,15 @@ public class AnimationDecider {
             return getSquashAnimation(plant);
         }
 
+        if ((plant.getName().equals(PlantType.ICEBERG_LETTUCE.getName()))) {
+            if (plant.getCurrentHP() <= 0) {
+                double difference = GAME.getTotalTimePassed() - plant.getDieTime();
+                if (difference >= 1.00) {
+                    plant.setAlive(false);
+                }
+                return "attack";
+            }
+        }
 
         return "idle";
     }
@@ -351,7 +368,9 @@ public class AnimationDecider {
         double attackTime = (double) plant.getPlantStats().getAttributes().get("attackTime");
         Map<String, String> status = plant.getPlantStats().getStatus();
 
-        double timeDifference = stateTime - plant.getPlantTime();
+        double timeDifference = GAME.getTotalTimePassed() - plant.getPlantTime();
+
+        System.out.println(timeDifference + "   " + attackTime);
         if (timeDifference >= attackTime) {
             return status.get("explosion");
         } else {
@@ -372,6 +391,20 @@ public class AnimationDecider {
 
             if (!tile.getZombies().isEmpty()) {
                 return status.get("action");
+            }
+            if (GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT) ||
+                GAME.getChapterType().equals(ChapterType.DARK_AGE) ||
+                GAME.getChapterType().equals(ChapterType.FROSTBITE_CAVES)) {
+                if ((!tile.isArable()) && (tile.getHP() > 0)) {
+                    return status.get("action");
+                }
+            }
+            if (!plant.getPlantStats().getCategory().equals("Lobber")) {
+                for (BattlePlant plant1 : tile.getPlants()) {
+                    if (plant.checkOctopusAndIced()) {
+                        return status.get("action");
+                    }
+                }
             }
         }
 
@@ -552,5 +585,107 @@ public class AnimationDecider {
         }
 
         return status.get("idle");
+    }
+
+    private boolean haveTarget(BattlePlant plant) {
+        int plantRow = plant.getRow();
+        int plantColumn = plant.getColumn();
+        for (int i = plantColumn; i <= 9; i++) {
+            Tile tile = GAME.getTileByPosition(i, plantRow);
+
+            if (!tile.getZombies().isEmpty()) {
+                return true;
+            }
+            if (GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT) ||
+                GAME.getChapterType().equals(ChapterType.DARK_AGE) ||
+                GAME.getChapterType().equals(ChapterType.FROSTBITE_CAVES)) {
+                if ((!tile.isArable()) && (tile.getHP() > 0)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private String getCitronAnimation(
+        BattlePlant plant,
+        Map<String, String> status) {
+
+        double now = GAME.getTotalTimePassed();
+
+
+        // =========================
+        // CHARGE
+        // =========================
+
+        if (plant.getStatus().equals("charge")) {
+
+            double chargeTime =
+                now - plant.getLastActionTime();
+
+            if (chargeTime < 7.0) {
+                return status.get("charge");
+            }
+
+            plant.setStatus("idle");
+        }
+
+
+        // =========================
+        // IDLE
+        // =========================
+
+        if (plant.getStatus().equals("idle")) {
+
+            if (haveTarget(plant)) {
+                plant.setStatus("attack");
+
+                /*
+                 * The animation system will automatically
+                 * restart because the clip changes:
+                 *
+                 * idle -> attack
+                 */
+                return status.get("attack");
+            }
+
+            return status.get("idle");
+        }
+
+
+        // =========================
+        // ATTACK
+        // =========================
+
+        if (plant.getStatus().equals("attack")) {
+
+            /*
+             * Don't interrupt the attack animation.
+             */
+            if (!isCitronAttackFinished(plant)) {
+                return status.get("attack");
+            }
+
+            /*
+             * Attack finished.
+             *
+             * Start a new 7-second charge.
+             */
+            plant.setLastActionTime(now);
+            plant.setStatus("charge");
+
+            return status.get("charge");
+        }
+
+
+        return status.get("idle");
+    }
+
+    private boolean isCitronAttackFinished(
+        BattlePlant plant) {
+
+        return plant.getAnimationState()
+            .getStateTime() >= 1.0f;
     }
 }

@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 
 
 public class UsersManager {
-    private static final String STATE_FILE = "jsonFiles/loginstate.json";
+    private static final String STATE_FILE = "Assets/jsonFiles/loginstate.json";
     private static final Pattern USERNAME_CHAR_REGEX = Pattern.compile("^[a-zA-Z0-9_]+$");
     private static final Pattern PASSWORD_COMPLEXITY_REGEX = Pattern.compile(
         "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+={}\\[\\]|\\\\:;\"',<>?])\\S{8,}$"

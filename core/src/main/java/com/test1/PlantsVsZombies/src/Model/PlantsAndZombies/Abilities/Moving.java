@@ -44,13 +44,13 @@ public class Moving implements Ability {
                 Position plantPosition = plant.getPosition();
 
                 if (zombie.getPosition().equals(plantPosition)) {
-                    zombie.setRival(plant);
                     if (zombie.getZombieStats().getName().equals("DODO")) {
                         if (isFlyable(plant)) {
                             makeFlyingActivated(zombie);
                             return;
                         }
                     }
+                    zombie.setRival(plant);
 
                     makeEatingActivated(zombie);
                     if (zombie.getZombieStats().getName().equals("EXPLORER")) {
@@ -75,7 +75,7 @@ public class Moving implements Ability {
 
     private void handleHypnotizedZombie(Zombie zombie) {
         double velocity = zombie.getCurrentVelocity();
-        double differenceX = velocity * 25;
+        double differenceX = velocity * 10;
 
         double zombieFinalPositionX = zombie.getPosition().getX() + differenceX;
         Position newPosition = new Position(zombieFinalPositionX, zombie.getPosition().getY());
@@ -85,12 +85,11 @@ public class Moving implements Ability {
             if (zombie1.getPosition().equals(zombie.getPosition())) {
                 if (!zombie1.isHypnotized()) {
                     zombie.setRival(zombie1);
+                    makeEatingActivated(zombie);
                     break;
                 }
             }
         }
-
-        makeEatingActivated(zombie);
     }
 
     private void moveZombie(Zombie zombie) {

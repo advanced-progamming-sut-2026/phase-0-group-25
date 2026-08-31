@@ -1,10 +1,12 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 
-import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
+import com.test1.PlantsVsZombies.src.Enums.ChapterType;
+import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.LobbedProjectile;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 
@@ -12,14 +14,13 @@ import java.util.List;
 import java.util.Random;
 
 public class Lobbing implements Ability {
-    private static int LOBBING_SHOT = 1820;
     private static Random RANDOM = new Random();
     private GamePlay GAME = GamePlay.activeInstance;
-
 
     @Override
     public void executeAbility(Entity entity) {
         BattlePlant plant = (BattlePlant) entity;
+
         if (plant.isEffected()) {
             if (checkTime(plant)) {
                 plantFoodEffect(plant);
@@ -27,18 +28,33 @@ public class Lobbing implements Ability {
             return;
         }
 
-        List<Integer> damageAttributes = (List<Integer>) plant.getPlantStats().getAttributes().get("damage");
-        List<Double> speedAttributes = (List<Double>) plant.getPlantStats().getAttributes().get("speed");
-        List<String> nameAttributes = (List<String>) plant.getPlantStats().getAttributes().get("projectileName");
+        Position target = findNearestTarget(plant);
+
+        if (target == null) {
+            return;
+        }
+
+        List<Integer> damageAttributes =
+            (List<Integer>) plant.getPlantStats()
+                .getAttributes().get("damage");
+
+        List<Double> speedAttributes =
+            (List<Double>) plant.getPlantStats()
+                .getAttributes().get("speed");
+
+        List<String> nameAttributes =
+            (List<String>) plant.getPlantStats()
+                .getAttributes().get("projectileName");
 
         int damage = 0;
         double speed = 0;
         String name = "";
 
-        double targetX = findNearestZombieInRow(plant);
-
         if (plant.getPlantStats().getAttributes().containsKey("probable")) {
-            List<Double> probableAttributes = (List<Double>) plant.getPlantStats().getAttributes().get("probable");
+            List<Double> probableAttributes =
+                (List<Double>) plant.getPlantStats()
+                    .getAttributes().get("probable");
+
             double roll = Math.random();
 
             if (roll < probableAttributes.get(0)) {
@@ -56,17 +72,32 @@ public class Lobbing implements Ability {
             name = nameAttributes.get(0);
         }
 
-        int AoEDamage = (int) plant.getPlantStats().getAttributes().get("AoEDamage");
-        int AoERange = (int) plant.getPlantStats().getAttributes().get("AoERange");
+        int AoEDamage =
+            (int) plant.getPlantStats()
+                .getAttributes().get("AoEDamage");
 
-        LobbedProjectile lobbedProjectile = new LobbedProjectile(plant,
-            plant.getPosition().getX(), plant.getPosition().getY(),
-            targetX, speed, AoEDamage, AoERange, damage, name
-        );
+        int AoERange =
+            (int) plant.getPlantStats()
+                .getAttributes().get("AoERange");
+
+        LobbedProjectile lobbedProjectile =
+            new LobbedProjectile(
+                plant,
+                plant.getPosition().getX(),
+                plant.getPosition().getY(),
+                target.getX(),
+                target.getY(),
+                speed,
+                AoEDamage,
+                AoERange,
+                damage,
+                name
+            );
 
         if (plant.getPlantStats().getTags().contains("ice")) {
             lobbedProjectile.setIcy(true);
         }
+
         if (plant.getPlantStats().getTags().contains("fire")) {
             lobbedProjectile.setFiring(true);
         }
@@ -74,71 +105,172 @@ public class Lobbing implements Ability {
         GAME.getProjectiles().add(lobbedProjectile);
     }
 
-    private boolean checkTime(BattlePlant plant) {
-        double currentTime = GAME.getTotalTimePassed();
-        double timeDifference = 10 *(currentTime - plant.getEffectedTime());
-        timeDifference = Math.floor(timeDifference);
-        timeDifference /= 10;
-        if ((timeDifference % 0.6) == 0) {//every 0.6 second, lobbers execute their special ability
-            return true;
-        }
-        return false;
-    }
+    private Position findNearestTarget(BattlePlant plant) {
+        int row = plant.getRow();
+        int column = plant.getColumn();
 
-    private double findNearestZombieInRow(BattlePlant plant) {
-        int plantColumn = plant.getColumn();
-        int plantRow = plant.getRow();
-        double distance = 99999;
-        double targetX = LOBBING_SHOT;
+        Zombie nearestZombie = null;
+        double nearestZombieDistance = Double.MAX_VALUE;
 
-        for (int i = 1; i <= 9; i++) {
-            Tile tile = GAME.getTileByPosition(i, plantRow);
+        Position nearestTile = null;
+        double nearestTileDistance = Double.MAX_VALUE;
+
+        for (int i = column; i <= 9; i++) {
+            Tile tile = GAME.getTileByPosition(i, row);
+
+            if (tile == null) {continue;
+            }
 
             for (Zombie zombie : tile.getZombies()) {
-                double tempDistance = zombie.getPosition().distance(plant.getPosition());
-                if (tempDistance <= distance) {
-                    distance = tempDistance;
-                    targetX = zombie.getPosition().getX();
+                if (zombie.getCurrentHP() <= 0) {
+                    continue;
+                }
+
+                double distance =
+                    Math.abs(
+                        zombie.getPosition().getX()
+                            - plant.getPosition().getX()
+                    );
+
+                if (distance < nearestZombieDistance) {
+                    nearestZombieDistance = distance;
+                    nearestZombie = zombie;
+                }
+            }
+
+            if (GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT) ||
+                GAME.getChapterType().equals(ChapterType.DARK_AGE) ||
+                GAME.getChapterType().equals(ChapterType.FROSTBITE_CAVES)) {
+
+                if (!tile.isArable() && tile.getHP() > 0) {
+                    double targetX = GAME.getRealX(i);
+                    double targetY = GAME.getRealY(row);
+
+                    double distance =
+                        Math.abs(
+                            targetX
+                                - plant.getPosition().getX()
+                        );
+
+                    if (distance < nearestTileDistance) {
+                        nearestTileDistance = distance;
+                        nearestTile =
+                            new Position(targetX, targetY);
+                    }
                 }
             }
         }
 
-        return targetX;
+        if (nearestZombie == null && nearestTile == null) {
+            return null;
+        }
+
+        if (nearestZombie == null) {
+            return nearestTile;
+        }
+
+        if (nearestTile == null) {
+            return nearestZombie.getPosition();
+        }
+
+        if (nearestZombieDistance <= nearestTileDistance) {
+            return nearestZombie.getPosition();
+        }
+
+        return nearestTile;
+    }
+
+    private boolean checkTime(BattlePlant plant) {
+        double currentTime = GAME.getTotalTimePassed();
+        double timeDifference =
+            10 * (currentTime - plant.getEffectedTime());
+
+        timeDifference = Math.floor(timeDifference);
+        timeDifference /= 10;
+
+        if ((timeDifference % 0.6) == 0) {
+            return true;
+        }
+
+        return false;
     }
 
     private void plantFoodEffect(BattlePlant plant) {
-        List<Integer> damageAttributes = (List<Integer>) plant.getPlantStats().getAttributes().get("damage");
-        List<Double> speedAttributes = (List<Double>) plant.getPlantStats().getAttributes().get("speed");
-        List<String> nameAttributes = (List<String>) plant.getPlantStats().getAttributes().get("projectileName");
+        List<Integer> damageAttributes =
+            (List<Integer>) plant.getPlantStats()
+                .getAttributes().get("damage");
 
-        int AoEDamage = (int) plant.getPlantStats().getAttributes().get("AoEDamage");
-        int AoERange = (int) plant.getPlantStats().getAttributes().get("AoERange");
+        List<Double> speedAttributes =
+            (List<Double>) plant.getPlantStats()
+                .getAttributes().get("speed");
 
-        if (plant.getPlantStats().getName().equals("KERNEL_PULT")) {
+        List<String> nameAttributes =
+            (List<String>) plant.getPlantStats()
+                .getAttributes().get("projectileName");
+
+        int AoEDamage =
+            (int) plant.getPlantStats()
+                .getAttributes().get("AoEDamage");
+
+        int AoERange =
+            (int) plant.getPlantStats()
+                .getAttributes().get("AoERange");
+
+        if (plant.getPlantStats().getName()
+            .equals("KERNEL_PULT")) {
+
             int damage = damageAttributes.get(1);
             double speed = speedAttributes.get(1);
             String name = nameAttributes.get(1);
+
             for (Zombie zombie : GAME.getGameZombies()) {
-                LobbedProjectile lobbedProjectile = new LobbedProjectile(plant,
-                    plant.getPosition().getX(), plant.getPosition().getY(),
-                    zombie.getPosition().getX(), speed,
-                    AoEDamage, AoERange, damage, name
-                );
+                LobbedProjectile lobbedProjectile =
+                    new LobbedProjectile(
+                        plant,
+                        plant.getPosition().getX(),
+                        plant.getPosition().getY(),
+                        zombie.getPosition().getX(),
+                        zombie.getPosition().getY(),
+                        speed,
+                        AoEDamage,
+                        AoERange,
+                        damage,
+                        name
+                    );
+
                 GAME.getProjectiles().add(lobbedProjectile);
             }
         } else {
             for (int i = 0; i < 3; i++) {
-                int randomIndex = RANDOM.nextInt(GAME.getGameZombies().size());
-                Zombie zombie = GAME.getGameZombies().get(randomIndex);
+                if (GAME.getGameZombies().isEmpty()) {
+                    return;
+                }
+
+                int randomIndex =
+                    RANDOM.nextInt(
+                        GAME.getGameZombies().size()
+                    );
+
+                Zombie zombie =
+                    GAME.getGameZombies().get(randomIndex);
 
                 int damage = damageAttributes.get(0);
                 double speed = speedAttributes.get(0);
                 String name = nameAttributes.get(0);
-                LobbedProjectile lobbedProjectile = new LobbedProjectile(plant,
-                    plant.getPosition().getX(), plant.getPosition().getY(),
-                    zombie.getPosition().getX(), speed,
-                    AoEDamage, AoERange, damage, name
-                );
+
+                LobbedProjectile lobbedProjectile =
+                    new LobbedProjectile(
+                        plant,
+                        plant.getPosition().getX(),
+                        plant.getPosition().getY(),
+                        zombie.getPosition().getX(),
+                        zombie.getPosition().getY(),
+                        speed,
+                        AoEDamage,
+                        AoERange,
+                        damage,
+                        name
+                    );
 
                 GAME.getProjectiles().add(lobbedProjectile);
             }

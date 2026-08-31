@@ -23,9 +23,7 @@ public class Explosion implements Ability {
         Zombie attacker = (Zombie) entity;
         BattlePlant plant = (BattlePlant) attacker.getRival();
         ArrayList<String> tags = plant.getPlantStats().getTags();
-        if (plant.isEffected()) {
-            plantFoodEffect(attacker, plant, tags);
-        }
+
 
         if (isNotArmored(plant)) {
             return;
@@ -34,6 +32,8 @@ public class Explosion implements Ability {
         if (tags.contains("Ice")) {
             int frozenTime = (int) plant.getPlantStats().getAttributes().get("freezeTime");
             attacker.freeze(frozenTime);
+            plant.setCurrentHP(0);
+            plant.setDieTime(GAME.getTotalTimePassed());
         }
 
         if (tags.contains("Water")) {
