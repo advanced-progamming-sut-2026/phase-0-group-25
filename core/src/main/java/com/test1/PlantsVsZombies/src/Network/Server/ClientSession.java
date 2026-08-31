@@ -28,6 +28,8 @@ public class ClientSession implements Runnable {
     private String sessionToken;
     private boolean stayLoggedIn;
 
+    private final Object writeLock = new Object();
+
     /** Assigned once LOGIN/RESTORE_SESSION succeeds; null until then. */
     private volatile String username;
     /** Set once the session's writer is up, so sendPush() can be called from other sessions' threads. */
