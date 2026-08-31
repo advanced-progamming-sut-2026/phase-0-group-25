@@ -15,7 +15,6 @@ public class MainMenu extends Menu {
         this.mainMenuView = mainMenuView;
         addChangeableMenuType(MenuType.Game);
         addChangeableMenuType(MenuType.Setting);
-        addChangeableMenuType(MenuType.Network);
         addChangeableMenuType(MenuType.News);
         addChangeableMenuType(MenuType.Profile);
     }

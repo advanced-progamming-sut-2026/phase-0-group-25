@@ -86,7 +86,6 @@ public class MenuManager {
         TravelLogMenu travelLogMenu = new TravelLogMenu(travelLogScreen);
         travelLogScreen.setMenuController(travelLogMenu);
         menusAndTheirNames.put(MenuType.TravelLog, travelLogMenu);
-        menusAndTheirNames.put(MenuType.Network, new NetworkMenu(new NetworkMenuTerminalView()));
         ChoosePlantScreen choosePlantScreen = new ChoosePlantScreen();
         ChoosePlantMenu choosePlantMenu = new ChoosePlantMenu(
             choosePlantScreen,
