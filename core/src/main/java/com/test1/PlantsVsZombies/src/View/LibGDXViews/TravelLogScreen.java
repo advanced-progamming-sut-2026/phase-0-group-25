@@ -19,6 +19,7 @@ import com.test1.PlantsVsZombies.src.View.ViewInterfaces.TravelLogMenuView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView {
 

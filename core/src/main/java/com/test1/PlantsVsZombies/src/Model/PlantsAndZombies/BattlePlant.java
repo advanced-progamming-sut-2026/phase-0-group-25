@@ -97,8 +97,8 @@ public class BattlePlant extends Plant {
                 double difference = GAME.getTotalTimePassed() - this.effectedTime;
                 if (difference >= (this.effectedLifeSpan / 2)) {
 
-                    PlantFood plantFood = new PlantFood();
-                    plantFood.plantFoodEffect(this, this.plantStats.getTags());
+                    //PlantFood plantFood = new PlantFood();
+                    //plantFood.plantFoodEffect(this, this.plantStats.getTags());
 
                     this.isEffected = false;
                 }
