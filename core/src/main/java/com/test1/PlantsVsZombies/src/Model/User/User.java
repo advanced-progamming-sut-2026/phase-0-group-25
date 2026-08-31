@@ -65,12 +65,7 @@ public class User {
         newsManager.addNews(new News("level " + level + " of " + chapterType.getName() + " completed!"));
     }
 
-    /**
-     * A copy of this user with everything sensitive (password, email,
-     * security question/answer) stripped out. Used by the server when
-     * building leaderboard responses, since that data goes out to every
-     * connected client, not just this user's own client.
-     */
+
     public User toPublicSummary() {
         User copy = new User();
         copy.userName = this.userName;
@@ -82,12 +77,12 @@ public class User {
         return copy;
     }
 
-    /** Server-side only: renames this account (also the userCache key -- callers must re-key their map). */
+
     public void rename(String newUsername) {
         this.userName = newUsername;
     }
 
-    /** Server-side only: used by the password-reset flow. */
+
     public void changePassword(String newPassword) {
         this.password = newPassword;
     }

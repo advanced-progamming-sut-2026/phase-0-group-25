@@ -176,7 +176,7 @@ public class LeaderBoardDialog extends BorderedTable {
         int rank = 1;
         for (User u : users) {
             Table row = new Table();
-            boolean isSelf = u.getUserName().equalsIgnoreCase(currentUsername);
+            boolean isSelf = u.getUserName().equals(currentUsername);
 
             if (isSelf) {
                 row.setBackground(skin.getDrawable("image_ui_quests_panel_edge_to_edge_ten"));

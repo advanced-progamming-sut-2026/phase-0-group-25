@@ -25,20 +25,12 @@ public class UserProgressManager {
         return maxLevel;
     }
 
-    /**
-     * Coins required to upgrade a plant FROM currentLevel to currentLevel+1.
-     * Shared by upgradePlant() (enforcement) and the Collection screen
-     * (display), so the two can't drift apart.
-     */
+
     public static int getRequiredCoinsForUpgrade(int currentLevel) {
         return currentLevel * 1000;
     }
 
-    /**
-     * Seed packets required to upgrade a plant FROM currentLevel to
-     * currentLevel+1. Shared by upgradePlant() (enforcement) and the
-     * Collection screen (display).
-     */
+
     public static int getRequiredSeedPacketsForUpgrade(int currentLevel) {
         return currentLevel * 5;
     }
@@ -282,14 +274,7 @@ public class UserProgressManager {
         save();
     }
 
-    /**
-     * Takes a snapshot of the currently stored greenhouse/choose-plant
-     * boosts and clears the persisted list in one step. Called exactly
-     * once, right when a level actually starts (GameMenu.startGame) --
-     * the returned snapshot is what gets handed to that GamePlay session,
-     * so boosts don't leak into whatever the user does afterward, and
-     * don't get lost if they never place the boosted plant.
-     */
+
     public Set<PlantType> takeAndClearGreenhouseBoosts() {
         User user = getLoggedInUser();
         if (user == null) return new HashSet<>();
@@ -324,10 +309,7 @@ public class UserProgressManager {
         return user.getUserProgress().isDailyOfferBoughtToday();
     }
 
-    /**
-     * Persists today's freshly-generated daily offer so it survives an app
-     * restart and only actually changes when the calendar day changes.
-     */
+
     public void saveDailyOffer(PlantType plantType, int price, int seedPacketCount, LocalDate generatedDate) {
         User user = getLoggedInUser();
         if (user == null) return;
@@ -419,8 +401,8 @@ public class UserProgressManager {
         int lastCompletedLevel = progress.getUnlockedChaptersAndLevels()
             .getOrDefault(chapterType, 0);
 
-        // Only advance progress the first time this level is beaten
-        // (replaying an already-completed level shouldn't regress it).
+
+
         if (currentLevel > lastCompletedLevel) {
             markLevelCompleted(chapterType, currentLevel);
 
