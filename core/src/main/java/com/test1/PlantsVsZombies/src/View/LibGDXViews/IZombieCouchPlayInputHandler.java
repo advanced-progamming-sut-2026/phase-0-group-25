@@ -10,14 +10,6 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Input for local couch play: the Plant player uses the mouse exactly like
- * {@link IZombieInputHandler} does for a networked Plant player, while the
- * Zombie player shares the same keyboard -- number keys pick a zombie card,
- * W/S (or the arrow keys) move the highlighted lane, and Space/Enter spawns.
- * Both halves are wired up unconditionally since there's no network faction
- * authority to enforce on a single shared machine.
- */
 public class IZombieCouchPlayInputHandler extends InputAdapter implements IZombieHudInputState {
     private final IZombie gamePlay;
     private final OrthographicCamera camera;
@@ -37,8 +29,6 @@ public class IZombieCouchPlayInputHandler extends InputAdapter implements IZombi
         this.zombieCardOrder = new ArrayList<>(gamePlay.getZombieDeck().keySet());
     }
 
-    // ---- Mouse: Plant side, pause, and the reaction drawer ----
-
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         camera.unproject(mouseWorldPos.set(screenX, screenY, 0));
@@ -55,6 +45,7 @@ public class IZombieCouchPlayInputHandler extends InputAdapter implements IZombi
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         camera.unproject(mouseWorldPos.set(screenX, screenY, 0));
         float x = mouseWorldPos.x, y = mouseWorldPos.y;
+
 
         if (isInside(x, y, IZombieHudRenderer.PAUSE_BTN_X, IZombieHudRenderer.PAUSE_BTN_Y,
             IZombieHudRenderer.PAUSE_BTN_SIZE, IZombieHudRenderer.PAUSE_BTN_SIZE)) {
@@ -74,7 +65,6 @@ public class IZombieCouchPlayInputHandler extends InputAdapter implements IZombi
         }
 
         if (gamePlay.isGameOver()) return false;
-
         if (gamePlay.tryCollectSunByClick(x, y)) return true;
 
         ArrayList<BattlePlant> deck = gamePlay.getPlants();
@@ -117,8 +107,6 @@ public class IZombieCouchPlayInputHandler extends InputAdapter implements IZombi
         }
         return false;
     }
-
-    // ---- Keyboard: Zombie side ----
 
     @Override
     public boolean keyDown(int keycode) {
@@ -163,28 +151,9 @@ public class IZombieCouchPlayInputHandler extends InputAdapter implements IZombi
         return x >= rx && x <= rx + rw && y >= ry && y <= ry + rh;
     }
 
-    @Override
-    public int getSelectedZombieLane() {
-        return selectedZombieLane;
-    }
-
-    @Override
-    public Vector3 getMouseWorldPos() {
-        return mouseWorldPos;
-    }
-
-    @Override
-    public BattlePlant getSelectedPlantCard() {
-        return selectedPlantCard;
-    }
-
-    @Override
-    public String getSelectedZombieCardType() {
-        return selectedZombieCardType;
-    }
-
-    @Override
-    public boolean isReactionDrawerOpen() {
-        return reactionDrawerOpen;
-    }
+    @Override public int getSelectedZombieLane() { return selectedZombieLane; }
+    @Override public Vector3 getMouseWorldPos() { return mouseWorldPos; }
+    @Override public BattlePlant getSelectedPlantCard() { return selectedPlantCard; }
+    @Override public String getSelectedZombieCardType() { return selectedZombieCardType; }
+    @Override public boolean isReactionDrawerOpen() { return reactionDrawerOpen; }
 }

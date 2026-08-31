@@ -169,11 +169,20 @@ public class IZombieLobbyDialog extends BorderedTable {
     }
 
     private void startRandomMatchmaking() {
+        User user = UsersManager.getInstance().getLoggedInUser();
+        if (user == null) {
+            statusMessage = "You must log in to play online.";
+            buildUI();
+            return;
+        }
+
         mode = Mode.SEARCHING;
         statusMessage = "";
         buildUI();
 
-        NetworkMessage request = NetworkMessage.request(0, MessageType.JOIN_MATCHMAKING_QUEUE);
+        NetworkMessage request = NetworkMessage.request(0, MessageType.JOIN_MATCHMAKING_QUEUE)
+            .put("username", user.getUserName());
+
         ServerConnection.getInstance().sendRequestAsync(request, response -> {
             if (mode != Mode.SEARCHING) return;
             if (!response.isSuccess()) {
@@ -192,6 +201,13 @@ public class IZombieLobbyDialog extends BorderedTable {
     }
 
     private void sendChallenge() {
+        User user = UsersManager.getInstance().getLoggedInUser();
+        if (user == null) {
+            statusMessage = "You must log in to challenge others.";
+            buildUI();
+            return;
+        }
+
         String target = (usernameField != null && usernameField.getText() != null) ? usernameField.getText().trim() : "";
         if (target.isEmpty()) {
             statusMessage = "Enter a username first.";
@@ -205,7 +221,10 @@ public class IZombieLobbyDialog extends BorderedTable {
         ServerConnection.getInstance().addPushListener(MessageType.RESPOND_TO_CHALLENGE, challengeResponseListener);
         buildUI();
 
-        NetworkMessage request = NetworkMessage.request(0, MessageType.CHALLENGE_USER).put("targetUsername", target);
+        NetworkMessage request = NetworkMessage.request(0, MessageType.CHALLENGE_USER)
+            .put("fromUsername", user.getUserName())
+            .put("targetUsername", target);
+
         ServerConnection.getInstance().sendRequestAsync(request, response -> {
             if (mode != Mode.CHALLENGE_PENDING) return;
             if (!response.isSuccess()) {
@@ -218,8 +237,12 @@ public class IZombieLobbyDialog extends BorderedTable {
     }
 
     private void handleMatchFoundPush(NetworkMessage msg) {
+
+        mode = Mode.CHOOSE;
+        cleanup();
+
         String roleStr = (String) msg.getData().get("role");
-        String opponent = (String) msg.getData().get("opponentUsername");
+        String opponent = (String) msg.getData().getOrDefault("opponentUsername", msg.getData().get("opponent"));
         Faction myFaction = "PLANT".equalsIgnoreCase(roleStr) ? Faction.PLANT : Faction.ZOMBIE;
 
         User currentUser = UsersManager.getInstance().getLoggedInUser();
@@ -230,7 +253,6 @@ public class IZombieLobbyDialog extends BorderedTable {
         IZombie gamePlay = new IZombie(ChapterType.MINI_GAME, 1, difficulty, currentUser,
             myFaction, false, opponent, seed, startTime);
 
-        cleanup();
         if (onClose != null) onClose.run();
 
         UIManager.showToast("Matched vs " + opponent + "! Role: " + myFaction, "IMAGE_UI_GENERIC_VTB");
@@ -248,9 +270,13 @@ public class IZombieLobbyDialog extends BorderedTable {
         notice.setFontScale(0.8f);
         modal.add(notice).colspan(2).padBottom(20).row();
 
+        User user = UsersManager.getInstance().getLoggedInUser();
+        String myUname = (user != null) ? user.getUserName() : "Player";
+
         TextButton acceptBtn = new TextButton("Accept", skin, "green");
         acceptBtn.addListener(clickListener(() -> {
             NetworkMessage resp = NetworkMessage.request(0, MessageType.RESPOND_TO_CHALLENGE)
+                .put("fromUsername", myUname)
                 .put("challenger", challenger)
                 .put("accepted", true);
             ServerConnection.getInstance().sendRequestAsync(resp, null);
@@ -260,6 +286,7 @@ public class IZombieLobbyDialog extends BorderedTable {
         TextButton declineBtn = new TextButton("Decline", skin, "brown");
         declineBtn.addListener(clickListener(() -> {
             NetworkMessage resp = NetworkMessage.request(0, MessageType.RESPOND_TO_CHALLENGE)
+                .put("fromUsername", myUname)
                 .put("challenger", challenger)
                 .put("accepted", false);
             ServerConnection.getInstance().sendRequestAsync(resp, null);
