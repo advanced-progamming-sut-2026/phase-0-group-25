@@ -24,6 +24,8 @@ public class Simple extends GamePlay {
                   ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         super(chapterType, level, difficulty, thisUser, plants, zombies, boosted);
         setLevelObjectives("Zombies shouldn't reach the house.");
+        //Zomboss zomboss = ZombieFactory.createZomboss("BEACH", new Position(1700, 600));
+        //this.gameZombies.add(zomboss);
     }
 
     @Override
@@ -58,13 +60,14 @@ public class Simple extends GamePlay {
 
         checkingSunMakers();
 
+        pendingNewPlants.clear();
+        updatingPlants = true;
 
-        List<BattlePlant> pendingNewPlants = new ArrayList<>();
         Iterator<BattlePlant> bp = gamePlants.iterator();
         while (bp.hasNext()) {
             BattlePlant plant = bp.next();
 
-            if (plant.isAlive() && plant.getCurrentHP() > 0) {
+            if (plant.isAlive()) {
                 plant.update();
 
                 plant.setCooldown(Math.max(plant.getCooldown() - 1, 0));
@@ -72,22 +75,29 @@ public class Simple extends GamePlay {
                 Tile currentTile = getTileByPosition(plant.getColumn(), plant.getRow());
 
                 if (currentTile != null) {
-                    currentTile.getPlants().removeIf(p -> p.getName().equals(plant.getName()));
+                    currentTile.getPlants().removeIf(p -> p == plant);
                 }
+
                 incrementLostPlants();
                 bp.remove();
             }
         }
+
+        updatingPlants = false;
+
         if (!pendingNewPlants.isEmpty()) {
             gamePlants.addAll(pendingNewPlants);
+            pendingNewPlants.clear();
         }
 
-        List<Zombie> pendingNewZombies = new ArrayList<>();
+        pendingNewZombies.clear();
+        updatingZombies = true;
+
         Iterator<Zombie> z = gameZombies.iterator();
         while (z.hasNext()) {
             Zombie zombie = z.next();
 
-            if (!zombie.isAlive() || zombie.getCurrentHP() <= 0) {
+            if (!zombie.isAlive()) {
                 killAward(this.thisUser);
 
                 addKilledZombieCost(zombie.getWaveNum(), zombie.getCost());
@@ -96,8 +106,12 @@ public class Simple extends GamePlay {
                 zombie.update();
             }
         }
+
+        updatingZombies = false;
+
         if (!pendingNewZombies.isEmpty()) {
             gameZombies.addAll(pendingNewZombies);
+            pendingNewZombies.clear();
         }
 
         updateZombieTiles();

@@ -52,7 +52,7 @@ Throwing implements Ability {
                 BattlePlant target = findTargetForHunterAndOctopus(zombie);
 
                 if (target != null) {
-                    target.setIceTime(3);
+                    target.setOctopusated(true);
                 }
                 afterAbility(zombie);
             } else {
@@ -73,9 +73,10 @@ Throwing implements Ability {
                 int row = RANDOM.nextInt(5) + 1;
                 int column = RANDOM.nextInt(9) + 1;
                 Tile tile = GAME.getTileByPosition(column, row);
-                System.out.println(row + "   " + column);
-                tile.setArable(false);
-                tile.setHP(600);
+                if (tile.getPlants().isEmpty()) {
+                    tile.setArable(false);
+                    tile.setHP(700);
+                }
             }
 
             afterAbility(zombie);
@@ -115,7 +116,7 @@ Throwing implements Ability {
 
         ArrayList<Zombie> properZombie = new ArrayList<>();
         for (int i = -1; i <= 1; i++) {
-            Tile tile = GAME.getTileByPosition(zombieColumn , zombieRow + i);
+            Tile tile = GAME.getTileByPosition(zombieColumn, zombieRow + i);
             if (tile == null) {
                 continue;
             }
