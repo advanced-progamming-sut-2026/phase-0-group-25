@@ -186,6 +186,10 @@ public class BattlePlant extends Plant {
     }
 
     public void setFrozen(boolean frozen) {
+        if (this.plantStats.getTags().contains("fire")) {
+            return;
+        }
+
         this.frozen = frozen;
         if (this.frozen) {
             if (this.iceHP <= 0) {
@@ -209,6 +213,9 @@ public class BattlePlant extends Plant {
     }
 
     public void setIceTime(int iceTime) {
+        if (this.plantStats.getTags().contains("fire")) {
+            return;
+        }
         this.iceTime = iceTime;
         if (this.iceTime >= 3) {
             this.setFrozen(true);

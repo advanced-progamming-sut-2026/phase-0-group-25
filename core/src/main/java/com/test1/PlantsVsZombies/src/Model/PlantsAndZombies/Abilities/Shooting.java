@@ -199,9 +199,6 @@ public class Shooting implements Ability {
                 for (Zombie zombie : tile.getZombies()) {
                     zombie.freeze();
                 }
-                for (BattlePlant plant1 : tile.getPlants()) {
-                    plant1.setFrozen(true);
-                }
             }
         }
         if (plant.getPlantStats().getTags().contains("fire")) {

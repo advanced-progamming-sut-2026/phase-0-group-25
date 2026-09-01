@@ -11,17 +11,21 @@ public class Zomboss extends Zombie {
     private GamePlay GAME = GamePlay.activeInstance;
     private static int ACTION_INTERVAL = 25;
     private static int STUN_INTERVAL = 10;
+    private static int FIRE_INTERVAL = 5;
 
     private static int X_RIGHT_LIMIT = 1860;
     private static int Y_UP_LIMIT = 880;
     private static int Y_DOWN_LIMIT = 130;
     private static int X_LEFT_LIMIT = 490;
     private static int TILE_Y_LENGTH = 150;
+    private static double TILE_X_LENGTH = 152.2;
 
     private int currentSecondRow;
 
     private boolean isStunned = false;
     private double timeWhenStunned;
+
+    private double timeWhenFired;
 
     private boolean firstStun = false;
     private boolean secondStun = false;
@@ -41,8 +45,9 @@ public class Zomboss extends Zombie {
 
     @Override
     public void update() {
-        System.out.println(GAME.getTotalTimePassed());
         checkLife();
+
+        checkFire();
 
         if (this.isStunned) {
             checkStun();
@@ -217,14 +222,14 @@ public class Zomboss extends Zombie {
                 plant.setAlive(false);
             }
 
-            //tile.setFiring(true);
+            tile.setFiring(true);
 
             tile = GAME.getTileByPosition(i, this.currentSecondRow);
             for (BattlePlant plant : tile.getPlants()) {
                 plant.setAlive(false);
             }
 
-            //tile.setFiring(true);
+            tile.setFiring(true);
         }
     }
 
@@ -296,6 +301,15 @@ public class Zomboss extends Zombie {
         }
 
         return ZombieFactory.createZombie(zombieName, zombiePosition);
+    }
+
+    private void checkFire() {
+        double difference = GAME.getTotalTimePassed() - this.timeWhenFired;
+        if (difference >= FIRE_INTERVAL) {
+            for (Tile tile : GAME.getTiles()) {
+                tile.setFiring(false);
+            }
+        }
     }
 }
 
