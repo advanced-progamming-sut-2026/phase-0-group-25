@@ -120,6 +120,10 @@ public class IZombieHudRenderer {
         boolean showPlantSide = gamePlay.isLocalCouchPlay() || gamePlay.getMyFaction() == Faction.PLANT;
         boolean showZombieSide = gamePlay.isLocalCouchPlay() || gamePlay.getMyFaction() == Faction.ZOMBIE;
 
+
+        renderLaneCursor(shapeRenderer, input);
+
+
         batch.begin();
         if (showPlantSide) renderPlantCurrencyAndDeck(batch, gamePlay, input);
         if (showZombieSide) renderZombieCurrencyAndDeck(batch, gamePlay, input);
@@ -134,8 +138,8 @@ public class IZombieHudRenderer {
         renderDragPreview(batch, gamePlay, input, stateTime);
         batch.end();
 
+
         renderCooldownOverlays(shapeRenderer, gamePlay, showPlantSide, showZombieSide);
-        renderLaneCursor(shapeRenderer, input);
     }
 
     private void renderTopCenterStatus(SpriteBatch batch, IZombie gamePlay) {
@@ -153,7 +157,6 @@ public class IZombieHudRenderer {
     private void renderPlantCurrencyAndDeck(SpriteBatch batch, IZombie gamePlay, IZombieHudInputState input) {
         if (bgHud != null) batch.draw(bgHud, PLANT_CURRENCY_X, PLANT_CURRENCY_Y, CURRENCY_BOX_W, CURRENCY_BOX_H);
         if (sunIcon != null) batch.draw(sunIcon, PLANT_CURRENCY_X + 10, PLANT_CURRENCY_Y + 10, 60, 60);
-
 
         hudFont.getData().setScale(1.42f);
         String sunText = String.valueOf(gamePlay.getMySuns());
@@ -185,7 +188,6 @@ public class IZombieHudRenderer {
             drawCardIcon(batch, textureBank.region(type.getIconAssetId()), CARD_X, cardY);
             batch.setColor(Color.WHITE);
 
-
             hudFont.getData().setScale(1.30f);
             hudFont.draw(batch, String.valueOf(card.getPlantStats().getCost()), CARD_X + 12f, cardY + 38f);
             hudFont.getData().setScale(1f);
@@ -195,7 +197,6 @@ public class IZombieHudRenderer {
     private void renderZombieCurrencyAndDeck(SpriteBatch batch, IZombie gamePlay, IZombieHudInputState input) {
         if (bgHud != null) batch.draw(bgHud, ZOMBIE_CURRENCY_X, ZOMBIE_CURRENCY_Y, CURRENCY_BOX_W, CURRENCY_BOX_H);
         if (brainIcon != null) batch.draw(brainIcon, ZOMBIE_CURRENCY_X + 10, ZOMBIE_CURRENCY_Y + 10, 60, 60);
-
 
         hudFont.getData().setScale(1.42f);
         String brainText = String.valueOf(gamePlay.getZombieBrainPoints());
@@ -224,7 +225,6 @@ public class IZombieHudRenderer {
             if (cardBgRegion != null) batch.draw(cardBgRegion, ZOMBIE_CARD_X, cardY, CARD_WIDTH, CARD_HEIGHT);
             drawCardIcon(batch, getZombieCardIcon(zombieName), ZOMBIE_CARD_X, cardY);
             batch.setColor(Color.WHITE);
-
 
             hudFont.getData().setScale(1.30f);
             hudFont.draw(batch, String.valueOf(cost), ZOMBIE_CARD_X + CARD_WIDTH - 65f, cardY + 38f);
@@ -265,6 +265,7 @@ public class IZombieHudRenderer {
         com.badlogic.gdx.Gdx.gl.glEnable(com.badlogic.gdx.Gdx.gl.GL_BLEND);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(new Color(0.4f, 0.9f, 0.4f, 0.18f));
+
         shapeRenderer.rect(490f, laneY - 75f, 1370f, 150f);
         shapeRenderer.end();
         com.badlogic.gdx.Gdx.gl.glDisable(com.badlogic.gdx.Gdx.gl.GL_BLEND);
