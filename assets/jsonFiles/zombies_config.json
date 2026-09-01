@@ -80,16 +80,16 @@
   "NEWSPAPER": {"category": "all", "eatdps": 200, "baseHP":  460, "velocity": 0.22, "waveCost": 700, "armor": ["Newspaper"], "abilities": ["moving", "eating"], "attributes": {"dieSpan": 1.83},
     "animation": "768/FULL/ZOMBIE/ZOMBIE_MODERN_NEWSPAPER/ZOMBIE_MODERN_NEWSPAPER.PAM", "status": {"idle": "idle_newspaper", "walk": "walk_newspaper", "eat": "eat_newspaper", "die": "die"}},
 
-  "DARK": {"category": "zomboss", "eatdps": 0, "baseHP":  12000, "velocity": 0, "waveCost": 0, "armor": [], "abilities": ["fatalDamage", "moving"], "attributes": {"projectileName": "fire", "throwSpan": 1.83, "spawnSpan": 2.13, "specialSpan": 1.66, "dieSpan": 5.67},
+  "DARK": {"category": "zomboss", "eatdps": 0, "baseHP":  12000, "velocity": 0, "waveCost": 0, "armor": [], "abilities": ["fatalDamage", "moving"], "attributes": {"projectileName": "fire", "X_Velocity": 0.0, "Y_Velocity": -200.0, "throwSpan": 1.83, "spawnSpan": 2.13, "specialSpan": 1.66, "dieSpan": 5.67},
     "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_ZOMBOSS/ZOMBIE_DARK_ZOMBOSS.PAM", "status": {"idle": "idle", "stun": "stun_loop", "throw": "fire_bomb", "spawn": "summoning", "special": "fire_attack_idle", "die": "die"}},
 
-  "EGYPT": {"category": "zomboss", "eatdps": 0, "baseHP":  12000, "velocity": 0, "waveCost": 0, "armor": [], "abilities": ["fatalDamage", "moving"], "attributes": {"projectileName": "missile", "throwSpan": 1.83, "spawnSpan": 2.00, "specialSpan": 2.53, "dieSpan": 4.93},
+  "EGYPT": {"category": "zomboss", "eatdps": 0, "baseHP":  12000, "velocity": 0, "waveCost": 0, "armor": [], "abilities": ["fatalDamage", "moving"], "attributes": {"projectileName": "missile", "X_Velocity": 0.0, "Y_Velocity": -200.0, "throwSpan": 1.83, "spawnSpan": 2.00, "specialSpan": 2.53, "dieSpan": 4.93},
   "animation": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_ZOMBOSS/ZOMBIE_EGYPT_ZOMBOSS.PAM", "status": {"idle": "idle", "stun": "stun_loop", "throw": "rocket_launch", "spawn": "zombie_portal_loop", "special": "stomp", "die": "die_idle"}},
 
-  "BEACH": {"category": "zomboss", "eatdps": 0, "baseHP":  12000, "velocity": 0, "waveCost": 0, "armor": [], "abilities": ["fatalDamage", "moving"], "attributes": {"projectileName": "shark", "throwSpan": 3.00, "specialSpan": 2.00, "dieSpan": 5.07},
+  "BEACH": {"category": "zomboss", "eatdps": 0, "baseHP":  12000, "velocity": 0, "waveCost": 0, "armor": [], "abilities": ["fatalDamage", "moving"], "attributes": {"projectileName": "shark", "X_Velocity": -100.0, "Y_Velocity": 0.0, "throwSpan": 3.00, "specialSpan": 2.00, "dieSpan": 5.07},
     "animation": "768/FULL/ZOMBIE/ZOMBIE_BEACH_ZOMBOSS/ZOMBIE_BEACH_ZOMBOSS.PAM", "status": {"idle": "idle", "stun": "stun_loop", "throw": "spawn", "special": "suction_loop", "die": "die"}},
 
-  "ICE": {"category": "zomboss", "eatdps": 0, "baseHP":  12000, "velocity": 0, "waveCost": 0, "armor": [], "abilities": ["fatalDamage", "moving"], "attributes": {"projectileName": "ice", "throwSpan": 3.50, "spawnSpan": 6.30, "specialSpan": 2.83, "dieSpan": 4.03},
+  "ICE": {"category": "zomboss", "eatdps": 0, "baseHP":  12000, "velocity": 0, "waveCost": 0, "armor": [], "abilities": ["fatalDamage", "moving"], "attributes": {"projectileName": "ice", "X_Velocity": 0.0, "Y_Velocity": -200.0, "throwSpan": 3.50, "spawnSpan": 6.30, "specialSpan": 2.83, "dieSpan": 4.03},
     "animation": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_ZOMBOSS/ZOMBIE_ICEAGE_ZOMBOSS.PAM", "status": {"idle": "idle", "stun": "stun", "throw": "slingshot", "spawn": "glacier_column_1", "special": "wind_2", "die": "die"}}
 
 

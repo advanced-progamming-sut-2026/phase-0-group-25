@@ -8,7 +8,7 @@ import com.test1.PlantsVsZombies.src.Model.Tile;
 
 
 public class Moving implements Ability {
-    private static int SNORKEL_X_LIMIT = 1420;
+    private static int SNORKEL_X_LIMIT = 1403;
     private static int PIANO_ACTION_INTERVAL = 20;
     private GamePlay GAME = GamePlay.activeInstance;
 
@@ -38,6 +38,12 @@ public class Moving implements Ability {
                     }
                     zombie.setLastActionTime(GAME.getTotalTimePassed());
                 }
+            } else if ((zombie.getZombieStats().getName().equals("SNORKEL"))) {
+                if (zombie.getPosition().getX() <= SNORKEL_X_LIMIT) {
+                    zombie.setSubmarine(false);
+                } else {
+                    zombie.setSubmarine(true);
+                }
             }
 
             for (BattlePlant plant : GAME.getGamePlants()) {
@@ -55,8 +61,7 @@ public class Moving implements Ability {
                     makeEatingActivated(zombie);
                     if (zombie.getZombieStats().getName().equals("EXPLORER")) {
                         handleExplorerTorch(zombie, plant);
-                    } else if ((zombie.getZombieStats().getName().equals("SNORKEL")) &&
-                        (zombie.getPosition().getX() < SNORKEL_X_LIMIT)) {
+                    } else if ((zombie.getZombieStats().getName().equals("SNORKEL"))) {
                         zombie.setSubmarine(false);
                     }
                     return;

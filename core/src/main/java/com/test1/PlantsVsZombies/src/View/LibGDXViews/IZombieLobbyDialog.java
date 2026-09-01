@@ -25,6 +25,9 @@ import java.util.function.Consumer;
 public class IZombieLobbyDialog extends BorderedTable {
     private enum Mode { CHOOSE, SEARCHING, CHALLENGE_INPUT, CHALLENGE_PENDING }
 
+    private static final float BTN_WIDTH = 160f;
+    private static final float BTN_HEIGHT = 48f;
+
     private final Skin skin;
     private final Runnable onClose;
 
@@ -43,7 +46,7 @@ public class IZombieLobbyDialog extends BorderedTable {
         this.onClose = onClose;
 
         this.pad(30);
-        this.setSize(560, 440);
+        this.setSize(580, 480);
 
         ServerConnection.getInstance().addPushListener(MessageType.MATCH_FOUND, matchFoundListener);
         ServerConnection.getInstance().addPushListener(MessageType.CHALLENGE_USER, challengeReceivedListener);
@@ -74,19 +77,12 @@ public class IZombieLobbyDialog extends BorderedTable {
                 buildChallengePendingView();
                 break;
         }
-
-        TextButton closeBtn = new TextButton("Close", skin, "brown");
-        closeBtn.addListener(clickListener(() -> {
-            cleanup();
-            if (onClose != null) onClose.run();
-        }));
-        this.add(closeBtn).width(140).height(45).padTop(24).row();
     }
 
     private void buildChooseView() {
         TextButton randomBtn = new TextButton("Random Matchmaking", skin, "green");
         randomBtn.addListener(clickListener(this::startRandomMatchmaking));
-        this.add(randomBtn).width(380).height(55).padBottom(14).row();
+        this.add(randomBtn).width(380).height(52).padBottom(14).row();
 
         TextButton challengeBtn = new TextButton("Direct Challenge", skin, "green");
         challengeBtn.addListener(clickListener(() -> {
@@ -94,26 +90,36 @@ public class IZombieLobbyDialog extends BorderedTable {
             statusMessage = "";
             buildUI();
         }));
-        this.add(challengeBtn).width(380).height(55).padBottom(14).row();
+        this.add(challengeBtn).width(380).height(52).padBottom(14).row();
 
         TextButton couchBtn = new TextButton("Local Couch Play", skin, "green");
         couchBtn.addListener(clickListener(this::startCouchPlay));
-        this.add(couchBtn).width(380).height(55).row();
+        this.add(couchBtn).width(380).height(52).padBottom(20).row();
+
+        TextButton closeBtn = createCloseButton();
+        this.add(closeBtn).width(180).height(BTN_HEIGHT).row();
     }
 
     private void buildSearchingView() {
         Label searching = new Label("Searching for an opponent...", skin, "big");
         searching.setFontScale(0.55f);
         searching.setColor(Color.BLACK);
-        this.add(searching).padBottom(20).row();
+        this.add(searching).padBottom(16).row();
 
         if (statusMessage != null && !statusMessage.isEmpty()) {
-            this.add(errorLabel(statusMessage)).width(400).padBottom(14).row();
+            this.add(errorLabel(statusMessage)).width(480).padBottom(16).row();
         }
 
+
+        Table actionRow = new Table();
         TextButton cancelBtn = new TextButton("Cancel", skin, "brown");
         cancelBtn.addListener(clickListener(this::cancelMatchmaking));
-        this.add(cancelBtn).width(200).height(45).row();
+        actionRow.add(cancelBtn).width(BTN_WIDTH).height(BTN_HEIGHT).padRight(16);
+
+        TextButton closeBtn = createCloseButton();
+        actionRow.add(closeBtn).width(BTN_WIDTH).height(BTN_HEIGHT);
+
+        this.add(actionRow).padTop(16).row();
     }
 
     private void buildChallengeInputView() {
@@ -126,43 +132,70 @@ public class IZombieLobbyDialog extends BorderedTable {
         this.add(usernameField).width(340).height(50).padBottom(12).row();
 
         if (statusMessage != null && !statusMessage.isEmpty()) {
-            this.add(errorLabel(statusMessage)).width(400).padBottom(12).row();
+            this.add(errorLabel(statusMessage)).width(480).padBottom(12).row();
         }
 
         TextButton sendBtn = new TextButton("Send Challenge", skin, "green");
         sendBtn.addListener(clickListener(this::sendChallenge));
-        this.add(sendBtn).width(300).height(50).padBottom(12).row();
+        this.add(sendBtn).width(320).height(50).padBottom(16).row();
 
+
+        Table actionRow = new Table();
         TextButton backBtn = new TextButton("Back", skin, "brown");
         backBtn.addListener(clickListener(() -> {
             mode = Mode.CHOOSE;
             statusMessage = "";
             buildUI();
         }));
-        this.add(backBtn).width(160).height(40).row();
+        actionRow.add(backBtn).width(BTN_WIDTH).height(BTN_HEIGHT).padRight(16);
+
+        TextButton closeBtn = createCloseButton();
+        actionRow.add(closeBtn).width(BTN_WIDTH).height(BTN_HEIGHT);
+
+        this.add(actionRow).row();
     }
 
     private void buildChallengePendingView() {
         Label waiting = new Label("Waiting for " + pendingChallengeTarget + " to respond...", skin, "big");
-        waiting.setFontScale(0.5f);
+        waiting.setFontScale(0.60f);
         waiting.setColor(Color.BLACK);
         waiting.setWrap(true);
         waiting.setAlignment(Align.center);
-        this.add(waiting).width(420).padBottom(20).row();
+        this.add(waiting).width(450).padBottom(20).row();
 
+        if (statusMessage != null && !statusMessage.isEmpty()) {
+            this.add(errorLabel(statusMessage)).width(480).padBottom(16).row();
+        }
+
+        Table actionRow = new Table();
         TextButton cancelBtn = new TextButton("Cancel", skin, "brown");
         cancelBtn.addListener(clickListener(() -> {
             cleanup();
-            mode = Mode.CHOOSE;
+            mode = Mode.CHALLENGE_INPUT;
+            statusMessage = "Challenge cancelled.";
             buildUI();
         }));
-        this.add(cancelBtn).width(200).height(45).row();
+        actionRow.add(cancelBtn).width(BTN_WIDTH).height(BTN_HEIGHT).padRight(16);
+
+        TextButton closeBtn = createCloseButton();
+        actionRow.add(closeBtn).width(BTN_WIDTH).height(BTN_HEIGHT);
+
+        this.add(actionRow).padTop(10).row();
+    }
+
+    private TextButton createCloseButton() {
+        TextButton closeBtn = new TextButton("Close", skin, "brown");
+        closeBtn.addListener(clickListener(() -> {
+            cleanup();
+            if (onClose != null) onClose.run();
+        }));
+        return closeBtn;
     }
 
     private Label errorLabel(String text) {
         Label label = new Label(text, skin);
         label.setColor(Color.FIREBRICK);
-        label.setFontScale(0.5f);
+        label.setFontScale(1.25f);
         label.setWrap(true);
         label.setAlignment(Align.center);
         return label;
@@ -215,6 +248,12 @@ public class IZombieLobbyDialog extends BorderedTable {
             return;
         }
 
+        if (target.equalsIgnoreCase(user.getUserName())) {
+            statusMessage = "You cannot challenge yourself!";
+            buildUI();
+            return;
+        }
+
         pendingChallengeTarget = target;
         mode = Mode.CHALLENGE_PENDING;
         statusMessage = "";
@@ -237,7 +276,6 @@ public class IZombieLobbyDialog extends BorderedTable {
     }
 
     private void handleMatchFoundPush(NetworkMessage msg) {
-
         mode = Mode.CHOOSE;
         cleanup();
 
@@ -261,6 +299,13 @@ public class IZombieLobbyDialog extends BorderedTable {
 
     private void handleChallengeReceivedPush(NetworkMessage msg) {
         String challenger = (String) msg.getData().get("challenger");
+        User user = UsersManager.getInstance().getLoggedInUser();
+        String myUname = (user != null) ? user.getUserName() : "Player";
+
+
+        if (challenger == null || challenger.equalsIgnoreCase(myUname) || mode == Mode.CHALLENGE_PENDING) {
+            return;
+        }
 
         BorderedTable modal = new BorderedTable();
         modal.pad(25);
@@ -269,9 +314,6 @@ public class IZombieLobbyDialog extends BorderedTable {
         notice.setColor(Color.BLACK);
         notice.setFontScale(0.8f);
         modal.add(notice).colspan(2).padBottom(20).row();
-
-        User user = UsersManager.getInstance().getLoggedInUser();
-        String myUname = (user != null) ? user.getUserName() : "Player";
 
         TextButton acceptBtn = new TextButton("Accept", skin, "green");
         acceptBtn.addListener(clickListener(() -> {
