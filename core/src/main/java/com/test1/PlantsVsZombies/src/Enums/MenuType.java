@@ -17,7 +17,6 @@ public enum MenuType {
     Quest("quest"),
     Setting("settings"),
     Shop("shop"),
-    Network("network"),
     TravelLog("travel log");
 
     private final String string;

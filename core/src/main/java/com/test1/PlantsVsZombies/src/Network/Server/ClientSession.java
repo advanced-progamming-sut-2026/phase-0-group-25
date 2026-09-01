@@ -23,7 +23,9 @@ public class ClientSession implements Runnable {
     private final Socket socket;
     private final UserDatabase database;
     private final ObjectMapper mapper = new ObjectMapper();
-    private final Object writeLock = new Object();
+    private String loggedInUsername;
+    private String sessionToken;
+    private boolean stayLoggedIn;
 
     private volatile PrintWriter out;
     private volatile String username;

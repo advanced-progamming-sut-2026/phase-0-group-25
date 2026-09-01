@@ -25,8 +25,8 @@ public class UserProgress {
     private int gamesPlayed;
     private Map<String, String> questVariables;
 
-    // New settings
-    private int gameSpeed = 1;          // 1, 2, or 3
+
+    private int gameSpeed = 1;
     private boolean showTileGrid = false;
 
     private Map<MiniGameType, Integer> miniGameLevels;
@@ -40,8 +40,8 @@ public class UserProgress {
     private Map<PlantType, Integer> seedPackets;
     private LocalDate dailyOfferPurchaseDate;
 
-    // Persisted so the daily offer stays the same plant across app restarts,
-    // and only actually changes when the calendar day changes.
+
+
     private PlantType dailyOfferPlantType;
     private int dailyOfferPrice;
     private int dailyOfferSeedPacketCount;
@@ -106,7 +106,7 @@ public class UserProgress {
         return potColumnCount;
     }
 
-    // ----- Existing getters/setters (unchanged) -----
+
     public Map<MiniGameType, Integer> getMiniGameLevels() {
         return miniGameLevels;
     }
@@ -270,11 +270,7 @@ public class UserProgress {
     void setDailyOfferGeneratedDate(LocalDate date) {
         this.dailyOfferGeneratedDate = date;
     }
-    /**
-     * True only if a daily offer was generated today AND the plant it was
-     * generated for is still unlocked. Used to decide whether a saved
-     * offer can be reused as-is or must be regenerated.
-     */
+
     public boolean hasValidPersistedDailyOffer() {
         return dailyOfferGeneratedDate != null
             && dailyOfferGeneratedDate.equals(LocalDate.now())
@@ -337,7 +333,7 @@ public class UserProgress {
         this.gameDifficulty = gameDifficulty;
     }
 
-    // ----- NEW getters/setters for settings -----
+
     public int getGameSpeed() {
         return gameSpeed;
     }
@@ -353,7 +349,7 @@ public class UserProgress {
         this.showTileGrid = showTileGrid;
     }
 
-    // ----- Existing methods (unchanged) -----
+
     public int getPlantLevel(PlantType plantType) {
         return unlockedPlantsAndTheirLevels.getOrDefault(plantType, 0);
     }
