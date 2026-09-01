@@ -13,6 +13,7 @@ import com.test1.PlantsVsZombies.src.Enums.MenuType;
 import com.test1.PlantsVsZombies.src.Menu.MenuManager;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.MiniGames.IZombieGame.IZombie;
+import com.test1.PlantsVsZombies.src.Model.Sun.Sun;
 import com.test1.PlantsVsZombies.src.Network.Client.ServerConnection;
 import com.test1.PlantsVsZombies.src.Network.MessageType;
 import com.test1.PlantsVsZombies.src.Network.NetworkMessage;
@@ -166,7 +167,6 @@ public class IZombieScreen extends ScreenAdapter implements GamePlayMenuView {
         textureBank.update();
         ScreenUtils.clear(0.1f, 0.4f, 0.1f, 1);
 
-
         boolean shouldTick = gamePlay.isNetworkGame() || !gamePlay.isPaused();
         if (shouldTick && !gamePlay.isGameOver()) {
             stateTime += delta;
@@ -176,6 +176,13 @@ public class IZombieScreen extends ScreenAdapter implements GamePlayMenuView {
             while (tickAccumulator >= TICK_RATE) {
                 gamePlay.update();
                 tickAccumulator -= TICK_RATE;
+            }
+
+
+            if (gamePlay.getActiveSuns() != null) {
+                for (Sun sun : gamePlay.getActiveSuns()) {
+                    sun.update(delta);
+                }
             }
 
             modals.checkAndMaybeShowEndGameModal();

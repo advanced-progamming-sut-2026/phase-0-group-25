@@ -28,7 +28,6 @@ public class IZombieCouchPlayInputHandler extends InputAdapter implements IZombi
         this.screen = screen;
         this.zombieCardOrder = new ArrayList<>(gamePlay.getZombieDeck().keySet());
 
-
         if (!zombieCardOrder.isEmpty()) {
             this.selectedZombieCardType = zombieCardOrder.get(0);
         }
@@ -37,12 +36,16 @@ public class IZombieCouchPlayInputHandler extends InputAdapter implements IZombi
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         camera.unproject(mouseWorldPos.set(screenX, screenY, 0));
+
+        gamePlay.tryCollectSunByClick(mouseWorldPos.x, mouseWorldPos.y);
         return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         camera.unproject(mouseWorldPos.set(screenX, screenY, 0));
+
+        gamePlay.tryCollectSunByClick(mouseWorldPos.x, mouseWorldPos.y);
         return false;
     }
 
@@ -51,13 +54,11 @@ public class IZombieCouchPlayInputHandler extends InputAdapter implements IZombi
         camera.unproject(mouseWorldPos.set(screenX, screenY, 0));
         float x = mouseWorldPos.x, y = mouseWorldPos.y;
 
-
         if (isInside(x, y, IZombieHudRenderer.PAUSE_BTN_X, IZombieHudRenderer.PAUSE_BTN_Y,
             IZombieHudRenderer.PAUSE_BTN_SIZE, IZombieHudRenderer.PAUSE_BTN_SIZE)) {
             screen.openPauseModal();
             return true;
         }
-
 
         if (isInside(x, y, IZombieHudRenderer.DRAWER_TOGGLE_X, IZombieHudRenderer.DRAWER_TOGGLE_Y,
             IZombieHudRenderer.DRAWER_TOGGLE_SIZE, IZombieHudRenderer.DRAWER_TOGGLE_SIZE)) {
@@ -72,7 +73,6 @@ public class IZombieCouchPlayInputHandler extends InputAdapter implements IZombi
 
         if (gamePlay.isGameOver()) return false;
         if (gamePlay.tryCollectSunByClick(x, y)) return true;
-
 
         ArrayList<BattlePlant> deck = gamePlay.getPlants();
         for (int i = 0; i < deck.size(); i++) {
@@ -119,13 +119,11 @@ public class IZombieCouchPlayInputHandler extends InputAdapter implements IZombi
     public boolean keyDown(int keycode) {
         if (gamePlay.isGameOver()) return false;
 
-
         int cardIndex = numberKeyIndex(keycode);
         if (cardIndex >= 0 && cardIndex < zombieCardOrder.size()) {
             selectedZombieCardType = zombieCardOrder.get(cardIndex);
             return true;
         }
-
 
         if (keycode == Input.Keys.W || keycode == Input.Keys.UP) {
             selectedZombieLane = Math.min(5, selectedZombieLane + 1);
@@ -135,7 +133,6 @@ public class IZombieCouchPlayInputHandler extends InputAdapter implements IZombi
             selectedZombieLane = Math.max(1, selectedZombieLane - 1);
             return true;
         }
-
 
         if (keycode == Input.Keys.SPACE || keycode == Input.Keys.ENTER || keycode == Input.Keys.NUMPAD_ENTER) {
             if (selectedZombieCardType != null) {
