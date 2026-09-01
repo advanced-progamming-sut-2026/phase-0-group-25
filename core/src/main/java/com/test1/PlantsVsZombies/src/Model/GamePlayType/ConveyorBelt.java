@@ -40,6 +40,8 @@ public class ConveyorBelt extends GamePlay {
         }
         this.mySuns = 0;
 
+        setLevelObjectives("Plant from");
+
         spawnNewCard();
     }
 

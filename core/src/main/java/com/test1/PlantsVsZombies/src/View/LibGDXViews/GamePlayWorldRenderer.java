@@ -43,7 +43,7 @@ public class GamePlayWorldRenderer {
     private final TextureRegion[] darkPlantFoodGraveRegions = new TextureRegion[5];
     private final TextureRegion[] darkSunGraveRegions = new TextureRegion[5];
 
-
+    private static final String JALAPENO_FIRE_ANIM_PATH = "768/INITIAL/EFFECTS/JALAPENO_FIRE/JALAPENO_FIRE.PAM";
     private static final String BEACH_WATER_ANIM_PATH = "768/FULL/BACKGROUNDS/WAVE_UPPERLAYER/WAVE_UPPERLAYER.PAM";
     private static final String BEACH_TIDELINE_ANIM_PATH = "768/FULL/BACKGROUNDS/WATER_TIDE_LINE/WATER_TIDE_LINE.PAM";
     private static final String ICY_WIND_ANIM_PATH = "768/FULL/EFFECTS/FROSTBITE_CHILL_WIND/FROSTBITE_CHILL_WIND.PAM";
@@ -236,6 +236,10 @@ public class GamePlayWorldRenderer {
                 batch.setColor(0.1f, 0.7f, 1f, pulse);
                 batch.draw(lowTideRuneRegion, realX - 60f, realY - 45f, 120f, 60f);
                 batch.setColor(Color.WHITE);
+            }
+
+            if (tile.isFiring()) {
+                player.draw(batch, JALAPENO_FIRE_ANIM_PATH, "idle", stateTime, realX, realY, true);
             }
         }
     }
