@@ -185,6 +185,7 @@ public class Zomboss extends Zombie {
                 break;
         }
 
+
     }
 
     @Override
@@ -231,6 +232,7 @@ public class Zomboss extends Zombie {
 
             tile.setFiring(true);
         }
+        this.timeWhenFired = GAME.getTotalTimePassed();
     }
 
     private void egyptAndBeachSpecialAffect() {
