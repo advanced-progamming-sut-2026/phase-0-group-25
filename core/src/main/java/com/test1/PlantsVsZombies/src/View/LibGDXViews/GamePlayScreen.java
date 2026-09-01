@@ -132,8 +132,11 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
         batch.setProjectionMatrix(camera.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
 
+
+        float renderDelta = gamePlay.isPaused() ? 0f : effectiveDelta;
+
         batch.begin();
-        worldRenderer.render(batch, gamePlay, stateTime, effectiveDelta);
+        worldRenderer.render(batch, gamePlay, stateTime, renderDelta);
         batch.end();
 
         hudRenderer.render(batch, shapeRenderer, gamePlay, inputHandler, stateTime);

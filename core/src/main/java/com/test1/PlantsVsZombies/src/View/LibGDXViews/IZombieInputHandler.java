@@ -29,12 +29,16 @@ public class IZombieInputHandler extends InputAdapter implements IZombieHudInput
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         camera.unproject(mouseWorldPos.set(screenX, screenY, 0));
+
+        gamePlay.tryCollectSunByClick(mouseWorldPos.x, mouseWorldPos.y);
         return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         camera.unproject(mouseWorldPos.set(screenX, screenY, 0));
+
+        gamePlay.tryCollectSunByClick(mouseWorldPos.x, mouseWorldPos.y);
         return false;
     }
 
@@ -42,7 +46,6 @@ public class IZombieInputHandler extends InputAdapter implements IZombieHudInput
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         camera.unproject(mouseWorldPos.set(screenX, screenY, 0));
         float x = mouseWorldPos.x, y = mouseWorldPos.y;
-
 
         if (isInside(x, y, IZombieHudRenderer.PAUSE_BTN_X, IZombieHudRenderer.PAUSE_BTN_Y,
             IZombieHudRenderer.PAUSE_BTN_SIZE, IZombieHudRenderer.PAUSE_BTN_SIZE)) {

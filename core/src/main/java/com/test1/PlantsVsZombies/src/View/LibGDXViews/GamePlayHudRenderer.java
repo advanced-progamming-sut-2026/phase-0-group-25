@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.*;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zomboss;
 import com.test1.PlantsVsZombies.src.Model.User.User;
 import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import pvz.libpvz.pam.PamPlayer;
@@ -190,17 +191,58 @@ public class GamePlayHudRenderer {
 
 
         batch.begin();
-        float barWidth = 450f, barLeftX = (1920f - barWidth) / 2f, barRightX = barLeftX + barWidth, barY = 1130f;
-        float headX = barRightX - (barWidth * gamePlay.getProgressPercentage());
-        batch.draw(progressBarFrame, barLeftX, barY, barWidth, 45f);
 
-        int totalWaves = gamePlay.calculateWaves(gamePlay.getChapterType(), gamePlay.getLevel());
-        for (int i = 0; i < totalWaves; i++) {
-            float flagX = barRightX - (barWidth * ((float) i / totalWaves));
-            if (i == totalWaves - 1) batch.draw(flagIcon, flagX - 15, barY + 5, 45, 55);
-            else batch.draw(flagIcon, flagX - 10, barY + 10, 30, 40);
+        if (gamePlay instanceof ZombossGamePlay zombossMode && zombossMode.getGameZomboss() != null) {
+            Zomboss boss = zombossMode.getGameZomboss();
+            float maxHp = (float) boss.getZombieStats().getBaseHP();
+            float currentHp = Math.max(0, (float) boss.getCurrentHP());
+            float hpRatio = (maxHp > 0) ? (currentHp / maxHp) : 0f;
+
+            float bossBarW = 600f;
+            float bossBarH = 35f;
+            float bossBarX = (1920f - bossBarW) / 2f;
+            float bossBarY = 1130f;
+
+
+            if (progressBarFrame != null) {
+                batch.draw(progressBarFrame, bossBarX, bossBarY, bossBarW, bossBarH);
+            }
+
+            batch.end();
+
+
+            Gdx.gl.glEnable(Gdx.gl.GL_BLEND);
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(new Color(0.1f, 0.1f, 0.1f, 0.85f));
+            shapeRenderer.rect(bossBarX + 15, bossBarY + 6, bossBarW - 30, bossBarH - 12);
+
+            if (hpRatio > 0) {
+                shapeRenderer.setColor(Color.RED);
+                shapeRenderer.rect(bossBarX + 15, bossBarY + 6, (bossBarW - 30) * hpRatio, bossBarH - 12);
+            }
+            shapeRenderer.end();
+            Gdx.gl.glDisable(Gdx.gl.GL_BLEND);
+
+            batch.begin();
+
+            hudFont.getData().setScale(0.55f);
+            hudFont.setColor(Color.WHITE);
+            hudFont.draw(batch, "Dr. Zomboss", bossBarX + (bossBarW / 2f) - 60f, bossBarY + 26f);
+            hudFont.getData().setScale(1f);
+        } else {
+
+            float barWidth = 450f, barLeftX = (1920f - barWidth) / 2f, barRightX = barLeftX + barWidth, barY = 1130f;
+            float headX = barRightX - (barWidth * gamePlay.getProgressPercentage());
+            batch.draw(progressBarFrame, barLeftX, barY, barWidth, 45f);
+
+            int totalWaves = gamePlay.calculateWaves(gamePlay.getChapterType(), gamePlay.getLevel());
+            for (int i = 0; i < totalWaves; i++) {
+                float flagX = barRightX - (barWidth * ((float) i / totalWaves));
+                if (i == totalWaves - 1) batch.draw(flagIcon, flagX - 15, barY + 5, 45, 55);
+                else batch.draw(flagIcon, flagX - 10, barY + 10, 30, 40);
+            }
+            batch.draw(zombieHeadIcon, headX - 25, barY - 5, 50, 50);
         }
-        batch.draw(zombieHeadIcon, headX - 25, barY - 5, 50, 50);
 
 
         if (selectedPlant != null && selectedPlant.getPlantStats().getAnimation() != null) {

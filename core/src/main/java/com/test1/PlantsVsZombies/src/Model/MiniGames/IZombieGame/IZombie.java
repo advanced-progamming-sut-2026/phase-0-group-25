@@ -101,7 +101,6 @@ public class IZombie extends GamePlay {
             matchTimeRemaining = Math.max(0f, matchTimeRemaining - 0.1f);
         }
 
-        sunMaker();
         checkingSunMakers();
         checkZombieBrainCollisions();
 

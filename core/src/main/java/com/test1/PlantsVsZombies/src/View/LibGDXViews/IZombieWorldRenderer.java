@@ -7,9 +7,11 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.test1.PlantsVsZombies.src.Model.MiniGames.IZombieGame.Brain;
 import com.test1.PlantsVsZombies.src.Model.MiniGames.IZombieGame.IZombie;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.LobbedProjectile;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.ProjectileConfig;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
+import com.test1.PlantsVsZombies.src.Model.Sun.Sun;
 import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
 
@@ -50,6 +52,7 @@ public class IZombieWorldRenderer {
         }
 
         renderProjectiles(batch, gamePlay, stateTime);
+        renderSuns(batch, gamePlay, stateTime);
         batch.end();
 
         renderBrains(batch, shapeRenderer, gamePlay, stateTime);
@@ -124,16 +127,52 @@ public class IZombieWorldRenderer {
         for (Projectile projectile : gamePlay.getProjectiles()) {
             if (!projectile.isActive()) continue;
 
-            String name = projectile.getName();
-            ProjectileConfig config = ProjectileConfig.fromName(name);
-            if ("pea".equals(name)) {
-                if (projectile.isIcy()) config = ProjectileConfig.ICY_PEA;
-                else if (projectile.isFiring()) config = ProjectileConfig.FIRING_PEA;
+            double offsetX = 0;
+            double offsetY = 0;
+            if (projectile instanceof LobbedProjectile) {
+                offsetX = 0;
+                offsetY = 50;
+            } else if (projectile.getOffset() != null) {
+                offsetX = 0;
+                offsetY = projectile.getOffset().getY();
             }
-            if (config == null) continue;
 
-            player.draw(batch, config.getAnimation(), config.getClip(), stateTime,
-                (float) projectile.getPosition().getX(), (float) projectile.getPosition().getY(), true);
+            float px = (float) (projectile.getPosition().getX() + offsetX);
+            float py = (float) (projectile.getPosition().getY() + offsetY);
+
+            String name = projectile.getName();
+            ProjectileConfig projectileConfig = ProjectileConfig.fromName(name);
+            if ("pea".equals(name)) {
+                if (projectile.isIcy()) {
+                    projectileConfig = ProjectileConfig.ICY_PEA;
+                } else if (projectile.isFiring()) {
+                    projectileConfig = ProjectileConfig.FIRING_PEA;
+                } else if (projectile.isBlueFiring()) {
+                    projectileConfig = ProjectileConfig.BLUE_FIRING_PEA;
+                }
+            }
+            if (projectileConfig == null) continue;
+
+            player.draw(batch, projectileConfig.getAnimation(), projectileConfig.getClip(), stateTime, px, py, true);
+        }
+    }
+
+    private void renderSuns(SpriteBatch batch, IZombie gamePlay, float stateTime) {
+        if (gamePlay.getActiveSuns() == null) return;
+
+        for (Sun sun : gamePlay.getActiveSuns()) {
+            if (!sun.isCollected() && sun.getPosition() != null) {
+                float x = (float) sun.getPosition().getX() + 40f;
+                float y = (float) sun.getPosition().getY() + 40f;
+
+                if (sun.getNumberOfSun() >= 100) {
+                    batch.setTransformMatrix(batch.getTransformMatrix().idt().translate(x, y, 0).scale(1.35f, 1.35f, 1).translate(-x, -y, 0));
+                    player.draw(batch, sun.getAnimationPath(), "animation", stateTime, x, y, true);
+                    batch.setTransformMatrix(batch.getTransformMatrix().idt());
+                } else {
+                    player.draw(batch, sun.getAnimationPath(), "animation", stateTime, x, y, true);
+                }
+            }
         }
     }
 }

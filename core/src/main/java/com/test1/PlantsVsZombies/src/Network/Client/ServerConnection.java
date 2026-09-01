@@ -86,7 +86,7 @@ public class ServerConnection {
                 if (line.isBlank()) continue;
                 NetworkMessage response = mapper.readValue(line, NetworkMessage.class);
 
-                // ۱. پاسخ به درخواست‌های دارای Request ID
+
                 Mailbox mailbox = pending.remove(response.getRequestId());
                 if (mailbox != null) {
                     if (mailbox.asyncCallback != null) {
@@ -102,7 +102,7 @@ public class ServerConnection {
                     }
                 }
 
-                // ۲. هدایت پیام‌های Push خودکار سرور به شنوندگان کلاینت
+
                 List<Consumer<NetworkMessage>> listeners = pushListeners.get(response.getType());
                 if (listeners != null && !listeners.isEmpty()) {
                     for (Consumer<NetworkMessage> listener : listeners) {
