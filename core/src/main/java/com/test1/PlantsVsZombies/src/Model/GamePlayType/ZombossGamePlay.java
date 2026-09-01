@@ -115,7 +115,7 @@ public class ZombossGamePlay extends ConveyorBelt {
         }
 
         updateZombieTiles();
-
+        updatePlantTiles();
 
         Iterator<Projectile> pj = projectiles.iterator();
         while (pj.hasNext()) {

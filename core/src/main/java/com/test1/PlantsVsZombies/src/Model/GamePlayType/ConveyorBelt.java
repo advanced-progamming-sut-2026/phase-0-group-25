@@ -169,6 +169,7 @@ public class ConveyorBelt extends GamePlay {
         }
 
         updateZombieTiles();
+        updatePlantTiles();
 
         Iterator<Projectile> pj = projectiles.iterator();
         while (pj.hasNext()) {
