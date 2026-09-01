@@ -121,7 +121,6 @@ public abstract class GamePlay {
         int waveMultiplier = (waveNumber - 1) * 550;
         return baseDifficultyForStage + waveMultiplier;
     }
-
     public int calculateWaves(ChapterType chapterType, int level) {
         int chapterNumber = (chapterType != null) ? chapterType.ordinal() + 1 : 2;
         int levelNumber = (Set.of(1, 2, 3, 4).contains(level)) ? level : 1;
@@ -129,9 +128,7 @@ public abstract class GamePlay {
         int globalLevel = ((chapterNumber - 1) * stagesPerChapter) + levelNumber;
         return Math.max(1, (int) Math.floor(1.1 + (globalLevel * 0.26)));
     }
-
     public abstract void update();
-
     public Boolean checkingTheEndOfTheGame() {
         if (this.allWaves.isEmpty()) return false;
         for (Wave wave : this.allWaves) {
@@ -139,15 +136,6 @@ public abstract class GamePlay {
         }
         return this.gameZombies.isEmpty();
     }
-
-    public void Pause() {
-        this.isPaused = true;
-    }
-
-    public void advanceTime(int ticks) {
-        for (int i = 0; i < ticks; i++) update();
-    }
-
     public void sunMaker() {
         ticksSinceLastDrop++;
         double t = totalTicksPassed / 10.0;
@@ -188,7 +176,6 @@ public abstract class GamePlay {
             }
         }
     }
-
     public void checkingSunMakers() {
         for (BattlePlant p : this.gamePlants) {
             if (p.getCategory() == PlantCategory.SUN_PRODUCER) {
@@ -200,40 +187,6 @@ public abstract class GamePlay {
             }
         }
     }
-
-    public void collectSun(int x, int y) {
-        Sun targetSun = null;
-        for (Sun sun : activeSuns) {
-            if ((int) sun.getPosition().getX() == getRealX(x) && (int) sun.getPosition().getY() == getRealY(y)) {
-                if (sun.isFromSky()) {
-                    sun.setCollected(true);
-                } else {
-                    sun.setCollected(true);
-                    Tile thisTile = getTileByPosition(x, y);
-                    if (thisTile != null && !thisTile.getPlants().isEmpty()) {
-                        Ability thisAbility = thisTile.getPlants().get(0).getOriginalAbilities().get(0);
-                        if (thisAbility instanceof ProducingSun ps) {
-                            ps.setCollected(false);
-                            ps.setProduced(false);
-                        }
-                    }
-                }
-                targetSun = sun;
-                break;
-            }
-        }
-
-        if (targetSun == null) return;
-
-        if (targetSun instanceof RadioActiveSun && targetSun.getTimeToReach() > 0) {
-            handleRadioActiveExploration((RadioActiveSun) targetSun);
-        } else {
-            addSun(targetSun);
-            QuestManager.getInstance().notifyEvent(new SunCollectedEvent(targetSun.getNumberOfSun()));
-        }
-        activeSuns.remove(targetSun);
-    }
-
     public boolean tryCollectSunByClick(float clickX, float clickY) {
         Sun targetSun = null;
         for (Sun sun : activeSuns) {
@@ -277,7 +230,6 @@ public abstract class GamePlay {
         activeSuns.remove(targetSun);
         return true;
     }
-
     private void handleRadioActiveExploration(RadioActiveSun radSun) {
         int sunX = (int) radSun.getPosition().getX();
         int sunY = (int) radSun.getPosition().getY();
@@ -292,7 +244,6 @@ public abstract class GamePlay {
             }
         }
     }
-
     private boolean hasFrozen(Tile thisTile) {
         if (thisTile == null) return false;
         for (BattlePlant p : thisTile.getPlants()) {
@@ -300,7 +251,6 @@ public abstract class GamePlay {
         }
         return false;
     }
-
     public void planting(BattlePlant thisPlant, Position thisPosition) {
         Tile thisTile = getTileByPosition((int) thisPosition.getX(), (int) thisPosition.getY());
         if (thisTile == null) return;
@@ -344,7 +294,6 @@ public abstract class GamePlay {
             this.mySuns = Math.max(0, this.mySuns - thisPlant.getPlantStats().getCost());
         }
     }
-
     public BattlePlant plantFromPlantFood(BattlePlant sourcePlant, Position position) {
         Tile tile = getTileByPosition(
             (int) position.getX(),
@@ -407,7 +356,6 @@ public abstract class GamePlay {
 
         return newPlant;
     }
-
     public Zombie addZombieFromAbility(Zombie zombie) {
         if (zombie == null) return null;
 
@@ -419,7 +367,6 @@ public abstract class GamePlay {
 
         return zombie;
     }
-
     public void plucking(Position thisPosition) {
         Tile thisTile = getTileByPosition((int) thisPosition.getX(), (int) thisPosition.getY());
         if (thisTile != null && !thisTile.getPlants().isEmpty()) {
@@ -427,7 +374,6 @@ public abstract class GamePlay {
             thisTile.removePlant();
         }
     }
-
     public void onWin() {
         if (levelObject != null) levelObject.completeLevel();
 
@@ -450,7 +396,6 @@ public abstract class GamePlay {
             sunProducersCount, emptyColumns, emptyRows
         ));
     }
-
     public void killAward(User thisUser) {
         if (Math.random() >= 0.9) {
             int kindOfAward = (int) (Math.random() * 3) + 1;
@@ -470,12 +415,10 @@ public abstract class GamePlay {
             }
         }
     }
-
     public void glowingAward(Position zombiePosition) {
         activePlantFoods.add(new DroppedPlantFood(new Position(zombiePosition.getX(), zombiePosition.getY())));
         UIManager.showToast("Plant Food dropped!", "IMAGE_UI_GENERIC_VTB");
     }
-
     public boolean tryCollectPlantFoodByHover(float mouseX, float mouseY) {
         DroppedPlantFood target = null;
         for (DroppedPlantFood pf : activePlantFoods) {
@@ -491,7 +434,6 @@ public abstract class GamePlay {
         }
         return false;
     }
-
     public void updateZombieTiles() {
         for (Tile tile : tiles) {
             tile.getZombies().clear();
@@ -522,7 +464,8 @@ public abstract class GamePlay {
                 continue;
             }
 
-            if (currentTile != null && !currentTile.isArable() && chapterType == ChapterType.FROSTBITE_CAVES && currentTile.getHP() == 0) {
+            if (currentTile != null && !currentTile.isArable() && chapterType == ChapterType.FROSTBITE_CAVES && currentTile.getHP() == 0
+                && !zombie.getName().equals("DODO")) {
                 zombie.changeRow();
                 zombiePosition = Position.getRowAndColumn(zombie.getPosition());
                 currentX = (int) zombiePosition.getX();
@@ -535,7 +478,21 @@ public abstract class GamePlay {
             }
         }
     }
-
+    public void updatePlantTiles() {
+        for (Tile tile : tiles) {
+            if (tile != null && tile.getPlants() != null) {
+                tile.getPlants().clear();
+            }
+        }
+        for (BattlePlant plant : gamePlants) {
+            if (plant != null && plant.isAlive()) {
+                Tile targetTile = getTileByPosition(plant.getColumn(), plant.getRow());
+                if (targetTile != null) {
+                    targetTile.addPlant(plant);
+                }
+            }
+        }
+    }
     public void triggerLowTide() {
         if (chapterType != ChapterType.BIG_WAVE_BEACH) return;
         boolean spawnedAny = false;
@@ -556,7 +513,6 @@ public abstract class GamePlay {
             UIManager.showToast("Low Tide! Zombies rising from the water!", "IMAGE_UI_GENERIC_TIMER_RIBBON_RED");
         }
     }
-
     public void applyIcyWind() {
         if (chapterType == ChapterType.FROSTBITE_CAVES && Math.random() < 0.012) {
             int randomNumber = new Random().nextInt(5) + 1;
@@ -568,7 +524,6 @@ public abstract class GamePlay {
             }
         }
     }
-
     public float getProgressPercentage() {
         if (allWaves.isEmpty()) return 1.0f;
         int total = allWaves.size();
@@ -584,7 +539,6 @@ public abstract class GamePlay {
 
         return Math.min(baseProgress + (fraction * (1.0f / total)), 1.0f);
     }
-
     public boolean usePlantFood(int gridX, int gridY) {
         if (this.numOfPlantFood <= 0) return false;
         Tile tile = getTileByPosition(gridX, gridY);
@@ -596,56 +550,38 @@ public abstract class GamePlay {
         }
         return false;
     }
-
     public void applyPlantFood(int x, int y) {
         Tile thisTile = getTileByPosition(x, y);
         if (thisTile != null) {
             for (BattlePlant p : thisTile.getPlants()) p.setEffected(true, effectedTime);
         }
     }
-
     public boolean isPlantBoosted(String plantName) {
         if (boostedPlants.contains(plantName)) return true;
         PlantType type = PlantType.fromName(plantName);
         return type != null && thisUser != null && thisUser.getUserProgress() != null && thisUser.getUserProgress().hasGreenhouseBoost(type);
     }
-
-
     public void addPlantFood() {
         this.numOfPlantFood = Math.min(this.numOfPlantFood + 1, 3);
         UsersManager.getInstance().addPlantFood(1);
     }
-
     public void addSun(Sun sun) {
         this.mySuns += sun.getNumberOfSun();
     }
-
     public void cheatAddSun(int sun) {
         this.mySuns += sun;
     }
-
-    public void releaseTheNuke() {
-        for (Zombie z : this.gameZombies) z.setAlive(false);
-    }
-
-    public void removeCooldown() {
-        for (BattlePlant p : this.plants) p.inactivateCooldown();
-    }
-
     public void incrementLostPlants() {
         this.lostPlants++;
     }
-
     public void addKilledZombieCost(int waveNum, float cost) {
         if (waveNum >= 0 && waveNum < killedZombiesCostPerWave.length) killedZombiesCostPerWave[waveNum] += cost;
     }
-
     protected void endGame(boolean won) {
         this.won = won;
         this.gameOver = true;
         this.isPaused = true;
     }
-
     public int getNextRandomY() {
         if (rowBag.isEmpty()) {
             for (int i = 1; i <= 5; i++) rowBag.add(i);
@@ -653,146 +589,102 @@ public abstract class GamePlay {
         }
         return rowBag.remove(0);
     }
-
     public int getRandomTime() {
         int[] numbers = {200, 350, 300, 450};
         return numbers[(int) (Math.random() * numbers.length)];
     }
-
     public int getLevelOfPlant(String plantName) {
         PlantType t = PlantType.valueOf(plantName);
         Integer lvl = thisUser.getUserProgress().getUnlockedPlantsAndTheirLevels().get(t);
         return lvl != null ? lvl : 1;
     }
-
     public int getRealX(int gridX) {
         return (int) Math.round(566.1 + ((gridX - 1) * 152.2));
     }
-
     public int getRealY(int gridY) {
         return 205 + ((gridY - 1) * 150);
     }
-
-    public String getKindOfTile(ChapterType thisChapter) {
-        return (thisChapter == ChapterType.ANCIENT_EGYPT || thisChapter == ChapterType.DARK_AGE) ? "Grave" : (thisChapter == ChapterType.FROSTBITE_CAVES) ? "Landslide" : "Water";
-    }
-
     public Tile getTileByPosition(int x, int y) {
         return tiles.stream().filter(t -> (int) t.getPosition().getX() == x && (int) t.getPosition().getY() == y).findFirst().orElse(null);
     }
-
     public int getNumOfPlantFood() {
         return numOfPlantFood;
     }
-
-    public int getCurrentWave() {
-        return allWaves.stream().filter(Wave::getStarted).mapToInt(Wave::getWaveNum).max().orElse(1);
-    }
-
     public ArrayList<Zombie> getGameZombies() {
         return gameZombies;
     }
-
-    public int getMySuns() {
-        return mySuns;
-    }
-
     public void setMySuns(int mySuns) {
         this.mySuns = mySuns;
     }
-
     public Level getLevelObject() {
         return levelObject;
     }
-
     public void setLevelObject(Level levelObject) {
         this.levelObject = levelObject;
     }
-
     public int getLevel() {
         return level;
     }
-
     public ChapterType getChapterType() {
         return chapterType;
     }
-
     public ArrayList<BattlePlant> getPlants() {
         return plants;
     }
-
     public ArrayList<BattlePlant> getGamePlants() {
         return gamePlants;
     }
-
     public ArrayList<Sun> getActiveSuns() {
         return activeSuns;
     }
-
     public int getTotalTicksPassed() {
         return totalTicksPassed;
     }
-
     public double getTotalTimePassed() {
         return totalTimePassed;
     }
-
     public void setTotalTimePassed(double totalTimePassed) {
         this.totalTimePassed = totalTimePassed;
     }
-
     public ArrayList<Projectile> getProjectiles() {
         return projectiles;
     }
-
     public ArrayList<Dynamite> getDynamites() {
         return dynamites;
     }
-
     public ArrayList<Tile> getTiles() {
         return tiles;
     }
-
     public ArrayList<Mower> getMowers() {
         return mowers;
     }
-
     public ArrayList<DroppedPlantFood> getActivePlantFoods() {
         return activePlantFoods;
     }
-
     public ArrayList<SandstormEffect> getActiveSandstorms() {
         return activeSandstorms;
     }
-
     public void addSandstormEffect(float x, float y) {
         activeSandstorms.add(new SandstormEffect(x, y));
     }
-
     public ArrayList<IcyWindEffect> getActiveIcyWinds() {
         return activeIcyWinds;
     }
-
     public User getThisUser() {
         return thisUser;
     }
-
     public boolean isPaused() {
         return isPaused;
     }
-
     public boolean isGameOver() {
         return gameOver;
     }
-
     public boolean hasWon() {
         return won;
     }
-
     public String getLevelObjectives() {
         return levelObjectives;
     }
-
     public void setLevelObjectives(String levelObjectives) {
         this.levelObjectives = levelObjectives;
     }
