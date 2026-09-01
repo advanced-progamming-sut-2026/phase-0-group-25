@@ -16,6 +16,12 @@ public class Eating implements Ability {
             if (zombie.isHypnotized()) {
                 if (zombie.getRival() instanceof Zombie) {
                     Zombie target = (Zombie) zombie.getRival();
+                    if (target.getCurrentHP() <= 0) {
+                        this.isActivated = false;
+                        makeMovingActivated(zombie);
+                        zombie.setRival(null);
+                        return;
+                    }
 
                     target.takeDamage(damageAmount);
                     checkTargetLife(zombie, target);

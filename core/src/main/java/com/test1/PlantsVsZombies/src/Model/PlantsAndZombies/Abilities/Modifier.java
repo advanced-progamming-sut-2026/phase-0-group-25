@@ -33,8 +33,10 @@ public class Modifier implements Ability {
         if (tags.contains("fire")) {
             float HPRatio = (float) plant.getCurrentHP() / plant.getPlantStats().getBaseHP();
             if (HPRatio <= 0.1) {
-                AoEDamage(plant, plant.getRow(), plant.getColumn());
-                return;
+                if (tags.contains("AoE")) {
+                    AoEDamage(plant, plant.getRow(), plant.getColumn());
+                    return;
+                }
             }
             //todo
             for (Projectile projectile : GAME.getProjectiles()) {
@@ -72,10 +74,10 @@ public class Modifier implements Ability {
                     }
                 }
 
-                if(nonArableTiles.isEmpty()){
+                if (nonArableTiles.isEmpty()) {
                     return;
                 }
-                
+
                 Random RANDOM = new Random();
                 for (int i = 0; i < 1; i++) {
                     int randomTile = RANDOM.nextInt(nonArableTiles.size());

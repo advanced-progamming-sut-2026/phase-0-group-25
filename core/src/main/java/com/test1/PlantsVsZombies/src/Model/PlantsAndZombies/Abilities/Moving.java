@@ -27,7 +27,7 @@ public class Moving implements Ability {
             moveZombie(zombie);
 
             if (zombie.getZombieStats().getName().equals("EXPLORER")) {
-                if (zombie.getZombieStats().getAttributes().get("torch").equals("on")) {
+                if (zombie.isTorchOn()) {
                     handleExplorerWithIgnitedTorch(zombie);
                     return;
                 }
@@ -107,13 +107,18 @@ public class Moving implements Ability {
         Position newPosition = new Position(zombieFinalPositionX, zombie.getPosition().getY());
         zombie.setPosition(newPosition);
 
-        int finalColumn = zombie.getColumn();
-        if (finalColumn != initialColumn) {
-            Tile tile = GAME.getTileByPosition(zombie.getColumn(), zombie.getRow());
-            if (!tile.isArable()) {
-                makeFlyingActivated(zombie);
-            }
+        Tile tile = GAME.getTileByPosition(zombie.getColumn(), zombie.getRow());
+        if (tile == null) {
+            return;
         }
+
+        if (!tile.isArable()) {
+            if (tile.getHP() > 0) {
+                return;
+            }
+            makeFlyingActivated(zombie);
+        }
+
     }
 
     private void handleExplorerWithIgnitedTorch(Zombie zombie) {
@@ -126,14 +131,16 @@ public class Moving implements Ability {
             return;
         for (BattlePlant plant : tile.getPlants()) {
             plant.setCurrentHP(0);
+            plant.setAlive(false);
         }
     }
 
     private void handleExplorerTorch(Zombie zombie, BattlePlant plant) {
-        if (plant.getPlantStats().getTags().contains("ice")) {
-            zombie.getZombieStats().getAttributes().replace("torch", "off");
+        if (plant.getPlantStats().getTags().contains("ice") ||
+            plant.getPlantStats().getTags().contains("Ice")) {
+            zombie.setTorchOn(false);
         } else if (plant.getPlantStats().getTags().contains("fire")) {
-            zombie.getZombieStats().getAttributes().replace("torch", "on");
+            zombie.setTorchOn(true);
         }
     }
 

@@ -9,12 +9,16 @@ import java.util.Random;
 public class Zomboss extends Zombie {
 
     private GamePlay GAME = GamePlay.activeInstance;
-    private static int ACTION_INTERVAL = 12;
+    private static int ACTION_INTERVAL = 25;
     private static int STUN_INTERVAL = 10;
+
+    private static int X_RIGHT_LIMIT = 1860;
+    private static int Y_UP_LIMIT = 880;
     private static int Y_DOWN_LIMIT = 130;
     private static int X_LEFT_LIMIT = 490;
+    private static int TILE_Y_LENGTH = 150;
 
-    private int currentSecondRow = 3;
+    private int currentSecondRow;
 
     private boolean isStunned = false;
     private double timeWhenStunned;
@@ -32,23 +36,26 @@ public class Zomboss extends Zombie {
 
         this.lastActionTime = GAME.getTotalTimePassed();
         this.currentVelocity = 0;
+        this.currentSecondRow = this.getRow() + 1;
     }
 
     @Override
     public void update() {
+        System.out.println(GAME.getTotalTimePassed());
         checkLife();
-
-        checkStatus();
 
         if (this.isStunned) {
             checkStun();
             return;
         }
 
+        checkStatus();
+
         if (isTimeForAction()) {
             handleState();
             this.lastActionTime = GAME.getTotalTimePassed();
         }
+
 
     }
 
@@ -57,10 +64,8 @@ public class Zomboss extends Zombie {
     }
 
     private void spawnZombies() {
-        Zombie newZombie1 = ZombieFactory.createZombie("DEFAULT",
-            new Position(900, 700));
-        Zombie newZombie2 = ZombieFactory.createZombie("BUCKET_HEAD",
-            new Position(700, 590));
+        Zombie newZombie1 = makeZombie();
+        Zombie newZombie2 = makeZombie();
 
         GAME.addZombieFromAbility(newZombie1);
         GAME.addZombieFromAbility(newZombie2);
@@ -80,14 +85,36 @@ public class Zomboss extends Zombie {
         Position launcher = new Position(600, 870);
 
         Projectile newProjectile = new Projectile(name, launcher,
-           XVelocity, YVelocity, target);
+            XVelocity, YVelocity, target);
 
         GAME.getProjectiles().add(newProjectile);
     }
 
     @Override
     public void changeRow() {
-        super.changeRow();
+        int row = this.getRow();
+
+        if (row == 1) {
+            this.position = new Position(
+                this.position.getX(),
+                this.position.getY() + TILE_Y_LENGTH);
+            this.currentSecondRow = 3;
+        } else if (row == 4) {
+            this.position = new Position(
+                this.position.getX(),
+                this.position.getY() - TILE_Y_LENGTH);
+            this.currentSecondRow = 4;
+        } else if ((row > 1) && (row < 4)) {
+            Random RANDOM = new Random();
+            int randomIndex = RANDOM.nextInt(2);
+            int difference = (randomIndex == 1) ? TILE_Y_LENGTH : (-1) * TILE_Y_LENGTH;
+
+            this.position = new Position(
+                this.position.getX(),
+                this.position.getY() + difference);
+
+            this.currentSecondRow = (randomIndex == 1) ? (this.currentSecondRow + 1) : (this.currentSecondRow - 1);
+        }
     }
 
     private void specialAffect() {
@@ -119,8 +146,11 @@ public class Zomboss extends Zombie {
 
     private void checkStun() {
         double difference = GAME.getTotalTimePassed() - this.timeWhenStunned;
+        System.out.println(difference);
         if (difference >= STUN_INTERVAL) {
             this.isStunned = false;
+            this.status = "idle";
+            this.lastActionTime = GAME.getTotalTimePassed();
         }
     }
 
@@ -158,9 +188,13 @@ public class Zomboss extends Zombie {
         if ((HPRatio <= 0.33) && (!this.secondStun)) {
             this.secondStun = true;
             this.isStunned = true;
+            this.timeWhenStunned = GAME.getTotalTimePassed();
+            this.status = "stun";
         } else if ((HPRatio <= 0.67) && (!this.firstStun)) {
             this.firstStun = true;
             this.isStunned = true;
+            this.timeWhenStunned = GAME.getTotalTimePassed();
+            this.status = "stun";
         }
     }
 
@@ -234,7 +268,34 @@ public class Zomboss extends Zombie {
         }
     }
 
+    public int getCurrentSecondRow() {
+        return currentSecondRow;
+    }
 
+    private Zombie makeZombie() {
+        Random RANDOM = new Random();
 
+        int column = RANDOM.nextInt(5);
+        Position zombiePosition = new Position(X_RIGHT_LIMIT - 200, (column * TILE_Y_LENGTH) + Y_DOWN_LIMIT + (TILE_Y_LENGTH / 2));
+
+        int zombieNumber = RANDOM.nextInt(4);
+        String zombieName = "";
+        switch (zombieNumber) {
+            case 0:
+                zombieName = "DEFAULT";
+                break;
+            case 1:
+                zombieName = "CONE_HEAD";
+                break;
+            case 2:
+                zombieName = "BUCKET_HEAD";
+                break;
+            case 3:
+                zombieName = "BRICK_HEAD";
+                break;
+        }
+
+        return ZombieFactory.createZombie(zombieName, zombiePosition);
+    }
 }
 

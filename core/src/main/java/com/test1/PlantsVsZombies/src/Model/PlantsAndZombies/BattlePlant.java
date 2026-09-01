@@ -426,6 +426,27 @@ public class BattlePlant extends Plant {
                 zombiesInRange.addAll(tile.getZombies());
             }
 
+            for (Zombie zombie : GAME.getGameZombies()) {
+                if (zombie instanceof Zomboss) {
+                    int secondRow = ((Zomboss) zombie).getCurrentSecondRow();
+                    if (secondRow == this.getRow()) {
+                        for (int i = -1; i <= 1; i++) {
+                            Tile tile = GAME.getTileByPosition(this.column + i, this.row);
+                            if (tile == null) {
+                                continue;
+                            }
+
+                            for (Zombie zombie1 : tile.getZombies()) {
+                                if (zombie1 instanceof Zomboss) {
+                                    this.status = "action";
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             if (zombiesInRange.size() != 0) {
                 this.status = "action";
             } else {

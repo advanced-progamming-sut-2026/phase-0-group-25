@@ -4,11 +4,8 @@ import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 
 import java.util.List;
@@ -335,6 +332,16 @@ public class Shooting implements Ability {
                 }
             }
         }
+
+        for (Zombie zombie : GAME.getGameZombies()) {
+            if (zombie instanceof Zomboss) {
+                int secondRow = ((Zomboss) zombie).getCurrentSecondRow();
+                if (secondRow == plant.getRow()) {
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 
