@@ -35,7 +35,7 @@ public class ConveyorBelt extends GamePlay {
             this.plantPool = new ArrayList<>(plants);
         } else {
             this.plantPool = new ArrayList<>(List.of(
-                "PEASHOOTER", "WALL_NUT", "REPEATER", "BONK_CHOY", "SNOW_PEA", "POTATO_MINE"
+                "MELON_PULT", "WALL_NUT", "JALAPENO", "REPEATER", "BONK_CHOY", "SNOW_PEA", "CHERRY_BOMB"
             ));
         }
         this.mySuns = 0;
@@ -76,14 +76,26 @@ public class ConveyorBelt extends GamePlay {
         Tile targetTile = getTileByPosition(col, row);
 
         if (targetTile != null && targetTile.isArable() && targetTile.getPlants().isEmpty()) {
-            plant.setRow(row);
-            plant.setColumn(col);
-            plant.setPosition(new Position(getRealX(col), getRealY(row)));
-            plant.setCurrentHP(plant.getPlantStats().getBaseHP());
-            plant.setAlive(true);
+            Position realPos = new Position(getRealX(col), getRealY(row));
 
-            this.gamePlants.add(plant);
-            targetTile.addPlant(plant);
+
+            BattlePlant freshPlant = PlantFactory.createBattlePlant(
+                plant.getName(),
+                getLevelOfPlant(plant.getName()),
+                realPos
+            );
+            if (freshPlant == null) {
+                freshPlant = plant;
+                freshPlant.setPosition(realPos);
+            }
+
+            freshPlant.setRow(row);
+            freshPlant.setColumn(col);
+            freshPlant.setCurrentHP(freshPlant.getPlantStats().getBaseHP());
+            freshPlant.setAlive(true);
+
+            this.gamePlants.add(freshPlant);
+            targetTile.addPlant(freshPlant);
         }
     }
 
@@ -105,20 +117,34 @@ public class ConveyorBelt extends GamePlay {
         applyIcyWind();
         checkingSunMakers();
 
+        pendingNewPlants.clear();
+        updatingPlants = true;
+
         Iterator<BattlePlant> bp = gamePlants.iterator();
         while (bp.hasNext()) {
             BattlePlant plant = bp.next();
-            if (plant.isAlive() && plant.getCurrentHP() > 0) {
+            if (plant.isAlive()) {
                 plant.update();
-                plant.setCooldown(0);
+                plant.setCooldown(Math.max(plant.getCooldown() - 1, 0));
             } else {
                 Tile currentTile = getTileByPosition(plant.getColumn(), plant.getRow());
                 if (currentTile != null) {
                     currentTile.getPlants().removeIf(p -> p == plant);
                 }
+                incrementLostPlants();
                 bp.remove();
             }
         }
+
+        updatingPlants = false;
+
+        if (!pendingNewPlants.isEmpty()) {
+            gamePlants.addAll(pendingNewPlants);
+            pendingNewPlants.clear();
+        }
+
+        pendingNewZombies.clear();
+        updatingZombies = true;
 
         Iterator<Zombie> z = gameZombies.iterator();
         while (z.hasNext()) {
@@ -133,6 +159,13 @@ public class ConveyorBelt extends GamePlay {
             }
         }
 
+        updatingZombies = false;
+
+        if (!pendingNewZombies.isEmpty()) {
+            gameZombies.addAll(pendingNewZombies);
+            pendingNewZombies.clear();
+        }
+
         updateZombieTiles();
 
         Iterator<Projectile> pj = projectiles.iterator();
@@ -142,8 +175,11 @@ public class ConveyorBelt extends GamePlay {
             else pj.remove();
         }
 
-        for (Dynamite d : dynamites) d.update();
-
+        Iterator<Dynamite> dy = dynamites.iterator();
+        while (dy.hasNext()) {
+            Dynamite thisDynamite = dy.next();
+            thisDynamite.update();
+        }
 
         if (timeToSpawn == 0) {
             timeToSpawn = getRandomTime();
