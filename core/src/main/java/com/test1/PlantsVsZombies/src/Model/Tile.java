@@ -14,6 +14,7 @@ public class Tile {
     private int HP;
     private Position position;
     private boolean isArable;
+    private boolean firing;
     private boolean isHole = false;
     public enum GraveType { NORMAL, PLANT_FOOD, SUN }
     private GraveType graveType = GraveType.NORMAL;
@@ -93,5 +94,13 @@ public class Tile {
 
     public void setHP(int HP) {
         this.HP = HP;
+    }
+
+    public boolean isFiring() {
+        return firing;
+    }
+
+    public void setFiring(boolean firing) {
+        this.firing = firing;
     }
 }
