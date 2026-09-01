@@ -259,7 +259,6 @@ public class ClientSession implements Runnable {
     private NetworkMessage handleJoinQueue(NetworkMessage req) {
         syncUsernameIfProvided(str(req.getData(), "username"));
 
-
         if (currentRoom != null) {
             currentRoom = null;
         }
@@ -274,18 +273,18 @@ public class ClientSession implements Runnable {
     private NetworkMessage handleChallengeUser(NetworkMessage req) {
         syncUsernameIfProvided(str(req.getData(), "fromUsername"));
 
-
         if (currentRoom != null) {
             currentRoom = null;
         }
 
         String targetName = str(req.getData(), "targetUsername");
-        if (targetName == null || targetName.equalsIgnoreCase(this.username)) {
+        if (targetName == null || this.username == null || targetName.equalsIgnoreCase(this.username)) {
             return NetworkMessage.error(req.getRequestId(), req.getType(), "Cannot challenge yourself.");
         }
 
         ClientSession targetSession = onlineSessions.get(targetName.toLowerCase());
-        if (targetSession == null || !targetSession.isConnected()) {
+
+        if (targetSession == null || !targetSession.isConnected() || targetSession == this) {
             return NetworkMessage.error(req.getRequestId(), req.getType(), "User '" + targetName + "' is offline or not found.");
         }
 
