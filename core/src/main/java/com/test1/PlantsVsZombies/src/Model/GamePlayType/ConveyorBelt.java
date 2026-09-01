@@ -18,19 +18,18 @@ import java.util.List;
 import java.util.Set;
 
 public class ConveyorBelt extends GamePlay {
-    private final ArrayList<ConveyorCard> conveyorCards = new ArrayList<>();
-    private final List<String> plantPool;
-    private int conveyorTimer = 0;
-    private final int SPAWN_INTERVAL_TICKS = 120;
-    private final int MAX_CARDS = 6;
-    private final float CARD_TOP_Y = 980f;
-    private final float CARD_HEIGHT = 105f;
-    private final float CARD_SPACING = 11f;
+    protected final ArrayList<ConveyorCard> conveyorCards = new ArrayList<>();
+    protected final List<String> plantPool;
+    protected int conveyorTimer = 0;
+    protected final int SPAWN_INTERVAL_TICKS = 120;
+    protected final int MAX_CARDS = 6;
+    protected final float CARD_TOP_Y = 980f;
+    protected final float CARD_HEIGHT = 105f;
+    protected final float CARD_SPACING = 11f;
 
     public ConveyorBelt(ChapterType chapterType, int level, int difficulty, User thisUser,
                         ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         super(chapterType, level, difficulty, thisUser, plants, zombies, boosted);
-
 
         if (plants != null && plants.size() >= 3) {
             this.plantPool = new ArrayList<>(plants);
@@ -44,7 +43,7 @@ public class ConveyorBelt extends GamePlay {
         spawnNewCard();
     }
 
-    private void spawnNewCard() {
+    protected void spawnNewCard() {
         if (conveyorCards.size() >= MAX_CARDS) return;
 
         String randomPlant = plantPool.get(random.nextInt(plantPool.size()));
@@ -75,7 +74,6 @@ public class ConveyorBelt extends GamePlay {
         int col = (int) position.getX();
         int row = (int) position.getY();
         Tile targetTile = getTileByPosition(col, row);
-
 
         if (targetTile != null && targetTile.isArable() && targetTile.getPlants().isEmpty()) {
             plant.setRow(row);
@@ -116,7 +114,7 @@ public class ConveyorBelt extends GamePlay {
             } else {
                 Tile currentTile = getTileByPosition(plant.getColumn(), plant.getRow());
                 if (currentTile != null) {
-                    currentTile.getPlants().removeIf(p -> p.getName().equals(plant.getName()));
+                    currentTile.getPlants().removeIf(p -> p == plant);
                 }
                 bp.remove();
             }
@@ -125,12 +123,12 @@ public class ConveyorBelt extends GamePlay {
         Iterator<Zombie> z = gameZombies.iterator();
         while (z.hasNext()) {
             Zombie zombie = z.next();
-            if (!zombie.isAlive()) {
+            if (!zombie.isAlive() || zombie.getCurrentHP() <= 0) {
                 killAward(this.thisUser);
                 if (zombie.isHalated()) glowingAward(zombie.getPosition());
                 addKilledZombieCost(zombie.getWaveNum(), zombie.getCost());
                 z.remove();
-            } else if (zombie.getCurrentHP() > 0) {
+            } else {
                 zombie.update();
             }
         }
@@ -145,6 +143,7 @@ public class ConveyorBelt extends GamePlay {
         }
 
         for (Dynamite d : dynamites) d.update();
+
 
         if (timeToSpawn == 0) {
             timeToSpawn = getRandomTime();
