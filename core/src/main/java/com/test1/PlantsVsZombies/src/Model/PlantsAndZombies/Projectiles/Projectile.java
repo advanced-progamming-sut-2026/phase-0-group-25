@@ -4,12 +4,11 @@ import com.test1.PlantsVsZombies.src.Audio.SoundManager;
 import com.test1.PlantsVsZombies.src.Enums.AudioType;
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.ZombieFactory;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
 import com.test1.PlantsVsZombies.src.Model.Sun.Sun;
 import com.test1.PlantsVsZombies.src.Model.Tile;
+
+import java.util.Random;
 
 public class Projectile {
     private static int X_RIGHT_LIMIT = 1860;
@@ -234,6 +233,13 @@ public class Projectile {
                         (zombie.isSubmarine())) {
                         continue;
                     }
+
+                    if (zombie.getName().equals("IMP_DRAGON")) {
+                        if(this.isFiring()){
+                            continue;
+                        }
+                    }
+
                     zombie.takeDamage(this, this.damage);
                     SoundManager.getInstance().playSound(AudioType.PROJECTILE_HIT);
                     zombie.setPosition(new Position(
@@ -358,6 +364,43 @@ public class Projectile {
     private void checkZombossCollision() {
         if (this.position.equals(this.target)) {
             this.isActive = false;
+            destroyPlants(this.target);
         }
+    }
+
+    private void destroyPlants(Position position) {
+        Position rowAndColumn = Position.getRowAndColumn(position);
+
+        Tile target = GAME.getTileByPosition((int) rowAndColumn.getX(), (int) rowAndColumn.getY());
+        for (BattlePlant plant : target.getPlants()) {
+            plant.setCurrentHP(0);
+        }
+
+        if (this.name.equals("fire")) {
+            spawnImpDragon(new Position(0, 0));
+        }
+
+        if (this.name.equals("missile")) {
+            makeTomb();
+        }
+
+    }
+
+    private void makeTomb() {
+        Random RANDOM = new Random();
+        for (int i = 0; i < 2; i++) {
+            int randomRow = RANDOM.nextInt(5) + 1;
+            int randomColumn = RANDOM.nextInt(9) + 1;
+
+            Tile tombTile = GAME.getTileByPosition(randomColumn, randomRow);
+            tombTile.setArable(false);
+            tombTile.setHP(700);
+        }
+    }
+
+    private void spawnImpDragon(Position target) {
+        Position zombiePosition = new Position(600, 700);
+        Zombie impDragon = ZombieFactory.createZombie("IMP_DRAGON", zombiePosition);
+        GAME.addZombieFromAbility(impDragon);
     }
 }

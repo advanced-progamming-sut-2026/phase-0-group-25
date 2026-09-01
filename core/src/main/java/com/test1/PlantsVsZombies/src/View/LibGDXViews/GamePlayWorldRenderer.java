@@ -79,9 +79,9 @@ public class GamePlayWorldRenderer {
         };
         for (int i = 0; i < iceIds.length; i++) iceStageRegions[i] = textureBank.region(iceIds[i]);
 
-        String[] darkNormal = { "IMAGE_GRAVESTONES_DARK_NOOP_DARK_NOOP_132X160", "IMAGE_GRAVESTONES_DARK_NOOP_DARK_NOOP_132X160_2", "IMAGE_GRAVESTONES_DARK_NOOP_DARK_NOOP_132X156", "IMAGE_GRAVESTONES_DARK_NOOP_DARK_NOOP_125X149", "IMAGE_GRAVESTONES_DARK_NOOP_DARK_NOOP_93X89" };
-        String[] darkPf = { "IMAGE_GRAVESTONES_DARK_PLANTFOOD_DARK_PLANTFOOD_132X160", "IMAGE_GRAVESTONES_DARK_PLANTFOOD_DARK_PLANTFOOD_132X160_2", "IMAGE_GRAVESTONES_DARK_PLANTFOOD_DARK_PLANTFOOD_132X157", "IMAGE_GRAVESTONES_DARK_PLANTFOOD_DARK_PLANTFOOD_129X144", "IMAGE_GRAVESTONES_DARK_PLANTFOOD_DARK_PLANTFOOD_93X95" };
-        String[] darkSun = { "IMAGE_GRAVESTONES_DARK_SUN_DARK_SUN_132X160", "IMAGE_GRAVESTONES_DARK_SUN_DARK_SUN_132X160_2", "IMAGE_GRAVESTONES_DARK_SUN_DARK_SUN_132X157", "IMAGE_GRAVESTONES_DARK_SUN_DARK_SUN_132X144", "IMAGE_GRAVESTONES_DARK_SUN_DARK_SUN_93X91" };
+        String[] darkNormal = {"IMAGE_GRAVESTONES_DARK_NOOP_DARK_NOOP_132X160", "IMAGE_GRAVESTONES_DARK_NOOP_DARK_NOOP_132X160_2", "IMAGE_GRAVESTONES_DARK_NOOP_DARK_NOOP_132X156", "IMAGE_GRAVESTONES_DARK_NOOP_DARK_NOOP_125X149", "IMAGE_GRAVESTONES_DARK_NOOP_DARK_NOOP_93X89"};
+        String[] darkPf = {"IMAGE_GRAVESTONES_DARK_PLANTFOOD_DARK_PLANTFOOD_132X160", "IMAGE_GRAVESTONES_DARK_PLANTFOOD_DARK_PLANTFOOD_132X160_2", "IMAGE_GRAVESTONES_DARK_PLANTFOOD_DARK_PLANTFOOD_132X157", "IMAGE_GRAVESTONES_DARK_PLANTFOOD_DARK_PLANTFOOD_129X144", "IMAGE_GRAVESTONES_DARK_PLANTFOOD_DARK_PLANTFOOD_93X95"};
+        String[] darkSun = {"IMAGE_GRAVESTONES_DARK_SUN_DARK_SUN_132X160", "IMAGE_GRAVESTONES_DARK_SUN_DARK_SUN_132X160_2", "IMAGE_GRAVESTONES_DARK_SUN_DARK_SUN_132X157", "IMAGE_GRAVESTONES_DARK_SUN_DARK_SUN_132X144", "IMAGE_GRAVESTONES_DARK_SUN_DARK_SUN_93X91"};
         for (int i = 0; i < 5; i++) {
             darkNormalGraveRegions[i] = textureBank.region(darkNormal[i]);
             darkPlantFoodGraveRegions[i] = textureBank.region(darkPf[i]);
@@ -110,7 +110,7 @@ public class GamePlayWorldRenderer {
 
         if (gamePlay.getChapterType() == ChapterType.BIG_WAVE_BEACH) {
             float waterOffset = (float) Math.sin(stateTime * 0.8f) * WATER_MOVE_RANGE;
-            player.draw(batch, BEACH_WATER_ANIM_PATH, "water", stateTime, WATER_BASE_X + waterOffset, WATER_BASE_Y-225, true);
+            player.draw(batch, BEACH_WATER_ANIM_PATH, "water", stateTime, WATER_BASE_X + waterOffset, WATER_BASE_Y - 225, true);
             player.draw(batch, BEACH_TIDELINE_ANIM_PATH, "idle", stateTime, TIDELINE_X, TIDELINE_Y, true);
         }
 
@@ -118,8 +118,8 @@ public class GamePlayWorldRenderer {
         for (int row = 5; row >= 1; row--) {
             final int currentRow = row;
             renderChapterTiles(batch, gamePlay, currentRow, stateTime);
-            renderPlantsInRow(batch, gamePlay, currentRow, stateTime);
-            renderZombiesInRow(batch, gamePlay, currentRow, stateTime);
+            renderPlantsInRow(batch, gamePlay, currentRow, stateTime, delta);
+            renderZombiesInRow(batch, gamePlay, currentRow, stateTime, delta);
         }
 
 
@@ -184,7 +184,8 @@ public class GamePlayWorldRenderer {
             SandstormEffect storm = it.next();
             if (!gamePlay.isPaused()) storm.update(delta);
             if (storm.isFinished()) it.remove();
-            else player.draw(batch, SANDSTORM_ANIM_PATH, "loop", storm.getAnimTime(), storm.getX(), storm.getY() + 40, true);
+            else
+                player.draw(batch, SANDSTORM_ANIM_PATH, "loop", storm.getAnimTime(), storm.getX(), storm.getY() + 40, true);
         }
 
 
@@ -194,7 +195,8 @@ public class GamePlayWorldRenderer {
                 IcyWindEffect wind = windIt.next();
                 if (!gamePlay.isPaused()) wind.update(delta);
                 if (wind.isFinished()) windIt.remove();
-                else player.draw(batch, ICY_WIND_ANIM_PATH, "animation", wind.getAnimTime(), 960f, gamePlay.getRealY(wind.getRow()) + 25, true);
+                else
+                    player.draw(batch, ICY_WIND_ANIM_PATH, "animation", wind.getAnimTime(), 960f, gamePlay.getRealY(wind.getRow()) + 25, true);
             }
         }
     }
@@ -209,10 +211,13 @@ public class GamePlayWorldRenderer {
             if (chapter == ChapterType.ANCIENT_EGYPT && !tile.isArable() && tile.getHP() > 0) {
                 int stage = 4 - (int) Math.min(4, Math.floor((tile.getHP() / GRAVE_MAX_HP) * 5));
                 TextureRegion grave = egyptGraveRegions[stage];
-                if (grave != null) batch.draw(grave, realX - (grave.getRegionWidth() * 0.7f) - 7f, realY - 30f, grave.getRegionWidth() * 1.4f, grave.getRegionHeight() * 1.4f);
+                if (grave != null)
+                    batch.draw(grave, realX - (grave.getRegionWidth() * 0.7f) - 7f, realY - 30f, grave.getRegionWidth() * 1.4f, grave.getRegionHeight() * 1.4f);
             } else if (chapter == ChapterType.FROSTBITE_CAVES && !tile.isArable()) {
-                if (tile.getHP() == 0 && iceSliderRegion != null) batch.draw(iceSliderRegion, realX - 72.5f, realY - 47f, 145f, 140f);
-                else if (tile.getHP() > 0 && iceBlockTexture != null) batch.draw(iceBlockTexture, realX - 72.5f, realY - 25f, 130f, 155f);
+                if (tile.getHP() == 0 && iceSliderRegion != null)
+                    batch.draw(iceSliderRegion, realX - 72.5f, realY - 47f, 145f, 140f);
+                else if (tile.getHP() > 0 && iceBlockTexture != null)
+                    batch.draw(iceBlockTexture, realX - 72.5f, realY - 25f, 130f, 155f);
             } else if (chapter == ChapterType.DARK_AGE && !tile.isArable() && tile.getHP() > 0) {
                 if (tile.isNecromancy() && !tile.isNecromancyTriggered() && necromancyRuneRegion != null) {
                     batch.draw(necromancyRuneRegion, realX - 60f, realY - 50f, 120f, 60f);
@@ -223,7 +228,8 @@ public class GamePlayWorldRenderer {
                     case SUN -> darkSunGraveRegions[stage];
                     default -> darkNormalGraveRegions[stage];
                 };
-                if (grave != null) batch.draw(grave, realX - (grave.getRegionWidth() * 0.7f) - 7f, realY - 30f, grave.getRegionWidth() * 1.4f, grave.getRegionHeight() * 1.4f);
+                if (grave != null)
+                    batch.draw(grave, realX - (grave.getRegionWidth() * 0.7f) - 7f, realY - 30f, grave.getRegionWidth() * 1.4f, grave.getRegionHeight() * 1.4f);
             } else if (chapter == ChapterType.BIG_WAVE_BEACH && !tile.isArable() && tile.isLowTide() && !tile.isLowTideTriggered() && lowTideRuneRegion != null) {
                 float pulse = 0.6f + 0.4f * (float) Math.sin(stateTime * 4f);
                 batch.setColor(0.1f, 0.7f, 1f, pulse);
@@ -233,7 +239,7 @@ public class GamePlayWorldRenderer {
         }
     }
 
-    private void renderPlantsInRow(SpriteBatch batch, GamePlay gamePlay, int currentRow, float stateTime) {
+    private void renderPlantsInRow(SpriteBatch batch, GamePlay gamePlay, int currentRow, float stateTime, float delta) {
         ArrayList<BattlePlant> rowPlants = new ArrayList<>();
         for (BattlePlant p : gamePlay.getGamePlants()) {
             if (p.isAlive() && p.getPosition() != null && p.getRow() == currentRow) rowPlants.add(p);
@@ -253,7 +259,17 @@ public class GamePlayWorldRenderer {
                 player.draw(batch, PLANT_FOOD_GLOW_ANIM_PATH, "plantfood", stateTime, drawX, drawY + 95, true);
             }
 
-            player.draw(batch, p.getAnimationPath(), p.getCurrentAnimationName(), stateTime, drawX, drawY, true, p.getVisibilities());
+
+            p.getAnimationState().update(p.getCurrentAnimationName(), delta);
+
+            player.draw(batch, p.getAnimationPath(), p.getCurrentAnimationName(),
+                p.getAnimationState().getStateTime(), drawX, drawY, true, p.getVisibilities());
+
+            if (p.isOctopusated()) {
+                player.draw(batch, "768/FULL/EFFECTS/ZOMBIE_OCTOPUS_PROJECTILE/ZOMBIE_OCTOPUS_PROJECTILE.PAM",
+                    "animation4", stateTime, drawX, drawY, true);
+            }
+
             batch.setColor(Color.WHITE);
 
             if (iceStage > 0) {
@@ -267,7 +283,7 @@ public class GamePlayWorldRenderer {
         }
     }
 
-    private void renderZombiesInRow(SpriteBatch batch, GamePlay gamePlay, int currentRow, float stateTime) {
+    private void renderZombiesInRow(SpriteBatch batch, GamePlay gamePlay, int currentRow, float stateTime, float delta) {
         ArrayList<Zombie> rowZombies = new ArrayList<>();
         for (Zombie z : gamePlay.getGameZombies()) {
             if (z.isAlive() && z.getRow() == currentRow) rowZombies.add(z);
@@ -286,7 +302,10 @@ public class GamePlayWorldRenderer {
                     batch.setColor(z.getColor());
                 }
 
-                player.draw(batch, z.getAnimationPath(), z.getCurrentAnimationName(), stateTime, drawX, drawY + 15, true, z.getVisibility());
+                z.getAnimationState().update(z.getCurrentAnimationName(), delta);
+
+                player.draw(batch, z.getAnimationPath(), z.getCurrentAnimationName(),
+                    z.getAnimationState().getStateTime(), drawX, drawY + 15, true, z.getVisibility());
                 batch.setColor(Color.WHITE);
             }
         }

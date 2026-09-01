@@ -7,6 +7,12 @@ public class ZombieFactory {
         return new Zombie(zombieStats, zombieName, position);
     }
 
+    public static Zomboss createZomboss(String zombieName, Position position) {
+        ZombieStats zombieStats = GameDataLoader.getStatsForZombie(zombieName);
+
+        return new Zomboss(zombieStats, zombieName, position);
+    }
+
     public static Zombie createZombie(String zombieName) {
         ZombieStats zombieStats = GameDataLoader.getStatsForZombie(zombieName);
 

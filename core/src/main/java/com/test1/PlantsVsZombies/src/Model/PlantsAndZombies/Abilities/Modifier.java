@@ -4,17 +4,22 @@ import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.PlantFactory;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Modifier implements Ability {
     private GamePlay GAME = GamePlay.activeInstance;
+
+    private static int X_RIGHT_LIMIT = 1860;
+    private static int Y_UP_LIMIT = 880;
+    private static int Y_DOWN_LIMIT = 130;
+    private static int X_LEFT_LIMIT = 490;
+    private static double X_TILE_LENGTH = 152.2;
+    private static int Y_TILE_LENGTH = 150;
 
     @Override
     public void executeAbility(Entity entity) {
@@ -53,20 +58,31 @@ public class Modifier implements Ability {
         }
 
         if (tags.contains("Water")) {
+            double difference = GAME.getTotalTimePassed() - plant.getEffectedTime();
+            if (Math.abs(difference - plant.getEffectedLifeSpan()) > 0.1) {
+                return;
+            }
+
             if (GAME.getChapterType().equals(ChapterType.BIG_WAVE_BEACH)) {
                 ArrayList<Tile> nonArableTiles = new ArrayList<>();
                 for (Tile tile : GAME.getTiles()) {
-                    if (!tile.isArable()) {
+                    if (!tile.isArable() &&
+                        tile.getPlants().isEmpty()) {
                         nonArableTiles.add(tile);
                     }
                 }
 
-                if (nonArableTiles.size() > 2) {
+                if(nonArableTiles.isEmpty()){
+                    return;
+                }
+                
+                Random RANDOM = new Random();
+                for (int i = 0; i < 1; i++) {
+                    int randomTile = RANDOM.nextInt(nonArableTiles.size());
+                    Tile target = nonArableTiles.get(randomTile);
 
-                } else {
-                    for (Tile tile : nonArableTiles) {
-                        BattlePlant newLilyPad;
-                    }
+                    Position newPosition = new Position(target.getPosition().getX(), target.getPosition().getY());
+                    BattlePlant newLilyPad = GAME.plantFromPlantFood(plant, newPosition);
                 }
             }
         }
