@@ -97,8 +97,8 @@ public class BattlePlant extends Plant {
                 double difference = GAME.getTotalTimePassed() - this.effectedTime;
                 if (difference >= (this.effectedLifeSpan / 2)) {
 
-                    //PlantFood plantFood = new PlantFood();
-                    //plantFood.plantFoodEffect(this, this.plantStats.getTags());
+                    PlantFood plantFood = new PlantFood();
+                    plantFood.plantFoodEffect(this, this.plantStats.getTags());
 
                     this.isEffected = false;
                 }
@@ -537,6 +537,11 @@ public class BattlePlant extends Plant {
 
     public void setOctopusated(boolean octopusated) {
         isOctopusated = octopusated;
+        if (this.isOctopusated) {
+            setOctopusHP(OCTOPUS_BASE_HP);
+        } else {
+            setOctopusHP(0);
+        }
     }
 
     public double getOctopusHp() {
@@ -545,6 +550,9 @@ public class BattlePlant extends Plant {
 
     public void setOctopusHP(double octopusHp) {
         this.octopusHP = octopusHp;
+        if (this.octopusHP == 0) {
+            this.isOctopusated = false;
+        }
     }
 
     public boolean checkOctopusAndIced() {
