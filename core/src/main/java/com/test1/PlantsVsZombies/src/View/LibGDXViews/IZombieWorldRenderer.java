@@ -4,8 +4,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.test1.PlantsVsZombies.src.Enums.PlantType;
-import com.test1.PlantsVsZombies.src.Enums.ZombieType;
 import com.test1.PlantsVsZombies.src.Model.MiniGames.IZombieGame.Brain;
 import com.test1.PlantsVsZombies.src.Model.MiniGames.IZombieGame.IZombie;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
@@ -18,35 +16,17 @@ import pvz.libpvz.textures.TextureBank;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Renders the actual lawn for multiplayer "I, Zombie": background, the five
- * lane brains, depth-sorted plants/zombies, projectiles, and any of the
- * opponent's incoming sticker reactions fading in the corner.
- */
 public class IZombieWorldRenderer {
     private static final String BG_ASSET_ID = "IMAGE_BACKGROUNDS_BACKGROUND_LOD_BIGBRAINZ_TEXTURE";
+    private static final String BRAIN_ICON_ASSET_ID = "IMAGE_UI_CURRENCY_VALENBRAINZ_STACK_0";
+    private static final String BRAIN_ICON_FALLBACK = "IMAGE_UI_HUD_INGAME_PROGRESS_METER_ZOMBIEHEAD";
 
-    // Best-effort brain icon; falls back to a confirmed-safe asset (and, failing
-    // that, a plain drawn circle) so a brain is always visible either way.
-    private static final String BRAIN_ICON_ASSET_ID = "IMAGE_UI_HUD_INGAME_IZOMBIE_BRAIN";
-    private static final String BRAIN_ICON_FALLBACK_ASSET_ID = "IMAGE_UI_HUD_INGAME_PROGRESS_METER_ZOMBIEHEAD";
-
-    private static final float BRAIN_SIZE = 70f;
-    private static final float STICKER_DURATION = 3.0f;
-    private static final float STICKER_FADE_START = 2.0f;
-    private static final float STICKER_X = 1750f;
-    private static final float STICKER_Y = 950f;
-    private static final float STICKER_SIZE_SCALE = 1.4f;
+    private static final float BRAIN_SIZE = 75f;
 
     private final TextureBank textureBank;
     private final PamPlayer player;
     private final TextureRegion bgRegion;
     private final TextureRegion brainRegion;
-    private final boolean brainRegionIsFallback;
-
-    // Sticker catalog mirrors IZombieHudRenderer.REACTION_STICKER_* so both classes agree on what index N means.
-    private final String[] stickerAnimPaths;
-    private final String[] stickerStateNames;
 
     public IZombieWorldRenderer(TextureBank textureBank, PamPlayer player) {
         this.textureBank = textureBank;
@@ -54,24 +34,8 @@ public class IZombieWorldRenderer {
         this.bgRegion = textureBank.region(BG_ASSET_ID);
 
         TextureRegion brain = textureBank.region(BRAIN_ICON_ASSET_ID);
-        boolean isFallback = false;
-        if (brain == null) {
-            brain = textureBank.region(BRAIN_ICON_FALLBACK_ASSET_ID);
-            isFallback = true;
-        }
+        if (brain == null) brain = textureBank.region(BRAIN_ICON_FALLBACK);
         this.brainRegion = brain;
-        this.brainRegionIsFallback = isFallback;
-
-        this.stickerAnimPaths = new String[]{
-            ZombieType.DEFAULT.getIdleAnimationPath(),
-            PlantType.SUNFLOWER.getIdleAnimationPath(),
-            PlantType.WALL_NUT.getIdleAnimationPath()
-        };
-        this.stickerStateNames = new String[]{
-            ZombieType.DEFAULT.getStateName(),
-            PlantType.SUNFLOWER.getStateName(),
-            PlantType.WALL_NUT.getStateName()
-        };
     }
 
     public void render(SpriteBatch batch, ShapeRenderer shapeRenderer, IZombie gamePlay,
@@ -79,13 +43,13 @@ public class IZombieWorldRenderer {
         batch.begin();
         if (bgRegion != null) batch.draw(bgRegion, 0, 0, 1920, 1200);
 
+
         for (int row = 5; row >= 1; row--) {
             renderPlantsInRow(batch, gamePlay, row, stateTime);
             renderZombiesInRow(batch, gamePlay, row, stateTime);
         }
 
         renderProjectiles(batch, gamePlay, stateTime);
-        renderStickers(batch, activeReactions, stateTime);
         batch.end();
 
         renderBrains(batch, shapeRenderer, gamePlay, stateTime);
@@ -97,41 +61,18 @@ public class IZombieWorldRenderer {
         if (brainRegion != null) {
             batch.begin();
             for (Brain brain : brains) {
-                if (brain.isEaten()) batch.setColor(0.35f, 0.35f, 0.35f, 0.55f);
+                if (brain.isEaten()) {
+                    batch.setColor(0.35f, 0.35f, 0.35f, 0.45f);
+                }
                 batch.draw(brainRegion, brain.getX() - BRAIN_SIZE / 2f, brain.getY() - BRAIN_SIZE / 2f, BRAIN_SIZE, BRAIN_SIZE);
                 batch.setColor(Color.WHITE);
             }
             batch.end();
-        }
-
-        // No texture resolved at all (even the fallback failed) -- guaranteed-safe shape draw so brains are never invisible.
-        if (brainRegion == null) {
+        } else {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             for (Brain brain : brains) {
-                shapeRenderer.setColor(brain.isEaten()
-                    ? new Color(0.3f, 0.25f, 0.25f, 0.6f)
-                    : new Color(0.95f, 0.75f, 0.75f, 1f));
+                shapeRenderer.setColor(brain.isEaten() ? new Color(0.3f, 0.25f, 0.25f, 0.6f) : new Color(0.95f, 0.75f, 0.75f, 1f));
                 shapeRenderer.circle(brain.getX(), brain.getY(), BRAIN_SIZE / 2.4f, 24);
-            }
-            shapeRenderer.end();
-        }
-
-        boolean anyEaten = false;
-        for (Brain brain : brains) {
-            if (brain.isEaten()) {
-                anyEaten = true;
-                break;
-            }
-        }
-        if (anyEaten) {
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            shapeRenderer.setColor(new Color(0.8f, 0.1f, 0.1f, 0.85f));
-            for (Brain brain : brains) {
-                if (!brain.isEaten()) continue;
-                float cx = brain.getX();
-                float cy = brain.getY();
-                shapeRenderer.line(cx - BRAIN_SIZE / 2.2f, cy - BRAIN_SIZE / 2.2f, cx + BRAIN_SIZE / 2.2f, cy + BRAIN_SIZE / 2.2f);
-                shapeRenderer.line(cx - BRAIN_SIZE / 2.2f, cy + BRAIN_SIZE / 2.2f, cx + BRAIN_SIZE / 2.2f, cy - BRAIN_SIZE / 2.2f);
             }
             shapeRenderer.end();
         }
@@ -142,6 +83,7 @@ public class IZombieWorldRenderer {
         for (BattlePlant p : gamePlay.getGamePlants()) {
             if (p.isAlive() && p.getPosition() != null && p.getRow() == currentRow) rowPlants.add(p);
         }
+        rowPlants.sort((p1, p2) -> Integer.compare(getPlantLayerPriority(p1), getPlantLayerPriority(p2)));
 
         for (BattlePlant p : rowPlants) {
             float drawX = (float) p.getPosition().getX();
@@ -170,6 +112,14 @@ public class IZombieWorldRenderer {
         }
     }
 
+    private int getPlantLayerPriority(BattlePlant plant) {
+        if (plant == null || plant.getName() == null) return 1;
+        String name = plant.getName().toUpperCase();
+        if (name.contains("LILY_PAD")) return 0;
+        if (name.contains("PUMPKIN") || name.contains("HOT_POTATO")) return 2;
+        return 1;
+    }
+
     private void renderProjectiles(SpriteBatch batch, IZombie gamePlay, float stateTime) {
         for (Projectile projectile : gamePlay.getProjectiles()) {
             if (!projectile.isActive()) continue;
@@ -184,33 +134,6 @@ public class IZombieWorldRenderer {
 
             player.draw(batch, config.getAnimation(), config.getClip(), stateTime,
                 (float) projectile.getPosition().getX(), (float) projectile.getPosition().getY(), true);
-        }
-    }
-
-    private void renderStickers(SpriteBatch batch, List<ActiveReaction> activeReactions, float stateTime) {
-        if (activeReactions == null) return;
-
-        float slotY = STICKER_Y;
-        for (ActiveReaction reaction : activeReactions) {
-            if (reaction.category != ActiveReaction.Category.STICKER) continue;
-
-            float age = stateTime - reaction.spawnStateTime;
-            if (age < 0 || age > STICKER_DURATION) continue;
-            if (reaction.index < 0 || reaction.index >= stickerAnimPaths.length) continue;
-
-            float alpha = (age <= STICKER_FADE_START) ? 1f
-                : Math.max(0f, 1f - ((age - STICKER_FADE_START) / (STICKER_DURATION - STICKER_FADE_START)));
-
-            batch.setColor(1f, 1f, 1f, alpha);
-            batch.setTransformMatrix(batch.getTransformMatrix().idt()
-                .translate(STICKER_X, slotY, 0)
-                .scale(STICKER_SIZE_SCALE, STICKER_SIZE_SCALE, 1)
-                .translate(-STICKER_X, -slotY, 0));
-            player.draw(batch, stickerAnimPaths[reaction.index], stickerStateNames[reaction.index], age, STICKER_X, slotY, true);
-            batch.setTransformMatrix(batch.getTransformMatrix().idt());
-            batch.setColor(Color.WHITE);
-
-            slotY -= 140f;
         }
     }
 }

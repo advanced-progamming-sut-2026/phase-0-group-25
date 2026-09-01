@@ -43,6 +43,7 @@ public class IZombieInputHandler extends InputAdapter implements IZombieHudInput
         camera.unproject(mouseWorldPos.set(screenX, screenY, 0));
         float x = mouseWorldPos.x, y = mouseWorldPos.y;
 
+
         if (isInside(x, y, IZombieHudRenderer.PAUSE_BTN_X, IZombieHudRenderer.PAUSE_BTN_Y,
             IZombieHudRenderer.PAUSE_BTN_SIZE, IZombieHudRenderer.PAUSE_BTN_SIZE)) {
             screen.openPauseModal();
@@ -149,23 +150,8 @@ public class IZombieInputHandler extends InputAdapter implements IZombieHudInput
         return x >= rx && x <= rx + rw && y >= ry && y <= ry + rh;
     }
 
-    @Override
-    public Vector3 getMouseWorldPos() {
-        return mouseWorldPos;
-    }
-
-    @Override
-    public BattlePlant getSelectedPlantCard() {
-        return selectedPlantCard;
-    }
-
-    @Override
-    public String getSelectedZombieCardType() {
-        return selectedZombieCardType;
-    }
-
-    @Override
-    public boolean isReactionDrawerOpen() {
-        return reactionDrawerOpen;
-    }
+    @Override public Vector3 getMouseWorldPos() { return mouseWorldPos; }
+    @Override public BattlePlant getSelectedPlantCard() { return selectedPlantCard; }
+    @Override public String getSelectedZombieCardType() { return selectedZombieCardType; }
+    @Override public boolean isReactionDrawerOpen() { return reactionDrawerOpen; }
 }
