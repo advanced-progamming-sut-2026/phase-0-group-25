@@ -3,10 +3,7 @@ package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 
 import java.util.ArrayList;
@@ -64,6 +61,7 @@ public class MeleeAttacking implements Ability {
                     }
                     takeDamage(plant, tile, damage);
                 }
+                handleZomboss(plant, damage);
             }
         }
     }
@@ -191,5 +189,19 @@ public class MeleeAttacking implements Ability {
             properZombies.addAll(tile.getZombies());
         }
         return properZombies;
+    }
+
+    private void handleZomboss(BattlePlant plant, int damage) {
+        for (Zombie zombie : GAME.getGameZombies()) {
+            if (zombie instanceof Zomboss) {
+                int zombossRow = ((Zomboss) zombie).getCurrentSecondRow();
+                if (plant.getRow() == zombossRow) {
+                    if (Math.abs((plant.getColumn() - zombie.getColumn())) <= 1) {
+                        zombie.takeDamage(plant, damage);
+                        return;
+                    }
+                }
+            }
+        }
     }
 }

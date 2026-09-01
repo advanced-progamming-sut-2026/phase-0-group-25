@@ -2,7 +2,6 @@ package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies;
 
 import com.badlogic.gdx.graphics.Color;
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
-import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities.*;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Armors.Armor;
@@ -20,7 +19,7 @@ import java.util.Random;
 
 public class Zombie extends Entity {
     private static int FROZEN_TIME = 8;
-    private static int TILE_X_LENGTH = 150;
+    private static int TILE_Y_LENGTH = 150;
     private static int BUTTER_TIME = 8;
     private static int CHILL_TIME = 3;
     private static Random RANDOM = new Random();
@@ -58,6 +57,9 @@ public class Zombie extends Entity {
 
     //just for snorkel zombie
     private boolean isSubmarine = false;
+
+    //just for explorer zombie
+    private boolean isTorchOn = false;
 
     public Zombie(ZombieStats zombieStats, String name) {
         this.zombieStats = zombieStats;
@@ -99,6 +101,9 @@ public class Zombie extends Entity {
                 this.activeArmors.add(new Armor(armor.getType(),
                     armor.getCurrentHP(), armor.isMetallic(), armor.getAnimations()));
             }
+        }
+        if (this.name.equals("EXPLORER")) {
+            this.isTorchOn = true;
         }
 
     }
@@ -179,14 +184,14 @@ public class Zombie extends Entity {
         if (row == 1) {
             this.position = new Position(
                 this.position.getX(),
-                this.position.getY() + TILE_X_LENGTH);
+                this.position.getY() + TILE_Y_LENGTH);
         } else if (row == 5) {
             this.position = new Position(
                 this.position.getX(),
-                this.position.getY() - TILE_X_LENGTH);
+                this.position.getY() - TILE_Y_LENGTH);
         } else if ((row > 1) && (row < 5)) {
             int randomIndex = RANDOM.nextInt(2);
-            int difference = (randomIndex == 1) ? TILE_X_LENGTH : (-1) * TILE_X_LENGTH;
+            int difference = (randomIndex == 1) ? TILE_Y_LENGTH : (-1) * TILE_Y_LENGTH;
 
             this.position = new Position(
                 this.position.getX(),
@@ -222,9 +227,9 @@ public class Zombie extends Entity {
         if (leftoverDamage > 0) {
             if (this.zombieStats.getName().equals("EXPLORER")) {
                 if (projectile.isFiring()) {
-                    this.zombieStats.getAttributes().replace("torch", "on");
+                    this.isTorchOn = true;
                 } else if (projectile.isIcy()) {
-                    this.zombieStats.getAttributes().replace("torch", "off");
+                    this.isTorchOn = false;
                 }
             } else if (this.zombieStats.getName().equals("PROSPECTOR")) {
                 if (projectile.isIcy()) {
@@ -359,6 +364,7 @@ public class Zombie extends Entity {
         this.isFrozen = true;
         this.frozenTime = frozenTime;
         this.currentVelocity = 0; //decreasing the zombie velocity after collision with icy projectiles
+        this.isTorchOn = false;
     }
 
     public void freeze() {
@@ -370,6 +376,7 @@ public class Zombie extends Entity {
         this.isFrozen = true;
         this.frozenTime = FROZEN_TIME;
         this.currentVelocity = 0; //decreasing the zombie velocity after collision with icy projectiles
+        this.isTorchOn = false;
     }
 
     public void chill() {
@@ -379,6 +386,7 @@ public class Zombie extends Entity {
 
         this.timeWhenChilled = GAME.getTotalTimePassed();
         this.setChilled(true);
+        this.isTorchOn = false;
 
     }
 
@@ -628,5 +636,13 @@ public class Zombie extends Entity {
 
     public void setTimeWhenChilled(double timeWhenChilled) {
         this.timeWhenChilled = timeWhenChilled;
+    }
+
+    public boolean isTorchOn() {
+        return isTorchOn;
+    }
+
+    public void setTorchOn(boolean torchOn) {
+        isTorchOn = torchOn;
     }
 }

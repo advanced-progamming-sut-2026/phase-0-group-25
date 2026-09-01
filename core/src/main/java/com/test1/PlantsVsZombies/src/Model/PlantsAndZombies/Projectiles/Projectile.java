@@ -92,6 +92,7 @@ public class Projectile {
         this.firing = false;
         this.poisonous = false;
         this.isHypnotizer = false;
+        SoundManager.getInstance().playSound(AudioType.PROJECTILE_SHOOT);
     }
 
     public Projectile(BattlePlant plant, double velocityX, double velocityY, Position position,
@@ -219,6 +220,7 @@ public class Projectile {
                         }
                     }
                     this.isActive = false;
+                    SoundManager.getInstance().playSound(AudioType.PROJECTILE_HIT);
                 }
             }
         }
@@ -235,7 +237,7 @@ public class Projectile {
                     }
 
                     if (zombie.getName().equals("IMP_DRAGON")) {
-                        if(this.isFiring()){
+                        if (this.isFiring()) {
                             continue;
                         }
                     }
@@ -259,10 +261,12 @@ public class Projectile {
                 if (plant.isOctopusated()) {
                     plant.setOctopusHP(plant.getOctopusHp() - this.damage);
                     this.setPierceAmount(this.getPierceAmount() - 1);
+                    SoundManager.getInstance().playSound(AudioType.PROJECTILE_HIT);
                 }
                 if (plant.isFrozen()) {
                     plant.takeIceDamage(this.damage);
                     this.setPierceAmount(this.getPierceAmount() - 1);
+                    SoundManager.getInstance().playSound(AudioType.PROJECTILE_HIT);
                 }
             }
         }

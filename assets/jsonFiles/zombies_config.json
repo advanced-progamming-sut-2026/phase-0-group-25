@@ -62,11 +62,11 @@
   "ALL_STAR": {"category": "all", "eatdps": 100, "baseHP":  1100, "velocity": 0.16, "waveCost": 1000, "armor": ["Arcade"], "abilities": ["fatalDamage", "moving"], "attributes": {"fatalTime": 1.60, "dieSpan": 1.83},
     "animation": "768/FULL/ZOMBIE/ZOMBIE_MODERN_ALLSTAR/ZOMBIE_MODERN_ALLSTAR.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "kick", "die": "die"}},
 
-  "ARCADE": {"category": "all", "eatdps": 100, "baseHP":  490, "velocity": 0.19, "waveCost": 600, "armor": [], "abilities": ["moving", "eating", "fatalDamage"], "attributes": {"dieSpan": 2.50},
+  "ARCADE": {"category": "all", "eatdps": 100, "baseHP":  490, "velocity": 0.19, "waveCost": 600, "armor": [], "abilities": ["fatalDamage", "moving", "eating"], "attributes": {"dieSpan": 2.50},
     "animation": "768/FULL/ZOMBIE/ZOMBIE_80S_ARCADE/ZOMBIE_80S_ARCADE.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "die": "die"}},
 
-  "UMBRELLA": {"category": "all", "eatdps": 100, "baseHP":  350, "velocity": 0.25, "waveCost": 200, "armor": [], "abilities": ["moving", "eating", "repelLobbers"], "attributes": {"dieSpan": 2.50},
-    "animation": "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_EXCAVATOR/ZOMBIE_LOSTCITY_EXCAVATOR.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat_shovel", "die": "die"}},
+  "UMBRELLA": {"category": "all", "eatdps": 100, "baseHP":  350, "velocity": 0.25, "waveCost": 200, "armor": [], "abilities": ["moving", "eating", "repelLobbers"], "attributes": {"dieSpan": 1.83},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_JANE/ZOMBIE_LOSTCITY_JANE.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "die": "die"}},
 
   "TURQUOISE": {"category": "all", "eatdps": 100, "baseHP":  250, "velocity": 0.185, "waveCost": 500, "armor": [], "abilities": ["moving", "eating", "stealingSun"], "attributes": {"actionTime": 1.00, "attackTime": 1.97, "dieSpan": 2.50},
     "animation": "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_CRYSTALSKULL/ZOMBIE_LOSTCITY_CRYSTALSKULL.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "action": "power", "attack": "attack", "die": "die"}},

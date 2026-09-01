@@ -132,6 +132,16 @@ public class AnimationDecider {
             visibility.put("coconut_fuse_spark_01", false);
         }
 
+        if (zombie.getName().equals("EXPLORER")) {
+            if (!zombie.isTorchOn()) {
+                visibility.put("torch_fire_frame_01", false);
+                visibility.put("torch_fire_fire_frame_01", false);
+                visibility.put("torch_fire_frame_02", false);
+                visibility.put("torch_fire_frame_03", false);
+                visibility.put("torch_fire_frame_04", false);
+            }
+        }
+
         if ((zombie.getName().equals("NEWSPAPER")) &&
             zombie.getActiveArmors().isEmpty()) {
 
@@ -402,6 +412,15 @@ public class AnimationDecider {
             if (!plant.getPlantStats().getCategory().equals("Lobber")) {
                 for (BattlePlant plant1 : tile.getPlants()) {
                     if (plant.checkOctopusAndIced()) {
+                        return status.get("action");
+                    }
+                }
+            }
+
+            for (Zombie zombie : GAME.getGameZombies()) {
+                if (zombie instanceof Zomboss) {
+                    int secondRow = ((Zomboss) zombie).getCurrentSecondRow();
+                    if (secondRow == plant.getRow()) {
                         return status.get("action");
                     }
                 }

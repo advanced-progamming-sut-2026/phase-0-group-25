@@ -1,5 +1,7 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles;
 
+import com.test1.PlantsVsZombies.src.Audio.SoundManager;
+import com.test1.PlantsVsZombies.src.Enums.AudioType;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
@@ -79,6 +81,7 @@ public class LobbedProjectile extends Projectile {
                 * flightTime
                 * flightTime)
                 / flightTime;
+        SoundManager.getInstance().playSound(AudioType.PROJECTILE_SHOOT);
     }
 
     private double calculateFlightTime(double distance) {
@@ -145,9 +148,6 @@ public class LobbedProjectile extends Projectile {
                 continue;
             }
 
-            if (zombie.getRow() != plant.getRow()) {
-                continue;
-            }
 
             double distance =
                 Math.abs(
@@ -160,6 +160,7 @@ public class LobbedProjectile extends Projectile {
                     this,
                     damage
                 );
+                SoundManager.getInstance().playSound(AudioType.PROJECTILE_HIT);
             }
         }
 
@@ -186,6 +187,7 @@ public class LobbedProjectile extends Projectile {
                     tile.getHP() - damage
                 )
             );
+            SoundManager.getInstance().playSound(AudioType.PROJECTILE_HIT);
         }
     }
 
