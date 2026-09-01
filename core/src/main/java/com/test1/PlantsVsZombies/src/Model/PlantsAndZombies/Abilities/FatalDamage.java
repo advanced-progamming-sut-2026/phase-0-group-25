@@ -23,12 +23,6 @@ public class FatalDamage implements Ability {
 
 
             if (fatalTime < difference) {
-                double zombieFinalPositionX = zombie.getPosition().getX() - 10;
-                Position newPosition = new Position(zombieFinalPositionX, zombie.getPosition().getY());
-                zombie.setPosition(newPosition);
-
-
-                rival.setCurrentHP(0);
                 rival.setAlive(false);
                 this.isActivated = false;
                 makeMovingActivated(zombie);

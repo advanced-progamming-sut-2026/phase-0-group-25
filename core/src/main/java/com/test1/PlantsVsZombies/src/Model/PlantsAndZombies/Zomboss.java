@@ -1,6 +1,7 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies;
 
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 
 import java.util.Random;
@@ -8,12 +9,12 @@ import java.util.Random;
 public class Zomboss extends Zombie {
 
     private GamePlay GAME = GamePlay.activeInstance;
-    private static int ACTION_INTERVAL = 20;
+    private static int ACTION_INTERVAL = 12;
     private static int STUN_INTERVAL = 10;
     private static int Y_DOWN_LIMIT = 130;
     private static int X_LEFT_LIMIT = 490;
 
-    private int currentSecondRow;
+    private int currentSecondRow = 3;
 
     private boolean isStunned = false;
     private double timeWhenStunned;
@@ -46,6 +47,7 @@ public class Zomboss extends Zombie {
 
         if (isTimeForAction()) {
             handleState();
+            this.lastActionTime = GAME.getTotalTimePassed();
         }
 
     }
@@ -60,8 +62,8 @@ public class Zomboss extends Zombie {
         Zombie newZombie2 = ZombieFactory.createZombie("BUCKET_HEAD",
             new Position(700, 590));
 
-        GAME.getGameZombies().add(newZombie1);
-        GAME.getGameZombies().add(newZombie2);
+        GAME.addZombieFromAbility(newZombie1);
+        GAME.addZombieFromAbility(newZombie2);
     }
 
     private void throwProjectile() {
@@ -71,16 +73,16 @@ public class Zomboss extends Zombie {
         int randomRow = RANDOM.nextInt(4) + 1;
 
         Tile targetTile = GAME.getTileByPosition(randomColumn, randomRow);
-        //Position target = findTarget();
+        Position target = new Position(600, 500);
 
         double XVelocity = (Double) this.zombieStats.getAttributes().get("X_Velocity");
         double YVelocity = (Double) this.zombieStats.getAttributes().get("Y_Velocity");
-        // Position launcher = findLauncher();
+        Position launcher = new Position(600, 870);
 
-        //Projectile newProjectile = new Projectile(name, laucnher,
-        //   XVelocity, YVelocity, target);
+        Projectile newProjectile = new Projectile(name, launcher,
+           XVelocity, YVelocity, target);
 
-        //GAME.getProjectiles().add(newProjectile);
+        GAME.getProjectiles().add(newProjectile);
     }
 
     @Override
@@ -125,6 +127,7 @@ public class Zomboss extends Zombie {
     private void handleState() {
         int random = (new Random()).nextInt(4);
         this.timeWhenTriggered = GAME.getTotalTimePassed();
+
         switch (random) {
             case 0:
                 throwProjectile();
@@ -146,6 +149,7 @@ public class Zomboss extends Zombie {
                 this.statusSpan = (Double) this.zombieStats.getAttributes().get("specialSpan");
                 break;
         }
+
     }
 
     @Override
@@ -229,6 +233,8 @@ public class Zomboss extends Zombie {
             }
         }
     }
+
+
 
 }
 

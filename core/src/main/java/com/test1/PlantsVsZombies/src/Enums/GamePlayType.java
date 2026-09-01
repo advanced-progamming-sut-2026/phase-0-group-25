@@ -7,5 +7,6 @@ public enum GamePlayType {
     TIMED_WAR,
     DEADLINE,
     LOVE_YOUR_PLANTS,
-    CONVEYOR_BELT
+    CONVEYOR_BELT,
+    ZOMBOSS
 }
