@@ -17,34 +17,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-
 public class ClientSession implements Runnable {
+    public static final Map<String, ClientSession> onlineSessions = new ConcurrentHashMap<>();
+
     private final Socket socket;
     private final UserDatabase database;
-    private final ConcurrentHashMap<String, ClientSession> onlineSessions;
-    private final MatchmakingManager matchmakingManager;
     private final ObjectMapper mapper = new ObjectMapper();
     private String loggedInUsername;
     private String sessionToken;
     private boolean stayLoggedIn;
 
-    /** Assigned once LOGIN/RESTORE_SESSION succeeds; null until then. */
-    private volatile String username;
-    /** Set once the session's writer is up, so sendPush() can be called from other sessions' threads. */
     private volatile PrintWriter out;
-    /** The I,Zombie room this session currently belongs to, if any. */
+    private volatile String username;
     private volatile IZombieRoom currentRoom;
-    /** Whether this session is currently sitting in the random matchmaking queue. */
-    private volatile boolean inQueue;
+    private volatile boolean inQueue = false;
 
-    public ClientSession(Socket socket, UserDatabase database,
-                         ConcurrentHashMap<String, ClientSession> onlineSessions,
-                         MatchmakingManager matchmakingManager) {
+    public ClientSession(Socket socket, UserDatabase database) {
         this.socket = socket;
         this.database = database;
-        this.onlineSessions = onlineSessions;
-        this.matchmakingManager = matchmakingManager;
         mapper.registerModule(new JavaTimeModule());
+    }
+
+    public ClientSession(Socket socket, UserDatabase database, Object unused1, Object unused2) {
+        this(socket, database);
     }
 
     @Override
@@ -54,10 +49,9 @@ public class ClientSession implements Runnable {
 
         try (
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
-            PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true)
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true)
         ) {
-            this.out = out;
-
+            this.out = writer;
             String line;
             while ((line = in.readLine()) != null) {
                 if (line.isBlank()) continue;
@@ -66,58 +60,52 @@ public class ClientSession implements Runnable {
                     NetworkMessage request = mapper.readValue(line, NetworkMessage.class);
                     response = handle(request);
                 } catch (Exception e) {
-                    response = NetworkMessage.error(0, null, "Malformed request: " + e.getMessage());
+                    System.err.println("[Server] Error parsing JSON from " + getDisplayName() + ": " + e.getMessage());
+                    response = null;
                 }
-                writeMessage(response);
+                if (response != null) {
+                    sendPush(response);
+                }
             }
         } catch (IOException e) {
-            System.out.println("[Server] Client disconnected: " + remote);
+            System.out.println("[Server] Client disconnected: " + getDisplayName());
         } finally {
-            if (loggedInUsername != null
-                && sessionToken != null
-                && !stayLoggedIn) {
-
-                database.logout(loggedInUsername, sessionToken);
-            }
-
-            try {
-                socket.close();
-            } catch (IOException ignored) {
-            }
-
-            System.out.println("[Server] Client session closed: " + remote);
+            cleanupSession();
         }
     }
 
-    /** Best-effort cleanup so a dropped connection can't leave the user "stuck" online, queued, or mid-match forever. */
-    private void cleanupOnDisconnect() {
+    private void cleanupSession() {
         if (username != null) {
-            onlineSessions.remove(username, this);
+            onlineSessions.remove(username.toLowerCase());
         }
-        matchmakingManager.cancel(this);
-        IZombieRoom room = this.currentRoom;
-        if (room != null) {
-            room.handleDisconnect(this);
+        MatchmakingManager.getInstance().cancel(this);
+
+        if (currentRoom != null) {
+            currentRoom.handleDisconnect(this);
+            currentRoom = null;
         }
+
+        try {
+            socket.close();
+        } catch (IOException ignored) {}
     }
 
-    private void writeMessage(NetworkMessage message) {
-        PrintWriter writer = this.out;
-        if (writer == null) return;
+    public void sendPush(NetworkMessage message) {
+        if (message == null) return;
+        if (out == null) {
+            System.err.println("[Server] sendPush(" + message.getType() + ") DROPPED -- no writer for " + getDisplayName());
+            return;
+        }
         try {
             String json = mapper.writeValueAsString(message);
             synchronized (writeLock) {
-                writer.println(json);
+                out.println(json);
             }
+            System.out.println("[Server] Push sent to " + getDisplayName() + " -> " + message.getType());
         } catch (Exception e) {
-            System.err.println("[Server] Failed to write message to "
-                + (username != null ? username : "unknown") + ": " + e.getMessage());
+            System.err.println("[Server] sendPush(" + message.getType() + ") FAILED for " + getDisplayName() + ": " + e.getMessage());
+            e.printStackTrace();
         }
-    }
-
-    /** Sends an unsolicited push (e.g. MATCH_FOUND, OPPONENT_GAME_STATE) to this session's client. */
-    public void sendPush(NetworkMessage message) {
-        writeMessage(message);
     }
 
     private NetworkMessage handle(NetworkMessage request) {
@@ -141,25 +129,39 @@ public class ClientSession implements Runnable {
                     return handleSaveProgress(request);
                 case GET_ALL_USERS:
                     return handleGetAllUsers(request);
+
                 case JOIN_MATCHMAKING_QUEUE:
-                    return handleJoinMatchmakingQueue(request);
+                    return handleJoinQueue(request);
                 case CANCEL_MATCHMAKING:
-                    return handleCancelMatchmaking(request);
+                    MatchmakingManager.getInstance().cancel(this);
+                    if (currentRoom != null) {
+                        currentRoom.handleDisconnect(this);
+                        currentRoom = null;
+                    }
+                    return NetworkMessage.ok(request.getRequestId(), request.getType());
                 case CHALLENGE_USER:
                     return handleChallengeUser(request);
                 case RESPOND_TO_CHALLENGE:
                     return handleRespondToChallenge(request);
                 case OPPONENT_GAME_STATE:
-                    return handleOpponentGameState(request);
+                    if (currentRoom != null) {
+                        currentRoom.forwardGameState(this, request);
+                    }
+                    return null;
                 case SEND_REACTION:
-                    return handleSendReaction(request);
+                    if (currentRoom != null) {
+                        currentRoom.forwardReaction(this, request);
+                    }
+                    return null;
+
                 default:
                     return NetworkMessage.error(request.getRequestId(), request.getType(),
                         "This request type isn't handled by the server yet.");
             }
         } catch (Exception e) {
-            return NetworkMessage.error(request.getRequestId(), request.getType(),
-                "Server error: " + e.getMessage());
+            System.err.println("[Server] Handler error for " + request.getType() + ": " + e.getMessage());
+            e.printStackTrace();
+            return NetworkMessage.error(request.getRequestId(), request.getType(), "Server error: " + e.getMessage());
         }
     }
 
@@ -177,28 +179,13 @@ public class ClientSession implements Runnable {
 
     private NetworkMessage handleLogin(NetworkMessage req) {
         Map<String, Object> d = req.getData();
+        String uname = str(d, "username");
+        UserDatabase.LoginResult result = database.login(uname, str(d, "password"));
+        if (!result.success()) return NetworkMessage.error(req.getRequestId(), req.getType(), result.errorMessage());
 
-        String username = str(d, "username");
-        String password = str(d, "password");
-
-        UserDatabase.LoginResult result =
-            database.login(username, password);
-
-        if (!result.success()) {
-            return NetworkMessage.error(
-                req.getRequestId(),
-                req.getType(),
-                result.errorMessage()
-            );
-        }
-
-        loggedInUsername = username;
-        sessionToken = result.sessionToken();
-
-        Object stayLoggedInValue = d.get("stayLoggedIn");
-        stayLoggedIn =
-            stayLoggedInValue != null &&
-                Boolean.parseBoolean(stayLoggedInValue.toString());
+        this.username = uname;
+        onlineSessions.put(this.username.toLowerCase(), this);
+        System.out.println("[Server] Logged in: " + this.username);
 
         return NetworkMessage.ok(req.getRequestId(), req.getType())
             .put("user", result.user())
@@ -207,67 +194,38 @@ public class ClientSession implements Runnable {
 
     private NetworkMessage handleRestoreSession(NetworkMessage req) {
         Map<String, Object> d = req.getData();
+        String uname = str(d, "username");
+        UserDatabase.LoginResult result = database.restoreSession(uname, str(d, "sessionToken"));
+        if (!result.success()) return NetworkMessage.error(req.getRequestId(), req.getType(), result.errorMessage());
 
-        String username = str(d, "username");
-        String token = str(d, "sessionToken");
+        this.username = uname;
+        onlineSessions.put(this.username.toLowerCase(), this);
+        System.out.println("[Server] Restored Session: " + this.username);
 
-        UserDatabase.LoginResult result =
-            database.restoreSession(username, token);
-
-        if (!result.success()) {
-            return NetworkMessage.error(
-                req.getRequestId(),
-                req.getType(),
-                result.errorMessage()
-            );
-        }
-
-        loggedInUsername = username;
-        sessionToken = token;
-
-        // A successfully restored session is a remembered session.
-        stayLoggedIn = true;
-
-        return NetworkMessage.ok(
-            req.getRequestId(),
-            req.getType()
-        ).put("user", result.user());
-    }
-
-    private void registerOnlineSession(String loggedInUsername) {
-        this.username = loggedInUsername;
-        if (loggedInUsername != null) {
-            onlineSessions.put(loggedInUsername, this);
-        }
+        return NetworkMessage.ok(req.getRequestId(), req.getType()).put("user", result.user());
     }
 
     private NetworkMessage handleLogout(NetworkMessage req) {
         Map<String, Object> d = req.getData();
-
-        String username = str(d, "username");
-        String token = str(d, "sessionToken");
-
-        database.logout(username, token);
-
-        loggedInUsername = null;
-        sessionToken = null;
-        stayLoggedIn = false;
-
-        return NetworkMessage.ok(
-            req.getRequestId(),
-            req.getType()
-        );
+        if (this.username != null) {
+            onlineSessions.remove(this.username.toLowerCase());
+        }
+        MatchmakingManager.getInstance().cancel(this);
+        database.logout(str(d, "username"), str(d, "sessionToken"));
+        return NetworkMessage.ok(req.getRequestId(), req.getType());
     }
 
     private NetworkMessage handleChangeUsername(NetworkMessage req) {
         Map<String, Object> d = req.getData();
-        String newUsername = str(d, "newUsername");
-        String error = database.changeUsername(str(d, "username"), str(d, "sessionToken"), newUsername);
+        String oldName = str(d, "username");
+        String newName = str(d, "newUsername");
+        String error = database.changeUsername(oldName, str(d, "sessionToken"), newName);
         if (error != null) return NetworkMessage.error(req.getRequestId(), req.getType(), error);
-        if (username != null) {
-            onlineSessions.remove(username, this);
-        }
-        registerOnlineSession(newUsername);
+
+        onlineSessions.remove(oldName.toLowerCase());
+        this.username = newName;
+        onlineSessions.put(this.username.toLowerCase(), this);
+
         return NetworkMessage.ok(req.getRequestId(), req.getType());
     }
 
@@ -298,146 +256,99 @@ public class ClientSession implements Runnable {
         return NetworkMessage.ok(req.getRequestId(), req.getType()).put("users", users);
     }
 
+    private NetworkMessage handleJoinQueue(NetworkMessage req) {
+        syncUsernameIfProvided(str(req.getData(), "username"));
 
 
-
-
-    private NetworkMessage handleJoinMatchmakingQueue(NetworkMessage req) {
-        if (username == null) {
-            return NetworkMessage.error(req.getRequestId(), req.getType(), "You must be logged in to join matchmaking.");
+        if (currentRoom != null) {
+            currentRoom = null;
         }
-        String error = matchmakingManager.enqueue(this);
-        if (error != null) return NetworkMessage.error(req.getRequestId(), req.getType(), error);
-        return NetworkMessage.ok(req.getRequestId(), req.getType());
-    }
 
-    /**
-     * Doubles as a general "leave whatever I,Zombie state I'm in" signal:
-     * besides popping this session out of the matchmaking queue, it also
-     * leaves the current room (if any) so a player who backs out mid-match
-     * isn't stuck unable to queue or be challenged again, and so their
-     * opponent is freed up (and told) via the same OPPONENT_DISCONNECTED
-     * path used for an actual dropped connection.
-     */
-    private NetworkMessage handleCancelMatchmaking(NetworkMessage req) {
-        matchmakingManager.cancel(this);
-        IZombieRoom room = this.currentRoom;
-        if (room != null) {
-            room.handleDisconnect(this);
+        String error = MatchmakingManager.getInstance().enqueue(this);
+        if (error != null) {
+            return NetworkMessage.error(req.getRequestId(), req.getType(), error);
         }
         return NetworkMessage.ok(req.getRequestId(), req.getType());
     }
 
     private NetworkMessage handleChallengeUser(NetworkMessage req) {
-        if (username == null) {
-            return NetworkMessage.error(req.getRequestId(), req.getType(), "You must be logged in to challenge another player.");
-        }
-        String targetUsername = str(req.getData(), "targetUsername");
-        if (targetUsername == null || targetUsername.isBlank()) {
-            return NetworkMessage.error(req.getRequestId(), req.getType(), "Enter a username to challenge.");
-        }
-        if (targetUsername.equalsIgnoreCase(this.username)) {
-            return NetworkMessage.error(req.getRequestId(), req.getType(), "You can't challenge yourself.");
-        }
-        if (!this.isAvailableForMatch()) {
-            return NetworkMessage.error(req.getRequestId(), req.getType(), "You're already queued or in a match.");
+        syncUsernameIfProvided(str(req.getData(), "fromUsername"));
+
+
+        if (currentRoom != null) {
+            currentRoom = null;
         }
 
-        ClientSession target = onlineSessions.get(targetUsername);
-        if (target == null || !target.isConnected()) {
-            return NetworkMessage.error(req.getRequestId(), req.getType(), targetUsername + " is not online.");
-        }
-        if (!target.isAvailableForMatch()) {
-            return NetworkMessage.error(req.getRequestId(), req.getType(), targetUsername + " is currently busy.");
+        String targetName = str(req.getData(), "targetUsername");
+        if (targetName == null || targetName.equalsIgnoreCase(this.username)) {
+            return NetworkMessage.error(req.getRequestId(), req.getType(), "Cannot challenge yourself.");
         }
 
-        target.sendPush(NetworkMessage.request(0, MessageType.CHALLENGE_USER).put("fromUsername", this.username));
+        ClientSession targetSession = onlineSessions.get(targetName.toLowerCase());
+        if (targetSession == null || !targetSession.isConnected()) {
+            return NetworkMessage.error(req.getRequestId(), req.getType(), "User '" + targetName + "' is offline or not found.");
+        }
+
+        NetworkMessage challengeNotice = NetworkMessage.request(0, MessageType.CHALLENGE_USER)
+            .put("challenger", this.username != null ? this.username : "Opponent");
+        targetSession.sendPush(challengeNotice);
+
         return NetworkMessage.ok(req.getRequestId(), req.getType());
     }
 
     private NetworkMessage handleRespondToChallenge(NetworkMessage req) {
-        Map<String, Object> d = req.getData();
-        String fromUsername = str(d, "fromUsername");
-        boolean accepted = Boolean.parseBoolean(String.valueOf(d.get("accepted")));
+        syncUsernameIfProvided(str(req.getData(), "fromUsername"));
 
-        if (fromUsername == null) {
-            return NetworkMessage.error(req.getRequestId(), req.getType(), "Missing challenger username.");
+        if (currentRoom != null) {
+            currentRoom = null;
         }
 
-        ClientSession challenger = onlineSessions.get(fromUsername);
+        String challengerName = str(req.getData(), "challenger");
+        boolean accepted = Boolean.parseBoolean(String.valueOf(req.getData().get("accepted")));
 
-        if (!accepted) {
-            if (challenger != null) {
-                challenger.sendPush(NetworkMessage.request(0, MessageType.RESPOND_TO_CHALLENGE)
-                    .put("opponentUsername", this.username)
-                    .put("accepted", false));
-            }
-            return NetworkMessage.ok(req.getRequestId(), req.getType());
+        ClientSession challenger = onlineSessions.get(challengerName != null ? challengerName.toLowerCase() : "");
+        if (challenger == null || !challenger.isConnected()) {
+            return NetworkMessage.error(req.getRequestId(), req.getType(), "Challenger is no longer online.");
         }
 
-        if (challenger == null || !challenger.isConnected() || !challenger.isAvailableForMatch()) {
-            return NetworkMessage.error(req.getRequestId(), req.getType(), fromUsername + " is no longer available.");
-        }
-        if (!this.isAvailableForMatch()) {
-            return NetworkMessage.error(req.getRequestId(), req.getType(), "You're already queued or in a match.");
+        if (accepted) {
+            MatchmakingManager.getInstance().cancel(challenger);
+            MatchmakingManager.getInstance().cancel(this);
+
+            IZombieRoom room = new IZombieRoom(challenger, this);
+            room.start();
+        } else {
+            NetworkMessage declineMsg = NetworkMessage.request(0, MessageType.RESPOND_TO_CHALLENGE)
+                .put("opponentUsername", this.username != null ? this.username : "Opponent")
+                .put("accepted", false);
+            challenger.sendPush(declineMsg);
         }
 
-        IZombieRoom room = new IZombieRoom(challenger, this);
-        room.start();
         return NetworkMessage.ok(req.getRequestId(), req.getType());
     }
 
-
-
-
-
-    private NetworkMessage handleOpponentGameState(NetworkMessage req) {
-        IZombieRoom room = this.currentRoom;
-        if (room == null) {
-            return NetworkMessage.error(req.getRequestId(), req.getType(), "You are not currently in a match.");
+    private void syncUsernameIfProvided(String u) {
+        if (u != null && !u.isEmpty() && !u.equalsIgnoreCase("Player")) {
+            this.username = u;
+            onlineSessions.put(this.username.toLowerCase(), this);
         }
-        room.forwardGameState(this, req);
-        return NetworkMessage.ok(req.getRequestId(), req.getType());
     }
 
-    private NetworkMessage handleSendReaction(NetworkMessage req) {
-        IZombieRoom room = this.currentRoom;
-        if (room == null) {
-            return NetworkMessage.error(req.getRequestId(), req.getType(), "You are not currently in a match.");
-        }
-        room.forwardReaction(this, req);
-        return NetworkMessage.ok(req.getRequestId(), req.getType());
-    }
-
-
-
-
-
-    public String getUsername() {
-        return username;
+    private String getDisplayName() {
+        return (username != null) ? username : ("Session@" + socket.getRemoteSocketAddress());
     }
 
     public boolean isConnected() {
-        return !socket.isClosed();
-    }
-
-    public void setInQueue(boolean inQueue) {
-        this.inQueue = inQueue;
-    }
-
-    public boolean isInQueue() {
-        return inQueue;
-    }
-
-    public void setCurrentRoom(IZombieRoom room) {
-        this.currentRoom = room;
-    }
-
-    public IZombieRoom getCurrentRoom() {
-        return currentRoom;
+        return socket != null && !socket.isClosed();
     }
 
     public boolean isAvailableForMatch() {
-        return username != null && !inQueue && currentRoom == null;
+        return isConnected() && username != null && !inQueue && currentRoom == null;
     }
+
+    public String getUsername() { return username; }
+    public void setInQueue(boolean inQueue) { this.inQueue = inQueue; }
+    public boolean isInQueue() { return inQueue; }
+    public void setCurrentRoom(IZombieRoom room) { this.currentRoom = room; }
+    public IZombieRoom getCurrentRoom() { return currentRoom; }
 }

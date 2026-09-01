@@ -10,14 +10,6 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Input for local couch play: the Plant player uses the mouse exactly like
- * {@link IZombieInputHandler} does for a networked Plant player, while the
- * Zombie player shares the same keyboard -- number keys pick a zombie card,
- * W/S (or the arrow keys) move the highlighted lane, and Space/Enter spawns.
- * Both halves are wired up unconditionally since there's no network faction
- * authority to enforce on a single shared machine.
- */
 public class IZombieCouchPlayInputHandler extends InputAdapter implements IZombieHudInputState {
     private final IZombie gamePlay;
     private final OrthographicCamera camera;
@@ -35,9 +27,12 @@ public class IZombieCouchPlayInputHandler extends InputAdapter implements IZombi
         this.camera = camera;
         this.screen = screen;
         this.zombieCardOrder = new ArrayList<>(gamePlay.getZombieDeck().keySet());
-    }
 
-    // ---- Mouse: Plant side, pause, and the reaction drawer ----
+
+        if (!zombieCardOrder.isEmpty()) {
+            this.selectedZombieCardType = zombieCardOrder.get(0);
+        }
+    }
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
@@ -56,11 +51,13 @@ public class IZombieCouchPlayInputHandler extends InputAdapter implements IZombi
         camera.unproject(mouseWorldPos.set(screenX, screenY, 0));
         float x = mouseWorldPos.x, y = mouseWorldPos.y;
 
+
         if (isInside(x, y, IZombieHudRenderer.PAUSE_BTN_X, IZombieHudRenderer.PAUSE_BTN_Y,
             IZombieHudRenderer.PAUSE_BTN_SIZE, IZombieHudRenderer.PAUSE_BTN_SIZE)) {
             screen.openPauseModal();
             return true;
         }
+
 
         if (isInside(x, y, IZombieHudRenderer.DRAWER_TOGGLE_X, IZombieHudRenderer.DRAWER_TOGGLE_Y,
             IZombieHudRenderer.DRAWER_TOGGLE_SIZE, IZombieHudRenderer.DRAWER_TOGGLE_SIZE)) {
@@ -74,8 +71,8 @@ public class IZombieCouchPlayInputHandler extends InputAdapter implements IZombi
         }
 
         if (gamePlay.isGameOver()) return false;
-
         if (gamePlay.tryCollectSunByClick(x, y)) return true;
+
 
         ArrayList<BattlePlant> deck = gamePlay.getPlants();
         for (int i = 0; i < deck.size(); i++) {
@@ -118,18 +115,17 @@ public class IZombieCouchPlayInputHandler extends InputAdapter implements IZombi
         return false;
     }
 
-    // ---- Keyboard: Zombie side ----
-
     @Override
     public boolean keyDown(int keycode) {
         if (gamePlay.isGameOver()) return false;
 
+
         int cardIndex = numberKeyIndex(keycode);
         if (cardIndex >= 0 && cardIndex < zombieCardOrder.size()) {
-            String card = zombieCardOrder.get(cardIndex);
-            selectedZombieCardType = card.equals(selectedZombieCardType) ? null : card;
+            selectedZombieCardType = zombieCardOrder.get(cardIndex);
             return true;
         }
+
 
         if (keycode == Input.Keys.W || keycode == Input.Keys.UP) {
             selectedZombieLane = Math.min(5, selectedZombieLane + 1);
@@ -139,9 +135,11 @@ public class IZombieCouchPlayInputHandler extends InputAdapter implements IZombi
             selectedZombieLane = Math.max(1, selectedZombieLane - 1);
             return true;
         }
-        if (keycode == Input.Keys.SPACE || keycode == Input.Keys.ENTER) {
-            if (selectedZombieCardType != null && gamePlay.spawnZombie(selectedZombieCardType, selectedZombieLane)) {
-                selectedZombieCardType = null;
+
+
+        if (keycode == Input.Keys.SPACE || keycode == Input.Keys.ENTER || keycode == Input.Keys.NUMPAD_ENTER) {
+            if (selectedZombieCardType != null) {
+                gamePlay.spawnZombie(selectedZombieCardType, selectedZombieLane);
             }
             return true;
         }
@@ -150,12 +148,23 @@ public class IZombieCouchPlayInputHandler extends InputAdapter implements IZombi
 
     private int numberKeyIndex(int keycode) {
         switch (keycode) {
-            case Input.Keys.NUM_1: return 0;
-            case Input.Keys.NUM_2: return 1;
-            case Input.Keys.NUM_3: return 2;
-            case Input.Keys.NUM_4: return 3;
-            case Input.Keys.NUM_5: return 4;
-            default: return -1;
+            case Input.Keys.NUM_1:
+            case Input.Keys.NUMPAD_1:
+                return 0;
+            case Input.Keys.NUM_2:
+            case Input.Keys.NUMPAD_2:
+                return 1;
+            case Input.Keys.NUM_3:
+            case Input.Keys.NUMPAD_3:
+                return 2;
+            case Input.Keys.NUM_4:
+            case Input.Keys.NUMPAD_4:
+                return 3;
+            case Input.Keys.NUM_5:
+            case Input.Keys.NUMPAD_5:
+                return 4;
+            default:
+                return -1;
         }
     }
 
@@ -163,28 +172,9 @@ public class IZombieCouchPlayInputHandler extends InputAdapter implements IZombi
         return x >= rx && x <= rx + rw && y >= ry && y <= ry + rh;
     }
 
-    @Override
-    public int getSelectedZombieLane() {
-        return selectedZombieLane;
-    }
-
-    @Override
-    public Vector3 getMouseWorldPos() {
-        return mouseWorldPos;
-    }
-
-    @Override
-    public BattlePlant getSelectedPlantCard() {
-        return selectedPlantCard;
-    }
-
-    @Override
-    public String getSelectedZombieCardType() {
-        return selectedZombieCardType;
-    }
-
-    @Override
-    public boolean isReactionDrawerOpen() {
-        return reactionDrawerOpen;
-    }
+    @Override public int getSelectedZombieLane() { return selectedZombieLane; }
+    @Override public Vector3 getMouseWorldPos() { return mouseWorldPos; }
+    @Override public BattlePlant getSelectedPlantCard() { return selectedPlantCard; }
+    @Override public String getSelectedZombieCardType() { return selectedZombieCardType; }
+    @Override public boolean isReactionDrawerOpen() { return reactionDrawerOpen; }
 }

@@ -3,16 +3,15 @@ package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.test1.PlantsVsZombies.Main;
 import com.test1.PlantsVsZombies.src.Enums.MenuType;
 import com.test1.PlantsVsZombies.src.Menu.MenuManager;
+import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.MiniGames.IZombieGame.IZombie;
 import com.test1.PlantsVsZombies.src.Network.Client.ServerConnection;
 import com.test1.PlantsVsZombies.src.Network.MessageType;
@@ -29,7 +28,7 @@ import java.util.function.Consumer;
 public class IZombieScreen extends ScreenAdapter implements GamePlayMenuView {
     private static final float TICK_RATE = 0.1f;
     private static final String ERROR_BG_ASSET_ID = "IMAGE_UI_GENERIC_TIMER_RIBBON_RED";
-    /** How long a reaction popup/sticker stays in the active list before being pruned (must exceed the renderers' own fade durations). */
+    private static final String SUCCESS_BG_ASSET_ID = "IMAGE_UI_GENERIC_VTB";
     private static final float REACTION_LIFETIME = 3.5f;
 
     private final IZombie gamePlay;
@@ -57,30 +56,26 @@ public class IZombieScreen extends ScreenAdapter implements GamePlayMenuView {
 
     public IZombieScreen(IZombie gamePlay) {
         this.gamePlay = gamePlay;
+        GamePlay.activeInstance = gamePlay;
     }
 
     @Override
     public void show() {
+        GamePlay.activeInstance = gamePlay;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 1920, 1200);
         shapeRenderer = new ShapeRenderer();
-        batch = new SpriteBatch();
-        textureBank = new TextureBank("768", Gdx.files.local("assets/Assets"));
-        player = new PamPlayer(textureBank, Gdx.files.local("assets/Assets"));
+        batch = Main.getInstance().getBatch();
 
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.local("pvz.ttf"));
-        FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-        parameter.size = 48;
-        parameter.color = Color.WHITE;
-        parameter.borderColor = Color.BLACK;
-        parameter.borderWidth = 3;
-        hudFont = generator.generateFont(parameter);
-        generator.dispose();
+        textureBank = Main.getInstance().getTextureBank();
+        player = Main.getInstance().getPamPlayer();
+        hudFont = Main.getInstance().getSkin().get("FBUSV8C5EI_2", BitmapFont.class);
+
 
         modals = new GamePlayModals(
             gamePlay,
-            () -> MenuManager.getInstance().changeMenu(MenuType.TravelLog),
-            () -> MenuManager.getInstance().changeMenu(MenuType.TravelLog)
+            this::exitMatch,
+            null
         );
 
         worldRenderer = new IZombieWorldRenderer(textureBank, player);
@@ -121,12 +116,6 @@ public class IZombieScreen extends ScreenAdapter implements GamePlayMenuView {
         networkListenersRegistered = false;
     }
 
-
-
-
-
-
-
     private void handleOpponentGameState(NetworkMessage message) {
         Map<String, Object> data = message.getData();
         Object actionType = data.get("actionType");
@@ -149,16 +138,17 @@ public class IZombieScreen extends ScreenAdapter implements GamePlayMenuView {
             int index = intValue(data, "index");
             String fromUsername = stringValue(data, "fromUsername");
             activeReactions.add(new ActiveReaction(category, index, fromUsername != null ? fromUsername : "Opponent", stateTime));
-        } catch (IllegalArgumentException ignored) {
-
-        }
+        } catch (IllegalArgumentException ignored) {}
     }
 
     private void handleOpponentDisconnected(NetworkMessage message) {
         if (gamePlay.isGameOver()) return;
         gamePlay.endMatch(gamePlay.getMyFaction());
         String opponent = stringValue(message.getData(), "opponentUsername");
-        UIManager.showToast((opponent != null ? opponent : "Your opponent") + " disconnected -- you win!", ERROR_BG_ASSET_ID);
+        UIManager.showToast((opponent != null ? opponent : "Your opponent") + " disconnected -- you win!", SUCCESS_BG_ASSET_ID);
+        if (modals != null) {
+            modals.checkAndMaybeShowEndGameModal();
+        }
     }
 
     private String stringValue(Map<String, Object> data, String key) {
@@ -171,16 +161,14 @@ public class IZombieScreen extends ScreenAdapter implements GamePlayMenuView {
         return (value instanceof Number) ? ((Number) value).intValue() : 0;
     }
 
-
-
-
-
     @Override
     public void render(float delta) {
         textureBank.update();
         ScreenUtils.clear(0.1f, 0.4f, 0.1f, 1);
 
-        if (!gamePlay.isPaused()) {
+
+        boolean shouldTick = gamePlay.isNetworkGame() || !gamePlay.isPaused();
+        if (shouldTick && !gamePlay.isGameOver()) {
             stateTime += delta;
             gamePlay.setTotalTimePassed(stateTime);
 
@@ -213,13 +201,17 @@ public class IZombieScreen extends ScreenAdapter implements GamePlayMenuView {
         UIManager.resizeToasts(width, height);
     }
 
+    private void exitMatch() {
+        if (!gamePlay.isLocalCouchPlay() && ServerConnection.isConnected()) {
+            ServerConnection.getInstance().sendRequestAsync(NetworkMessage.request(0, MessageType.CANCEL_MATCHMAKING), null);
+        }
+        unregisterNetworkListeners();
+        MenuManager.getInstance().changeMenu(MenuType.TravelLog);
+    }
+
     @Override
     public void hide() {
-
-
-
-
-        if (!gamePlay.isLocalCouchPlay() && !gamePlay.isGameOver() && ServerConnection.isConnected()) {
+        if (!gamePlay.isLocalCouchPlay() && ServerConnection.isConnected()) {
             ServerConnection.getInstance().sendRequestAsync(NetworkMessage.request(0, MessageType.CANCEL_MATCHMAKING), null);
         }
         unregisterNetworkListeners();
@@ -229,20 +221,13 @@ public class IZombieScreen extends ScreenAdapter implements GamePlayMenuView {
     public void dispose() {
         unregisterNetworkListeners();
         if (shapeRenderer != null) shapeRenderer.dispose();
-        if (batch != null) batch.dispose();
-        if (hudFont != null) hudFont.dispose();
         if (modals != null) modals.dispose();
     }
-
-
-
-
 
     public void openPauseModal() {
         modals.showPauseModal();
     }
 
-    /** Applies a local action's network echo: sends what the local player just did so the opponent's client can mirror it. */
     public void sendGameStateAction(String actionType, String entityName, int column, int row) {
         if (gamePlay.isLocalCouchPlay() || !ServerConnection.isConnected()) return;
         NetworkMessage message = NetworkMessage.request(0, MessageType.OPPONENT_GAME_STATE)
@@ -253,7 +238,6 @@ public class IZombieScreen extends ScreenAdapter implements GamePlayMenuView {
         ServerConnection.getInstance().sendRequestAsync(message, null);
     }
 
-    /** Shows an instant local echo of a reaction the local player just sent, and forwards it to the opponent over the network. */
     public void sendReaction(ActiveReaction.Category category, int index) {
         activeReactions.add(new ActiveReaction(category, index, "You", stateTime));
 
@@ -265,16 +249,8 @@ public class IZombieScreen extends ScreenAdapter implements GamePlayMenuView {
         }
     }
 
-
-
-
-
-    @Override
-    public void showCurrentMenu() {
-    }
-
-    @Override
-    public void showError(String errorMessage) {
+    @Override public void showCurrentMenu() {}
+    @Override public void showError(String errorMessage) {
         UIManager.showToast(errorMessage, ERROR_BG_ASSET_ID);
     }
 }
