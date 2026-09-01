@@ -25,7 +25,6 @@ public class ClientSession implements Runnable {
     private final ObjectMapper mapper = new ObjectMapper();
     private final Object writeLock = new Object();
 
-    // متغیرهای فرار برای تضمین دسترسی ایمن بین تردها
     private volatile PrintWriter out;
     private volatile String username;
     private volatile IZombieRoom currentRoom;
@@ -133,6 +132,10 @@ public class ClientSession implements Runnable {
                     return handleJoinQueue(request);
                 case CANCEL_MATCHMAKING:
                     MatchmakingManager.getInstance().cancel(this);
+                    if (currentRoom != null) {
+                        currentRoom.handleDisconnect(this);
+                        currentRoom = null;
+                    }
                     return NetworkMessage.ok(request.getRequestId(), request.getType());
                 case CHALLENGE_USER:
                     return handleChallengeUser(request);
@@ -254,6 +257,11 @@ public class ClientSession implements Runnable {
     private NetworkMessage handleJoinQueue(NetworkMessage req) {
         syncUsernameIfProvided(str(req.getData(), "username"));
 
+
+        if (currentRoom != null) {
+            currentRoom = null;
+        }
+
         String error = MatchmakingManager.getInstance().enqueue(this);
         if (error != null) {
             return NetworkMessage.error(req.getRequestId(), req.getType(), error);
@@ -263,6 +271,11 @@ public class ClientSession implements Runnable {
 
     private NetworkMessage handleChallengeUser(NetworkMessage req) {
         syncUsernameIfProvided(str(req.getData(), "fromUsername"));
+
+
+        if (currentRoom != null) {
+            currentRoom = null;
+        }
 
         String targetName = str(req.getData(), "targetUsername");
         if (targetName == null || targetName.equalsIgnoreCase(this.username)) {
@@ -284,6 +297,10 @@ public class ClientSession implements Runnable {
     private NetworkMessage handleRespondToChallenge(NetworkMessage req) {
         syncUsernameIfProvided(str(req.getData(), "fromUsername"));
 
+        if (currentRoom != null) {
+            currentRoom = null;
+        }
+
         String challengerName = str(req.getData(), "challenger");
         boolean accepted = Boolean.parseBoolean(String.valueOf(req.getData().get("accepted")));
 
@@ -293,6 +310,9 @@ public class ClientSession implements Runnable {
         }
 
         if (accepted) {
+            MatchmakingManager.getInstance().cancel(challenger);
+            MatchmakingManager.getInstance().cancel(this);
+
             IZombieRoom room = new IZombieRoom(challenger, this);
             room.start();
         } else {

@@ -28,6 +28,7 @@ import java.util.function.Consumer;
 public class IZombieScreen extends ScreenAdapter implements GamePlayMenuView {
     private static final float TICK_RATE = 0.1f;
     private static final String ERROR_BG_ASSET_ID = "IMAGE_UI_GENERIC_TIMER_RIBBON_RED";
+    private static final String SUCCESS_BG_ASSET_ID = "IMAGE_UI_GENERIC_VTB";
     private static final float REACTION_LIFETIME = 3.5f;
 
     private final IZombie gamePlay;
@@ -66,15 +67,15 @@ public class IZombieScreen extends ScreenAdapter implements GamePlayMenuView {
         shapeRenderer = new ShapeRenderer();
         batch = Main.getInstance().getBatch();
 
-        // استفاده مستقیم از آبجکت‌های آماده Main برای جلوگیری از خطای مسیر و کرش فونت
         textureBank = Main.getInstance().getTextureBank();
         player = Main.getInstance().getPamPlayer();
         hudFont = Main.getInstance().getSkin().get("FBUSV8C5EI_2", BitmapFont.class);
 
+
         modals = new GamePlayModals(
             gamePlay,
-            () -> MenuManager.getInstance().changeMenu(MenuType.TravelLog),
-            () -> MenuManager.getInstance().changeMenu(MenuType.TravelLog)
+            this::exitMatch,
+            null
         );
 
         worldRenderer = new IZombieWorldRenderer(textureBank, player);
@@ -137,15 +138,17 @@ public class IZombieScreen extends ScreenAdapter implements GamePlayMenuView {
             int index = intValue(data, "index");
             String fromUsername = stringValue(data, "fromUsername");
             activeReactions.add(new ActiveReaction(category, index, fromUsername != null ? fromUsername : "Opponent", stateTime));
-        } catch (IllegalArgumentException ignored) {
-        }
+        } catch (IllegalArgumentException ignored) {}
     }
 
     private void handleOpponentDisconnected(NetworkMessage message) {
         if (gamePlay.isGameOver()) return;
         gamePlay.endMatch(gamePlay.getMyFaction());
         String opponent = stringValue(message.getData(), "opponentUsername");
-        UIManager.showToast((opponent != null ? opponent : "Your opponent") + " disconnected -- you win!", ERROR_BG_ASSET_ID);
+        UIManager.showToast((opponent != null ? opponent : "Your opponent") + " disconnected -- you win!", SUCCESS_BG_ASSET_ID);
+        if (modals != null) {
+            modals.checkAndMaybeShowEndGameModal();
+        }
     }
 
     private String stringValue(Map<String, Object> data, String key) {
@@ -163,7 +166,9 @@ public class IZombieScreen extends ScreenAdapter implements GamePlayMenuView {
         textureBank.update();
         ScreenUtils.clear(0.1f, 0.4f, 0.1f, 1);
 
-        if (!gamePlay.isPaused()) {
+
+        boolean shouldTick = gamePlay.isNetworkGame() || !gamePlay.isPaused();
+        if (shouldTick && !gamePlay.isGameOver()) {
             stateTime += delta;
             gamePlay.setTotalTimePassed(stateTime);
 
@@ -196,9 +201,17 @@ public class IZombieScreen extends ScreenAdapter implements GamePlayMenuView {
         UIManager.resizeToasts(width, height);
     }
 
+    private void exitMatch() {
+        if (!gamePlay.isLocalCouchPlay() && ServerConnection.isConnected()) {
+            ServerConnection.getInstance().sendRequestAsync(NetworkMessage.request(0, MessageType.CANCEL_MATCHMAKING), null);
+        }
+        unregisterNetworkListeners();
+        MenuManager.getInstance().changeMenu(MenuType.TravelLog);
+    }
+
     @Override
     public void hide() {
-        if (!gamePlay.isLocalCouchPlay() && !gamePlay.isGameOver() && ServerConnection.isConnected()) {
+        if (!gamePlay.isLocalCouchPlay() && ServerConnection.isConnected()) {
             ServerConnection.getInstance().sendRequestAsync(NetworkMessage.request(0, MessageType.CANCEL_MATCHMAKING), null);
         }
         unregisterNetworkListeners();
@@ -236,11 +249,8 @@ public class IZombieScreen extends ScreenAdapter implements GamePlayMenuView {
         }
     }
 
-    @Override
-    public void showCurrentMenu() {}
-
-    @Override
-    public void showError(String errorMessage) {
+    @Override public void showCurrentMenu() {}
+    @Override public void showError(String errorMessage) {
         UIManager.showToast(errorMessage, ERROR_BG_ASSET_ID);
     }
 }

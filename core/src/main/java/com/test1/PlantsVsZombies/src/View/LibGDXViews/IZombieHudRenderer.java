@@ -2,13 +2,14 @@ package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Align;
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Enums.ZombieType;
-import com.test1.PlantsVsZombies.src.Model.MiniGames.IZombieGame.Brain;
 import com.test1.PlantsVsZombies.src.Model.MiniGames.IZombieGame.Faction;
 import com.test1.PlantsVsZombies.src.Model.MiniGames.IZombieGame.IZombie;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
@@ -20,13 +21,31 @@ import java.util.List;
 import java.util.Map;
 
 public class IZombieHudRenderer {
-    public static final String[] REACTION_TEXTS = {"Well played!", "Brains incoming!", "Nice defense!"};
+
+    public static final String[] REACTION_TEXTS = {"Well played!", "Nice attack!", "Nice defense!"};
+
+
     public static final String[] REACTION_EMOJI_ASSET_IDS = {
-        "IMAGE_UI_HUD_INGAME_CHALLENGE_SUCCESS",
-        "IMAGE_UI_SEASONS_UNCOMPRESSED_PVZ2_SEASONS_UIASSET_ICON_SUN",
-        "IMAGE_UI_HUD_INGAME_PROGRESS_METER_ZOMBIEHEAD"
+        "IMAGE_UI_HUD_LOD_LOD_STRAWBURST",
+        "IMAGE_UI_HUD_LOD_LOD_GHOST_PEPPER",
+        "IMAGE_UI_HUD_LOD_LOD_FUTURE_LASERBEAN"
     };
-    public static final String[] REACTION_STICKER_LABELS = {"Zombie", "Sunflower", "Wall-nut"};
+
+
+    public static final String[] STICKER_ANIM_PATHS = {
+        "768/FULL/EFFECTS/ZOMBIE_BIGHEAD_IMP_SHOCK/ZOMBIE_BIGHEAD_IMP_SHOCK.PAM",
+        "768/INITIAL/EFFECTS/BLOOMING_HEARTS_ZOMBIE_EFFECT/BLOOMING_HEARTS_ZOMBIE_EFFECT.PAM",
+        "768/FULL/ZOMBIE/ZOMBIE_BIGHEAD_SUPERFAN/ZOMBIE_BIGHEAD_SUPERFAN.PAM"
+    };
+
+    public static final String[] STICKER_STATE_NAMES = {
+        "animation",
+        "animation_lrg",
+        "eat"
+    };
+
+
+    private static final float PREVIEW_ANIM_SCALE = 0.45f;
 
 
     public static final float CARD_X = 45f, CARD_START_Y = 980f, CARD_WIDTH = 160f, CARD_HEIGHT = 105f, CARD_SPACING = 11f;
@@ -36,14 +55,15 @@ public class IZombieHudRenderer {
     public static final float ZOMBIE_CURRENCY_X = 1685f, ZOMBIE_CURRENCY_Y = 1100f;
 
 
-    public static final float PAUSE_BTN_X = 1810f, PAUSE_BTN_Y = 1105f, PAUSE_BTN_SIZE = 75f;
-
-
-    public static final float TIMER_BOX_X = 840f, TIMER_BOX_Y = 1100f, TIMER_BOX_W = 220f, TIMER_BOX_H = 80f;
-    public static final float BRAIN_COUNTER_BOX_X = 1075f, BRAIN_COUNTER_BOX_Y = 1100f, BRAIN_BOX_W = 220f, BRAIN_BOX_H = 80f;
-
-
     public static final float DRAWER_TOGGLE_X = 1780f, DRAWER_TOGGLE_Y = 30f, DRAWER_TOGGLE_SIZE = 100f;
+
+
+    public static final float PAUSE_BTN_X = 1670f, PAUSE_BTN_Y = 30f, PAUSE_BTN_SIZE = 100f;
+
+
+    public static final float TIMER_BOX_X = 850f, TIMER_BOX_Y = 1100f, TIMER_BOX_W = 220f, TIMER_BOX_H = 80f;
+
+
     public static final float DRAWER_PANEL_X = 1160f, DRAWER_PANEL_Y = 150f, DRAWER_PANEL_W = 720f, DRAWER_PANEL_H = 330f;
     public static final float DRAWER_BTN_W = 220f, DRAWER_BTN_H = 90f;
     public static final float DRAWER_COL_GAP = 20f, DRAWER_ROW_GAP = 10f, DRAWER_MARGIN = 20f;
@@ -55,12 +75,13 @@ public class IZombieHudRenderer {
         return DRAWER_PANEL_Y + DRAWER_MARGIN + row * (DRAWER_BTN_H + DRAWER_ROW_GAP);
     }
 
-    private static final float EMOTE_POPUP_CENTER_X = 960f, EMOTE_POPUP_Y = 900f;
-    private static final float EMOTE_POPUP_DURATION = 3.0f;
+    private static final float EMOTE_POPUP_CENTER_X = 960f, EMOTE_POPUP_Y = 880f;
+    private static final float EMOTE_POPUP_DURATION = 3.2f;
 
     private final TextureBank textureBank;
     private final PamPlayer player;
     private final BitmapFont hudFont;
+    private final GlyphLayout glyphLayout = new GlyphLayout();
 
     private final TextureRegion sunIcon;
     private final TextureRegion brainIcon;
@@ -77,7 +98,6 @@ public class IZombieHudRenderer {
 
         sunIcon = textureBank.region("IMAGE_UI_SEASONS_UNCOMPRESSED_PVZ2_SEASONS_UIASSET_ICON_SUN");
 
-
         TextureRegion brain = textureBank.region("IMAGE_UI_CURRENCY_VALENBRAINZ_STACK_0");
         if (brain == null) brain = textureBank.region("IMAGE_UI_HUD_INGAME_PROGRESS_METER_ZOMBIEHEAD");
         brainIcon = brain;
@@ -86,7 +106,8 @@ public class IZombieHudRenderer {
         cardBgRegion = textureBank.region("IMAGE_UI_PACKETS_SELECTED");
         pauseBtnRegion = textureBank.region("IMAGE_UI_HUD_INGAME_PAUSE_BUTTON");
 
-        TextureRegion toggle = textureBank.region("IMAGE_UI_HUD_INGAME_SHOVEL_BUTTON");
+        TextureRegion toggle = textureBank.region("IMAGE_UI_HUD_WORLDMAP_BUTTONS_HUD_SOCIAL_NORMAL");
+        if (toggle == null) toggle = textureBank.region("IMAGE_UI_HUD_INGAME_SHOVEL_BUTTON");
         drawerToggleRegion = (toggle != null) ? toggle : bgHud;
 
         for (int i = 0; i < REACTION_EMOJI_ASSET_IDS.length; i++) {
@@ -103,13 +124,12 @@ public class IZombieHudRenderer {
         if (showPlantSide) renderPlantCurrencyAndDeck(batch, gamePlay, input);
         if (showZombieSide) renderZombieCurrencyAndDeck(batch, gamePlay, input);
 
-
         if (pauseBtnRegion != null) {
             batch.draw(pauseBtnRegion, PAUSE_BTN_X, PAUSE_BTN_Y, PAUSE_BTN_SIZE, PAUSE_BTN_SIZE);
         }
 
         renderTopCenterStatus(batch, gamePlay);
-        renderDrawerToggleAndPanel(batch, input);
+        renderDrawerToggleAndPanel(batch, input, stateTime);
         renderEmotePopups(batch, activeReactions, stateTime);
         renderDragPreview(batch, gamePlay, input, stateTime);
         batch.end();
@@ -119,35 +139,33 @@ public class IZombieHudRenderer {
     }
 
     private void renderTopCenterStatus(SpriteBatch batch, IZombie gamePlay) {
-
         if (bgHud != null) batch.draw(bgHud, TIMER_BOX_X, TIMER_BOX_Y, TIMER_BOX_W, TIMER_BOX_H);
         int secondsRemaining = gamePlay.getSecondsRemaining();
         String timeText = String.format("%02d:%02d", secondsRemaining / 60, secondsRemaining % 60);
 
-        hudFont.getData().setScale(0.85f);
+        hudFont.getData().setScale(1.28f);
         hudFont.setColor((secondsRemaining <= 20) ? Color.RED : Color.YELLOW);
-        hudFont.draw(batch, timeText, TIMER_BOX_X + 45f, TIMER_BOX_Y + 58f);
+        hudFont.draw(batch, timeText, TIMER_BOX_X, TIMER_BOX_Y + 58f, TIMER_BOX_W, Align.center, false);
         hudFont.setColor(Color.WHITE);
-        hudFont.getData().setScale(1f);
-
-
-        if (bgHud != null) batch.draw(bgHud, BRAIN_COUNTER_BOX_X, BRAIN_COUNTER_BOX_Y, BRAIN_BOX_W, BRAIN_BOX_H);
-        if (brainIcon != null) {
-            batch.draw(brainIcon, BRAIN_COUNTER_BOX_X + 10f, BRAIN_COUNTER_BOX_Y + 12f, 56f, 56f);
-        }
-        long remainingBrains = 0;
-        for (Brain b : gamePlay.getBrains()) {
-            if (!b.isEaten()) remainingBrains++;
-        }
-        hudFont.getData().setScale(0.70f);
-        hudFont.draw(batch, remainingBrains + " / 5", BRAIN_COUNTER_BOX_X + 80f, BRAIN_COUNTER_BOX_Y + 56f);
         hudFont.getData().setScale(1f);
     }
 
     private void renderPlantCurrencyAndDeck(SpriteBatch batch, IZombie gamePlay, IZombieHudInputState input) {
         if (bgHud != null) batch.draw(bgHud, PLANT_CURRENCY_X, PLANT_CURRENCY_Y, CURRENCY_BOX_W, CURRENCY_BOX_H);
         if (sunIcon != null) batch.draw(sunIcon, PLANT_CURRENCY_X + 10, PLANT_CURRENCY_Y + 10, 60, 60);
-        hudFont.draw(batch, String.valueOf(gamePlay.getMySuns()), PLANT_CURRENCY_X + 75, PLANT_CURRENCY_Y + 60);
+
+
+        hudFont.getData().setScale(1.42f);
+        String sunText = String.valueOf(gamePlay.getMySuns());
+        glyphLayout.setText(hudFont, sunText);
+
+        float textSlotX = PLANT_CURRENCY_X + 70f;
+        float textSlotW = CURRENCY_BOX_W - 75f;
+        float textX = textSlotX + (textSlotW - glyphLayout.width) / 2f;
+        float textY = PLANT_CURRENCY_Y + (CURRENCY_BOX_H + glyphLayout.height) / 2f;
+
+        hudFont.draw(batch, sunText, textX, textY);
+        hudFont.getData().setScale(1f);
 
         ArrayList<BattlePlant> deck = gamePlay.getPlants();
         BattlePlant selected = input.getSelectedPlantCard();
@@ -168,8 +186,8 @@ public class IZombieHudRenderer {
             batch.setColor(Color.WHITE);
 
 
-            hudFont.getData().setScale(0.65f);
-            hudFont.draw(batch, String.valueOf(card.getPlantStats().getCost()), CARD_X + 80f, cardY + 30f);
+            hudFont.getData().setScale(1.30f);
+            hudFont.draw(batch, String.valueOf(card.getPlantStats().getCost()), CARD_X + 12f, cardY + 38f);
             hudFont.getData().setScale(1f);
         }
     }
@@ -177,7 +195,19 @@ public class IZombieHudRenderer {
     private void renderZombieCurrencyAndDeck(SpriteBatch batch, IZombie gamePlay, IZombieHudInputState input) {
         if (bgHud != null) batch.draw(bgHud, ZOMBIE_CURRENCY_X, ZOMBIE_CURRENCY_Y, CURRENCY_BOX_W, CURRENCY_BOX_H);
         if (brainIcon != null) batch.draw(brainIcon, ZOMBIE_CURRENCY_X + 10, ZOMBIE_CURRENCY_Y + 10, 60, 60);
-        hudFont.draw(batch, String.valueOf(gamePlay.getZombieBrainPoints()), ZOMBIE_CURRENCY_X + 75, ZOMBIE_CURRENCY_Y + 60);
+
+
+        hudFont.getData().setScale(1.42f);
+        String brainText = String.valueOf(gamePlay.getZombieBrainPoints());
+        glyphLayout.setText(hudFont, brainText);
+
+        float textSlotX = ZOMBIE_CURRENCY_X + 70f;
+        float textSlotW = CURRENCY_BOX_W - 75f;
+        float textX = textSlotX + (textSlotW - glyphLayout.width) / 2f;
+        float textY = ZOMBIE_CURRENCY_Y + (CURRENCY_BOX_H + glyphLayout.height) / 2f;
+
+        hudFont.draw(batch, brainText, textX, textY);
+        hudFont.getData().setScale(1f);
 
         String selected = input.getSelectedZombieCardType();
         int i = 0;
@@ -196,8 +226,8 @@ public class IZombieHudRenderer {
             batch.setColor(Color.WHITE);
 
 
-            hudFont.getData().setScale(0.65f);
-            hudFont.draw(batch, String.valueOf(cost), ZOMBIE_CARD_X + 80f, cardY + 30f);
+            hudFont.getData().setScale(1.30f);
+            hudFont.draw(batch, String.valueOf(cost), ZOMBIE_CARD_X + CARD_WIDTH - 65f, cardY + 38f);
             hudFont.getData().setScale(1f);
             i++;
         }
@@ -210,18 +240,13 @@ public class IZombieHudRenderer {
 
         String name = zombieName.toUpperCase();
         if (name.contains("CONE")) {
-            region = textureBank.region("IMAGE_UI_ALMANAC_PACKETS_ZOMBIES_CONEHEAD");
-            if (region == null) region = textureBank.region("IMAGE_UI_ALMANAC_PACKETS_ZOMBIES_CONE");
+            region = textureBank.region("IMAGE_UI_ALMANAC_PACKETS_ZOMBIES_DARK_ARMOR1");
         } else if (name.contains("BUCKET")) {
-            region = textureBank.region("IMAGE_UI_ALMANAC_PACKETS_ZOMBIES_BUCKETHEAD");
-            if (region == null) region = textureBank.region("IMAGE_UI_ALMANAC_PACKETS_ZOMBIES_BUCKET");
+            region = textureBank.region("IMAGE_UI_ALMANAC_PACKETS_ZOMBIES_DARK_ARMOR2");
         } else if (name.contains("NEWSPAPER")) {
             region = textureBank.region("IMAGE_UI_ALMANAC_PACKETS_ZOMBIES_NEWSPAPER");
         }
-        if (region == null) {
-            region = textureBank.region("IMAGE_UI_ALMANAC_PACKETS_ZOMBIES_READY");
-        }
-        return (region != null) ? region : textureBank.region("IMAGE_UI_ALMANAC_PACKETS_ZOMBIES_TUTORIAL");
+        return (region != null) ? region : textureBank.region("IMAGE_UI_ALMANAC_PACKETS_ZOMBIES_DARK");
     }
 
     private void drawCardIcon(SpriteBatch batch, TextureRegion icon, float cardX, float cardY) {
@@ -245,7 +270,7 @@ public class IZombieHudRenderer {
         com.badlogic.gdx.Gdx.gl.glDisable(com.badlogic.gdx.Gdx.gl.GL_BLEND);
     }
 
-    private void renderDrawerToggleAndPanel(SpriteBatch batch, IZombieHudInputState input) {
+    private void renderDrawerToggleAndPanel(SpriteBatch batch, IZombieHudInputState input, float stateTime) {
         if (drawerToggleRegion != null) {
             if (input.isReactionDrawerOpen()) batch.setColor(0.6f, 1f, 0.6f, 1f);
             batch.draw(drawerToggleRegion, DRAWER_TOGGLE_X, DRAWER_TOGGLE_Y, DRAWER_TOGGLE_SIZE, DRAWER_TOGGLE_SIZE);
@@ -255,72 +280,129 @@ public class IZombieHudRenderer {
         if (!input.isReactionDrawerOpen()) return;
 
         if (bgHud != null) {
-            batch.setColor(0f, 0f, 0f, 0.55f);
+            batch.setColor(0f, 0f, 0f, 0.65f);
             batch.draw(bgHud, DRAWER_PANEL_X, DRAWER_PANEL_Y, DRAWER_PANEL_W, DRAWER_PANEL_H);
             batch.setColor(Color.WHITE);
         }
 
-        hudFont.getData().setScale(0.38f);
+
+        hudFont.getData().setScale(1.26f);
         for (int col = 0; col < 3; col++) {
             float bx = drawerButtonX(col), by = drawerButtonY(0);
             if (cardBgRegion != null) batch.draw(cardBgRegion, bx, by, DRAWER_BTN_W, DRAWER_BTN_H);
-            hudFont.draw(batch, REACTION_TEXTS[col], bx + 12, by + DRAWER_BTN_H / 2f + 10, DRAWER_BTN_W - 24, com.badlogic.gdx.utils.Align.left, true);
+            hudFont.draw(batch, REACTION_TEXTS[col], bx + 6, by + DRAWER_BTN_H / 2f + 20, DRAWER_BTN_W - 12, Align.center, true);
         }
         hudFont.getData().setScale(1f);
+
 
         for (int col = 0; col < 3; col++) {
             float bx = drawerButtonX(col), by = drawerButtonY(1);
             if (cardBgRegion != null) batch.draw(cardBgRegion, bx, by, DRAWER_BTN_W, DRAWER_BTN_H);
             if (emojiRegions[col] != null) {
-                float size = 55f;
+                float size = 65f;
                 batch.draw(emojiRegions[col], bx + (DRAWER_BTN_W - size) / 2f, by + (DRAWER_BTN_H - size) / 2f, size, size);
             }
         }
 
-        hudFont.getData().setScale(0.42f);
+
         for (int col = 0; col < 3; col++) {
             float bx = drawerButtonX(col), by = drawerButtonY(2);
             if (cardBgRegion != null) batch.draw(cardBgRegion, bx, by, DRAWER_BTN_W, DRAWER_BTN_H);
-            hudFont.draw(batch, REACTION_STICKER_LABELS[col], bx + 12, by + DRAWER_BTN_H / 2f + 10);
+
+            if (player != null && col < STICKER_ANIM_PATHS.length && STICKER_ANIM_PATHS[col] != null) {
+                float animCenterX = bx + DRAWER_BTN_W / 2f;
+                float animCenterY = by + 20f;
+
+                batch.setTransformMatrix(batch.getTransformMatrix().idt()
+                    .translate(animCenterX, animCenterY, 0)
+                    .scale(PREVIEW_ANIM_SCALE, PREVIEW_ANIM_SCALE, 1)
+                    .translate(-animCenterX, -animCenterY, 0));
+
+                player.draw(batch, STICKER_ANIM_PATHS[col], STICKER_STATE_NAMES[col], stateTime, animCenterX, animCenterY, true);
+
+                batch.setTransformMatrix(batch.getTransformMatrix().idt());
+            }
         }
-        hudFont.getData().setScale(1f);
     }
 
     private void renderEmotePopups(SpriteBatch batch, List<ActiveReaction> activeReactions, float stateTime) {
-        if (activeReactions == null) return;
-        float y = EMOTE_POPUP_Y;
-        for (ActiveReaction reaction : activeReactions) {
-            if (reaction.category == ActiveReaction.Category.STICKER) continue;
+        if (activeReactions == null || activeReactions.isEmpty()) return;
 
+        float currentCenterY = EMOTE_POPUP_Y;
+
+        for (ActiveReaction reaction : activeReactions) {
             float age = stateTime - reaction.spawnStateTime;
             if (age < 0 || age > EMOTE_POPUP_DURATION) continue;
 
-            String label = (reaction.category == ActiveReaction.Category.TEXT)
-                ? ((reaction.index >= 0 && reaction.index < REACTION_TEXTS.length) ? REACTION_TEXTS[reaction.index] : "")
-                : "(emoji)";
-            String fullText = reaction.fromLabel + ": " + label;
+            float alpha = (age > EMOTE_POPUP_DURATION - 0.8f)
+                ? Math.max(0f, (EMOTE_POPUP_DURATION - age) / 0.8f)
+                : 1f;
 
-            float alpha = (age > EMOTE_POPUP_DURATION - 1f) ? Math.max(0f, EMOTE_POPUP_DURATION - age) : 1f;
+            if (reaction.category == ActiveReaction.Category.TEXT) {
+                String text = (reaction.index >= 0 && reaction.index < REACTION_TEXTS.length)
+                    ? REACTION_TEXTS[reaction.index]
+                    : "";
+                String fullText = reaction.fromLabel + ": " + text;
 
-            if (bgHud != null) {
-                batch.setColor(0f, 0f, 0f, 0.6f * alpha);
-                batch.draw(bgHud, EMOTE_POPUP_CENTER_X - 220f, y - 10f, 440f, 60f);
+                float boxW = 820f;
+                float boxH = 110f;
+                float boxX = EMOTE_POPUP_CENTER_X - (boxW / 2f);
+                float boxY = currentCenterY - (boxH / 2f);
+
+                if (bgHud != null) {
+                    batch.setColor(0.1f, 0.1f, 0.1f, 0.85f * alpha);
+                    batch.draw(bgHud, boxX, boxY, boxW, boxH);
+                    batch.setColor(Color.WHITE);
+                }
+
+                hudFont.getData().setScale(1.5f);
+                hudFont.setColor(1f, 0.95f, 0.2f, alpha);
+                hudFont.draw(batch, fullText, boxX, currentCenterY + 18f, boxW, Align.center, false);
+                hudFont.setColor(Color.WHITE);
+                hudFont.getData().setScale(1f);
+
+                currentCenterY -= 130f;
+
+            } else if (reaction.category == ActiveReaction.Category.EMOJI) {
+                if (reaction.index >= 0 && reaction.index < emojiRegions.length && emojiRegions[reaction.index] != null) {
+                    TextureRegion icon = emojiRegions[reaction.index];
+                    float size = 150f;
+                    batch.setColor(1f, 1f, 1f, alpha);
+                    batch.draw(icon, EMOTE_POPUP_CENTER_X - (size / 2f), currentCenterY - (size / 2f), size, size);
+                    batch.setColor(Color.WHITE);
+
+                    hudFont.getData().setScale(0.6f);
+                    hudFont.setColor(1f, 1f, 1f, alpha);
+                    hudFont.draw(batch, reaction.fromLabel, EMOTE_POPUP_CENTER_X - 150f, currentCenterY - (size / 2f) - 10f, 300f, Align.center, false);
+                    hudFont.setColor(Color.WHITE);
+                    hudFont.getData().setScale(1f);
+
+                    currentCenterY -= 180f;
+                }
+
+            } else if (reaction.category == ActiveReaction.Category.STICKER) {
+                if (player != null && reaction.index >= 0 && reaction.index < STICKER_ANIM_PATHS.length) {
+                    batch.setColor(1f, 1f, 1f, alpha);
+                    batch.setTransformMatrix(batch.getTransformMatrix().idt()
+                        .translate(EMOTE_POPUP_CENTER_X, currentCenterY, 0)
+                        .scale(1.8f, 1.8f, 1)
+                        .translate(-EMOTE_POPUP_CENTER_X, -currentCenterY, 0));
+
+                    player.draw(batch, STICKER_ANIM_PATHS[reaction.index], STICKER_STATE_NAMES[reaction.index],
+                        age, EMOTE_POPUP_CENTER_X, currentCenterY, true);
+
+                    batch.setTransformMatrix(batch.getTransformMatrix().idt());
+                    batch.setColor(Color.WHITE);
+
+                    hudFont.getData().setScale(0.6f);
+                    hudFont.setColor(1f, 1f, 1f, alpha);
+                    hudFont.draw(batch, reaction.fromLabel, EMOTE_POPUP_CENTER_X - 150f, currentCenterY - 90f, 300f, Align.center, false);
+                    hudFont.setColor(Color.WHITE);
+                    hudFont.getData().setScale(1f);
+
+                    currentCenterY -= 200f;
+                }
             }
-
-            if (reaction.category == ActiveReaction.Category.EMOJI
-                && reaction.index >= 0 && reaction.index < emojiRegions.length && emojiRegions[reaction.index] != null) {
-                batch.setColor(1f, 1f, 1f, alpha);
-                batch.draw(emojiRegions[reaction.index], EMOTE_POPUP_CENTER_X - 210f, y - 2f, 44f, 44f);
-            }
-
-            hudFont.getData().setScale(0.42f);
-            hudFont.setColor(1f, 1f, 1f, alpha);
-            hudFont.draw(batch, fullText, EMOTE_POPUP_CENTER_X - 150f, y + 30f);
-            hudFont.setColor(Color.WHITE);
-            hudFont.getData().setScale(1f);
-            batch.setColor(Color.WHITE);
-
-            y -= 70f;
         }
     }
 

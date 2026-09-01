@@ -8,15 +8,7 @@ import com.test1.PlantsVsZombies.src.Network.NetworkMessage;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Pairs two {@link ClientSession}s for a single "I, Zombie" multiplayer
- * match. The server never simulates the match itself -- it only assigns
- * roles, hands out a shared seed/start time so both clients' independent
- * simulations line up, and relays each player's game actions and reactions
- * to their opponent.
- */
 public class IZombieRoom {
-    /** Small buffer so both clients have time to receive MATCH_FOUND and load the screen before the clock starts. */
     private static final long MATCH_START_DELAY_MS = 3000L;
 
     private final ClientSession playerA;
@@ -30,7 +22,6 @@ public class IZombieRoom {
         this.roomSeed = new Random().nextLong();
     }
 
-    /** Randomly assigns Plant/Zombie roles and pushes MATCH_FOUND to both players. */
     public void start() {
         playerA.setCurrentRoom(this);
         playerB.setCurrentRoom(this);
@@ -97,11 +88,6 @@ public class IZombieRoom {
         leavingSession.setCurrentRoom(null);
     }
 
-    public ClientSession getPlayerA() {
-        return playerA;
-    }
-
-    public ClientSession getPlayerB() {
-        return playerB;
-    }
+    public ClientSession getPlayerA() { return playerA; }
+    public ClientSession getPlayerB() { return playerB; }
 }

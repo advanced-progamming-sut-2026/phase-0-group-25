@@ -47,19 +47,16 @@ public class IZombie extends GamePlay {
 
         this.mySuns = 800;
 
-
         this.mowers.clear();
         for (int i = 0; i < 5; i++) {
             int row = i + 1;
             brains[i] = new Brain(row, 430f, getRealY(row) + 15f);
         }
 
-
         zombieDeck.put(ZombieType.DEFAULT.getName(), 50);
         zombieDeck.put(ZombieType.CONE_HEAD.getName(), 75);
         zombieDeck.put(ZombieType.BUCKET_HEAD.getName(), 125);
         zombieDeck.put(ZombieType.NEWSPAPER.getName(), 100);
-
 
         this.plants.clear();
         this.plants.add(PlantFactory.createBattlePlant(PlantType.PEASHOOTER.getName(), 1));
@@ -97,9 +94,12 @@ public class IZombie extends GamePlay {
 
     @Override
     public void update() {
-        if (isPaused || isGameOver()) return;
+        if (isGameOver()) return;
+        if (isLocalCouchPlay && isPaused) return;
 
-        matchTimeRemaining = Math.max(0f, matchTimeRemaining - 0.1f);
+        if (isLocalCouchPlay) {
+            matchTimeRemaining = Math.max(0f, matchTimeRemaining - 0.1f);
+        }
 
         sunMaker();
         checkingSunMakers();
@@ -155,7 +155,7 @@ public class IZombie extends GamePlay {
             return;
         }
 
-        if (matchTimeRemaining <= 0.0f) {
+        if (getSecondsRemaining() <= 0) {
             endMatch(Faction.PLANT);
         }
     }
@@ -220,7 +220,17 @@ public class IZombie extends GamePlay {
 
     @Override public boolean isGameOver() { return matchOver; }
     @Override public boolean hasWon() { return matchWon; }
-    public int getSecondsRemaining() { return (int) Math.ceil(matchTimeRemaining); }
+
+    public int getSecondsRemaining() {
+        if (isLocalCouchPlay) {
+            return (int) Math.ceil(matchTimeRemaining);
+        }
+
+        long elapsedMs = Math.max(0, System.currentTimeMillis() - startTimeMillis);
+        long remainingMs = (MATCH_DURATION_SECONDS * 1000L) - elapsedMs;
+        return Math.max(0, (int) Math.ceil(remainingMs / 1000.0));
+    }
+
     public Brain[] getBrains() { return brains; }
     public Map<String, Integer> getZombieDeck() { return zombieDeck; }
     public int getZombieBrainPoints() { return zombieBrainPoints; }
