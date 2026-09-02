@@ -688,4 +688,8 @@ public abstract class GamePlay {
     public void setLevelObjectives(String levelObjectives) {
         this.levelObjectives = levelObjectives;
     }
+
+    public int getMySuns() {
+        return mySuns;
+    }
 }

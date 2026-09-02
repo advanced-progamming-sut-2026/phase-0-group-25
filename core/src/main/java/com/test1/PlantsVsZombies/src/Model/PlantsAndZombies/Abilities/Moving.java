@@ -45,11 +45,15 @@ public class Moving implements Ability {
                     zombie.setSubmarine(true);
                 }
             }
+            Tile zombieTile = GAME.getTileByPosition(zombie.getColumn(), zombie.getRow());
+            if (zombieTile == null) {
+                return;
+            }
 
-            for (BattlePlant plant : GAME.getGamePlants()) {
-                Position plantPosition = plant.getPosition();
+            if (!zombieTile.getPlants().isEmpty()) {
+                BattlePlant plant = zombieTile.getPlants().get(zombieTile.getPlants().size() - 1);
 
-                if (zombie.getPosition().equals(plantPosition)) {
+                if (zombie.getPosition().equals(plant.getPosition())) {
                     if (zombie.getZombieStats().getName().equals("DODO")) {
                         if (isFlyable(plant)) {
                             makeFlyingActivated(zombie);

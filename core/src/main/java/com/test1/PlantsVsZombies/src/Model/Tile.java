@@ -16,7 +16,9 @@ public class Tile {
     private boolean isArable;
     private boolean firing;
     private boolean isHole = false;
-    public enum GraveType { NORMAL, PLANT_FOOD, SUN }
+
+    public enum GraveType {NORMAL, PLANT_FOOD, SUN}
+
     private GraveType graveType = GraveType.NORMAL;
     private boolean isNecromancy = false;
     private boolean necromancyTriggered = false;
@@ -32,25 +34,45 @@ public class Tile {
         projectiles = new ArrayList<>();
     }
 
-    public boolean isLowTide() { return isLowTide; }
+    public boolean isLowTide() {
+        return isLowTide;
+    }
 
-    public void setLowTide(boolean lowTide) { this.isLowTide = lowTide; }
+    public void setLowTide(boolean lowTide) {
+        this.isLowTide = lowTide;
+    }
 
-    public boolean isLowTideTriggered() { return lowTideTriggered; }
+    public boolean isLowTideTriggered() {
+        return lowTideTriggered;
+    }
 
-    public void setLowTideTriggered(boolean lowTideTriggered) { this.lowTideTriggered = lowTideTriggered; }
+    public void setLowTideTriggered(boolean lowTideTriggered) {
+        this.lowTideTriggered = lowTideTriggered;
+    }
 
-    public GraveType getGraveType() { return graveType; }
+    public GraveType getGraveType() {
+        return graveType;
+    }
 
-    public void setGraveType(GraveType graveType) { this.graveType = graveType; }
+    public void setGraveType(GraveType graveType) {
+        this.graveType = graveType;
+    }
 
-    public boolean isNecromancy() { return isNecromancy; }
+    public boolean isNecromancy() {
+        return isNecromancy;
+    }
 
-    public void setNecromancy(boolean necromancy) { this.isNecromancy = necromancy; }
+    public void setNecromancy(boolean necromancy) {
+        this.isNecromancy = necromancy;
+    }
 
-    public boolean isNecromancyTriggered() { return necromancyTriggered; }
+    public boolean isNecromancyTriggered() {
+        return necromancyTriggered;
+    }
 
-    public void setNecromancyTriggered(boolean triggered) { this.necromancyTriggered = triggered; }
+    public void setNecromancyTriggered(boolean triggered) {
+        this.necromancyTriggered = triggered;
+    }
 
     public Position getPosition() {
         return position;
@@ -77,6 +99,9 @@ public class Tile {
     }
 
     public void removePlant() {
+        for (BattlePlant plant : plants) {
+            plant.setAlive(false);
+        }
         plants.remove(0);
     }
 
