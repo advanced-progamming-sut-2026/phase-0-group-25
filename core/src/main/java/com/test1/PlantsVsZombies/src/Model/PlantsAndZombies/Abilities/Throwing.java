@@ -13,7 +13,7 @@ import java.util.Random;
 
 public class
 Throwing implements Ability {
-    private static int TILE_X_LENGTH = 200;
+    private static double TILE_X_LENGTH = 152.2;
     private static int TOMB_RAISER_ACTION_INTERVAL = 20;
     private static int HUNTER_ACTION_INTERVAL = 20;
     private static int OCTOPUS_ACTION_INTERVAL = 20;

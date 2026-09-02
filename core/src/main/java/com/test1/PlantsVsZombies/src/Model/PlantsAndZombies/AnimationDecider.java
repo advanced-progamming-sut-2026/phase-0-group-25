@@ -127,19 +127,22 @@ public class AnimationDecider {
 
     public HashMap<String, Boolean> zombieVisibilities(Zombie zombie) {
         HashMap<String, Boolean> visibility = new HashMap<>();
-        if (zombie.getName().equals("PROSPECTOR")) {
-            visibility.put("_dynamite_burning_01", true);
+        if (zombie.getName().equals("PROSPECTOR") &&
+            !zombie.isDynamiteOn()) {
+            visibility.put("_dynamite_damage_states", true);
             visibility.put("coconut_fuse_spark_01", false);
+            visibility.put("_dynamite_burning_03", false);
+            visibility.put("_dynamite_burning_02", false);
         }
 
-        if (zombie.getName().equals("EXPLORER")) {
-            if (!zombie.isTorchOn()) {
-                visibility.put("torch_fire_frame_01", false);
-                visibility.put("torch_fire_fire_frame_01", false);
-                visibility.put("torch_fire_frame_02", false);
-                visibility.put("torch_fire_frame_03", false);
-                visibility.put("torch_fire_frame_04", false);
-            }
+        if (zombie.getName().equals("EXPLORER") &&
+            !zombie.isTorchOn()) {
+            visibility.put("torch_fire_frame_01", false);
+            visibility.put("torch_fire_fire_frame_01", false);
+            visibility.put("torch_fire_frame_02", false);
+            visibility.put("torch_fire_frame_03", false);
+            visibility.put("torch_fire_frame_04", false);
+
         }
 
         if ((zombie.getName().equals("NEWSPAPER")) &&

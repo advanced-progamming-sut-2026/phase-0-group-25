@@ -172,6 +172,12 @@ public class GamePlayWorldRenderer {
                 stateTime, px, py, true);
         }
 
+        for (Dynamite dynamite : gamePlay.getDynamites()) {
+            player.draw(batch, "768/FULL/EFFECTS/REDSTINGER_PROJECTILE/REDSTINGER_PROJECTILE.PAM", "animation",
+                stateTime, (float) dynamite.getPosition().getX(),
+                (float) dynamite.getPosition().getY(), true);
+        }
+
 
         for (Mower mower : gamePlay.getMowers()) {
             if (!mower.isDone()) {
@@ -308,6 +314,18 @@ public class GamePlayWorldRenderer {
                 }
 
                 z.getAnimationState().update(z.getCurrentAnimationName(), delta);
+                if (z.getName().equals("PIANO")) {
+                    drawX += 100;
+                    player.draw(batch, "768/FULL/ZOMBIE/PIANO/PIANO.PAM",
+                        "play", stateTime, drawX, drawY + 15, true);
+                }
+                if (z.getName().equals("ARCADE")) {
+                    if (z.getCurrentHP() >= (z.getZombieStats().getBaseHP() / 2)) {
+                        drawX += 100;
+                        player.draw(batch, "768/FULL/EFFECTS/80S_ARCADE_CABINET/80S_ARCADE_CABINET.PAM",
+                            "active", stateTime, drawX - 80, drawY + 15, true);
+                    }
+                }
 
                 player.draw(batch, z.getAnimationPath(), z.getCurrentAnimationName(),
                     z.getAnimationState().getStateTime(), drawX, drawY + 15, true, z.getVisibility());

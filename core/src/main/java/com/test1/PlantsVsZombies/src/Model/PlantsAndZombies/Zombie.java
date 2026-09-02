@@ -59,7 +59,10 @@ public class Zombie extends Entity {
     private boolean isSubmarine = false;
 
     //just for explorer zombie
-    private boolean isTorchOn = false;
+    private boolean isTorchOn = true;
+
+    //just for prospector zombie
+    private boolean isDynamiteOn = true;
 
     public Zombie(ZombieStats zombieStats, String name) {
         this.zombieStats = zombieStats;
@@ -102,10 +105,6 @@ public class Zombie extends Entity {
                     armor.getCurrentHP(), armor.isMetallic(), armor.getAnimations()));
             }
         }
-        if (this.name.equals("EXPLORER")) {
-            this.isTorchOn = true;
-        }
-
     }
 
     private void addAbilities() {
@@ -140,9 +139,10 @@ public class Zombie extends Entity {
 
         checkLife();
         if ((this.zombieStats.getName().equals("PROSPECTOR")) &&
-            (this.zombieStats.getAttributes().get("dynamite").equals("on"))) {
-            if ((GAME.getTotalTimePassed() - this.spawnTime) >= 10) {
-                Dynamite dynamite = new Dynamite(new Position(20, this.position.getY()));
+            (this.isDynamiteOn)) {
+            double difference = GAME.getTotalTimePassed() - this.spawnTime;
+            if ((Math.abs(difference) >= 10) && (Math.abs(difference) <= 10.1)) {
+                Dynamite dynamite = new Dynamite(new Position(495, this.position.getY()));
 
                 GAME.getDynamites().add(dynamite);
             }
@@ -233,7 +233,7 @@ public class Zombie extends Entity {
                 }
             } else if (this.zombieStats.getName().equals("PROSPECTOR")) {
                 if (projectile.isIcy()) {
-                    this.zombieStats.getAttributes().replace("dynamite", "off");
+                    this.isDynamiteOn = false;
                 }
             }
 
@@ -409,6 +409,22 @@ public class Zombie extends Entity {
                 }
             }
         }
+
+        if (this.name.equals("ARCADE")) {
+            if (this.currentHP <= (this.zombieStats.getBaseHP() / 2)) {
+                try {
+                    for (int i = 0; i < this.originalAbilities.size(); i++) {
+                        Ability ability = this.originalAbilities.get(i);
+                        if (ability instanceof FatalDamage) {
+                            this.originalAbilities.remove(i);
+                            i -= 1;
+                        }
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                }
+            }
+        }
+
 
         if (this.currentHP <= 0) {
             this.currentHP = 0;
@@ -644,5 +660,13 @@ public class Zombie extends Entity {
 
     public void setTorchOn(boolean torchOn) {
         isTorchOn = torchOn;
+    }
+
+    public boolean isDynamiteOn() {
+        return isDynamiteOn;
+    }
+
+    public void setDynamiteOn(boolean dynamiteOn) {
+        isDynamiteOn = dynamiteOn;
     }
 }
