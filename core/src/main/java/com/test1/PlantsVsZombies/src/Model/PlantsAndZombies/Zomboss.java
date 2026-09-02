@@ -9,7 +9,7 @@ import java.util.Random;
 public class Zomboss extends Zombie {
 
     private GamePlay GAME = GamePlay.activeInstance;
-    private static int ACTION_INTERVAL = 25;
+    private static int ACTION_INTERVAL = 12;
     private static int STUN_INTERVAL = 10;
     private static int FIRE_INTERVAL = 5;
 
@@ -40,11 +40,12 @@ public class Zomboss extends Zombie {
 
         this.lastActionTime = GAME.getTotalTimePassed();
         this.currentVelocity = 0;
-        this.currentSecondRow = this.getRow() + 1;
     }
 
     @Override
     public void update() {
+        this.currentSecondRow = this.getRow() + 1;
+
         checkLife();
 
         checkFire();

@@ -6,9 +6,9 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
 
 public class Dynamite {
-    private double velocity = 0.5;
+    private double velocity = 200;
     private Position position;
-    private double damage = 10;
+    private double damage = 30;
 
     private GamePlay GAME = GamePlay.activeInstance;
 
@@ -32,5 +32,9 @@ public class Dynamite {
                 plant.setCurrentHP(plant.getCurrentHP() - damage);
             }
         }
+    }
+
+    public Position getPosition() {
+        return position;
     }
 }
