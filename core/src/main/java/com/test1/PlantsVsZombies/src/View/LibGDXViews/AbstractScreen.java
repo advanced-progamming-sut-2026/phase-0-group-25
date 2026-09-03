@@ -35,6 +35,8 @@ import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
 
+import java.util.HashMap;
+
 public abstract class AbstractScreen implements Screen {
     protected Stage stage;
     protected Skin skin;
@@ -493,20 +495,22 @@ public abstract class AbstractScreen implements Screen {
         return block;
     }
 
-    protected Actor createAnimationActor(String animationPath, String stateName) {
-        return new PamAnimationActor(Main.getInstance().getPamPlayer(), animationPath, stateName);
+    protected Actor createAnimationActor(String animationPath, String stateName, HashMap<String, Boolean> visibility) {
+        return new PamAnimationActor(Main.getInstance().getPamPlayer(), animationPath, stateName, visibility);
     }
 
     private static class PamAnimationActor extends Actor {
         private final PamPlayer player;
         private final String animationPath;
         private final String stateName;
+        private final HashMap<String, Boolean> visibility;
         private float stateTime = 0f;
 
-        PamAnimationActor(PamPlayer player, String animationPath, String stateName) {
+        PamAnimationActor(PamPlayer player, String animationPath, String stateName, HashMap<String, Boolean> visibility) {
             this.player = player;
             this.animationPath = animationPath;
             this.stateName = stateName;
+            this.visibility = visibility;
         }
 
         @Override
@@ -520,7 +524,7 @@ public abstract class AbstractScreen implements Screen {
             if (player == null || animationPath == null) return;
             float centerX = getX() + getWidth() / 2f;
             float centerY = getY() + getHeight() / 4f;
-            player.draw(batch, animationPath, stateName, stateTime, centerX, centerY, true);
+            player.draw(batch, animationPath, stateName, stateTime, centerX, centerY, true, visibility);
         }
     }
 

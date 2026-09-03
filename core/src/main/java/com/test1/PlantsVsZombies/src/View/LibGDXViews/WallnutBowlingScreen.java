@@ -21,6 +21,7 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.GamePlayMenuView;
 import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
+import com.test1.PlantsVsZombies.src.Model.User.User;
 
 import java.util.ArrayList;
 
@@ -64,14 +65,12 @@ public class WallnutBowlingScreen extends ScreenAdapter implements GamePlayMenuV
     private static final String NUT_BIG_ANIM = "768/FULL/EFFECTS/BOWLINGBULB_PROJECTILE3/BOWLINGBULB_PROJECTILE3.PAM";
     private static final String NUT_EXPLODE_ANIM = "768/FULL/EFFECTS/BOWLINGBULB_PLANTFOOD_PROJECTILE/BOWLINGBULB_PLANTFOOD_PROJECTILE.PAM";
 
-    // ---- Pause button (top-right corner, matches GamePlayScreen's) ----
     public static final String PAUSE_BTN_ASSET_ID = "IMAGE_UI_HUD_INGAME_PAUSE_BUTTON";
     private TextureRegion pauseBtnRegion;
     private static final float PAUSE_BTN_X = 1810f;
     private static final float PAUSE_BTN_Y = 1105f;
     private static final float PAUSE_BTN_SIZE = 75f;
 
-    // ---- Objectives / pause / end-of-game modal system (shared component) ----
     private GamePlayModals modals;
 
     public WallnutBowlingScreen(WalnutBowling gamePlay) {
@@ -107,9 +106,9 @@ public class WallnutBowlingScreen extends ScreenAdapter implements GamePlayMenuV
 
         UIManager.resizeToasts(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        // Mini-games exit back to the Travel Log (where they're launched
-        // from), not the chapter/level select screen, and restart via the
-        // exact same entry point a fresh "play" click uses.
+
+
+
         modals = new GamePlayModals(
             gamePlay,
             () -> MenuManager.getInstance().changeMenu(MenuType.TravelLog),
@@ -178,15 +177,22 @@ public class WallnutBowlingScreen extends ScreenAdapter implements GamePlayMenuV
     public void render(float delta) {
         textureBank.update();
 
-        if (!gamePlay.isPaused()) {
-            stateTime += delta;
+        int gameSpeed = 1;
+        User user = gamePlay.getThisUser();
+        if (user != null && user.getUserProgress() != null) {
+            gameSpeed = Math.max(1, Math.min(3, user.getUserProgress().getGameSpeed()));
+        }
+        float effectiveDelta = delta * gameSpeed;
 
-            timeAccumulator += delta;
+        if (!gamePlay.isPaused()) {
+            stateTime += effectiveDelta;
+
+            timeAccumulator += effectiveDelta;
             while (timeAccumulator >= TICK_RATE) {
                 gamePlay.update();
                 timeAccumulator -= TICK_RATE;
             }
-            gamePlay.updateWithDelta(delta);
+            gamePlay.updateWithDelta(effectiveDelta);
 
             modals.checkAndMaybeShowEndGameModal();
         }
@@ -198,7 +204,6 @@ public class WallnutBowlingScreen extends ScreenAdapter implements GamePlayMenuV
         batch.begin();
         if (bgRegion != null) batch.draw(bgRegion, 0, 0, 1920, 1200);
 
-
         if (conveyorTrackRegion != null) {
             float scrollOffset = (stateTime * BELT_SCROLL_SPEED) % BELT_SEGMENT_HEIGHT;
             for (float y = 120f - BELT_SEGMENT_HEIGHT; y <= 1110f + BELT_SEGMENT_HEIGHT; y += BELT_SEGMENT_HEIGHT) {
@@ -208,7 +213,6 @@ public class WallnutBowlingScreen extends ScreenAdapter implements GamePlayMenuV
                 }
             }
         }
-
 
         ArrayList<BowlingCard> cards = gamePlay.getConveyorBelt();
         for (BowlingCard card : cards) {
