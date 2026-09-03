@@ -356,7 +356,7 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
         box.pad(50);
 
         Table leftCell = new Table();
-        leftCell.add(createAnimationActor(type.getIdleAnimationPath(), type.getStateName()))
+        leftCell.add(createAnimationActor(type.getIdleAnimationPath(), type.getStateName(), type.getVisibility()))
             .size(ANIMATION_BOX_WIDTH, ANIMATION_BOX_HEIGHT);
 
         Table rightCell = buildPlantStatsBlock(type, level);

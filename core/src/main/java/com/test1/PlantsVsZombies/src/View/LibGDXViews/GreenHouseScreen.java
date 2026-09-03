@@ -277,7 +277,7 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
                         }
 
                         // Plant Animation (Lowered down to sit cleanly on top rim of the pot)
-                        Actor anim = createAnimationActor(plant.getType().getIdleAnimationPath(), plant.getType().getStateName());
+                        Actor anim = createAnimationActor(plant.getType().getIdleAnimationPath(), plant.getType().getStateName(), plant.getType().getVisibility());
                         anim.setSize(ANIM_SIZE, ANIM_SIZE);
                         anim.setPosition((POT_WIDTH - ANIM_SIZE) / 2f, 50f);
                         anim.setTouchable(Touchable.disabled);

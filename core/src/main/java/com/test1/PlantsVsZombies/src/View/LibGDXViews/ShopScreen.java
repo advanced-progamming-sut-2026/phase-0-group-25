@@ -208,7 +208,7 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
         // 2. Animated Plant Hero (Middle - Expands vertically)
         Table animWrapper = new Table();
         if (offer != null) {
-            Actor anim = createAnimationActor(offer.getPlantType().getIdleAnimationPath(), offer.getPlantType().getStateName());
+            Actor anim = createAnimationActor(offer.getPlantType().getIdleAnimationPath(), offer.getPlantType().getStateName(), offer.getPlantType().getVisibility());
             animWrapper.add(anim).size(CARD_IMAGE_SIZE);
         } else {
             animWrapper.add().size(CARD_IMAGE_SIZE);

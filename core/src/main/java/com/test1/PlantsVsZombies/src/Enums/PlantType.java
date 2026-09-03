@@ -1,5 +1,7 @@
 package com.test1.PlantsVsZombies.src.Enums;
 
+import java.util.HashMap;
+
 public enum PlantType {
     SUNFLOWER("SUNFLOWER", "IMAGE_UI_PACKETS_SUNFLOWER", "768/INITIAL/PLANT/SUNFLOWER/SUNFLOWER.PAM", "idle"),
     TWIN_SUNFLOWER("TWIN_SUNFLOWER", "IMAGE_UI_PACKETS_TWINSUNFLOWER", "768/INITIAL/PLANT/SUNFLOWER_TWIN/SUNFLOWER_TWIN.PAM", "idle"),
@@ -78,6 +80,8 @@ public enum PlantType {
     private final String iconAssetId;
     private final String idleAnimationPath;
     private final String stateName;
+    private final HashMap<String, Boolean> visibility;
+
 
     /**
      * Default constructor: derives the collection-screen icon asset id and
@@ -86,15 +90,17 @@ public enum PlantType {
      * plant don't follow this pattern, use the 3-arg constructor on that
      * one entry to override it explicitly.
      */
-    PlantType(String name) {
-        this(name, "IMAGE_REWARD_ICON_" + name, "768/INITIAL/PLANT/" + name + "/" + name + ".PAM", "idle");
-    }
 
     PlantType(String name, String iconAssetId, String idleAnimationPath, String stateName) {
         this.name = name;
         this.iconAssetId = iconAssetId;
         this.idleAnimationPath = idleAnimationPath;
         this.stateName = stateName;
+        this.visibility = new HashMap<>();
+    }
+
+    public HashMap<String, Boolean> getVisibility() {
+        return visibility;
     }
 
     public String getStateName() {
