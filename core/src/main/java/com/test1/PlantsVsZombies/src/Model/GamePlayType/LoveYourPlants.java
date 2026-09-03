@@ -42,14 +42,14 @@ public class LoveYourPlants extends GamePlay {
 
         checkingSunMakers();
 
-        // Updating Zombies, Plant and Projectile and Dynamite (Deleting them if they're dead) :
+
         Iterator<BattlePlant> bp = gamePlants.iterator();
         while (bp.hasNext()) {
             BattlePlant plant = bp.next();
 
             if (plant.isAlive() && plant.getCurrentHP() > 0) {
                 plant.update();
-                // passing cooldown
+
                 plant.setCooldown(Math.max(plant.getCooldown() - 1, 0));
             } else {
                 Tile currentTile = getTileByPosition(plant.getColumn(), plant.getRow());
@@ -104,7 +104,7 @@ public class LoveYourPlants extends GamePlay {
             battlePlant.setCurrentCoolDown(Math.max(battlePlant.getCurrentCoolDown() - 1, 0));
         }
 
-        // Spawning zombies :
+
         if (timeToSpawn == 0) {
             timeToSpawn = getRandomTime();
             for (Wave thisWave : allWaves) {
@@ -146,7 +146,7 @@ public class LoveYourPlants extends GamePlay {
             }
         }
 
-        // Checking if the end of the game (Losing) + Activate Mowers :
+
         for (Zombie zombie : gameZombies) {
             if (!zombie.isAlive()) continue;
 
@@ -170,13 +170,13 @@ public class LoveYourPlants extends GamePlay {
             }
         }
 
-        // Another condition for losing (in this game) :
+
         if (numOfLost > 5) {
             UsersManager.getInstance().addGamesPlayed();
             endGame(false);
         }
 
-        // Checking if the end of the game (Winning) :
+
         if (checkingTheEndOfTheGame()) {
             onWin();
             endGame(true);

@@ -146,7 +146,7 @@ public class MeleeAttacking implements Ability {
         double timeDifference = 10 * (currentTime - plant.getEffectedTime());
         timeDifference = Math.floor(timeDifference);
         timeDifference /= 10;
-        if ((timeDifference % 0.8) == 0) {//every 0.8 second, melee attackers execute their special ability
+        if ((timeDifference % 0.8) == 0) {
             return true;
         }
         return false;

@@ -55,7 +55,7 @@ public class ExplosionWithLifespan implements Ability {
                     zombie.takeDamage(plant, damage);
                 }
             }
-            //todo:
+
             Tile tile = GAME.getTileByPosition(plant.getColumn(), plant.getRow());
             tile.setHole(true);
             tile.setArable(false);
@@ -65,14 +65,14 @@ public class ExplosionWithLifespan implements Ability {
     private void fireLine(BattlePlant plant) {
         if (plant.getPlantStats().getTags().contains("insta-kill")) {
             Tile tile = GAME.getTileByPosition(plant.getColumn(), plant.getRow());
-            // tile.meltIce();
+
             return;
         }
         int damage = (int) plant.getPlantStats().getAttributes().get("damage");
 
         int row = plant.getRow();
         for (int i = 1; i <= 9; i++) {
-            //todo
+
             Tile tile = GAME.getTileByPosition(i, row);
             for (Zombie zombie : tile.getZombies()) {
                 zombie.unfreeze();
@@ -105,7 +105,7 @@ public class ExplosionWithLifespan implements Ability {
         if (plant.getPlantStats().getTags().contains("shoot")) {
             int bounce = (int) plant.getPlantStats().getAttributes().get("bounce");
             for (int i = 0; i < bounce; i++) {
-                //todo
+
                 Projectile projectile = new Projectile(plant, 50, 0, plant.getPosition(), 10, 1, 0, 0);
                 GAME.getProjectiles().add(projectile);
             }

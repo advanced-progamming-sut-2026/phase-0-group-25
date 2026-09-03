@@ -38,7 +38,7 @@ public class Modifier implements Ability {
                     return;
                 }
             }
-            //todo
+
             for (Projectile projectile : GAME.getProjectiles()) {
                 if (projectile.getPosition().equals(plant.getPosition())) {
                     projectile.setFiring(true);
@@ -51,7 +51,7 @@ public class Modifier implements Ability {
 
     private void plantFoodEffect(BattlePlant plant, ArrayList<String> tags) {
         if (tags.contains("fire")) {
-            //todo
+
             for (Projectile projectile : GAME.getProjectiles()) {
                 if (projectile.getPosition().equals(plant.getPosition())) {
                     projectile.setBlueFiring(true);

@@ -70,10 +70,10 @@ public enum PlantType {
     ENFORCE_MINT("ENFORCE_MINT", "IMAGE_UI_PACKETS_ENFORCEMINT", "768/INITIAL/EMPOWERMINTS/PLANT/ENFORCEMINT/ENFORCEMINT.PAM","loop"),
     REINFORCE_MINT("REINFORCE_MINT", "IMAGE_UI_PACKETS_REINFORCEMINT", "768/INITIAL/EMPOWERMINTS/PLANT/REINFORCEMINT/REINFORCEMINT.PAM", "loop"),
     ENCHANT_MINT("ENCHANT_MINT","IMAGE_UI_PACKETS_ENCHANTMINT", "768/INITIAL/EMPOWERMINTS/PLANT/ENCHANTMINT/ENCHANTMINT.PAM", "loop"),
-//    PIERCE_MINT("PIERCE_MINT"),
+
     PIERCE_MINT("PIERCE_MINT", "IMAGE_UI_PACKETS_AILMINT", "768/INITIAL/EMPOWERMINTS/PLANT/AILMINT/AILMINT.PAM", "loop"),
     CATTAIL_MINT("CATTAIL_MINT", "IMAGE_UI_PACKETS_PEPPERMINT", "768/INITIAL/EMPOWERMINTS/PLANT/PEPPERMINT/PEPPERMINT.PAM", "loop"),
-//    CATTAIL_MINT("CATTAIL_MINT"),
+
     MARIGOLD("MARIGOLD", "IMAGE_UI_PACKETS_MARIGOLD", "768/INITIAL/PLANT/MARIGOLD/MARIGOLD.PAM", "idle");
 
     private final String name;
@@ -83,13 +83,7 @@ public enum PlantType {
     private final HashMap<String, Boolean> visibility;
 
 
-    /**
-     * Default constructor: derives the collection-screen icon asset id and
-     * the idle-animation PAM path from the plant's name using a consistent
-     * convention. If your real TextureBank keys or PAM paths for a specific
-     * plant don't follow this pattern, use the 3-arg constructor on that
-     * one entry to override it explicitly.
-     */
+
 
     PlantType(String name, String iconAssetId, String idleAnimationPath, String stateName) {
         this.name = name;
@@ -120,18 +114,12 @@ public enum PlantType {
         return name;
     }
 
-    /**
-     * Asset id for the thumbnail shown in the Collection screen grid.
-     * See constructor javadoc re: placeholder convention.
-     */
+
     public String getIconAssetId() {
         return iconAssetId;
     }
 
-    /**
-     * PAM animation path for the idle animation shown in the plant's
-     * detail box on the Collection screen.
-     */
+
     public String getIdleAnimationPath() {
         return idleAnimationPath;
     }

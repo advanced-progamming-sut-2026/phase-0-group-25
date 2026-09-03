@@ -1,4 +1,4 @@
-// file: core/src/main/java/com/test1/PlantsVsZombies/src/View/LibGDXViews/ChoosePlantScreen.java
+
 package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 
 import com.badlogic.gdx.graphics.Color;
@@ -73,24 +73,24 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
         Table uiTable = new Table();
         uiTable.setFillParent(true);
 
-        // --------------------------------------------------------
-        // Top bar: currency (far left) + back (far right)
-        // --------------------------------------------------------
+
+
+
         Table topBar = new Table();
         topBar.add(createCurrencyHud()).left().top().padLeft(15).padTop(15);
         topBar.add().expandX().fillX();
         topBar.add(createBackButton(MenuType.Game)).right().top().size(70, 70).padRight(15).padTop(15);
         uiTable.add(topBar).expandX().fillX().top().row();
 
-        // --------------------------------------------------------
-        // 8 selected-plant slots, 2 rows of 4
-        // --------------------------------------------------------
+
+
+
         topSlotsContainer = new Table();
         uiTable.add(topSlotsContainer).padTop(10).row();
 
-        // --------------------------------------------------------
-        // Plant grid
-        // --------------------------------------------------------
+
+
+
         gridContainer = new Table();
         gridContainer.top().left();
 
@@ -102,9 +102,9 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
 
         uiTable.add(gridScrollPane).expandY().fillY().pad(10, 0, 10, 0).row();
 
-        // --------------------------------------------------------
-        // Bottom bar: Let's Rock
-        // --------------------------------------------------------
+
+
+
         Table bottomBar = new Table();
         TextButton letsRockButton = createSkinButton("Let's Rock!", "green", new ClickListener() {
             @Override
@@ -124,9 +124,9 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
         refreshGrid();
     }
 
-    // ============================================================
-    // TOP SLOTS (selected plants)
-    // ============================================================
+
+
+
 
     private void refreshTopSlots() {
         if (topSlotsContainer == null || gameMenu == null) return;
@@ -172,9 +172,9 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
         }
     }
 
-    // ============================================================
-    // GRID
-    // ============================================================
+
+
+
 
     private void refreshGrid() {
         if (gridContainer == null) return;
@@ -293,9 +293,9 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
         }
     }
 
-    // ============================================================
-    // BUY DIALOG
-    // ============================================================
+
+
+
 
     private void openBuyDialog(PlantType type) {
         Table box = new BorderedTable();
@@ -342,9 +342,9 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
         showModal(box);
     }
 
-    // ============================================================
-    // DETAIL DIALOG
-    // ============================================================
+
+
+
 
     private void openPlantDetailDialog(PlantType type) {
         User user = UsersManager.getInstance().getLoggedInUser();
@@ -474,9 +474,9 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
         showModal(box);
     }
 
-    // ============================================================
-    // ChoosePlantMenuView / BaseView
-    // ============================================================
+
+
+
 
     @Override
     public void showAllPlants(List<String> plantNames) {}

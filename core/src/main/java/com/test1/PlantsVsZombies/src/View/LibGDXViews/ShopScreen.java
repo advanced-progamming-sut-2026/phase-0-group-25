@@ -1,4 +1,4 @@
-// file: core/src/main/java/com/test1/PlantsVsZombies/src/View/LibGDXViews/ShopScreen.java
+
 package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 
 import com.badlogic.gdx.graphics.Color;
@@ -25,6 +25,9 @@ import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.ShopMenuView;
 import pvz.skin.BorderedTable;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +55,10 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
     private Table itemsContainer;
     private ScrollPane shopScrollPane;
 
+
+    private Label dailyTimerLabel;
+    private float timerUpdateAccumulator = 0f;
+
     public void setMenuController(ShopMenu menuController) {
         this.menuController = menuController;
     }
@@ -74,9 +81,9 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
         Table uiTable = new Table();
         uiTable.setFillParent(true);
 
-        // --------------------------------------------------------
-        // Top bar: currency (left) + back to greenhouse (right)
-        // --------------------------------------------------------
+
+
+
         Table topBar = new Table();
         topBar.add(createCurrencyHud()).left().top().padLeft(15).padTop(15);
         topBar.add().expandX().fillX();
@@ -86,16 +93,16 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
         Label title = createLabel("SHOP", "FBUSV8C5EI_1", Color.WHITE);
         uiTable.add(title).padTop(4).padBottom(4).row();
 
-        // --------------------------------------------------------
-        // Horizontal scroll pane of shop item cards
-        // --------------------------------------------------------
+
+
+
         itemsContainer = new Table();
         itemsContainer.center().pad(10);
 
         shopScrollPane = new ScrollPane(itemsContainer, skin);
-        shopScrollPane.setScrollingDisabled(false, true); // Enable horizontal, disable vertical
-        shopScrollPane.setFadeScrollBars(false);          // Keep scrollbar visible
-        shopScrollPane.setScrollBarPositions(true, false); // Position horizontal scrollbar at bottom
+        shopScrollPane.setScrollingDisabled(false, true);
+        shopScrollPane.setFadeScrollBars(false);
+        shopScrollPane.setScrollBarPositions(true, false);
         shopScrollPane.setScrollbarsVisible(true);
         shopScrollPane.setOverscroll(false, false);
 
@@ -123,9 +130,39 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
         refreshItems();
     }
 
-    // ==========================================================
-    // ITEM LIST
-    // ==========================================================
+    @Override
+    public void render(float delta) {
+        super.render(delta);
+
+
+        timerUpdateAccumulator += delta;
+        if (timerUpdateAccumulator >= 1.0f) {
+            timerUpdateAccumulator = 0f;
+            if (dailyTimerLabel != null) {
+                String remaining = getRemainingTimeText();
+                dailyTimerLabel.setText("Resets in: " + remaining);
+                if ("00:00:00".equals(remaining)) {
+                    refreshItems();
+                }
+            }
+        }
+    }
+
+    private String getRemainingTimeText() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime nextReset = LocalDate.now().plusDays(1).atStartOfDay();
+        long seconds = Math.max(0, Duration.between(now, nextReset).getSeconds());
+
+        long hours = seconds / 3600;
+        long minutes = (seconds % 3600) / 60;
+        long secs = seconds % 60;
+
+        return String.format("%02d:%02d:%02d", hours, minutes, secs);
+    }
+
+
+
+
 
     private void refreshItems() {
         if (itemsContainer == null || menuController == null) return;
@@ -144,14 +181,14 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
         applyCardBackground(card);
         card.top();
 
-        // 1. Title (Top)
+
         Label nameLabel = createLabel(item.getName(), "FBUSV8C5EI_1_outline", Color.WHITE);
         nameLabel.setFontScale(0.65f);
         nameLabel.setWrap(true);
         nameLabel.setAlignment(Align.center);
         card.add(nameLabel).width(CARD_WIDTH - 28).padTop(4).padBottom(4).row();
 
-        // 2. Image Area (Middle - Expands vertically to push bottom block down)
+
         Table imageWrapper = new Table();
         String imageAssetId = getImageAssetIdForType(item.getType());
         TextureRegion imgRegion = (imageAssetId != null) ? textureBank.region(imageAssetId) : null;
@@ -164,7 +201,7 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
         }
         card.add(imageWrapper).expandY().center().padBottom(6).row();
 
-        // 3. Description (Bottom Block)
+
         String description = item.getDescription();
         Label descLabel = createLabel(description != null ? description : "", "FBUSV8C5EI_2", Color.BLACK);
         descLabel.setFontScale(0.75f);
@@ -172,12 +209,12 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
         descLabel.setAlignment(Align.center);
         card.add(descLabel).width(CARD_WIDTH - 30).height(44).padBottom(6).row();
 
-        // 4. Price (Bottom Block)
+
         Label priceLabel = createLabel(item.getPrice() + " " + currencyText(item.getCurrency()), "FBUSV8C5EI_2", Color.BLACK);
         priceLabel.setColor(Color.GOLD);
         card.add(priceLabel).padBottom(12).row();
 
-        // 5. Buy Button (Bottom Block)
+
         TextButton buyButton = createSkinButton("Buy", "green", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -197,15 +234,21 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
         applyCardBackground(card);
         card.top();
 
-        // 1. Title (Top)
+
         String plantName = (offer != null) ? formatEnumName(offer.getPlantType().getName()) : "Daily Offer";
         Label nameLabel = createLabel(plantName + " Seed Packet", "FBUSV8C5EI_1_outline", Color.WHITE);
         nameLabel.setFontScale(0.65f);
         nameLabel.setWrap(true);
         nameLabel.setAlignment(Align.center);
-        card.add(nameLabel).width(CARD_WIDTH - 28).padTop(4).padBottom(4).row();
+        card.add(nameLabel).width(CARD_WIDTH - 28).padTop(4).padBottom(2).row();
 
-        // 2. Animated Plant Hero (Middle - Expands vertically)
+
+        dailyTimerLabel = createLabel("Resets in: " + getRemainingTimeText(), "FBUSV8C5EI_2", Color.BLACK);
+
+        dailyTimerLabel.setAlignment(Align.center);
+        card.add(dailyTimerLabel).width(CARD_WIDTH - 28).padBottom(4).row();
+
+
         Table animWrapper = new Table();
         if (offer != null) {
             Actor anim = createAnimationActor(offer.getPlantType().getIdleAnimationPath(), offer.getPlantType().getStateName(), offer.getPlantType().getVisibility());
@@ -215,7 +258,7 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
         }
         card.add(animWrapper).expandY().center().padBottom(6).row();
 
-        // 3. Description (Bottom Block)
+
         int count = (offer != null) ? offer.getSeedPacketCount() : 0;
         Label descLabel = createLabel("Special daily offer: " + count + " seed packets for " + plantName + ".", "FBUSV8C5EI_2", Color.BLACK);
         descLabel.setFontScale(0.75f);
@@ -223,13 +266,13 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
         descLabel.setAlignment(Align.center);
         card.add(descLabel).width(CARD_WIDTH - 30).height(44).padBottom(6).row();
 
-        // 4. Price (Bottom Block)
+
         int price = (offer != null) ? offer.getPrice() : 0;
         Label priceLabel = createLabel(price + " Coins", "FBUSV8C5EI_2", Color.BLACK);
         priceLabel.setColor(Color.GOLD);
         card.add(priceLabel).padBottom(12).row();
 
-        // 5. Action Button (Bottom Block)
+
         boolean alreadyBought = menuController.isDailyOfferBoughtToday();
         TextButton buyButton;
         if (alreadyBought || offer == null) {
@@ -275,9 +318,9 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
         return currency == WalletType.COIN ? "Coins" : "Gems";
     }
 
-    // ==========================================================
-    // PURCHASE FLOW
-    // ==========================================================
+
+
+
 
     private void onBuyClicked(ShopItem item) {
         User user = UsersManager.getInstance().getLoggedInUser();
@@ -314,9 +357,9 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
         openDailyOfferConfirmDialog(offer);
     }
 
-    // ----------------------------------------------------------
-    // Plant picker (for selective seed packet)
-    // ----------------------------------------------------------
+
+
+
     private void openPlantPickerDialog(ShopItem item) {
         User user = UsersManager.getInstance().getLoggedInUser();
         UserProgress progress = (user != null) ? user.getUserProgress() : null;
@@ -353,7 +396,7 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
                         }
                     }
                 );
-                // Natural size as defined by buildIconBoxButton and its asset textures
+
                 grid.add(plantBox).pad(6);
                 count++;
                 if (count % columns == 0) grid.row();
@@ -465,9 +508,9 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
         showModal(box);
     }
 
-    // ==========================================================
-    // ShopMenuView / BaseView
-    // ==========================================================
+
+
+
 
     @Override
     public void showShopList(List<ShopItem> items) {

@@ -59,7 +59,7 @@ public class ProducingSun implements Ability {
         double timeDifference = 10 * (currentTime - plant.getEffectedTime());
         timeDifference = Math.floor(timeDifference);
         timeDifference /= 10;
-        if ((timeDifference % 1) == 0) {//every second, sun producers execute their special ability
+        if ((timeDifference % 1) == 0) {
             return true;
         }
         return false;

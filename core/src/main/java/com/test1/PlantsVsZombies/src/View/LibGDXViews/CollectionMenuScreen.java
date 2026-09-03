@@ -1,4 +1,4 @@
-// file: core/src/main/java/com/test1/PlantsVsZombies/src/View/LibGDXViews/CollectionMenuScreen.java
+
 package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 
 import com.badlogic.gdx.graphics.Color;
@@ -81,18 +81,18 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
         Table uiTable = new Table();
         uiTable.setFillParent(true);
 
-        // --------------------------------------------------------
-        // Top bar: currency (far left) + back (far right)
-        // --------------------------------------------------------
+
+
+
         Table topBar = new Table();
         topBar.add(createCurrencyHud()).left().top().padLeft(15).padTop(15);
         topBar.add().expandX().fillX();
         topBar.add(createBackButton(MenuType.Game)).right().top().size(70, 70).padRight(15).padTop(15);
         uiTable.add(topBar).expandX().fillX().top().row();
 
-        // --------------------------------------------------------
-        // Tabs + filter row
-        // --------------------------------------------------------
+
+
+
         Table tabRow = new Table();
 
         TextButton plantsTabButton = new TextButton("Plants", skin, "green");
@@ -141,9 +141,9 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
 
         uiTable.add(tabRow).width(CARD_CELL_WIDTH * 6).padTop(10).row();
 
-        // --------------------------------------------------------
-        // Grid
-        // --------------------------------------------------------
+
+
+
         gridContainer = new Table();
         gridContainer.top().left();
 
@@ -161,9 +161,9 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
         refreshGrid();
     }
 
-    // ============================================================
-    // GRID
-    // ============================================================
+
+
+
 
     private void refreshGrid() {
         if (gridContainer == null) return;
@@ -275,9 +275,9 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
         return card;
     }
 
-    // ============================================================
-    // FILTERING
-    // ============================================================
+
+
+
 
     private boolean passesActivePlantFilter(PlantType type, UserProgress progress) {
         if (activeFilterDimension == FilterDimension.NONE) return true;
@@ -351,7 +351,7 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
         else if (activeFilterDimension == FilterDimension.LOCK_STATUS) lockDimensionBox.setChecked(true);
         else if (activeFilterDimension == FilterDimension.UPGRADABILITY) upgradeDimensionBox.setChecked(true);
 
-        // --- Family section ---
+
         box.add(familyDimensionBox).left().colspan(2).padBottom(6).row();
 
         Table familyOptions = new Table();
@@ -369,7 +369,7 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
         }
         box.add(familyOptions).left().colspan(2).padLeft(20).padBottom(14).row();
 
-        // --- Lock status section ---
+
         box.add(lockDimensionBox).left().colspan(2).padBottom(6).row();
 
         CheckBox lockedOption = new CheckBox("  Locked", skin);
@@ -386,7 +386,7 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
         lockOptions.add(unlockedOption);
         box.add(lockOptions).left().colspan(2).padLeft(20).padBottom(14).row();
 
-        // --- Upgradability section ---
+
         box.add(upgradeDimensionBox).left().colspan(2).padBottom(6).row();
 
         CheckBox canUpgradeOption = new CheckBox("  Can upgrade", skin);
@@ -455,9 +455,9 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
         showModal(wrapper);
     }
 
-    // ============================================================
-    // BUY DIALOG
-    // ============================================================
+
+
+
 
     private void openBuyDialog(PlantType type) {
         Table box = new BorderedTable();
@@ -504,9 +504,9 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
         showModal(box);
     }
 
-    // ============================================================
-    // DETAIL DIALOGS
-    // ============================================================
+
+
+
 
     private void openPlantDetailDialog(PlantType type) {
         User user = UsersManager.getInstance().getLoggedInUser();
@@ -624,9 +624,9 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
         showModal(box);
     }
 
-    // ============================================================
-    // FORMATTING HELPERS
-    // ============================================================
+
+
+
 
     private String formatPlantName(PlantType type) {
         return formatEnumName(type.getName());
@@ -636,9 +636,9 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
         return formatEnumName(type.getName());
     }
 
-    // ============================================================
-    // CollectionMenuView / BaseView
-    // ============================================================
+
+
+
 
     @Override
     public void showPlants(List<String> plantNames) {}

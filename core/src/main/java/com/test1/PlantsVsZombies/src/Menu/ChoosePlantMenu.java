@@ -77,13 +77,13 @@ public class ChoosePlantMenu extends Menu {
         getView().showError("Invalid command format for this menu state.");
     }
 
-    // ------------------------------------------------------------
-    // Each of these mutates state and returns null on success, or a
-    // user-facing error message on failure. handleSpecificCommands(...)
-    // routes the result to the terminal view above; CollectionMenuScreen's
-    // sibling, ChoosePlantScreen, calls these same methods directly for
-    // the GUI, so the validation logic lives in exactly one place.
-    // ------------------------------------------------------------
+
+
+
+
+
+
+
 
     public String addPlant(String typeName) {
         PlantType plantType = PlantType.fromName(typeName);
@@ -137,11 +137,7 @@ public class ChoosePlantMenu extends Menu {
         return null;
     }
 
-    /**
-     * Stores a boost for this plant (2 gems), same underlying storage as
-     * GreenHouse boosting -- see UserProgressManager.addGreenhouseBoost /
-     * takeAndClearGreenhouseBoosts.
-     */
+
     public String boostPlant(String plantName) {
         PlantType plant = PlantType.fromName(plantName);
         if (plant == null) {
@@ -185,11 +181,7 @@ public class ChoosePlantMenu extends Menu {
         choosePlantMenuView.showAvailablePlants(availablePlantNames);
     }
 
-    /**
-     * The plants currently selected for the next game (shared, same list
-     * reference GameMenu holds -- adding/removing here is reflected there
-     * too, since they're literally the same ArrayList).
-     */
+
     public ArrayList<String> getSelectedPlants() {
         return plantsStr;
     }

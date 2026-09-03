@@ -68,8 +68,8 @@ public class Shooting implements Ability {
                                       List<List<Double>> offsetAttributes, int pierce,
                                       int rangeAmount, int i) {
 
-        double velocityX = directionAttributes.get(i).get(1) * 50;//todo
-        double velocityY = directionAttributes.get(i).get(2) * 50;//todo
+        double velocityX = directionAttributes.get(i).get(1) * 50;
+        double velocityY = directionAttributes.get(i).get(2) * 50;
         int damage = damageAttributes.get(i);
 
         double offsetX = offsetAttributes.get(i).get(0);
@@ -107,8 +107,8 @@ public class Shooting implements Ability {
                                       List<List<Double>> offsetAttributes, int pierce,
                                       int rangeAmount, int i, String name) {
 
-        double velocityX = directionAttributes.get(i).get(1) * 50;//todo
-        double velocityY = directionAttributes.get(i).get(2) * 50;//todo
+        double velocityX = directionAttributes.get(i).get(1) * 50;
+        double velocityY = directionAttributes.get(i).get(2) * 50;
         int damage = damageAttributes.get(i);
 
         double offsetX = offsetAttributes.get(i).get(0);
@@ -145,8 +145,8 @@ public class Shooting implements Ability {
     }
 
     private Position findPosition(BattlePlant plant, double startingPoint) {
-        // this.plant = plant;
-        //this.startingPoint = (int) startingPoint;
+
+
 
         if (startingPoint == 1) {
             return new Position(plant.getPosition().getX(),
@@ -165,7 +165,7 @@ public class Shooting implements Ability {
         double timeDifference = 10 * (currentTime - plant.getEffectedTime());
         timeDifference = Math.floor(timeDifference);
         timeDifference /= 10;
-        if ((timeDifference % 0.5) == 0) {//every 0.5 second, shooters & strike-throughs execute their special ability
+        if ((timeDifference % 0.5) == 0) {
             return true;
         }
         return false;

@@ -1,4 +1,4 @@
-// file: core/src/main/java/com/test1/PlantsVsZombies/src/View/LibGDXViews/GreenHouseScreen.java
+
 package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 
 import com.badlogic.gdx.graphics.Color;
@@ -26,9 +26,9 @@ import pvz.skin.BorderedTable;
 
 public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuView {
 
-    // ==========================================
-    // ASSET IDENTIFIERS
-    // ==========================================
+
+
+
     private static final String BACKGROUND_ASSET_ID = "IMAGE_BACKGROUNDS_ZEN_GARDEN";
     private static final String SHOP_BUTTON_ASSET_ID = "IMAGE_UI_HUD_WORLDMAP_BUTTONS_HUD_STORE_NORMAL";
     private static final String POT_ASSET_ID = "IMAGE_ZEN_GARDEN_GROWING_PLANT_SLOT_GROWING_PLANT_SLOT_184X161";
@@ -37,27 +37,27 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
     private static final String SUCCESS_BG_ASSET_ID = "IMAGE_UI_GENERIC_VTB";
     private static final String ERROR_BG_ASSET_ID = "IMAGE_UI_GENERIC_TIMER_RIBBON_RED";
 
-    // ==========================================
-    // 3 ROWS x 4 COLUMNS POT COORDINATES (X, Y)
-    // Measured from bottom-left of the original background
-    // ==========================================
+
+
+
+
     private static final float[][] ORIGINAL_POT_X = {
-        { 560f, 734f, 900f, 1067f }, // Row 1 (y = 1)
-        { 560f, 734f, 900f, 1067f }, // Row 2 (y = 2)
-        { 560f, 734f, 900f, 1067f }  // Row 3 (y = 3)
+        { 560f, 734f, 900f, 1067f },
+        { 560f, 734f, 900f, 1067f },
+        { 560f, 734f, 900f, 1067f }
     };
 
     private static final float[][] POT_Y = {
-        { 420f, 420f, 420f, 420f }, // Row 1 (y = 1)
-        { 260f, 260f, 260f, 260f }, // Row 2 (y = 2)
-        { 95f, 95f, 95f, 95f }      // Row 3 (y = 3)
+        { 420f, 420f, 420f, 420f },
+        { 260f, 260f, 260f, 260f },
+        { 95f, 95f, 95f, 95f }
     };
 
-    // Crop the background: remove 190px from left and right
+
     private static final float CROP_LEFT = 190f;
     private static final float CROP_RIGHT = 190f;
 
-    // Fixed unscaled sizes
+
     private static final float POT_WIDTH = 120f;
     private static final float POT_HEIGHT = 90f;
     private static final float ANIM_SIZE = 120f;
@@ -66,7 +66,7 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
     private Group potGroup;
     private Label[][] timerLabels = new Label[UserProgress.getPotRowCount()][UserProgress.getPotColumnCount()];
 
-    // Background projection metrics for exact anchoring
+
     private float bgWidth;
     private float bgHeight;
     private float bgStartX = 0f;
@@ -82,7 +82,7 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
     public void show() {
         super.show();
 
-        // 1. Get background texture and crop it
+
         TextureRegion bgRegion = textureBank.region(BACKGROUND_ASSET_ID);
         if (bgRegion == null) {
             showError("Background not found!");
@@ -94,35 +94,35 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
         bgWidth = croppedBg.getRegionWidth();
         bgHeight = croppedBg.getRegionHeight();
 
-        // 2. Compute background projection metrics
+
         updateBackgroundMetrics();
 
-        // 3. Root stack
+
         Stack screenStack = new Stack();
         screenStack.setFillParent(true);
 
-        // 4. Background image – fills the screen with Scaling.fill
+
         Image bgImage = new Image(croppedBg);
         bgImage.setScaling(Scaling.fill);
         bgImage.setFillParent(true);
         screenStack.add(bgImage);
 
-        // 5. Pots group – pinned on top of the background
+
         potGroup = new Group();
         potGroup.setTouchable(Touchable.childrenOnly);
         screenStack.add(potGroup);
 
-        // 6. UI overlay (currency, shop, back button)
+
         Table uiTable = new Table();
         uiTable.setFillParent(true);
         uiTable.setTouchable(Touchable.childrenOnly);
 
-        // Top bar
+
         Table topBar = new Table();
         topBar.add(createCurrencyHud()).left().top().padLeft(15).padTop(15);
         topBar.add().expandX().fillX();
 
-        // Shop button (Top Right)
+
         TextureRegion shopRegion = textureBank.region(SHOP_BUTTON_ASSET_ID);
         if (shopRegion != null) {
             ImageButton shopBtn = new ImageButton(new TextureRegionDrawable(shopRegion));
@@ -146,7 +146,7 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
 
         uiTable.add().expandY().fillY().row();
 
-        // Bottom bar (Back Button on bottom-left)
+
         Table bottomBar = new Table();
         bottomBar.add(createBackButton(MenuType.Game)).left().bottom().size(70, 70).padLeft(15).padBottom(15);
         bottomBar.add().expandX().fillX();
@@ -155,7 +155,7 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
         screenStack.add(uiTable);
         rootTable.add(screenStack).grow();
 
-        // 7. Populate pots
+
         refreshPots();
     }
 
@@ -164,7 +164,7 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
         float stageW = stage.getWidth() > 0 ? stage.getWidth() : 1280f;
         float stageH = stage.getHeight() > 0 ? stage.getHeight() : 720f;
 
-        // Matches LibGDX Scaling.fill positioning
+
         float targetRatio = stageH / stageW;
         float sourceRatio = bgHeight / bgWidth;
         bgScale = (targetRatio < sourceRatio) ? (stageW / bgWidth) : (stageH / bgHeight);
@@ -200,19 +200,19 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
                 final int gridX = x + 1;
                 final int gridY = y + 1;
 
-                // Fixed coordinates anchored to the background texture
+
                 float potX = bgStartX + (ORIGINAL_POT_X[y][x] - CROP_LEFT) * bgScale;
                 float potY = bgStartY + POT_Y[y][x] * bgScale;
 
-                // Fixed pot bounds (no stretching or scaling of elements)
+
                 Group potContainer = new Group();
                 potContainer.setPosition(potX, potY);
                 potContainer.setSize(POT_WIDTH, POT_HEIGHT);
 
                 if (!unlocked[y][x]) {
-                    // ==========================================
-                    // 1. LOCKED POT
-                    // ==========================================
+
+
+
                     TextureRegion potRegion = textureBank.region(POT_ASSET_ID);
                     if (potRegion != null) {
                         Image potImg = new Image(potRegion);
@@ -238,9 +238,9 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
                     GreenhousePlant plant = plants[y][x];
 
                     if (plant == null) {
-                        // ==========================================
-                        // 2. UNLOCKED & EMPTY POT
-                        // ==========================================
+
+
+
                         TextureRegion potRegion = textureBank.region(POT_ASSET_ID);
                         if (potRegion != null) {
                             Image potImg = new Image(potRegion);
@@ -265,10 +265,10 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
                         plantBtn.setPosition((POT_WIDTH - 90f) / 2f, (POT_HEIGHT - 10f) / 2f);
                         potContainer.addActor(plantBtn);
                     } else {
-                        // ==========================================
-                        // 3. UNLOCKED & PLANTED (GROWING / READY)
-                        // ==========================================
-                        // Pot Graphic
+
+
+
+
                         TextureRegion potRegion = textureBank.region(POT_ASSET_ID);
                         if (potRegion != null) {
                             Image potImg = new Image(potRegion);
@@ -276,7 +276,7 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
                             potContainer.addActor(potImg);
                         }
 
-                        // Plant Animation (Lowered down to sit cleanly on top rim of the pot)
+
                         Actor anim = createAnimationActor(plant.getType().getIdleAnimationPath(), plant.getType().getStateName(), plant.getType().getVisibility());
                         anim.setSize(ANIM_SIZE, ANIM_SIZE);
                         anim.setPosition((POT_WIDTH - ANIM_SIZE) / 2f, 50f);
@@ -284,7 +284,7 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
                         potContainer.addActor(anim);
 
                         if (plant.isReady()) {
-                            // READY Banner above the plant head
+
                             Table readyBadge = new Table();
                             readyBadge.setSize(90f, 26f);
                             readyBadge.setPosition((POT_WIDTH - 90f) / 2f, 125f);
@@ -294,7 +294,7 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
                             readyBadge.setTouchable(Touchable.disabled);
                             potContainer.addActor(readyBadge);
 
-                            // Collect Button (Placed below the pot)
+
                             TextButton collectBtn = createSkinButton("Collect", "green", new ClickListener() {
                                 @Override
                                 public void clicked(InputEvent event, float ex, float ey) {
@@ -313,7 +313,7 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
                             collectBtn.setPosition((POT_WIDTH - 100f) / 2f, -38f);
                             potContainer.addActor(collectBtn);
                         } else {
-                            // Timer Box (Scaled smaller and shifted to the top-left of the plant)
+
                             Table timerBox = new Table();
                             TextureRegion boxRegion = textureBank.region(TIMER_BOX_ASSET_ID);
 
@@ -329,7 +329,7 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
                             timerBox.setPosition(-70f, 100f);
                             potContainer.addActor(timerBox);
 
-                            // Grow Button (Placed below the pot)
+
                             int cost = (int) Math.ceil(plant.getRemainingHours());
                             TextButton growBtn = createSkinButton("Grow (" + cost + ")", "green", new ClickListener() {
                                 @Override
@@ -488,9 +488,9 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
         if (needsRefresh) refreshPots();
     }
 
-    // ==========================================
-    // GreenHouseMenuView callbacks
-    // ==========================================
+
+
+
 
     @Override public void showGreenhouseStatus(String status) {}
     @Override public void showError(String errorMessage) { showToast(errorMessage, ERROR_BG_ASSET_ID); }

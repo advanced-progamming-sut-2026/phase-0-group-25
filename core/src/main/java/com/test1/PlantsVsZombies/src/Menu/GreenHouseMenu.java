@@ -1,4 +1,4 @@
-// file: core/src/main/java/com/test1/PlantsVsZombies/src/Menu/GreenHouseMenu.java
+
 package com.test1.PlantsVsZombies.src.Menu;
 
 import com.test1.PlantsVsZombies.src.Enums.Command;
@@ -33,7 +33,7 @@ public class GreenHouseMenu extends Menu {
         getView().showError("Invalid command format for this menu state.");
     }
 
-    // Public wrappers for the GUI Screen to call
+
     public String buyPot(int x, int y) {
         return manager.unlockPot(x, y);
     }

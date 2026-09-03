@@ -37,7 +37,7 @@ public class Homing implements Ability {
         double timeDifference = 10 * (currentTime - plant.getEffectedTime());
         timeDifference = Math.floor(timeDifference);
         timeDifference /= 10;
-        if ((timeDifference % 0.4) == 0) {//every 0.4 second, homings execute their special ability
+        if ((timeDifference % 0.4) == 0) {
             return true;
         }
         return false;

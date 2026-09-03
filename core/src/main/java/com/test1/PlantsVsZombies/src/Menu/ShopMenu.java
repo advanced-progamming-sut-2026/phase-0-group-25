@@ -51,7 +51,7 @@ public class ShopMenu extends Menu {
         getView().showError("Invalid command format for this menu state.");
     }
 
-    // Public wrappers for the GUI Screen to call
+
     public List<ShopItem> getPermanentItems() {
         return shopManager.getPermanentItems();
     }

@@ -18,7 +18,7 @@ public class SettingsModal extends Dialog {
         Table contentTable = getContentTable();
         contentTable.pad(20);
 
-        // Music Volume Slider
+
         Label volumeLabel = new Label("Music Volume:", skin);
         Slider volumeSlider = new Slider(0f, 1f, 0.05f, false, skin);
         volumeSlider.setValue(SoundManager.getInstance().getMusicVolume());
@@ -29,7 +29,7 @@ public class SettingsModal extends Dialog {
             }
         });
 
-        // Music CheckBox
+
         CheckBox musicCheckBox = new CheckBox(" Enable Music", skin);
         musicCheckBox.setChecked(SoundManager.getInstance().isMusicEnabled());
         musicCheckBox.addListener(new ChangeListener() {
@@ -39,7 +39,7 @@ public class SettingsModal extends Dialog {
             }
         });
 
-        // SFX CheckBox
+
         CheckBox sfxCheckBox = new CheckBox(" Enable SFX", skin);
         sfxCheckBox.setChecked(SoundManager.getInstance().isSfxEnabled());
         sfxCheckBox.addListener(new ChangeListener() {

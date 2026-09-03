@@ -38,15 +38,15 @@ public class LeaderBoardDialog extends BorderedTable {
     private void buildUI() {
         this.clearChildren();
 
-        // 1. Header Title
+
         Label title = new Label("LEADERBOARD", skin, "big");
         title.setColor(Color.BLACK);
         title.setFontScale(0.8f);
         title.setAlignment(Align.center);
-//        title.setColor(new Color(0.95f, 0.8f, 0.2f, 1f));
+
         this.add(title).center().padBottom(15).row();
 
-        // 2. Control Row: Sort Parameters & Order Checkboxes
+
         Table controlsTable = new Table();
         controlsTable.left();
 
@@ -63,9 +63,9 @@ public class LeaderBoardDialog extends BorderedTable {
         dailyCb.getLabel().setColor(Color.BLACK);
         nonDailyCb.getLabel().setColor(Color.BLACK);
 
-//        miniGamesCb.getLabel().setFontScale(1.5f);
-//        dailyCb.getLabel().setFontScale(1.5f);
-//        nonDailyCb.getLabel().setFontScale(1.5f);
+
+
+
 
         ButtonGroup<CheckBox> sortGroup = new ButtonGroup<>(miniGamesCb, dailyCb, nonDailyCb);
         sortGroup.setMinCheckCount(1);
@@ -93,7 +93,7 @@ public class LeaderBoardDialog extends BorderedTable {
         controlsTable.add(dailyCb).padRight(12);
         controlsTable.add(nonDailyCb).padRight(20);
 
-        // Order CheckBoxes (Asc / Desc)
+
         CheckBox descCb = new CheckBox(" Desc", skin);
         CheckBox ascCb = new CheckBox(" Asc", skin);
         descCb.getLabel().setColor(Color.BLACK);
@@ -120,7 +120,7 @@ public class LeaderBoardDialog extends BorderedTable {
 
         this.add(controlsTable).fillX().padBottom(12).row();
 
-        // 3. Table Column Headers
+
         Table tableHeader = new Table();
         tableHeader.setBackground(skin.getDrawable("image_ui_quests_panel_edge_to_edge_ten"));
 
@@ -133,7 +133,7 @@ public class LeaderBoardDialog extends BorderedTable {
 
         this.add(tableHeader).fillX().padBottom(4).row();
 
-        // 4. Scrollable Rows Area
+
         rowsTable = new Table();
         rowsTable.top().left();
 
@@ -146,7 +146,7 @@ public class LeaderBoardDialog extends BorderedTable {
 
         this.add(scrollPane).size(720, 270).fill().expand().padBottom(15).row();
 
-        // 5. Close Button
+
         TextButton closeBtn = new TextButton("Close", skin, "brown");
         closeBtn.addListener(new ClickListener() {
             @Override

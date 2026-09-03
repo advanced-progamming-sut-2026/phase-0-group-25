@@ -50,7 +50,7 @@ public class GameMenu extends Menu {
         return plantsStr;
     }
 
-    // In GameMenu.java
+
     public void backToChapterSelection() {
         this.chapter = null;
         this.activeView = this.chapterSelectionView;

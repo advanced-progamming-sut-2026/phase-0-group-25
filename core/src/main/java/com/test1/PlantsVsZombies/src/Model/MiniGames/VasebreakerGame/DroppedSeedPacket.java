@@ -6,7 +6,7 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
 public class DroppedSeedPacket {
     private BattlePlant plant;
     private Position position;
-    private int remainingTicks; // زمان باقی‌مانده قبل از ناپدید شدن
+    private int remainingTicks;
 
     public DroppedSeedPacket(BattlePlant plant, Position position, int disappearTicks) {
         this.plant = plant;

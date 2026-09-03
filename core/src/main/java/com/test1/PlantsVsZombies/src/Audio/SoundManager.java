@@ -19,7 +19,7 @@ public class SoundManager {
     private boolean musicEnabled = true;
     private boolean sfxEnabled = true;
 
-    // Caps the max music output to 20% so computer master volume can be turned up
+
     private static final float MUSIC_MAX_CEILING = 0.20f;
 
     private SoundManager() {}
@@ -87,7 +87,7 @@ public class SoundManager {
     private void updateBackGroundMusicState() {
         if (currentBackGroundMusic != null) {
             if (musicEnabled) {
-                // Scales the 0.0-1.0 slider to output a maximum of 0.20 (20%)
+
                 currentBackGroundMusic.setVolume(musicVolume * MUSIC_MAX_CEILING);
                 if (!currentBackGroundMusic.isPlaying()) currentBackGroundMusic.play();
             } else {

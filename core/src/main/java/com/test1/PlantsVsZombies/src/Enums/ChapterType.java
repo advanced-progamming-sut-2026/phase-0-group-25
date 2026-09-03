@@ -7,11 +7,7 @@ public enum ChapterType {
     FROSTBITE_CAVES("frostbite caves", 3),
     BIG_WAVE_BEACH("big wave beach", 4);
 
-    /**
-     * Single source of truth for how many levels each (non-minigame) chapter has.
-     * Used anywhere level counts, "locked level" checks, or progress ratios
-     * (e.g. "4/4") need this number instead of a hardcoded literal.
-     */
+
     public static final int LEVELS_PER_CHAPTER = 4;
 
     private final String name;

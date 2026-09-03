@@ -44,7 +44,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
     private Table topLeftTable;
     private Table bottomTable;
 
-    // Store unread messages snapshot before marking them read
+
     private ArrayList<String> unreadMessages = new ArrayList<>();
 
     public void setMenuController(MainMenu menuController) {
@@ -119,9 +119,9 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         rootTable.add(screenStack).grow();
     }
 
-    // ============================================================
-    // TOP BAR
-    // ============================================================
+
+
+
 
     private Table createTopLeftTable() {
         Table table = new Table();
@@ -161,9 +161,9 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         return userBadgeTable;
     }
 
-    // ============================================================
-    // BOTTOM BAR & NEWS BUTTON
-    // ============================================================
+
+
+
 
     private boolean hasUnreadNews() {
         User user = UsersManager.getInstance().getLoggedInUser();
@@ -261,9 +261,9 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         rebuildBottomTable();
     }
 
-    // ============================================================
-    // SETTINGS BUTTON
-    // ============================================================
+
+
+
 
     private Actor createSettingsButton() {
         TextureRegion settingsRegion = textureBank.region(SETTINGS_BUTTON_ASSET_ID);
@@ -294,9 +294,9 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         }
     }
 
-    // ================================================================
-    // SETTINGS MODAL
-    // ================================================================
+
+
+
 
     private void showSettingsDialog() {
         BorderedTable box = new BorderedTable();
@@ -312,10 +312,10 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         Label title = createLabel("SETTINGS", "FBUSV8C5EI_2", Color.BLACK);
         box.add(title).colspan(2).center().padBottom(20).row();
 
-        // ----------------- AUDIO SETTINGS -----------------
+
         SoundManager sm = SoundManager.getInstance();
 
-        // Music Volume Slider (0.0 to 1.0)
+
         box.add(createBlackLabel("Music Volume:")).left().padRight(20).row();
         Table musicVolRow = new Table();
         final Slider musicVolSlider = new Slider(0f, 1f, 0.05f, false, skin, "default-horizontal");
@@ -333,7 +333,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         musicVolRow.add(musicVolValueLabel).width(50);
         box.add(musicVolRow).left().padBottom(10).row();
 
-        // Music Toggle CheckBox
+
         final CheckBox musicCheckBox = new CheckBox(" Enable Music", skin);
         musicCheckBox.getLabel().setColor(Color.BLACK);
         musicCheckBox.setChecked(sm.isMusicEnabled());
@@ -345,7 +345,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         });
         box.add(musicCheckBox).left().padBottom(15).row();
 
-        // SFX Volume Slider (0.0 to 1.0)
+
         box.add(createBlackLabel("SFX Volume:")).left().padRight(20).row();
         Table sfxVolRow = new Table();
         final Slider sfxVolSlider = new Slider(0f, 1f, 0.05f, false, skin, "default-horizontal");
@@ -363,7 +363,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         sfxVolRow.add(sfxVolValueLabel).width(50);
         box.add(sfxVolRow).left().padBottom(10).row();
 
-        // SFX Toggle CheckBox
+
         final CheckBox sfxCheckBox = new CheckBox(" Enable SFX", skin);
         sfxCheckBox.getLabel().setColor(Color.BLACK);
         sfxCheckBox.setChecked(sm.isSfxEnabled());
@@ -375,8 +375,8 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         });
         box.add(sfxCheckBox).left().padBottom(20).row();
 
-        // ----------------- GAMEPLAY SETTINGS -----------------
-        // Difficulty slider (1-5)
+
+
         box.add(createBlackLabel("Difficulty:")).left().padRight(20).row();
         Table diffRow = new Table();
         Slider diffSlider = new Slider(1, 5, 1, false, skin, "default-horizontal");
@@ -392,7 +392,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         diffRow.add(diffValueLabel).width(30);
         box.add(diffRow).left().padBottom(15).row();
 
-        // Speed slider (1-3)
+
         box.add(createBlackLabel("Game Speed:")).left().padRight(20).row();
         Table speedRow = new Table();
         Slider speedSlider = new Slider(1, 3, 1, false, skin, "default-horizontal");
@@ -408,7 +408,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         speedRow.add(speedValueLabel).width(30);
         box.add(speedRow).left().padBottom(15).row();
 
-        // Show Tile Grid
+
         box.add(createBlackLabel("Show Tile Grid:")).left().padRight(20).row();
         Table gridRow = new Table();
         ButtonGroup<CheckBox> gridGroup = new ButtonGroup<>();
@@ -429,7 +429,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         gridRow.add(gridOff).padRight(10);
         box.add(gridRow).left().padBottom(15).row();
 
-        // Debug Mode
+
         box.add(createBlackLabel("Debug Mode:")).left().padRight(20).row();
         Table debugRow = new Table();
         ButtonGroup<CheckBox> debugGroup = new ButtonGroup<>();
@@ -450,18 +450,18 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         debugRow.add(debugOff).padRight(10);
         box.add(debugRow).left().padBottom(25).row();
 
-        // Buttons: OK / Cancel
+
         Table buttonRow = new Table();
         TextButton okButton = createSkinButton("OK", "green", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Save audio preferences
+
                 sm.setMusicVolume(musicVolSlider.getValue());
                 sm.setMusicEnabled(musicCheckBox.isChecked());
                 sm.setSfxVolume(sfxVolSlider.getValue());
                 sm.setSfxEnabled(sfxCheckBox.isChecked());
 
-                // Save game configurations
+
                 int diff = (int) diffSlider.getValue();
                 um.changeDifficulty(String.valueOf(diff));
 
@@ -489,14 +489,14 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         box.add(buttonRow).colspan(2).center();
 
         Table wrapper = new Table();
-        // Height increased to 720 to cleanly fit all settings vertically without scrolling
+
         wrapper.add(box).size(480, 720);
         showModal(wrapper);
     }
 
-    // ================================================================
-    // NEWS MODAL
-    // ================================================================
+
+
+
 
     private boolean showUnread = true;
 
@@ -603,9 +603,9 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         }
     }
 
-    // ================================================================
-    // PROFILE MODAL
-    // ================================================================
+
+
+
 
     private void showProfileDialog() {
         UsersManager um = UsersManager.getInstance();
@@ -845,9 +845,9 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         showModal(dialog);
     }
 
-    // ================================================================
-    // BaseView methods
-    // ================================================================
+
+
+
 
     @Override
     public void showError(String error) {

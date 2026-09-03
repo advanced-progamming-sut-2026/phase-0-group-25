@@ -637,9 +637,9 @@ public class AnimationDecider {
         double now = GAME.getTotalTimePassed();
 
 
-        // =========================
-        // CHARGE
-        // =========================
+
+
+
 
         if (plant.getStatus().equals("charge")) {
 
@@ -654,21 +654,16 @@ public class AnimationDecider {
         }
 
 
-        // =========================
-        // IDLE
-        // =========================
+
+
+
 
         if (plant.getStatus().equals("idle")) {
 
             if (haveTarget(plant)) {
                 plant.setStatus("attack");
 
-                /*
-                 * The animation system will automatically
-                 * restart because the clip changes:
-                 *
-                 * idle -> attack
-                 */
+
                 return status.get("attack");
             }
 
@@ -676,24 +671,18 @@ public class AnimationDecider {
         }
 
 
-        // =========================
-        // ATTACK
-        // =========================
+
+
+
 
         if (plant.getStatus().equals("attack")) {
 
-            /*
-             * Don't interrupt the attack animation.
-             */
+
             if (!isCitronAttackFinished(plant)) {
                 return status.get("attack");
             }
 
-            /*
-             * Attack finished.
-             *
-             * Start a new 7-second charge.
-             */
+
             plant.setLastActionTime(now);
             plant.setStatus("charge");
 

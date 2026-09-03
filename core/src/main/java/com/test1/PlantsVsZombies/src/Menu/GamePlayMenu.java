@@ -25,10 +25,7 @@ public class GamePlayMenu extends Menu {
         super(MenuType.Game);
     }
 
-    /**
-     * Initializes a new gameplay session, disposes of previous screen resources,
-     * and attaches a fresh GamePlayScreen.
-     */
+
     public void startSession(GamePlay gamePlay) {
         if (this.gamePlayMenuView instanceof Screen) {
             ((Screen) this.gamePlayMenuView).dispose();

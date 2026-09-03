@@ -10,27 +10,19 @@ public class AnimationState {
         this.stateTime = 0f;
     }
 
-    /**
-     * Updates the animation state.
-     *
-     * If the clip has changed:
-     *      restart it from frame 0.
-     *
-     * If the clip is the same:
-     *      continue from its previous frame.
-     */
+
     public void update(String newClip, float delta) {
 
         if (newClip == null) {
             return;
         }
 
-        // Animation changed -> restart
+
         if (!newClip.equals(currentClip)) {
             currentClip = newClip;
             stateTime = 0f;
         }
-        // Same animation -> continue
+
         else {
             stateTime += delta;
         }
@@ -44,10 +36,7 @@ public class AnimationState {
         return stateTime;
     }
 
-    /**
-     * Useful when you explicitly want to restart
-     * the currently playing animation.
-     */
+
     public void restart() {
         stateTime = 0f;
     }

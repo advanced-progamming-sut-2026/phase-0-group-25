@@ -93,9 +93,9 @@ public class PlantWhatYouGet extends GamePlay {
             Zombie zombie = z.next();
             if (!zombie.isAlive()) {
                 killAward(this.thisUser);
-//                if (zombie.isHalated()) {
-//                    glowingAward(zombie.getPosition());
-//                }
+
+
+
                 addKilledZombieCost(zombie.getWaveNum(), zombie.getCost());
                 z.remove();
             } else {
@@ -142,7 +142,7 @@ public class PlantWhatYouGet extends GamePlay {
                     Position pos = new Position(spawnX, getRealY(spawnY));
                     Zombie newZombie = ZombieFactory.createZombie(nameOfZ, pos);
 
-//                    if (Math.random() <= 0.05) newZombie.setHalated(true);
+
                     newZombie.setWaveNum(thisWave.getWaveNum());
                     this.gameZombies.add(newZombie);
                     thisWave.addZombieToSpawned(newZombie);

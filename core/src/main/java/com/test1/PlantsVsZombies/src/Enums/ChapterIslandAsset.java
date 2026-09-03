@@ -1,11 +1,6 @@
 package com.test1.PlantsVsZombies.src.Enums;
 
-/**
- * The big chapter-icon asset shown for each chapter (e.g. on the Choose
- * Chapter screen, and reused as the chapter icon on the level-select
- * GameScreen). Kept in one place, mirroring LevelIslandAsset, so both
- * screens stay in sync instead of duplicating the same id strings.
- */
+
 public enum ChapterIslandAsset {
 
     ANCIENT_EGYPT(

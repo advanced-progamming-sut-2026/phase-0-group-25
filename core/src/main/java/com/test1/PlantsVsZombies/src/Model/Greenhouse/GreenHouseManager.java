@@ -1,4 +1,4 @@
-// file: core/src/main/java/com/test1/PlantsVsZombies/src/Model/Greenhouse/GreenHouseManager.java
+
 package com.test1.PlantsVsZombies.src.Model.Greenhouse;
 
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
@@ -12,7 +12,7 @@ public class GreenHouseManager {
 
     private static GreenHouseManager instance;
     private final UsersManager usersManager;
-    private static final int UNLOCK_POT_COST = 50; // Gems cost to unlock a pot
+    private static final int UNLOCK_POT_COST = 50;
 
     private GreenHouseManager() {
         usersManager = UsersManager.getInstance();
@@ -91,7 +91,7 @@ public class GreenHouseManager {
         }
 
         unlocked[y - 1][x - 1] = true;
-        return null; // Success
+        return null;
     }
 
     public String plantPot(int x, int y) {

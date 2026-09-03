@@ -1,4 +1,4 @@
-// file: core/src/main/java/com/test1/PlantsVsZombies/src/View/LibGDXViews/TravelLogScreen.java
+
 package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -53,7 +53,7 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
     private Actor goToMinigamesButton;
     private Actor backToQuestsButton;
 
-    // Overlay for BorderedTable pop-ups
+
     private Table activePopupOverlay;
 
     public void setMenuController(TravelLogMenu menuController) {
@@ -67,7 +67,7 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
         Stack screenStack = new Stack();
         screenStack.setFillParent(true);
 
-        // 1. Background image stretched to fit screen bounds
+
         TextureRegion backgroundRegion = textureBank.region(BACKGROUND_ASSET_ID);
         if (backgroundRegion != null) {
             Image background = new Image(backgroundRegion);
@@ -78,9 +78,9 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
         Table uiTable = new Table();
         uiTable.setFillParent(true);
 
-        // --------------------------------------------------------
-        // 2. Top bar: currency HUD (left) + back button (right)
-        // --------------------------------------------------------
+
+
+
         Table topBar = new Table();
         topBar.add(createCurrencyHud())
             .left()
@@ -100,9 +100,9 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
             .top()
             .row();
 
-        // --------------------------------------------------------
-        // 3. Center Content Stack (Quests vs Mini-Games)
-        // --------------------------------------------------------
+
+
+
         Stack contentStack = new Stack();
 
         questsContentTable = buildQuestsView();
@@ -118,9 +118,9 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
             .pad(10, 20, 10, 20)
             .row();
 
-        // --------------------------------------------------------
-        // 4. Bottom bar (Tab switch button aligned to bottom-right)
-        // --------------------------------------------------------
+
+
+
         Table bottomBar = new Table();
         bottomBar.add().expandX();
 
@@ -177,9 +177,9 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
         refreshQuests();
     }
 
-    // ============================================================
-    // TAB SWITCHING
-    // ============================================================
+
+
+
 
     private void switchTab(Tab tab) {
         currentTab = tab;
@@ -196,9 +196,9 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
         backToQuestsButton.setVisible(currentTab == Tab.MINIGAMES);
     }
 
-    // ============================================================
-    // QUESTS TAB (SCROLLABLE & SEPARATED)
-    // ============================================================
+
+
+
 
     private Table buildQuestsView() {
         Table mainContainer = new Table();
@@ -256,7 +256,7 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
     private void refreshQuests() {
         if (dailyQuestsSection == null || regularQuestsContainer == null) return;
 
-        // Sync user progress before rendering
+
         QuestManager.getInstance().loadProgress();
 
         dailyQuestsSection.clearChildren();
@@ -277,7 +277,7 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
             }
         }
 
-        // Render Daily Quests Section
+
         if (!dailyQuests.isEmpty()) {
             dailyQuestsSection.add(createSectionHeader("--- DAILY QUESTS ---")).left().padBottom(6).row();
             for (Quest quest : dailyQuests) {
@@ -286,7 +286,7 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
             }
         }
 
-        // Render Regular Quests Section
+
         if (!regularQuests.isEmpty()) {
             regularQuestsContainer.add(createSectionHeader("--- REGULAR QUESTS ---")).left().padBottom(6).row();
             for (Quest quest : regularQuests) {
@@ -304,7 +304,7 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
         }
         card.pad(8, 15, 8, 15);
 
-        // Quest icon (left)
+
         TextureRegion iconRegion = (quest.getIcon() != null) ? textureBank.region(quest.getIcon()) : null;
         if (iconRegion != null) {
             Image icon = new Image(iconRegion);
@@ -314,7 +314,7 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
             card.add().size(64, 64).padRight(15);
         }
 
-        // Description and progress bar (middle)
+
         Table middle = new Table();
 
         Label descLabel = createBlackLabel(quest.getDescription());
@@ -330,7 +330,7 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
 
         card.add(middle).expandX().left().padRight(15);
 
-        // Reward icon & count
+
         String rewardAssetId = null;
         if (quest.getReward() != null && quest.getReward().getType() != null) {
             rewardAssetId = quest.getReward().getType().getId();
@@ -349,7 +349,7 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
         rewardAmountLabel.setFontScale(0.85f);
         card.add(rewardAmountLabel).padRight(15);
 
-        // Claim button or placeholder
+
         if (quest.isCompleted() && !quest.isClaimed()) {
             TextButton claimButton = createSkinButton("CLAIM", "green", new ClickListener() {
                 @Override
@@ -370,9 +370,9 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
         return card;
     }
 
-    // ============================================================
-    // MINI GAMES TAB
-    // ============================================================
+
+
+
 
     private Table buildMinigamesView() {
         Table container = new Table();
@@ -449,7 +449,7 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
         activePopupOverlay.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Prevent click events from reaching widgets underneath the modal
+
             }
         });
 
@@ -507,9 +507,7 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
         showPopup(popup);
     }
 
-    /**
-     * Dialog 2: Text input for challenging a specific user by username
-     */
+
     private void showSpecificUserInputDialog() {
         BorderedTable popup = new BorderedTable();
         popup.pad(25);
@@ -605,9 +603,9 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
         showPopup(popup);
     }
 
-    // ============================================================
-    // TravelLogMenuView callbacks
-    // ============================================================
+
+
+
 
     @Override
     public void showQuests(List<Quest> activeQuests, List<Quest> completedQuests, QuestPage page) {

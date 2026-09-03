@@ -242,10 +242,7 @@ public class BattlePlant extends Plant {
         this.isEffected = effected;
         this.effectedLifeSpan = effectedLifeSpan;
         this.effectedTime = GAME.getTotalTimePassed();
-       /* checkEffected();
-        System.out.println("fhghgiug" + this.getName() + "   " + this.isEffected + "   " + this.effectedTime + "   " + this.effectedLifeSpan + "    " + GAME.getTotalTimePassed());
-        checkEffected();
-    */
+
     }
 
 
@@ -311,11 +308,11 @@ public class BattlePlant extends Plant {
         if (currentHP < 0) {
             this.isAlive = false;
         }
-////        if (!this.isAlive) {
-//            if (this.plantStats.getCategory().equals(PlantCategory.EXPLOSIVE.name())) {
-//                QuestManager.getInstance().notifyEvent(new ExplosiveUsedEvent(this.name));
-//            }
-//        }
+
+
+
+
+
     }
 
     public double getLastActionTime() {
@@ -324,12 +321,7 @@ public class BattlePlant extends Plant {
 
     public boolean isTimeForAction() {
         boolean actionIntervalBoolean = ((GAME.getTotalTimePassed() - this.lastActionTime) >= this.plantStats.getActionInterval());
-      /*  if (this.name.equals(PlantType.CITRON.getName())) {
-            boolean citronTime = (Math.abs(GAME.getTotalTimePassed() - this.attackTime) <= 0.1);
-            return (actionIntervalBoolean && citronTime);
-        }
 
-       */
         return actionIntervalBoolean;
     }
 

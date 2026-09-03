@@ -184,25 +184,18 @@ public class CollectionMenu extends Menu {
         return collectionMenuView;
     }
 
-    // ------------------------------------------------------------
-    // GUI-facing methods (used by CollectionMenuScreen). These sit
-    // alongside handleSpecificCommands(...) rather than replacing it,
-    // so the terminal view keeps working exactly as before.
-    // ------------------------------------------------------------
 
-    /**
-     * Attempts to purchase the given plant with coins. Returns null on
-     * success, or a user-facing error message on failure (not enough
-     * coins, already owned, unknown plant, etc.).
-     */
+
+
+
+
+
+
     public String buyPlant(String plantName) {
         return UsersManager.getInstance().purchasePlant(plantName);
     }
 
-    /**
-     * Attempts to upgrade the given plant using coins + seed packets.
-     * Returns null on success, or a user-facing error message on failure.
-     */
+
     public String upgradePlant(String plantName) {
         return UsersManager.getInstance().upgradePlant(plantName);
     }

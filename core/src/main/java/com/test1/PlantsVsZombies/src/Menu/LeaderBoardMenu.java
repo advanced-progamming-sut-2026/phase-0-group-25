@@ -53,17 +53,13 @@ public class LeaderBoardMenu extends Menu {
         view.showLeaderBoard(sorted, sortColumn, ascending);
     }
 
-    /**
-     * Returns the sorted list of users based on the specified column and direction.
-     */
+
     public static List<User> getSortedUsers(SortColumn column, boolean ascending) {
         Collection<User> allUsers = UsersManager.getInstance().getAllUsers();
         return UserSorter.sortUsers(allUsers, column, ascending);
     }
 
-    /**
-     * Extracts and formats the last chapter and level played for a given user.
-     */
+
     public static String getLastChapterAndLevel(User user) {
         if (user == null || user.getUserProgress() == null) return "None";
         UserProgress progress = user.getUserProgress();

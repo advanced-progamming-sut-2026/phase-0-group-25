@@ -47,16 +47,12 @@ public class ShopManager {
     private static final int DAILY_OFFER_PRICE = 1600;
     private static final int DAILY_OFFER_SEED_PACKET_COUNT = 10;
 
-    /**
-     * Picks a brand-new random unlocked plant for today and persists it to
-     * the logged-in user's save data, so it stays the same plant across
-     * app restarts and only changes again once the date rolls over.
-     */
+
     private void generateDailyOffer() {
         User user = UsersManager.getInstance().getLoggedInUser();
         if (user == null) {
-            // No logged-in user to persist against (e.g. viewed pre-login) --
-            // fall back to an in-memory-only offer for this session.
+
+
             dailyOffer = new DailyOffer(PlantType.SUNFLOWER, DAILY_OFFER_PRICE, DAILY_OFFER_SEED_PACKET_COUNT, LocalDate.now());
             return;
         }
@@ -80,9 +76,9 @@ public class ShopManager {
 
         if (user != null) {
             UserProgress progress = user.getUserProgress();
-            // Reuse the persisted offer as long as it was generated today
-            // and its plant is still unlocked -- this is what makes the
-            // offer survive an app restart instead of re-rolling every time.
+
+
+
             if (progress.hasValidPersistedDailyOffer()) {
                 dailyOffer = new DailyOffer(
                     progress.getDailyOfferPlantType(),
@@ -92,8 +88,8 @@ public class ShopManager {
                 );
                 return dailyOffer;
             }
-            // No valid persisted offer for today (first time, day changed,
-            // or the plant somehow got locked again) -- roll a new one.
+
+
             generateDailyOffer();
             return dailyOffer;
         }

@@ -1,4 +1,4 @@
-// file: core/src/main/java/com/test1/PlantsVsZombies/src/Model/Mower.java
+
 package com.test1.PlantsVsZombies.src.Model;
 
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
