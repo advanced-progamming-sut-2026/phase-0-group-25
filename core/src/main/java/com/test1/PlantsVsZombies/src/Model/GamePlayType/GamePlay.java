@@ -75,7 +75,7 @@ public abstract class GamePlay {
     public GamePlay(ChapterType chapterType, int level, int difficulty, User thisUser,
                     ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         this.numOfPlantFood = thisUser.getUserProgress().getPlantFoodCount();
-        this.mySuns = 1050;
+        this.mySuns = 50;
         this.isPaused = false;
         this.level = level;
         this.chapterType = chapterType;
