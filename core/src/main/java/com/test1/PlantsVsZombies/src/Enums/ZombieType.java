@@ -39,13 +39,7 @@ public enum ZombieType {
     private final String stateName;
     private final HashMap<String, Boolean> visibility;
 
-    /**
-     * Default constructor: derives the collection-screen icon asset id and
-     * the idle-animation PAM path from the zombie's name using the same
-     * convention shown in your PamPlayer sample
-     * ("768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM").
-     * Use the 3-arg constructor on individual entries to override.
-     */
+
 
 
     ZombieType(String name, String iconAssetId, String idleAnimationPath, String stateName) {

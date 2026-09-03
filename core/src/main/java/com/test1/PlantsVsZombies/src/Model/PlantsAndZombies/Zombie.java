@@ -50,18 +50,18 @@ public class Zombie extends Entity {
     private double dieTime;
     private boolean isDeadByExplosion = false;
 
-    //just for gargantuar zombie
+
     private double thrownTime;
     private boolean isThrown = false;
     private boolean isFinished = false;
 
-    //just for snorkel zombie
+
     private boolean isSubmarine = false;
 
-    //just for explorer zombie
+
     private boolean isTorchOn = true;
 
-    //just for prospector zombie
+
     private boolean isDynamiteOn = true;
 
     public Zombie(ZombieStats zombieStats, String name) {
@@ -131,7 +131,7 @@ public class Zombie extends Entity {
     public void update() {
         checkFreezeAndButter();
 
-        // System.out.println(this.zombieStats.getEatdps());
+
         if (this.isFrozen ||
             this.isButtered) {
             return;
@@ -213,7 +213,7 @@ public class Zombie extends Entity {
                 if (armor.isDisarmed()) {
                     activeArmors.remove(armor);
                     i -= 1;
-                    if (this.name.equals("NEWSPAPER")) { //increasing velocity & damage per second of NEWSPAPER_ZOMBIE
+                    if (this.name.equals("NEWSPAPER")) {
                         this.currentVelocity = this.zombieStats.getVelocity() * 2.5;
                         this.getZombieStats().setEatdps(this.zombieStats.getEatdps() * 2.5);
                     }
@@ -268,7 +268,7 @@ public class Zombie extends Entity {
             if (armor.isDisarmed()) {
                 activeArmors.remove(armor);
                 i -= 1;
-                if (this.name.equals("NEWSPAPER")) { //increasing velocity & damage per second of NEWSPAPER_ZOMBIE
+                if (this.name.equals("NEWSPAPER")) {
                     this.currentVelocity = this.zombieStats.getVelocity() * 2.5;
                     this.zombieStats.setEatdps(this.zombieStats.getEatdps() * 2.5);
                 }
@@ -295,7 +295,7 @@ public class Zombie extends Entity {
             if (armor.isDisarmed()) {
                 activeArmors.remove(armor);
                 i -= 1;
-                if (this.name.equals("NEWSPAPER")) { //increasing velocity & damage per second of NEWSPAPER_ZOMBIE
+                if (this.name.equals("NEWSPAPER")) {
                     this.currentVelocity = this.zombieStats.getVelocity() * 2.5;
                     this.zombieStats.setEatdps(this.zombieStats.getEatdps() * 2.5);
                 }
@@ -363,7 +363,7 @@ public class Zombie extends Entity {
         this.timeWhenFrozen = GAME.getTotalTimePassed();
         this.isFrozen = true;
         this.frozenTime = frozenTime;
-        this.currentVelocity = 0; //decreasing the zombie velocity after collision with icy projectiles
+        this.currentVelocity = 0;
         this.isTorchOn = false;
     }
 
@@ -375,7 +375,7 @@ public class Zombie extends Entity {
         this.timeWhenFrozen = GAME.getTotalTimePassed();
         this.isFrozen = true;
         this.frozenTime = FROZEN_TIME;
-        this.currentVelocity = 0; //decreasing the zombie velocity after collision with icy projectiles
+        this.currentVelocity = 0;
         this.isTorchOn = false;
     }
 
@@ -393,7 +393,7 @@ public class Zombie extends Entity {
     public void unfreeze() {
         this.isFrozen = false;
         this.isChilled = false;
-        this.currentVelocity = this.zombieStats.getVelocity(); //setting the velocity to its base
+        this.currentVelocity = this.zombieStats.getVelocity();
     }
 
     public boolean isFrozen() {
