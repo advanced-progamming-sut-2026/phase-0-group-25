@@ -50,8 +50,8 @@
   "JUGGLER": {"category": "dark age", "eatdps": 100, "baseHP":  420, "velocity": 0.2, "waveCost": 450, "armor": [], "abilities": ["moving", "eating"], "attributes": {"dieSpan": 1.70},
     "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_JESTER/ZOMBIE_DARK_JESTER.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "die": "die"}},
 
-  "WIZARD": {"category": "dark age", "eatdps": 100, "baseHP":  490, "velocity": 0.12, "waveCost": 800, "armor": [], "abilities": ["moving", "eating"], "attributes": {"dieSpan": 2.17},
-    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_WIZARD/ZOMBIE_DARK_WIZARD.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "die": "die"}},
+  "WIZARD": {"category": "dark age", "eatdps": 100, "baseHP":  490, "velocity": 0.12, "waveCost": 800, "armor": [], "abilities": ["moving", "eating", "throwing"], "attributes": {"dieSpan": 2.17, "throwTime": 2.30},
+    "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_WIZARD/ZOMBIE_DARK_WIZARD.PAM", "status": {"idle": "idle", "walk": "walk", "eat": "eat", "action": "sheep", "die": "die"}},
 
   "KING": {"category": "dark age", "eatdps": 100, "baseHP":  100, "velocity": 0, "waveCost": 750, "armor": [], "abilities": ["throwing"], "attributes": {"dieSpan": 3.12, "throwTime": 4.00},
     "animation": "768/FULL/ZOMBIE/ZOMBIE_DARK_KING/ZOMBIE_DARK_KING.PAM", "status": {"idle": "idle", "action": "special", "die": "die"}},

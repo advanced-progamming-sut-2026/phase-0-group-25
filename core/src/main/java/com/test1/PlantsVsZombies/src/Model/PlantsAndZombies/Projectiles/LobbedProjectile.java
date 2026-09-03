@@ -2,10 +2,12 @@ package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles;
 
 import com.test1.PlantsVsZombies.src.Audio.SoundManager;
 import com.test1.PlantsVsZombies.src.Enums.AudioType;
+import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
+import com.test1.PlantsVsZombies.src.Model.Tile;
 
 public class LobbedProjectile extends Projectile {
     private static final double DELTA = 0.1;
@@ -17,6 +19,9 @@ public class LobbedProjectile extends Projectile {
     private double startY;
     private double targetX;
     private double targetY;
+
+    private int targetColumn = -1;
+    private int targetRow = -1;
 
     private double velocityX;
     private double velocityY;
@@ -45,6 +50,9 @@ public class LobbedProjectile extends Projectile {
         super();
 
         this.plant = plant;
+        if (plant.getName().equals(PlantType.WINTER_MELON.getName())) {
+            this.icy = true;
+        }
 
         this.startX = startX;
         this.startY = startY;
@@ -81,7 +89,71 @@ public class LobbedProjectile extends Projectile {
                 * flightTime
                 * flightTime)
                 / flightTime;
-        SoundManager.getInstance().playSound(AudioType.PROJECTILE_SHOOT);
+
+        SoundManager.getInstance()
+            .playSound(AudioType.PROJECTILE_SHOOT);
+    }
+
+    public LobbedProjectile(
+        BattlePlant plant,
+        double startX,
+        double startY,
+        int targetColumn,
+        int targetRow,
+        double speed,
+        int AoEDamage,
+        int AoERange,
+        int damage,
+        String name) {
+
+        super();
+
+        this.plant = plant;
+
+        this.startX = startX;
+        this.startY = startY;
+
+        this.targetColumn = targetColumn;
+        this.targetRow = targetRow;
+
+        this.targetX =
+            GAME.getRealX(targetColumn);
+
+        this.targetY =
+            GAME.getRealY(targetRow);
+
+        this.AoEDamage = AoEDamage;
+        this.AoERange = AoERange;
+        this.damage = damage;
+
+        this.name = name;
+
+        this.position =
+            new Position(startX, startY);
+
+        this.isActive = true;
+
+        double distance =
+            Math.abs(targetX - startX);
+
+        this.flightTime =
+            calculateFlightTime(distance);
+
+        this.elapsedTime = 0;
+
+        this.velocityX =
+            (targetX - startX)
+                / flightTime;
+
+        this.velocityY =
+            (targetY - startY
+                + 0.5 * GRAVITY
+                * flightTime
+                * flightTime)
+                / flightTime;
+
+        SoundManager.getInstance()
+            .playSound(AudioType.PROJECTILE_SHOOT);
     }
 
     private double calculateFlightTime(double distance) {
@@ -143,43 +215,26 @@ public class LobbedProjectile extends Projectile {
     }
 
     private void affectTarget() {
-        for (Zombie zombie : GAME.getGameZombies()) {
-            if (zombie.getCurrentHP() <= 0) {
-                continue;
-            }
+        if (targetColumn < 0 ||
+            targetRow < 0) {
 
-
-            double distance =
-                Math.abs(
-                    zombie.getPosition().getX()
-                        - targetX
-                );
-
-            if (distance <= 50) {
-                zombie.takeDamage(
-                    this,
-                    damage
-                );
-                SoundManager.getInstance().playSound(AudioType.PROJECTILE_HIT);
-            }
-        }
-
-        int row = plant.getRow();
-        int column = findTargetColumn();
-
-        if (column == -1) {
             return;
         }
 
-        com.test1.PlantsVsZombies.src.Model.Tile tile =
+        Tile tile =
             GAME.getTileByPosition(
-                column,
-                row
+                targetColumn,
+                targetRow
             );
 
-        if (tile != null
-            && !tile.isArable()
-            && tile.getHP() > 0) {
+        if (tile == null) {
+            return;
+        }
+
+        boolean hit = false;
+
+        if (!tile.isArable() &&
+            tile.getHP() > 0) {
 
             tile.setHP(
                 Math.max(
@@ -187,30 +242,53 @@ public class LobbedProjectile extends Projectile {
                     tile.getHP() - damage
                 )
             );
-            SoundManager.getInstance().playSound(AudioType.PROJECTILE_HIT);
+
+            hit = true;
         }
-    }
 
-    private int findTargetColumn() {
-        int row = plant.getRow();
+        for (Zombie zombie : tile.getZombies()) {
+            if (zombie.getCurrentHP() <= 0) {
+                continue;
+            }
 
-        for (int column = plant.getColumn();
-             column <= 9;
-             column++) {
+            zombie.takeDamage(
+                this,
+                damage
+            );
 
-            double tileX =
-                GAME.getRealX(column);
+            hit = true;
+        }
 
-            double tileY =
-                GAME.getRealY(row);
+        for (BattlePlant targetPlant : tile.getPlants()) {
+            if (targetPlant.equals(plant)) {
+                continue;
+            }
 
-            if (Math.abs(tileX - targetX) <= 1
-                && Math.abs(tileY - targetY) <= 1) {
-                return column;
+            if (targetPlant.getCurrentHP() <= 0) {
+                continue;
+            }
+
+            if (targetPlant.isFrozen()) {
+                targetPlant.takeIceDamage(damage);
+                hit = true;
+            }
+
+            if (targetPlant.isOctopusated()) {
+                targetPlant.setOctopusHP(
+                    Math.max(
+                        0,
+                        targetPlant.getOctopusHp() - damage
+                    )
+                );
+
+                hit = true;
             }
         }
 
-        return -1;
+        if (hit) {
+            SoundManager.getInstance()
+                .playSound(AudioType.PROJECTILE_HIT);
+        }
     }
 
     public double getTargetX() {

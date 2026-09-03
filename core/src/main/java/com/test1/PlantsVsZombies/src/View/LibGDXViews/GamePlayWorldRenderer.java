@@ -272,6 +272,9 @@ public class GamePlayWorldRenderer {
 
 
             p.getAnimationState().update(p.getCurrentAnimationName(), delta);
+            if (p.isCat()) {
+                batch.setColor(Color.GRAY);
+            }
 
             player.draw(batch, p.getAnimationPath(), p.getCurrentAnimationName(),
                 p.getAnimationState().getStateTime(), drawX, drawY, true, p.getVisibilities());
@@ -309,6 +312,7 @@ public class GamePlayWorldRenderer {
                 if (z.isHypnotized()) {
                     float pulse = 0.75f + 0.25f * (float) Math.sin(stateTime * 7f);
                     batch.setColor(0.35f * pulse, 1.0f, 0.45f * pulse, 1.0f);
+
                 } else {
                     batch.setColor(z.getColor());
                 }

@@ -45,16 +45,23 @@ public class Moving implements Ability {
                     zombie.setSubmarine(true);
                 }
             }
+            Tile zombieTile = GAME.getTileByPosition(zombie.getColumn(), zombie.getRow());
+            if (zombieTile == null) {
+                return;
+            }
 
-            for (BattlePlant plant : GAME.getGamePlants()) {
-                Position plantPosition = plant.getPosition();
+            if (!zombieTile.getPlants().isEmpty()) {
+                BattlePlant plant = zombieTile.getPlants().get(zombieTile.getPlants().size() - 1);
 
-                if (zombie.getPosition().equals(plantPosition)) {
+                if (zombie.getPosition().equals(plant.getPosition())) {
                     if (zombie.getZombieStats().getName().equals("DODO")) {
                         if (isFlyable(plant)) {
                             makeFlyingActivated(zombie);
                             return;
                         }
+                    }
+                    if (plant.isCat()) {
+                        return;
                     }
                     zombie.setRival(plant);
 
@@ -149,12 +156,8 @@ public class Moving implements Ability {
             Position zombie1Position = zombie1.getPosition();
 
             if ((zombie.getPosition().equals(zombie1Position)) && (zombie1.isHypnotized())) {
-                zombie.setCurrentVelocity(0);
                 zombie.setRival(zombie1);
-                if ((zombie.getZombieStats().getName().equals("ARCADE")) &&
-                    (zombie.getActiveArmors().isEmpty())) {
-                    deleteFatalDamage(zombie);
-                }
+
                 makeEatingActivated(zombie);
             }
         }

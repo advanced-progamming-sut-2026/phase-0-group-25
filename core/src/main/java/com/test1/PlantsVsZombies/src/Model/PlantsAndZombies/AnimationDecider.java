@@ -10,6 +10,7 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Armors.Armor;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Armors.ArmorConfig;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
 import com.test1.PlantsVsZombies.src.Model.Tile;
+import com.test1.PlantsVsZombies.src.View.LibGDXViews.ScreenShake;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class AnimationDecider {
 
     public String plantDecider(BattlePlant plant, float stateTime) {
         Map<String, String> status = plant.getPlantStats().getStatus();
-        if (plant.checkOctopusAndIced()) {
+        if (plant.checkOctopusAndIced() || plant.isCat()) {
             return status.get("idle");
         }
 
@@ -89,6 +90,10 @@ public class AnimationDecider {
         if (zombie.isButtered() ||
             zombie.isFrozen()) {
             return status.get("idle");
+        }
+
+        if (zombie.isHypnotized()) {
+            return handleHypnotizedZombie(zombie, status);
         }
 
         if (zombie.getName().equals("GARGANTUAR")) {
@@ -213,6 +218,7 @@ public class AnimationDecider {
                 if (difference >= 1.00) {
                     plant.setAlive(false);
                 }
+                ScreenShake.shake(0.1f, 5f);
                 return status.get("explosion");
             }
         }
@@ -385,6 +391,7 @@ public class AnimationDecider {
 
         System.out.println(timeDifference + "   " + attackTime);
         if (timeDifference >= attackTime) {
+            ScreenShake.shake(0.1f, 5f);
             return status.get("explosion");
         } else {
             return status.get("attack");
@@ -414,7 +421,7 @@ public class AnimationDecider {
             }
             if (!plant.getPlantStats().getCategory().equals("Lobber")) {
                 for (BattlePlant plant1 : tile.getPlants()) {
-                    if (plant.checkOctopusAndIced()) {
+                    if (plant1.checkOctopusAndIced()) {
                         return status.get("action");
                     }
                 }
@@ -467,7 +474,7 @@ public class AnimationDecider {
             dieSpan = (double) zombie.getZombieStats().getAttributes().get("dieSpan");
         }
 
-        if (difference >= dieSpan / 2) {
+        if (difference >= dieSpan) {
             zombie.setAlive(false);
         }
 
@@ -575,6 +582,7 @@ public class AnimationDecider {
                 }
 
             } else if ((ability instanceof Moving) && (((Moving) ability).isActivated())) {
+                ScreenShake.shake(0.1f, 5f);
                 return status.get("walk");
             }
         }
@@ -709,5 +717,16 @@ public class AnimationDecider {
 
         return plant.getAnimationState()
             .getStateTime() >= 1.0f;
+    }
+
+    private String handleHypnotizedZombie(Zombie zombie, Map<String, String> status) {
+        for (Ability ability : zombie.getOriginalAbilities()) {
+            if ((ability instanceof Moving) && (((Moving) ability).isActivated())) {
+                return status.get("walk");
+            } else if ((ability instanceof Eating) && (((Eating) ability).isActivated())) {
+                return status.get("eat");
+            }
+        }
+        return status.get("idle");
     }
 }

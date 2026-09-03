@@ -316,7 +316,7 @@ public class Shooting implements Ability {
             }
 
             for (BattlePlant plant1 : tile.getPlants()) {
-                if (plant.checkOctopusAndIced()) {
+                if (plant1.checkOctopusAndIced()) {
                     return true;
                 }
             }
