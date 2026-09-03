@@ -225,6 +225,14 @@ public class Zomboss extends Zombie {
 
     @Override
     public void checkLife() {
+        Position secondPosition = new Position(this.position.getX(), this.position.getY() + TILE_Y_LENGTH);
+        for (Projectile projectile : GAME.getProjectiles()) {
+            if (projectile.getPosition().equals(secondPosition)) {
+                projectile.setPierceAmount(projectile.getPierceAmount() - 1);
+                this.takeDamage(projectile, projectile.getDamage());
+            }
+        }
+
         float HPRatio = (float) (this.currentHP / this.zombieStats.getBaseHP());
         if ((HPRatio <= 0.33) && (!this.secondStun)) {
             this.secondStun = true;

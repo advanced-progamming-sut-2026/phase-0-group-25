@@ -21,99 +21,9 @@ public class StealingSun implements Ability {
         Zombie zombie = (Zombie) entity;
 
         if (zombie.getZombieStats().getName().equals("TURQUOISE")) {
-            int zombieColumn = zombie.getColumn();
-            int zombieRow = zombie.getRow();
-
-            if (!this.isActivated) {
-                for (int i = 0; i < 4; i++) {
-                    Tile tile = GAME.getTileByPosition(zombieColumn - i, zombieRow);
-                    if (tile == null) {
-                        continue;
-                    }
-                    if (tile.getPlants().isEmpty()) {
-                        continue;
-                    } else {
-                        zombie.setLastActionTime(GAME.getTotalTimePassed());
-                        this.isActivated = true;
-                        changeMovingActivation(zombie, false);
-                        break;
-                    }
-                }
-            } else {
-                if ((GAME.getTotalTimePassed() - zombie.getLastActionTime()) < 5) {
-                    if (GAME.getMySuns() < TURQUOISE_STEAL) {
-                        this.stolenSun += GAME.getMySuns();
-                        GAME.setMySuns(0);
-                    } else {
-                        this.stolenSun += TURQUOISE_STEAL;
-                        GAME.setMySuns(GAME.getMySuns() - (int) TURQUOISE_STEAL);
-                    }
-                } else {
-                    for (int i = 0; i < 4; i++) {
-                        Tile tile = GAME.getTileByPosition(zombieColumn - i, zombieRow);
-                        if (tile == null) {
-                            continue;
-                        }
-
-                        for (BattlePlant plant : tile.getPlants()) {
-                            plant.setAlive(false);
-                            plant.setCurrentHP(0);
-                        }
-                    }
-                    this.isActivated = false;
-                    changeMovingActivation(zombie, true);
-                }
-            }
-
+            handleTurquoise(zombie);
         } else if (zombie.getZombieStats().getName().equals("RA")) {
-            if (this.isActivated) {
-                double actionTime = (double) zombie.getZombieStats().getAttributes().get("actionTime");
-                float difference = (float) (GAME.getTotalTimePassed() - zombie.getLastActionTime());
-
-                if (difference > actionTime) {
-
-                    int activeSun = GAME.getActiveSuns().size();
-                    for (int i = 0; i < activeSun; i++) {
-                        try {
-                            Sun sun = GAME.getActiveSuns().get(i);
-                            sun.setCollected(true);
-                            if (!sun.isFromSky()) {
-                                Position sunPosition = Position.getRowAndColumn(sun.getPosition().getX() - 20, sun.getPosition().getY() - 20);
-                                Tile tile = GAME.getTileByPosition((int) sunPosition.getX(), (int) sunPosition.getY());
-
-
-                                BattlePlant sunProducer = null;
-                                for (BattlePlant plant : tile.getPlants()) {
-                                    if (plant.getPlantStats().getCategory().equals("Sun Producer")) {
-                                        sunProducer = plant;
-                                        break;
-                                    }
-                                }
-                                Ability ability = tile.getPlants().get(0).getOriginalAbilities().get(0);
-                                if (ability instanceof ProducingSun) {
-                                    ((ProducingSun) ability).setCollected(false);
-                                    ((ProducingSun) ability).setProduced(false);
-                                }
-                            }
-                            this.stolenSun += sun.getNumberOfSun();
-                            GAME.getActiveSuns().remove(i);
-                            i -= 1;
-                        } catch (IndexOutOfBoundsException e) {
-
-                        }
-                    }
-                    this.isActivated = false;
-                    changeMovingActivation(zombie, true);
-                }
-            } else {
-
-                if (!GAME.getActiveSuns().isEmpty()) {
-                    zombie.setLastActionTime(GAME.getTotalTimePassed());
-                    this.isActivated = true;
-                    changeMovingActivation(zombie, false);
-                }
-
-            }
+            handleRa(zombie);
         }
     }
 
@@ -135,5 +45,101 @@ public class StealingSun implements Ability {
 
     public boolean isActivated() {
         return isActivated;
+    }
+
+    private void handleTurquoise(Zombie zombie) {
+        int zombieColumn = zombie.getColumn();
+        int zombieRow = zombie.getRow();
+
+        if (!this.isActivated) {
+            for (int i = 0; i < 4; i++) {
+                Tile tile = GAME.getTileByPosition(zombieColumn - i, zombieRow);
+                if (tile == null) {
+                    continue;
+                }
+                if (tile.getPlants().isEmpty()) {
+                    continue;
+                } else {
+                    zombie.setLastActionTime(GAME.getTotalTimePassed());
+                    this.isActivated = true;
+                    changeMovingActivation(zombie, false);
+                    break;
+                }
+            }
+        } else {
+            if ((GAME.getTotalTimePassed() - zombie.getLastActionTime()) < 5) {
+                if (GAME.getMySuns() < TURQUOISE_STEAL) {
+                    this.stolenSun += GAME.getMySuns();
+                    GAME.setMySuns(0);
+                } else {
+                    this.stolenSun += TURQUOISE_STEAL;
+                    GAME.setMySuns(GAME.getMySuns() - (int) TURQUOISE_STEAL);
+                }
+            } else {
+                for (int i = 0; i < 4; i++) {
+                    Tile tile = GAME.getTileByPosition(zombieColumn - i, zombieRow);
+                    if (tile == null) {
+                        continue;
+                    }
+
+                    for (BattlePlant plant : tile.getPlants()) {
+                        plant.setAlive(false);
+                        plant.setCurrentHP(0);
+                    }
+                }
+                this.isActivated = false;
+                changeMovingActivation(zombie, true);
+            }
+        }
+    }
+
+    private void handleRa(Zombie zombie) {
+        if (this.isActivated) {
+            double actionTime = (double) zombie.getZombieStats().getAttributes().get("actionTime");
+            float difference = (float) (GAME.getTotalTimePassed() - zombie.getLastActionTime());
+
+            if (difference > actionTime) {
+
+                int activeSun = GAME.getActiveSuns().size();
+                for (int i = 0; i < activeSun; i++) {
+                    try {
+                        Sun sun = GAME.getActiveSuns().get(i);
+                        sun.setCollected(true);
+                        if (!sun.isFromSky()) {
+                            Position sunPosition = Position.getRowAndColumn(sun.getPosition().getX() - 20, sun.getPosition().getY() - 20);
+                            Tile tile = GAME.getTileByPosition((int) sunPosition.getX(), (int) sunPosition.getY());
+
+                            BattlePlant sunProducer = null;
+                            for (BattlePlant plant : tile.getPlants()) {
+                                if (plant.getPlantStats().getCategory().equals("Sun Producer")) {
+                                    sunProducer = plant;
+                                    break;
+                                }
+                            }
+                            Ability ability = tile.getPlants().get(0).getOriginalAbilities().get(0);
+                            if (ability instanceof ProducingSun) {
+                                ((ProducingSun) ability).setCollected(false);
+                                ((ProducingSun) ability).setProduced(false);
+                            }
+                        }
+                        this.stolenSun += sun.getNumberOfSun();
+                        GAME.getActiveSuns().remove(i);
+                        i -= 1;
+                    } catch (IndexOutOfBoundsException e) {
+
+                    }
+                }
+                this.isActivated = false;
+                changeMovingActivation(zombie, true);
+            }
+        } else {
+
+            if (!GAME.getActiveSuns().isEmpty()) {
+                zombie.setLastActionTime(GAME.getTotalTimePassed());
+                this.isActivated = true;
+                changeMovingActivation(zombie, false);
+            }
+
+        }
     }
 }
