@@ -371,10 +371,11 @@ public class Projectile {
 
     private void checkZombossCollision() {
         if (this.name.equals("shark")) {
-            Position rowAndColumn = Position.getRowAndColumn(this.position);
-            Tile currentTile = GAME.getTileByPosition((int) rowAndColumn.getX(), (int) rowAndColumn.getY());
-            if (currentTile.isArable()) {
-                this.isActive = false;
+            for (BattlePlant plant : GAME.getGamePlants()) {
+                if (plant.getPosition().equals(this.position)) {
+                    plant.setCurrentHP(0);
+                    plant.setAlive(false);
+                }
             }
         }
 

@@ -8,16 +8,19 @@ import java.util.Random;
 
 public class Zomboss extends Zombie {
 
-    private static final int ACTION_INTERVAL = 12;
-    private static final int STUN_INTERVAL = 10;
-    private static final int FIRE_INTERVAL = 5;
-    private static final int X_RIGHT_LIMIT = 1860;
-    private static final int Y_UP_LIMIT = 880;
-    private static final int Y_DOWN_LIMIT = 130;
-    private static final int X_LEFT_LIMIT = 490;
-    private static final int TILE_Y_LENGTH = 150;
-    private static final double TILE_X_LENGTH = 152.2;
-    private final GamePlay GAME = GamePlay.activeInstance;
+    private GamePlay GAME = GamePlay.activeInstance;
+    private static int ACTION_INTERVAL = 12;
+    private static int STUN_INTERVAL = 10;
+    private static int FIRE_INTERVAL = 5;
+
+    private static int X_RIGHT_LIMIT = 1860;
+    private static int Y_UP_LIMIT = 880;
+    private static int Y_DOWN_LIMIT = 130;
+    private static int X_LEFT_LIMIT = 490;
+    private static int TILE_Y_LENGTH = 150;
+    private static double TILE_X_LENGTH = 152.2;
+    private static int SNORKEL_LIMIT = 1556;
+
     private int currentSecondRow;
 
     private boolean isStunned = false;
@@ -105,7 +108,8 @@ public class Zomboss extends Zombie {
     private void throwProjectile() {
         Random RANDOM = new Random();
         String name = (String) this.zombieStats.getAttributes().get("projectileName");
-        int randomPlantIndex = RANDOM.nextInt(GAME.getGamePlants().size()) + 1;
+
+        int randomPlantIndex = RANDOM.nextInt(GAME.getGamePlants().size());
         BattlePlant plant = GAME.getGamePlants().get(randomPlantIndex);
 
         Tile targetTile = GAME.getTileByPosition(plant.getColumn(), plant.getRow());
@@ -192,6 +196,11 @@ public class Zomboss extends Zombie {
 
         switch (random) {
             case 0:
+                if (GAME.getGamePlants().isEmpty()) {
+                    changeRow();
+                    this.status = "idle";
+                    return;
+                }
                 throwProjectile();
                 this.status = "throw";
                 this.statusSpan = (Double) this.zombieStats.getAttributes().get("throwSpan");
@@ -223,6 +232,14 @@ public class Zomboss extends Zombie {
 
     @Override
     public void checkLife() {
+        Position secondPosition = new Position(this.position.getX(), this.position.getY() + TILE_Y_LENGTH);
+        for (Projectile projectile : GAME.getProjectiles()) {
+            if (projectile.getPosition().equals(secondPosition)) {
+                projectile.setPierceAmount(projectile.getPierceAmount() - 1);
+                this.takeDamage(projectile, projectile.getDamage());
+            }
+        }
+
         float HPRatio = (float) (this.currentHP / this.zombieStats.getBaseHP());
         if ((HPRatio <= 0.33) && (!this.secondStun)) {
             this.secondStun = true;
@@ -355,7 +372,7 @@ public class Zomboss extends Zombie {
 
     private Position findLauncher(Position target) {
         if (this.name.equals("BEACH")) {
-            return new Position(this.position.getX(), this.position.getY());
+            return new Position(this.position.getX() - 21, this.position.getY());
         }
         return new Position(target.getX(), 1200);
     }

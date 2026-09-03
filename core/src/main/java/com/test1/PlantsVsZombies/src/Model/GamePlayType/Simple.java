@@ -164,7 +164,7 @@ public class Simple extends GamePlay {
                         positionOfZ = new Position(spawnX, getRealY(spawnY));
                     }
 
-                    Zombie newZombie = ZombieFactory.createZombie(nameOfZ, positionOfZ);
+                    Zombie newZombie = ZombieFactory.createZombie("ALL_STAR", positionOfZ);
 
                     newZombie.setWaveNum(thisWave.getWaveNum());
                     this.gameZombies.add(newZombie);

@@ -240,10 +240,6 @@ public class BattlePlant extends Plant {
         this.isEffected = effected;
         this.effectedLifeSpan = effectedLifeSpan;
         this.effectedTime = GAME.getTotalTimePassed();
-       /* checkEffected();
-        System.out.println("fhghgiug" + this.getName() + "   " + this.isEffected + "   " + this.effectedTime + "   " + this.effectedLifeSpan + "    " + GAME.getTotalTimePassed());
-        checkEffected();
-    */
     }
 
 
