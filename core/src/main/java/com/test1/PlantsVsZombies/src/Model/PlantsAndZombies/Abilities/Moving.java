@@ -60,6 +60,9 @@ public class Moving implements Ability {
                             return;
                         }
                     }
+                    if (plant.isCat()) {
+                        return;
+                    }
                     zombie.setRival(plant);
 
                     makeEatingActivated(zombie);
@@ -153,12 +156,8 @@ public class Moving implements Ability {
             Position zombie1Position = zombie1.getPosition();
 
             if ((zombie.getPosition().equals(zombie1Position)) && (zombie1.isHypnotized())) {
-                zombie.setCurrentVelocity(0);
                 zombie.setRival(zombie1);
-                if ((zombie.getZombieStats().getName().equals("ARCADE")) &&
-                    (zombie.getActiveArmors().isEmpty())) {
-                    deleteFatalDamage(zombie);
-                }
+
                 makeEatingActivated(zombie);
             }
         }

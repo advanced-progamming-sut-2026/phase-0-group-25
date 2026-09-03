@@ -19,6 +19,7 @@ Throwing implements Ability {
     private static int OCTOPUS_ACTION_INTERVAL = 20;
     private static int FISHERMAN_ACTION_INTERVAL = 20;
     private static int KING_ACTION_INTERVAL = 20;
+    private static int WIZARD_ACTION_INTERVAL = 20;
     private static Random RANDOM = new Random();
 
     private GamePlay GAME = GamePlay.activeInstance;
@@ -28,9 +29,10 @@ Throwing implements Ability {
     @Override
     public void executeAbility(Entity entity) {
         Zombie zombie = (Zombie) entity;
-        Random random = new Random();
 
-        if (zombie.getZombieStats().getName().equals("TOMB_RAISER")) {
+        if (zombie.getZombieStats().getName().equals("WIZARD")) {
+            handleWizardZombie(zombie);
+        } else if (zombie.getZombieStats().getName().equals("TOMB_RAISER")) {
             handleTombRaiserZombie(zombie);
         } else if (zombie.getZombieStats().getName().equals("HUNTER")) {
             if (this.isActivated) {
@@ -216,5 +218,23 @@ Throwing implements Ability {
 
     public boolean isActivated() {
         return isActivated;
+    }
+
+    private void handleWizardZombie(Zombie zombie) {
+        if (GAME.getGamePlants().isEmpty()) {
+            return;
+        }
+
+        if (this.isActivated) {
+            int randomIndex = RANDOM.nextInt(GAME.getGamePlants().size());
+            BattlePlant randomPlant = GAME.getGamePlants().get(randomIndex);
+            randomPlant.makeCat(zombie);
+            afterAbility(zombie);
+
+        } else {
+            if ((GAME.getTotalTimePassed() - zombie.getLastActionTime()) >= WIZARD_ACTION_INTERVAL) {
+                this.isActivated = true;
+            }
+        }
     }
 }

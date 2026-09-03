@@ -50,6 +50,8 @@ public class Zombie extends Entity {
     private double dieTime;
     private boolean isDeadByExplosion = false;
 
+    private double eatdps;
+
     //just for gargantuar zombie
     private double thrownTime;
     private boolean isThrown = false;
@@ -94,6 +96,7 @@ public class Zombie extends Entity {
 
         this.spawnTime = GAME.getTotalTimePassed();
         this.lastActionTime = this.spawnTime;
+        this.eatdps = this.zombieStats.getEatdps();
 
         addAbilities();
 
@@ -215,7 +218,7 @@ public class Zombie extends Entity {
                     i -= 1;
                     if (this.name.equals("NEWSPAPER")) { //increasing velocity & damage per second of NEWSPAPER_ZOMBIE
                         this.currentVelocity = this.zombieStats.getVelocity() * 2.5;
-                        this.getZombieStats().setEatdps(this.zombieStats.getEatdps() * 2.5);
+                        this.eatdps = this.zombieStats.getEatdps() * 2.5;
                     }
                 }
                 if (leftoverDamage <= 0) {
@@ -270,7 +273,7 @@ public class Zombie extends Entity {
                 i -= 1;
                 if (this.name.equals("NEWSPAPER")) { //increasing velocity & damage per second of NEWSPAPER_ZOMBIE
                     this.currentVelocity = this.zombieStats.getVelocity() * 2.5;
-                    this.zombieStats.setEatdps(this.zombieStats.getEatdps() * 2.5);
+                    this.eatdps = this.zombieStats.getEatdps() * 2.5;
                 }
             }
 
@@ -297,7 +300,7 @@ public class Zombie extends Entity {
                 i -= 1;
                 if (this.name.equals("NEWSPAPER")) { //increasing velocity & damage per second of NEWSPAPER_ZOMBIE
                     this.currentVelocity = this.zombieStats.getVelocity() * 2.5;
-                    this.zombieStats.setEatdps(this.zombieStats.getEatdps() * 2.5);
+                    this.eatdps = this.zombieStats.getEatdps() * 2.5;
                 }
             }
 
@@ -422,6 +425,20 @@ public class Zombie extends Entity {
                     }
                 } catch (IndexOutOfBoundsException e) {
                 }
+            }
+        }
+        if (this.isHypnotized) {
+            try {
+                for (int i = 0; i < this.originalAbilities.size(); i++) {
+                    Ability ability = this.originalAbilities.get(i);
+                    if ((ability instanceof Moving) || (ability instanceof Eating) || (ability instanceof FatalDamage)) {
+                        continue;
+                    }
+                    this.originalAbilities.remove(ability);
+                    i -= 1;
+                }
+            } catch (IndexOutOfBoundsException e) {
+
             }
         }
 
@@ -552,6 +569,10 @@ public class Zombie extends Entity {
     }
 
     public Color getColor() {
+        if (this instanceof Zomboss) {
+            return Color.WHITE;
+        }
+
         if (this.isFrozen) {
             return Color.BLUE;
         } else if (this.isButtered) {
@@ -668,5 +689,13 @@ public class Zombie extends Entity {
 
     public void setDynamiteOn(boolean dynamiteOn) {
         isDynamiteOn = dynamiteOn;
+    }
+
+    public double getEatdps() {
+        return eatdps;
+    }
+
+    public void setEatdps(double eatdps) {
+        this.eatdps = eatdps;
     }
 }

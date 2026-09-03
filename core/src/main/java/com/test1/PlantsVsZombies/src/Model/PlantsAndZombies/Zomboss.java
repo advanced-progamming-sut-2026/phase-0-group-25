@@ -70,25 +70,52 @@ public class Zomboss extends Zombie {
     }
 
     private void spawnZombies() {
-        Zombie newZombie1 = makeZombie();
-        Zombie newZombie2 = makeZombie();
+        if (this.name.equals("ICE")) {
+            spawnFrozenZombies();
+            return;
+        }
+
+        Random RANDOM = new Random();
+        int column1 = RANDOM.nextInt(5);
+        int column2 = RANDOM.nextInt(5);
+        if (column2 == column1) {
+            column2 += 1;
+            if (column2 == 5) {
+                column2 = 0;
+            }
+        }
+        Zombie newZombie1 = makeZombie(column1);
+        Zombie newZombie2 = makeZombie(column2);
 
         GAME.addZombieFromAbility(newZombie1);
         GAME.addZombieFromAbility(newZombie2);
     }
 
+    private void spawnFrozenZombies() {
+        int frontColumn = this.column - 1;
+        for (int i = 1; i <= 5; i++) {
+            Tile tile = GAME.getTileByPosition(frontColumn, i);
+            for (BattlePlant plant : tile.getPlants()) {
+                plant.setCurrentHP(0);
+                plant.setAlive(false);
+            }
+            tile.setArable(false);
+            tile.setHP(300);
+        }
+    }
+
     private void throwProjectile() {
         Random RANDOM = new Random();
         String name = (String) this.zombieStats.getAttributes().get("projectileName");
-        int randomColumn = RANDOM.nextInt(7) + 1;
-        int randomRow = RANDOM.nextInt(4) + 1;
+        int randomPlantIndex = RANDOM.nextInt(GAME.getGamePlants().size()) + 1;
+        BattlePlant plant = GAME.getGamePlants().get(randomPlantIndex);
 
-        Tile targetTile = GAME.getTileByPosition(randomColumn, randomRow);
-        Position target = new Position(600, 500);
+        Tile targetTile = GAME.getTileByPosition(plant.getColumn(), plant.getRow());
+        Position target = findTarget(targetTile);
 
         double XVelocity = (Double) this.zombieStats.getAttributes().get("X_Velocity");
         double YVelocity = (Double) this.zombieStats.getAttributes().get("Y_Velocity");
-        Position launcher = new Position(600, 870);
+        Position launcher = findLauncher(target);
 
         Projectile newProjectile = new Projectile(name, launcher,
             XVelocity, YVelocity, target);
@@ -164,6 +191,7 @@ public class Zomboss extends Zombie {
         int random = (new Random()).nextInt(4);
         this.timeWhenTriggered = GAME.getTotalTimePassed();
 
+
         switch (random) {
             case 0:
                 throwProjectile();
@@ -171,6 +199,12 @@ public class Zomboss extends Zombie {
                 this.statusSpan = (Double) this.zombieStats.getAttributes().get("throwSpan");
                 break;
             case 1:
+                if (this.name.equals("BEACH")) {
+                    changeRow();
+                    this.status = "idle";
+                    return;
+                }
+
                 spawnZombies();
                 this.status = "spawn";
                 this.statusSpan = (Double) this.zombieStats.getAttributes().get("spawnSpan");
@@ -280,10 +314,9 @@ public class Zomboss extends Zombie {
         return currentSecondRow;
     }
 
-    private Zombie makeZombie() {
+    private Zombie makeZombie(int column) {
         Random RANDOM = new Random();
 
-        int column = RANDOM.nextInt(5);
         Position zombiePosition = new Position(X_RIGHT_LIMIT - 200, (column * TILE_Y_LENGTH) + Y_DOWN_LIMIT + (TILE_Y_LENGTH / 2));
 
         int zombieNumber = RANDOM.nextInt(4);
@@ -313,6 +346,20 @@ public class Zomboss extends Zombie {
                 tile.setFiring(false);
             }
         }
+    }
+
+    private Position findTarget(Tile tile) {
+        double xCoordinate = (((int) tile.getPosition().getX() * TILE_X_LENGTH) - (TILE_X_LENGTH / 2) + X_LEFT_LIMIT);
+        double yCoordinate = (((int) tile.getPosition().getY() * TILE_Y_LENGTH) - (TILE_Y_LENGTH / 2) + Y_DOWN_LIMIT);
+
+        return new Position(xCoordinate, yCoordinate);
+    }
+
+    private Position findLauncher(Position target) {
+        if (this.name.equals("BEACH")) {
+            return new Position(this.position.getX(), this.position.getY());
+        }
+        return new Position(target.getX(), 1200);
     }
 }
 

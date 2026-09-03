@@ -33,6 +33,9 @@ public class BattlePlant extends Plant {
     private boolean isOctopusated = false;
     private double octopusHP;
 
+    private boolean isCat = false;
+    private Zombie wizard = null;
+
     private String status = "idle";
     private double armorHP = 0.0;
     private double dieTime;
@@ -68,7 +71,13 @@ public class BattlePlant extends Plant {
 
     @Override
     public void update() {
+        checkWizard();
+
         if (checkOctopusAndIced()) {
+            return;
+        }
+
+        if (this.isCat) {
             return;
         }
 
@@ -430,8 +439,17 @@ public class BattlePlant extends Plant {
                         return;
                     }
                 }
+
+                for (BattlePlant plant : tile.getPlants()) {
+                    if (plant.checkOctopusAndIced()) {
+                        this.status = "action";
+                        return;
+                    }
+                }
+
                 zombiesInRange.addAll(tile.getZombies());
             }
+
 
             for (Zombie zombie : GAME.getGameZombies()) {
                 if (zombie instanceof Zomboss) {
@@ -590,5 +608,24 @@ public class BattlePlant extends Plant {
         }
 
         return condition;
+    }
+
+    public void makeCat(Zombie zombie) {
+        this.isCat = true;
+        this.wizard = zombie;
+    }
+
+    private void checkWizard() {
+        if(wizard == null){
+            return;
+        }
+        if ((wizard.getCurrentHP() <= 0) ||
+            !(wizard.isAlive())){
+            this.isCat = false;
+        }
+    }
+
+    public boolean isCat() {
+        return isCat;
     }
 }

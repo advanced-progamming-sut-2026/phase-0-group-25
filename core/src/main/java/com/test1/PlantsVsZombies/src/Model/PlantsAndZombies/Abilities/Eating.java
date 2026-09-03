@@ -12,7 +12,7 @@ public class Eating implements Ability {
     public void executeAbility(Entity entity) {
         if (this.isActivated) {
             Zombie zombie = (Zombie) entity;
-            double damageAmount = zombie.getZombieStats().getEatdps() * 0.1;
+            double damageAmount = zombie.getEatdps() * 0.1;
             if (zombie.isHypnotized()) {
                 if (zombie.getRival() instanceof Zombie) {
                     Zombie target = (Zombie) zombie.getRival();

@@ -24,7 +24,7 @@ public class Simple extends GamePlay {
                   ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         super(chapterType, level, difficulty, thisUser, plants, zombies, boosted);
         setLevelObjectives("Zombies shouldn't reach the house.");
-        //Zomboss zomboss = ZombieFactory.createZomboss("DARK", new Position(1700, 600));
+        //Zomboss zomboss = ZombieFactory.createZomboss("BEACH", new Position(1700, 600));
         //this.gameZombies.add(zomboss);
     }
 

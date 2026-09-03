@@ -15,6 +15,8 @@ public class Projectile {
     private static int Y_UP_LIMIT = 880;
     private static int Y_DOWN_LIMIT = 130;
     private static int X_LEFT_LIMIT = 490;
+    private static int TILE_Y_LENGTH = 150;
+    private static double TILE_X_LENGTH = 152.2;
     private static double VELOCITY_MULTIPLIER = 4;
 
     protected boolean isActive = true;
@@ -366,6 +368,14 @@ public class Projectile {
     }
 
     private void checkZombossCollision() {
+        if (this.name.equals("shark")) {
+            Position rowAndColumn = Position.getRowAndColumn(this.position);
+            Tile currentTile = GAME.getTileByPosition((int) rowAndColumn.getX(), (int) rowAndColumn.getY());
+            if (currentTile.isArable()) {
+                this.isActive = false;
+            }
+        }
+
         if (this.position.equals(this.target)) {
             this.isActive = false;
             destroyPlants(this.target);
@@ -378,10 +388,11 @@ public class Projectile {
         Tile target = GAME.getTileByPosition((int) rowAndColumn.getX(), (int) rowAndColumn.getY());
         for (BattlePlant plant : target.getPlants()) {
             plant.setCurrentHP(0);
+            plant.setAlive(false);
         }
 
         if (this.name.equals("fire")) {
-            spawnImpDragon(new Position(0, 0));
+            spawnImpDragon(position);
         }
 
         if (this.name.equals("missile")) {
@@ -397,13 +408,18 @@ public class Projectile {
             int randomColumn = RANDOM.nextInt(9) + 1;
 
             Tile tombTile = GAME.getTileByPosition(randomColumn, randomRow);
+            for (BattlePlant plant : tombTile.getPlants()) {
+                plant.setCurrentHP(0);
+                plant.setAlive(false);
+            }
             tombTile.setArable(false);
             tombTile.setHP(700);
         }
     }
 
     private void spawnImpDragon(Position target) {
-        Position zombiePosition = new Position(600, 700);
+        Position zombiePosition = new Position(target.getX(),
+            target.getY());
         Zombie impDragon = ZombieFactory.createZombie("IMP_DRAGON", zombiePosition);
         GAME.addZombieFromAbility(impDragon);
     }

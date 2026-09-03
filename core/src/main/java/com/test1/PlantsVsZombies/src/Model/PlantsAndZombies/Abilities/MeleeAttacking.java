@@ -85,6 +85,15 @@ public class MeleeAttacking implements Ability {
                 zombie.takeDamage(plant, damage);
             }
         }
+
+        for (BattlePlant plant1 : tile.getPlants()) {
+            if (plant1.isFrozen()) {
+                plant1.takeIceDamage(damage);
+            }
+            if (plant1.isOctopusated()) {
+                plant1.setOctopusHP(plant1.getOctopusHp() - damage);
+            }
+        }
     }
 
     private void takeDamage(Tile tile, int damage) {

@@ -1,7 +1,5 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 
-import com.test1.PlantsVsZombies.src.Enums.ChapterType;
-import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
@@ -17,6 +15,9 @@ public class Lobbing implements Ability {
     private static Random RANDOM = new Random();
     private GamePlay GAME = GamePlay.activeInstance;
 
+    private int targetColumn = -1;
+    private int targetRow = -1;
+
     @Override
     public void executeAbility(Entity entity) {
         BattlePlant plant = (BattlePlant) entity;
@@ -28,7 +29,7 @@ public class Lobbing implements Ability {
             return;
         }
 
-        Position target = findNearestTarget(plant);
+        Tile target = findNearestTarget(plant);
 
         if (target == null) {
             return;
@@ -85,8 +86,8 @@ public class Lobbing implements Ability {
                 plant,
                 plant.getPosition().getX(),
                 plant.getPosition().getY(),
-                target.getX(),
-                target.getY(),
+                targetColumn,
+                targetRow,
                 speed,
                 AoEDamage,
                 AoERange,
@@ -105,79 +106,53 @@ public class Lobbing implements Ability {
         GAME.getProjectiles().add(lobbedProjectile);
     }
 
-    private Position findNearestTarget(BattlePlant plant) {
+    private Tile findNearestTarget(BattlePlant plant) {
         int row = plant.getRow();
         int column = plant.getColumn();
 
-        Zombie nearestZombie = null;
-        double nearestZombieDistance = Double.MAX_VALUE;
+        targetColumn = -1;
+        targetRow = -1;
 
-        Position nearestTile = null;
-        double nearestTileDistance = Double.MAX_VALUE;
-
-        for (int i = column; i <= 9; i++) {
+        for (int i = column + 1; i <= 9; i++) {
             Tile tile = GAME.getTileByPosition(i, row);
 
-            if (tile == null) {continue;
+            if (tile == null) {
+                continue;
+            }
+
+            if (!tile.isArable() && tile.getHP() > 0) {
+                targetColumn = i;
+                targetRow = row;
+                return tile;
             }
 
             for (Zombie zombie : tile.getZombies()) {
-                if (zombie.getCurrentHP() <= 0) {
+                if (zombie.getCurrentHP() > 0) {
+                    targetColumn = i;targetRow = row;
+                    return tile;
+                }
+            }
+
+            for (BattlePlant targetPlant : tile.getPlants()) {
+                if (targetPlant.equals(plant)) {
                     continue;
                 }
 
-                double distance =
-                    Math.abs(
-                        zombie.getPosition().getX()
-                            - plant.getPosition().getX()
-                    );
-
-                if (distance < nearestZombieDistance) {
-                    nearestZombieDistance = distance;
-                    nearestZombie = zombie;
+                if (targetPlant.getCurrentHP() <= 0) {
+                    continue;
                 }
-            }
 
-            if (GAME.getChapterType().equals(ChapterType.ANCIENT_EGYPT) ||
-                GAME.getChapterType().equals(ChapterType.DARK_AGE) ||
-                GAME.getChapterType().equals(ChapterType.FROSTBITE_CAVES)) {
+                if (targetPlant.isFrozen() ||
+                    targetPlant.isOctopusated()) {
 
-                if (!tile.isArable() && tile.getHP() > 0) {
-                    double targetX = GAME.getRealX(i);
-                    double targetY = GAME.getRealY(row);
-
-                    double distance =
-                        Math.abs(
-                            targetX
-                                - plant.getPosition().getX()
-                        );
-
-                    if (distance < nearestTileDistance) {
-                        nearestTileDistance = distance;
-                        nearestTile =
-                            new Position(targetX, targetY);
-                    }
+                    targetColumn = i;
+                    targetRow = row;
+                    return tile;
                 }
             }
         }
 
-        if (nearestZombie == null && nearestTile == null) {
-            return null;
-        }
-
-        if (nearestZombie == null) {
-            return nearestTile;
-        }
-
-        if (nearestTile == null) {
-            return nearestZombie.getPosition();
-        }
-
-        if (nearestZombieDistance <= nearestTileDistance) {
-            return nearestZombie.getPosition();
-        }
-
-        return nearestTile;
+        return null;
     }
 
     private boolean checkTime(BattlePlant plant) {
