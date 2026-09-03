@@ -96,9 +96,9 @@ public class PlantWhatYouGet extends GamePlay {
             Zombie zombie = z.next();
             if (!zombie.isAlive()) {
                 killAward(this.thisUser);
-//                if (zombie.isHalated()) {
-//                    glowingAward(zombie.getPosition());
-//                }
+                if (zombie.isHalated()) {
+                    glowingAward(zombie.getPosition());
+                }
                 addKilledZombieCost(zombie.getWaveNum(), zombie.getCost());
                 z.remove();
             } else {
