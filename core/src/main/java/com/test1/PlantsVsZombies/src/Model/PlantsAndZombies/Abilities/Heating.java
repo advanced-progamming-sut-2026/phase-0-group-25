@@ -1,14 +1,13 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 
-import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 
 public class Heating implements Ability {
-    private static int ICE_MELTING_DAMAGE = 6;
-    private GamePlay GAME = GamePlay.activeInstance;
+    private static final int ICE_MELTING_DAMAGE = 6;
+    private final GamePlay GAME = GamePlay.activeInstance;
 
     @Override
     public void executeAbility(Entity entity) {

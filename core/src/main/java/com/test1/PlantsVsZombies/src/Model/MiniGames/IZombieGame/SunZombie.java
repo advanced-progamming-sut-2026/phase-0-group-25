@@ -6,7 +6,7 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 
 public class SunZombie extends Zombie {
     private int ticksSinceLastSun = 0;
-    private int baseInterval = 300;
+    private final int baseInterval = 300;
 
     public SunZombie(Position position) {
         super(GameDataLoader.getStatsForZombie("DEFAULT"), "SunZombie", position);

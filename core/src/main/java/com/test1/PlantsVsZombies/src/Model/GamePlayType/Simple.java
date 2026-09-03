@@ -1,7 +1,6 @@
 package com.test1.PlantsVsZombies.src.Model.GamePlayType;
 
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
-import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Model.Mower;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Dynamite;
@@ -15,7 +14,6 @@ import com.test1.PlantsVsZombies.src.View.LibGDXViews.UIManager;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 public class Simple extends GamePlay {

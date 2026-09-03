@@ -17,7 +17,7 @@ public enum Tag {
     TRAP,
     MOVE_ZOMBIES,
     SUN,
-    EXPLOSIVE;
+    EXPLOSIVE
 
 
 }

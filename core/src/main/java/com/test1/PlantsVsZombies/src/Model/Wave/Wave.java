@@ -1,17 +1,18 @@
 package com.test1.PlantsVsZombies.src.Model.Wave;
 
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
+
 import java.util.*;
 
 public class Wave {
     protected Queue<Zombie> pendingZombies;
     protected ArrayList<Zombie> spawnedZombie = new ArrayList<>();
     protected int totalZombies;
-    private int waveNum;
+    private final int waveNum;
     private Boolean isStarted = false;
-    private double waveCost;
+    private final double waveCost;
     private double initialTotalHealth;
-    private Random random = new Random();
+    private final Random random = new Random();
 
     public Wave(int waveCost, int waveNum) {
         this.waveCost = waveCost;

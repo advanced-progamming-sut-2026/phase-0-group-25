@@ -8,18 +8,16 @@ import java.util.Random;
 
 public class Zomboss extends Zombie {
 
-    private GamePlay GAME = GamePlay.activeInstance;
-    private static int ACTION_INTERVAL = 12;
-    private static int STUN_INTERVAL = 10;
-    private static int FIRE_INTERVAL = 5;
-
-    private static int X_RIGHT_LIMIT = 1860;
-    private static int Y_UP_LIMIT = 880;
-    private static int Y_DOWN_LIMIT = 130;
-    private static int X_LEFT_LIMIT = 490;
-    private static int TILE_Y_LENGTH = 150;
-    private static double TILE_X_LENGTH = 152.2;
-
+    private static final int ACTION_INTERVAL = 12;
+    private static final int STUN_INTERVAL = 10;
+    private static final int FIRE_INTERVAL = 5;
+    private static final int X_RIGHT_LIMIT = 1860;
+    private static final int Y_UP_LIMIT = 880;
+    private static final int Y_DOWN_LIMIT = 130;
+    private static final int X_LEFT_LIMIT = 490;
+    private static final int TILE_Y_LENGTH = 150;
+    private static final double TILE_X_LENGTH = 152.2;
+    private final GamePlay GAME = GamePlay.activeInstance;
     private int currentSecondRow;
 
     private boolean isStunned = false;

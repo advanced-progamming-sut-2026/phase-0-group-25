@@ -2,9 +2,12 @@ package com.test1.PlantsVsZombies.src.Model.GamePlayType;
 
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Model.Mower;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Dynamite;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.ZombieFactory;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 import com.test1.PlantsVsZombies.src.Model.User.User;
 import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
@@ -17,8 +20,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class PlantWhatYouGet extends GamePlay {
-    private boolean waveStarted = false;
     private final int INITIAL_SUN_BUDGET = 800;
+    private boolean waveStarted = false;
 
     public PlantWhatYouGet(ChapterType chapterType, int level, int difficulty, User thisUser,
                            ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {

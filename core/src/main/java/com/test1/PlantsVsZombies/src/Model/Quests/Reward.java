@@ -5,10 +5,10 @@ import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Enums.RewardType;
 
 public class Reward {
-    private RewardType type;
-    private int amount;
-    private PlantType plantType;
-    private ChapterType chapterType;
+    private final RewardType type;
+    private final int amount;
+    private final PlantType plantType;
+    private final ChapterType chapterType;
 
     public Reward(RewardType type, int amount) {
         this(type, amount, null, null);

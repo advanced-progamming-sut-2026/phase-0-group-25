@@ -23,8 +23,6 @@ import com.test1.PlantsVsZombies.src.View.ViewInterfaces.GameMenuView;
 public class GameScreen extends AbstractScreen implements GameMenuView {
 
 
-
-
     private static final String BACKGROUND_ASSET_ID = "IMAGE_MAINMENU_BACKGROUND";
     private static final String ERROR_BG_ASSET_ID = "IMAGE_UI_GENERIC_TIMER_RIBBON_RED";
 
@@ -35,12 +33,9 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
         "IMAGE_UI_GENERIC_BUTTONS_HUD_ZG_NORMAL";
 
 
-
-
     private static final float DEFAULT_ICON_BUTTON_SIZE = 70f;
     private static final float CHAPTER_ICON_WIDTH = 260f;
     private static final float CHAPTER_ICON_HEIGHT = 320f;
-
 
 
     private static final float CENTER_BLOCK_UPWARD_SHIFT = 60f;
@@ -59,8 +54,6 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
         screenStack.setFillParent(true);
 
 
-
-
         TextureRegion backgroundRegion = textureBank.region(BACKGROUND_ASSET_ID);
         if (backgroundRegion != null) {
             Image background = new Image(backgroundRegion);
@@ -69,12 +62,8 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
         }
 
 
-
-
         Table uiTable = new Table();
         uiTable.setFillParent(true);
-
-
 
 
         Table topBar = new Table();
@@ -105,8 +94,6 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
             .row();
 
 
-
-
         Chapter chapter = menuController.getChapter();
 
         Table centerBlock = new Table();
@@ -128,13 +115,7 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
         }
 
 
-
         centerBlock.padBottom(CENTER_BLOCK_UPWARD_SHIFT);
-
-
-
-
-
 
 
         ScrollPane.ScrollPaneStyle centerScrollStyle = new ScrollPane.ScrollPaneStyle();
@@ -149,9 +130,6 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
             .expand()
             .fill()
             .row();
-
-
-
 
 
         TextureRegion travelLogRegion = textureBank.region(TRAVEL_LOG_BUTTON_ASSET_ID);
@@ -235,10 +213,6 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
     }
 
 
-
-
-
-
     private Actor createChapterIcon(ChapterType chapterType) {
         String assetId = ChapterIslandAsset.getAssetId(chapterType);
         TextureRegion region = (assetId != null) ? textureBank.region(assetId) : null;
@@ -253,9 +227,6 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
         fallback.setColor(Color.WHITE);
         return fallback;
     }
-
-
-
 
 
     private void addLevels(Table levelsTable, Chapter chapter) {
@@ -324,14 +295,11 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
         });
 
 
-
-
         Label levelNumberLabel = createLabel(
             String.valueOf(level.getLevelNumber()),
             "FBUSV8C5EI_1",
             isUnlocked ? Color.WHITE : Color.LIGHT_GRAY
         );
-
 
 
         Table levelContainer = new Table();
@@ -371,15 +339,6 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
     }
 
 
-
-
-
-
-
-
-
-
-
     @Override
     public void showChapterEnterSuccess(String chapterName) {
         showToast("Entering " + chapterName, "IMAGE_UI_GENERIC_VTB");
@@ -391,5 +350,6 @@ public class GameScreen extends AbstractScreen implements GameMenuView {
     }
 
     @Override
-    public void showCurrentMenu() {}
+    public void showCurrentMenu() {
+    }
 }

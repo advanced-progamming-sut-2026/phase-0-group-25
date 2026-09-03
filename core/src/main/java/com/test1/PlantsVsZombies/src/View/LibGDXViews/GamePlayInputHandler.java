@@ -4,7 +4,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
-import com.test1.PlantsVsZombies.src.Model.GamePlayType.*;
+import com.test1.PlantsVsZombies.src.Model.GamePlayType.ConveyorBelt;
+import com.test1.PlantsVsZombies.src.Model.GamePlayType.ConveyorCard;
+import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
+import com.test1.PlantsVsZombies.src.Model.GamePlayType.PlantWhatYouGet;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
 import com.test1.PlantsVsZombies.src.Model.Tile;
@@ -13,19 +16,6 @@ import com.test1.PlantsVsZombies.src.Model.User.User;
 import java.util.ArrayList;
 
 public class GamePlayInputHandler extends InputAdapter {
-    private final GamePlay gamePlay;
-    private final OrthographicCamera camera;
-    private final GamePlayModals modals;
-    private final IntroDialogueCutscene introCutscene;
-    private final GamePlayScreen screen;
-
-    private final Vector3 mouseWorldPos = new Vector3();
-    private BattlePlant selectedPlant = null;
-    private ConveyorCard selectedConveyorCard = null;
-    private boolean isShovelSelected = false;
-    private boolean isPlantFoodSelected = false;
-
-
     private static final float SUN_PLUS_X = 190f, SUN_PLUS_Y = 1120f;
     private static final float PF_PLUS_X = 269f, PF_PLUS_Y = 1120f;
     private static final float PLUS_BTN_SIZE = 40f;
@@ -34,6 +24,16 @@ public class GamePlayInputHandler extends InputAdapter {
     private static final float SHOVEL_BTN_X = 1770f, SHOVEL_BTN_Y = 30f, SHOVEL_BTN_SIZE = 100f;
     private static final float START_WAVE_BTN_X = 1450f, START_WAVE_BTN_Y = 1100f, START_WAVE_BTN_W = 220f, START_WAVE_BTN_H = 75f;
     private static final float CARD_X = 45f, CARD_START_Y = 980f, CARD_WIDTH = 160f, CARD_HEIGHT = 105f, CARD_SPACING = 11f;
+    private final GamePlay gamePlay;
+    private final OrthographicCamera camera;
+    private final GamePlayModals modals;
+    private final IntroDialogueCutscene introCutscene;
+    private final GamePlayScreen screen;
+    private final Vector3 mouseWorldPos = new Vector3();
+    private BattlePlant selectedPlant = null;
+    private ConveyorCard selectedConveyorCard = null;
+    private boolean isShovelSelected = false;
+    private boolean isPlantFoodSelected = false;
 
     public GamePlayInputHandler(GamePlay gamePlay, OrthographicCamera camera, GamePlayModals modals,
                                 IntroDialogueCutscene introCutscene, GamePlayScreen screen) {
@@ -224,8 +224,19 @@ public class GamePlayInputHandler extends InputAdapter {
         isPlantFoodSelected = false;
     }
 
-    public Vector3 getMouseWorldPos() { return mouseWorldPos; }
-    public BattlePlant getSelectedPlant() { return selectedPlant; }
-    public boolean isShovelSelected() { return isShovelSelected; }
-    public boolean isPlantFoodSelected() { return isPlantFoodSelected; }
+    public Vector3 getMouseWorldPos() {
+        return mouseWorldPos;
+    }
+
+    public BattlePlant getSelectedPlant() {
+        return selectedPlant;
+    }
+
+    public boolean isShovelSelected() {
+        return isShovelSelected;
+    }
+
+    public boolean isPlantFoodSelected() {
+        return isPlantFoodSelected;
+    }
 }

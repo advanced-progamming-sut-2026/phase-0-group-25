@@ -20,12 +20,12 @@ import java.util.Set;
 public class ConveyorBelt extends GamePlay {
     protected final ArrayList<ConveyorCard> conveyorCards = new ArrayList<>();
     protected final List<String> plantPool;
-    protected int conveyorTimer = 0;
     protected final int SPAWN_INTERVAL_TICKS = 120;
     protected final int MAX_CARDS = 6;
     protected final float CARD_TOP_Y = 980f;
     protected final float CARD_HEIGHT = 105f;
     protected final float CARD_SPACING = 11f;
+    protected int conveyorTimer = 0;
 
     public ConveyorBelt(ChapterType chapterType, int level, int difficulty, User thisUser,
                         ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
@@ -102,7 +102,8 @@ public class ConveyorBelt extends GamePlay {
     }
 
     @Override
-    public void sunMaker() {}
+    public void sunMaker() {
+    }
 
     @Override
     public void update() {
@@ -232,5 +233,7 @@ public class ConveyorBelt extends GamePlay {
         }
     }
 
-    public ArrayList<ConveyorCard> getConveyorCards() { return conveyorCards; }
+    public ArrayList<ConveyorCard> getConveyorCards() {
+        return conveyorCards;
+    }
 }

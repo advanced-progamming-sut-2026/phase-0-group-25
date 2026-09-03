@@ -4,9 +4,9 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 
 public class ConveyorCard {
     private final BattlePlant plant;
+    private final float speed = 250f;
     private float currentY;
     private float targetY;
-    private final float speed = 250f;
 
     public ConveyorCard(BattlePlant plant, float startY) {
         this.plant = plant;
@@ -22,7 +22,15 @@ public class ConveyorCard {
         }
     }
 
-    public BattlePlant getPlant() { return plant; }
-    public float getCurrentY() { return currentY; }
-    public void setTargetY(float targetY) { this.targetY = targetY; }
+    public BattlePlant getPlant() {
+        return plant;
+    }
+
+    public float getCurrentY() {
+        return currentY;
+    }
+
+    public void setTargetY(float targetY) {
+        this.targetY = targetY;
+    }
 }

@@ -1,7 +1,5 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles;
 
-import com.test1.PlantsVsZombies.src.Enums.PlantType;
-
 public enum ProjectileConfig {
     PEA("pea",
         "768/INITIAL/EFFECTS/T_PEA_PROJECTILE/T_PEA_PROJECTILE.PAM", "animation"),

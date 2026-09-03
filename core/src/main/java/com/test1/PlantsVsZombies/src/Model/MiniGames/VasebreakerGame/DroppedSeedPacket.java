@@ -4,8 +4,8 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
 
 public class DroppedSeedPacket {
-    private BattlePlant plant;
-    private Position position;
+    private final BattlePlant plant;
+    private final Position position;
     private int remainingTicks; // زمان باقی‌مانده قبل از ناپدید شدن
 
     public DroppedSeedPacket(BattlePlant plant, Position position, int disappearTicks) {

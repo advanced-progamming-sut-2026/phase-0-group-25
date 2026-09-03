@@ -1,11 +1,9 @@
 package com.test1.PlantsVsZombies.src.Menu;
 
-import com.test1.PlantsVsZombies.src.Enums.Command;
 import com.test1.PlantsVsZombies.src.Enums.MenuType;
 import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.BaseView;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.LoginMenuView;
-import java.util.regex.Matcher;
 
 public class LoginMenu extends Menu {
     private final LoginMenuView loginMenuView;
@@ -15,7 +13,6 @@ public class LoginMenu extends Menu {
         super(MenuType.Signup);
         this.loginMenuView = loginMenuView;
     }
-
 
 
     public void loginUser(String username, String password, boolean stayLoggedIn) {

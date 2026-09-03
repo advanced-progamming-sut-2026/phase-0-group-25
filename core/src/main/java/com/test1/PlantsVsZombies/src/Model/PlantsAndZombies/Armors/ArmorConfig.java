@@ -1,6 +1,5 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Armors;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public enum ArmorConfig {

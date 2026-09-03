@@ -1,7 +1,6 @@
 package com.test1.PlantsVsZombies.src.Menu;
 
 import com.badlogic.gdx.Gdx;
-import com.test1.PlantsVsZombies.src.Enums.Command;
 import com.test1.PlantsVsZombies.src.Enums.GenderType;
 import com.test1.PlantsVsZombies.src.Enums.MenuType;
 import com.test1.PlantsVsZombies.src.Enums.SecurityQuestionType;
@@ -9,7 +8,6 @@ import com.test1.PlantsVsZombies.src.Model.User.User;
 import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.BaseView;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.SignUpMenuView;
-import java.util.regex.Matcher;
 
 public class SignUpMenu extends Menu {
     private final SignUpMenuView signUpMenuView;
@@ -51,7 +49,7 @@ public class SignUpMenu extends Menu {
             getView().showError("Invalid choice! Please select a valid number from the listed options.");
             return;
         }
-        if(answer.equals("")){
+        if (answer.equals("")) {
             getView().showError("You must enter an answer.");
             return;
         }

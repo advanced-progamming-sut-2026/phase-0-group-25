@@ -20,7 +20,7 @@ public class GameMenu extends Menu {
     private GameMenuView activeView;
     private GameMenuView levelSelectionView;
     private Chapter chapter;
-    private ArrayList<String> plantsStr;
+    private final ArrayList<String> plantsStr;
 
     public GameMenu(GameMenuView gameMenuView) {
         super(MenuType.Main);
@@ -59,6 +59,7 @@ public class GameMenu extends Menu {
                 .changeScreen((com.badlogic.gdx.Screen) this.chapterSelectionView);
         }
     }
+
     public Chapter getChapter() {
         return chapter;
     }

@@ -1,7 +1,6 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
-import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
@@ -14,7 +13,7 @@ import com.test1.PlantsVsZombies.src.Model.Tile;
 import java.util.ArrayList;
 
 public class ExplosionWithLifespan implements Ability {
-    private GamePlay GAME = GamePlay.activeInstance;
+    private final GamePlay GAME = GamePlay.activeInstance;
 
     @Override
     public void executeAbility(Entity entity) {
@@ -37,7 +36,6 @@ public class ExplosionWithLifespan implements Ability {
 
         if (tags.contains("AoE")) {
             AoEDamage(plant);
-            return;
         }
     }
 

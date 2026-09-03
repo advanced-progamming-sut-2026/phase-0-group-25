@@ -5,7 +5,7 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 
 public class Eating implements Ability {
-    private static int SNORKEL_X_LIMIT = 1403;
+    private static final int SNORKEL_X_LIMIT = 1403;
     private boolean isActivated = false;
 
     @Override
@@ -14,8 +14,7 @@ public class Eating implements Ability {
             Zombie zombie = (Zombie) entity;
             double damageAmount = zombie.getEatdps() * 0.1;
             if (zombie.isHypnotized()) {
-                if (zombie.getRival() instanceof Zombie) {
-                    Zombie target = (Zombie) zombie.getRival();
+                if (zombie.getRival() instanceof Zombie target) {
                     if (target.getCurrentHP() <= 0) {
                         this.isActivated = false;
                         makeMovingActivated(zombie);
@@ -35,8 +34,7 @@ public class Eating implements Ability {
 
             }
 
-            if (zombie.getRival() instanceof Zombie) {
-                Zombie target = (Zombie) zombie.getRival();
+            if (zombie.getRival() instanceof Zombie target) {
 
                 target.takeDamage(damageAmount);
                 checkTargetLife(zombie, target);
@@ -88,11 +86,11 @@ public class Eating implements Ability {
         }
     }
 
-    public void setActivated(boolean isActivated) {
-        this.isActivated = isActivated;
-    }
-
     public boolean isActivated() {
         return isActivated;
+    }
+
+    public void setActivated(boolean isActivated) {
+        this.isActivated = isActivated;
     }
 }

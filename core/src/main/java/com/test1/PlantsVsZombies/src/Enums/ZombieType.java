@@ -55,22 +55,15 @@ public enum ZombieType {
         this.stateName = stateName;
         this.visibility = new HashMap<>();
     }
+
     ZombieType(String name, String iconAssetId, String idleAnimationPath, String stateName, ArrayList<String> visibleParts) {
         this.name = name;
         this.iconAssetId = iconAssetId;
         this.idleAnimationPath = idleAnimationPath;
         this.stateName = stateName;
         this.visibility = new HashMap<>();
-        for (String visiblePart: visibleParts)
+        for (String visiblePart : visibleParts)
             visibility.put(visiblePart, true);
-    }
-
-    public HashMap<String, Boolean> getVisibility() {
-        return visibility;
-    }
-
-    public String getStateName() {
-        return stateName;
     }
 
     public static ZombieType fromName(String name) {
@@ -80,6 +73,14 @@ public enum ZombieType {
             }
         }
         throw new IllegalArgumentException("Unknown zombie name: " + name);
+    }
+
+    public HashMap<String, Boolean> getVisibility() {
+        return visibility;
+    }
+
+    public String getStateName() {
+        return stateName;
     }
 
     public String getName() {

@@ -1,25 +1,25 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
-import com.test1.PlantsVsZombies.src.Enums.PlantType;
-import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Modifier implements Ability {
-    private GamePlay GAME = GamePlay.activeInstance;
-
-    private static int X_RIGHT_LIMIT = 1860;
-    private static int Y_UP_LIMIT = 880;
-    private static int Y_DOWN_LIMIT = 130;
-    private static int X_LEFT_LIMIT = 490;
-    private static double X_TILE_LENGTH = 152.2;
-    private static int Y_TILE_LENGTH = 150;
+    private static final int X_RIGHT_LIMIT = 1860;
+    private static final int Y_UP_LIMIT = 880;
+    private static final int Y_DOWN_LIMIT = 130;
+    private static final int X_LEFT_LIMIT = 490;
+    private static final double X_TILE_LENGTH = 152.2;
+    private static final int Y_TILE_LENGTH = 150;
+    private final GamePlay GAME = GamePlay.activeInstance;
 
     @Override
     public void executeAbility(Entity entity) {

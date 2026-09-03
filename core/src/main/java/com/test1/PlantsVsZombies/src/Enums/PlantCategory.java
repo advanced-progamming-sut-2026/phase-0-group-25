@@ -15,18 +15,18 @@ public enum PlantCategory {
 
     private final String string;
 
-    public String getString() {
-        return string;
-    }
-
     PlantCategory(String string) {
         this.string = string;
     }
 
-    public static PlantCategory findCategoryByString(String string){
-        for (PlantCategory plantCategory: PlantCategory.values())
-            if(plantCategory.getString().equals(string))
+    public static PlantCategory findCategoryByString(String string) {
+        for (PlantCategory plantCategory : PlantCategory.values())
+            if (plantCategory.getString().equals(string))
                 return plantCategory;
         return null;
+    }
+
+    public String getString() {
+        return string;
     }
 }

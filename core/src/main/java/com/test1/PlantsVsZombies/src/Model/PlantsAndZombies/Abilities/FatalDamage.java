@@ -1,12 +1,12 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 
-import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 
 public class FatalDamage implements Ability {
     private boolean isActivated = false;
-    private GamePlay GAME = GamePlay.activeInstance;
+    private final GamePlay GAME = GamePlay.activeInstance;
 
     @Override
     public void executeAbility(Entity entity) {
@@ -38,11 +38,11 @@ public class FatalDamage implements Ability {
         }
     }
 
-    public void setActivated(boolean activated) {
-        this.isActivated = activated;
-    }
-
     public boolean isActivated() {
         return isActivated;
+    }
+
+    public void setActivated(boolean activated) {
+        this.isActivated = activated;
     }
 }

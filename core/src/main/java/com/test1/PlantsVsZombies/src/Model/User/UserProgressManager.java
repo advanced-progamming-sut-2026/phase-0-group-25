@@ -4,18 +4,17 @@ import com.test1.PlantsVsZombies.src.Enums.*;
 import com.test1.PlantsVsZombies.src.Model.Greenhouse.GreenhousePlant;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 public class UserProgressManager {
 
     private static final int PLANT_PURCHASE_COST = 2000;
     private static UserProgressManager instance;
-    private static int maxLevel = 4;
+    private static final int maxLevel = 4;
+
+    private UserProgressManager() {
+    }
 
     public static int getPlantPurchaseCost() {
         return PLANT_PURCHASE_COST;
@@ -25,17 +24,12 @@ public class UserProgressManager {
         return maxLevel;
     }
 
-
     public static int getRequiredCoinsForUpgrade(int currentLevel) {
         return currentLevel * 1000;
     }
 
-
     public static int getRequiredSeedPacketsForUpgrade(int currentLevel) {
         return currentLevel * 5;
-    }
-
-    private UserProgressManager() {
     }
 
     public static UserProgressManager getInstance() {
@@ -402,7 +396,6 @@ public class UserProgressManager {
             .getOrDefault(chapterType, 0);
 
 
-
         if (currentLevel > lastCompletedLevel) {
             markLevelCompleted(chapterType, currentLevel);
 
@@ -422,7 +415,7 @@ public class UserProgressManager {
         save();
     }
 
-    public void addGamesPlayed(){
+    public void addGamesPlayed() {
         getLoggedInUser().getUserProgress().addGamesPlayed();
         save();
     }

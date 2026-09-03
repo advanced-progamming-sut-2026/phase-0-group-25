@@ -42,15 +42,15 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
     // Measured from bottom-left of the original background
     // ==========================================
     private static final float[][] ORIGINAL_POT_X = {
-        { 560f, 734f, 900f, 1067f }, // Row 1 (y = 1)
-        { 560f, 734f, 900f, 1067f }, // Row 2 (y = 2)
-        { 560f, 734f, 900f, 1067f }  // Row 3 (y = 3)
+        {560f, 734f, 900f, 1067f}, // Row 1 (y = 1)
+        {560f, 734f, 900f, 1067f}, // Row 2 (y = 2)
+        {560f, 734f, 900f, 1067f}  // Row 3 (y = 3)
     };
 
     private static final float[][] POT_Y = {
-        { 420f, 420f, 420f, 420f }, // Row 1 (y = 1)
-        { 260f, 260f, 260f, 260f }, // Row 2 (y = 2)
-        { 95f, 95f, 95f, 95f }      // Row 3 (y = 3)
+        {420f, 420f, 420f, 420f}, // Row 1 (y = 1)
+        {260f, 260f, 260f, 260f}, // Row 2 (y = 2)
+        {95f, 95f, 95f, 95f}      // Row 3 (y = 3)
     };
 
     // Crop the background: remove 190px from left and right
@@ -357,7 +357,7 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
         title.setFontScale(1.1f);
         box.add(title).colspan(2).padBottom(20).row();
 
-        box.add(createBlackLabel("Cost: "+ GreenHouseManager.getPotCost() +" Gems")).colspan(2).left().padBottom(20).row();
+        box.add(createBlackLabel("Cost: " + GreenHouseManager.getPotCost() + " Gems")).colspan(2).left().padBottom(20).row();
 
         TextButton buyBtn = createSkinButton("Buy", "green", new ClickListener() {
             @Override
@@ -492,13 +492,49 @@ public class GreenHouseScreen extends AbstractScreen implements GreenHouseMenuVi
     // GreenHouseMenuView callbacks
     // ==========================================
 
-    @Override public void showGreenhouseStatus(String status) {}
-    @Override public void showError(String errorMessage) { showToast(errorMessage, ERROR_BG_ASSET_ID); }
-    @Override public void showPlantPlanted(String plantName, int x, int y) { refreshPots(); }
-    @Override public void showCollectedMarigold(int amount) { openRewardDialog("Collected Marigold: +" + amount + " coins."); }
-    @Override public void showCollectedBoost(String plantName) { openRewardDialog("Collected " + plantName + " -> greenhouse boost stored."); }
-    @Override public void showAlreadyHasBoost(String plantName) { openRewardDialog("You already have a boost for " + plantName + ". Pot cleared."); }
-    @Override public void showPotCleared() { refreshPots(); }
-    @Override public void showGrowthAccelerated() { refreshPots(); updateCurrencyHud(); }
-    @Override public void showCurrentMenu() { updateCurrencyHud(); refreshPots(); }
+    @Override
+    public void showGreenhouseStatus(String status) {
+    }
+
+    @Override
+    public void showError(String errorMessage) {
+        showToast(errorMessage, ERROR_BG_ASSET_ID);
+    }
+
+    @Override
+    public void showPlantPlanted(String plantName, int x, int y) {
+        refreshPots();
+    }
+
+    @Override
+    public void showCollectedMarigold(int amount) {
+        openRewardDialog("Collected Marigold: +" + amount + " coins.");
+    }
+
+    @Override
+    public void showCollectedBoost(String plantName) {
+        openRewardDialog("Collected " + plantName + " -> greenhouse boost stored.");
+    }
+
+    @Override
+    public void showAlreadyHasBoost(String plantName) {
+        openRewardDialog("You already have a boost for " + plantName + ". Pot cleared.");
+    }
+
+    @Override
+    public void showPotCleared() {
+        refreshPots();
+    }
+
+    @Override
+    public void showGrowthAccelerated() {
+        refreshPots();
+        updateCurrencyHud();
+    }
+
+    @Override
+    public void showCurrentMenu() {
+        updateCurrencyHud();
+        refreshPots();
+    }
 }

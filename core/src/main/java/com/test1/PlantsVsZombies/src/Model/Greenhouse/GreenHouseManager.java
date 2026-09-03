@@ -10,15 +10,15 @@ import java.util.Set;
 
 public class GreenHouseManager {
 
+    private static final int UNLOCK_POT_COST = 50; // Gems cost to unlock a pot
     private static GreenHouseManager instance;
     private final UsersManager usersManager;
-    private static final int UNLOCK_POT_COST = 50; // Gems cost to unlock a pot
 
     private GreenHouseManager() {
         usersManager = UsersManager.getInstance();
     }
 
-    public static int getPotCost(){
+    public static int getPotCost() {
         return UNLOCK_POT_COST;
     }
 

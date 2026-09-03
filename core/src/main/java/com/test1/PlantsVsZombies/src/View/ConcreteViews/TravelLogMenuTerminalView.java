@@ -26,7 +26,7 @@ public class TravelLogMenuTerminalView extends AbstractTerminalView implements T
             for (Quest q : activeQuests) {
                 String status = q.getCurrentProgress() + "/" + q.getRequiredCount();
                 System.out.printf("  [%s] %s (%s) - %s\n",
-                        q.getPriority(), q.getName(), status, q.getDescription());
+                    q.getPriority(), q.getName(), status, q.getDescription());
                 System.out.println("    ID: " + q.getId());
             }
         }
@@ -37,7 +37,7 @@ public class TravelLogMenuTerminalView extends AbstractTerminalView implements T
         } else {
             for (Quest q : completedQuests) {
                 System.out.printf("  [%s] %s - %s\n",
-                        q.getPriority(), q.getName(), q.getDescription());
+                    q.getPriority(), q.getName(), q.getDescription());
                 System.out.println("    ID: " + q.getId() + " (use 'claim quest -q <id>')");
             }
         }

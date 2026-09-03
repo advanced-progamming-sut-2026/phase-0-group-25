@@ -12,7 +12,6 @@ import com.test1.PlantsVsZombies.src.Enums.ChapterIslandAsset;
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Enums.MenuType;
 import com.test1.PlantsVsZombies.src.Menu.GameMenu;
-import com.test1.PlantsVsZombies.src.Menu.MenuManager;
 import com.test1.PlantsVsZombies.src.Model.User.User;
 import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.GameMenuView;
@@ -94,8 +93,6 @@ public class ChooseChapterScreen extends AbstractScreen implements GameMenuView 
             && user.getUserProgress().getUnlockedChaptersAndLevels().containsKey(chapterType));
 
 
-
-
         int levelsDone = 0;
         if (isUnlocked) {
             int lastCompletedLevel = user.getUserProgress().getUnlockedChaptersAndLevels().getOrDefault(chapterType, 0);
@@ -163,5 +160,6 @@ public class ChooseChapterScreen extends AbstractScreen implements GameMenuView 
     }
 
     @Override
-    public void showCurrentMenu() {}
+    public void showCurrentMenu() {
+    }
 }

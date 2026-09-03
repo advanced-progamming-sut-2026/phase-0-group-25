@@ -17,16 +17,15 @@ import java.util.List;
 import java.util.Set;
 
 public class WalnutBowling extends GamePlay {
+    private static final float CARD_START_Y = 980f;
+    private static final float CARD_HEIGHT = 105f;
+    private static final float CARD_SPACING = 11f;
     static int spawnX = 1850;
     private final int RED_LINE_LIMIT_X = 3;
     private final MiniGameType miniGameType = MiniGameType.WALNUT_BOWLING;
     private final ArrayList<BowlingCard> conveyorBelt = new ArrayList<>();
     private final ArrayList<Walnut> activeWalnuts = new ArrayList<>();
     private final List<float[]> activeExplosions = new ArrayList<>();
-
-    private static final float CARD_START_Y = 980f;
-    private static final float CARD_HEIGHT = 105f;
-    private static final float CARD_SPACING = 11f;
 
     public WalnutBowling(ChapterType chapterType, int level, int difficulty, User thisUser,
                          ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
@@ -40,7 +39,8 @@ public class WalnutBowling extends GamePlay {
     }
 
     @Override
-    public void sunMaker() {}
+    public void sunMaker() {
+    }
 
     public void generateConveyorPlants() {
         if (conveyorBelt.size() < 7) {
@@ -147,13 +147,7 @@ public class WalnutBowling extends GamePlay {
 
             if (!zombie.isAlive() || zombie.getCurrentHP() <= 0) {
                 killAward(this.thisUser);
-                Position zPos = Position.getRowAndColumn(zombie.getPosition());
-                System.out.printf("Zombie of type %s is dead at (%d, %d)\n",
-                    zombie.getName(), (int) zPos.getX(), (int) zPos.getY());
-
-
                 addKilledZombieCost(zombie.getWaveNum(), zombie.getCost());
-
                 z.remove();
             } else {
                 zombie.update();
@@ -214,7 +208,15 @@ public class WalnutBowling extends GamePlay {
         UsersManager.getInstance().handleMiniGameWin(miniGameType, this.level);
     }
 
-    public ArrayList<BowlingCard> getConveyorBelt() { return conveyorBelt; }
-    public ArrayList<Walnut> getActiveWalnuts() { return activeWalnuts; }
-    public List<float[]> getActiveExplosions() { return activeExplosions; }
+    public ArrayList<BowlingCard> getConveyorBelt() {
+        return conveyorBelt;
+    }
+
+    public ArrayList<Walnut> getActiveWalnuts() {
+        return activeWalnuts;
+    }
+
+    public List<float[]> getActiveExplosions() {
+        return activeExplosions;
+    }
 }

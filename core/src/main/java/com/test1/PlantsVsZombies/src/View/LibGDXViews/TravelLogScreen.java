@@ -16,35 +16,25 @@ import com.test1.PlantsVsZombies.src.Menu.TravelLogMenu;
 import com.test1.PlantsVsZombies.src.Model.Quests.Quest;
 import com.test1.PlantsVsZombies.src.Model.Quests.QuestManager;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.TravelLogMenuView;
-import pvz.libpvz.textures.TextureBank;
 import pvz.skin.BorderedTable;
-import pvz.skin.PvzSkin;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView {
-
-    private enum Tab { QUESTS, MINIGAMES }
 
     private static final String BACKGROUND_ASSET_ID = "IMAGE_UI_QUESTS_TRAVEL_LOG_FINAL";
     private static final String ERROR_BG_ASSET_ID = "IMAGE_UI_GENERIC_TIMER_RIBBON_RED";
     private static final String SUCCESS_BG_ASSET_ID = "IMAGE_UI_GENERIC_VTB";
-
     private static final String QUEST_CARD_BG_SKIN_DRAWABLE = "image_ui_powerups_powerup_cost_10";
-
     private static final String GO_TO_MINIGAMES_BUTTON_ASSET_ID = "IMAGE_UI_GENERIC_BUTTON_HUD_MINIGAMES_NORMAL";
     private static final String BACK_TO_QUESTS_BUTTON_ASSET_ID = "IMAGE_UI_GENERIC_BUTTONS_HUD_QUESTS_NORMAL";
     private static final String VASEBREAKER_ICON_ASSET_ID = "IMAGE_VASEBREAKER_VASE_BROWN_VASE_BROWN_115X150";
     private static final String WALNUT_BOWLING_ICON_ASSET_ID = "IMAGE_UI_PACKETS_WALLNUT";
     private static final String IZOMBIE_ICON_ASSET_ID = "IMAGE_UI_ALMANAC_PACKETS_ZOMBIES_TUTORIAL";
-
     private static final float DEFAULT_ICON_BUTTON_SIZE = 70f;
-
     private TravelLogMenu menuController;
     private Tab currentTab = Tab.QUESTS;
-
     private Table questsContentTable;
     private Table minigamesContentTable;
     private Table dailyQuestsSection;
@@ -52,7 +42,6 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
     private ScrollPane questsScrollPane;
     private Actor goToMinigamesButton;
     private Actor backToQuestsButton;
-
     // Overlay for BorderedTable pop-ups
     private Table activePopupOverlay;
 
@@ -177,10 +166,6 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
         refreshQuests();
     }
 
-    // ============================================================
-    // TAB SWITCHING
-    // ============================================================
-
     private void switchTab(Tab tab) {
         currentTab = tab;
         updateTabVisibility();
@@ -189,16 +174,16 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
         }
     }
 
+    // ============================================================
+    // TAB SWITCHING
+    // ============================================================
+
     private void updateTabVisibility() {
         questsContentTable.setVisible(currentTab == Tab.QUESTS);
         minigamesContentTable.setVisible(currentTab == Tab.MINIGAMES);
         goToMinigamesButton.setVisible(currentTab == Tab.QUESTS);
         backToQuestsButton.setVisible(currentTab == Tab.MINIGAMES);
     }
-
-    // ============================================================
-    // QUESTS TAB (SCROLLABLE & SEPARATED)
-    // ============================================================
 
     private Table buildQuestsView() {
         Table mainContainer = new Table();
@@ -242,6 +227,10 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
         mainContainer.add(questsScrollPane).expand().fill().minHeight(0).row();
         return mainContainer;
     }
+
+    // ============================================================
+    // QUESTS TAB (SCROLLABLE & SEPARATED)
+    // ============================================================
 
     private Table createSectionHeader(String title) {
         Table header = new Table();
@@ -370,10 +359,6 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
         return card;
     }
 
-    // ============================================================
-    // MINI GAMES TAB
-    // ============================================================
-
     private Table buildMinigamesView() {
         Table container = new Table();
         container.center();
@@ -398,6 +383,10 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
 
         return container;
     }
+
+    // ============================================================
+    // MINI GAMES TAB
+    // ============================================================
 
     private Table buildMiniGameCard(MiniGameType type, String iconAssetId, String description) {
         Table card = new Table();
@@ -438,7 +427,6 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
         return card;
     }
 
-
     private void showPopup(Table popupTable) {
         closePopup();
 
@@ -463,7 +451,6 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
             activePopupOverlay = null;
         }
     }
-
 
     private void showIZombieMatchmakingDialog() {
         BorderedTable popup = new BorderedTable();
@@ -579,7 +566,6 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
         showPopup(popup);
     }
 
-
     private void showWaitingForUserPopup(String targetUsername) {
         BorderedTable popup = new BorderedTable();
         popup.pad(25);
@@ -605,14 +591,14 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
         showPopup(popup);
     }
 
-    // ============================================================
-    // TravelLogMenuView callbacks
-    // ============================================================
-
     @Override
     public void showQuests(List<Quest> activeQuests, List<Quest> completedQuests, QuestPage page) {
         refreshQuests();
     }
+
+    // ============================================================
+    // TravelLogMenuView callbacks
+    // ============================================================
 
     @Override
     public void showMinigames() {
@@ -620,7 +606,8 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
     }
 
     @Override
-    public void showMiniGameLaunched(String miniGameName) {}
+    public void showMiniGameLaunched(String miniGameName) {
+    }
 
     @Override
     public void showRewardClaimed(String questId) {
@@ -639,4 +626,6 @@ public class TravelLogScreen extends AbstractScreen implements TravelLogMenuView
         updateCurrencyHud();
         refreshQuests();
     }
+
+    private enum Tab {QUESTS, MINIGAMES}
 }

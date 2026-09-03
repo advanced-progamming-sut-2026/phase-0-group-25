@@ -1,15 +1,12 @@
 package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.test1.PlantsVsZombies.src.Enums.MenuType;
@@ -26,36 +23,25 @@ public class SignUpMenuScreen extends AbstractScreen implements SignUpMenuView {
     private static final String SUCCESS_BG_ASSET_ID = "IMAGE_UI_GENERIC_VTB";
     private static final String LEFT_ARROW_ASSET_ID = "IMAGE_UI_GENERIC_ARROW_LEFT_GREEN";
     private static final String RIGHT_ARROW_ASSET_ID = "IMAGE_UI_GENERIC_ARROW_RIGHT_GREEN";
-
-    private SignUpMenu menuController;
-
-
-    private Table mainContainer;
-    private BorderedTable registrationTable;
-    private BorderedTable securityQuestionTable;
-
-
-    private TextField usernameField;
-    private TextField passwordField;
-    private TextField passwordConfirmField;
-    private TextField nicknameField;
-    private TextField emailField;
-
-
-    private String selectedGender = "Male";
-    private CheckBox maleCheckBox;
-    private CheckBox femaleCheckBox;
-    private ButtonGroup<CheckBox> genderGroup;
-
-
-    private int selectedQuestionIndex = 0;
-
     private final String[] securityQuestions = new String[]{
         SecurityQuestionType.FAVORITE_COLOR.getDescription(),
         SecurityQuestionType.FIRST_PET.getDescription(),
         SecurityQuestionType.BORN_CITY.getDescription()
     };
-
+    private SignUpMenu menuController;
+    private Table mainContainer;
+    private BorderedTable registrationTable;
+    private BorderedTable securityQuestionTable;
+    private TextField usernameField;
+    private TextField passwordField;
+    private TextField passwordConfirmField;
+    private TextField nicknameField;
+    private TextField emailField;
+    private String selectedGender = "Male";
+    private CheckBox maleCheckBox;
+    private CheckBox femaleCheckBox;
+    private ButtonGroup<CheckBox> genderGroup;
+    private int selectedQuestionIndex = 0;
     private Label questionLabel;
     private TextField answerField;
     private TextField answerConfirmField;
@@ -121,9 +107,6 @@ public class SignUpMenuScreen extends AbstractScreen implements SignUpMenuView {
         emailField = new TextField("", skin);
 
 
-
-
-
         maleCheckBox = new CheckBox("Male", skin);
         femaleCheckBox = new CheckBox("Female", skin);
         maleCheckBox.getLabel().setColor(Color.BLACK);
@@ -158,9 +141,6 @@ public class SignUpMenuScreen extends AbstractScreen implements SignUpMenuView {
         Table genderContainer = new Table();
         genderContainer.add(maleCheckBox).padRight(15);
         genderContainer.add(femaleCheckBox);
-
-
-
 
 
         TextButton registerButton =

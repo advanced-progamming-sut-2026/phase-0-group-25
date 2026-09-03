@@ -262,12 +262,18 @@ public class ShopScreen extends AbstractScreen implements ShopMenuView {
 
     private String getImageAssetIdForType(ShopItemType type) {
         switch (type) {
-            case POT: return POT_IMAGE_ASSET_ID;
-            case PLANT_FOOD: return PLANT_FOOD_IMAGE_ASSET_ID;
-            case RANDOM_SEED_PACKET: return RANDOM_SEED_IMAGE_ASSET_ID;
-            case SELECTIVE_SEED_PACKET: return SELECTIVE_SEED_IMAGE_ASSET_ID;
-            case CURRENCY_EXCHANGE: return CURRENCY_EXCHANGE_IMAGE_ASSET_ID;
-            default: return null;
+            case POT:
+                return POT_IMAGE_ASSET_ID;
+            case PLANT_FOOD:
+                return PLANT_FOOD_IMAGE_ASSET_ID;
+            case RANDOM_SEED_PACKET:
+                return RANDOM_SEED_IMAGE_ASSET_ID;
+            case SELECTIVE_SEED_PACKET:
+                return SELECTIVE_SEED_IMAGE_ASSET_ID;
+            case CURRENCY_EXCHANGE:
+                return CURRENCY_EXCHANGE_IMAGE_ASSET_ID;
+            default:
+                return null;
         }
     }
 

@@ -48,8 +48,6 @@ public class UsersManager {
     }
 
 
-
-
     private void startProgressSyncThread() {
         Thread thread = new Thread(() -> {
             while (true) {
@@ -345,7 +343,7 @@ public class UsersManager {
         progressManager.addPlantFood(amount);
     }
 
-    public void reducePlantFood(int amount){
+    public void reducePlantFood(int amount) {
         progressManager.reducePlantFood(amount);
     }
 
@@ -458,7 +456,7 @@ public class UsersManager {
         progressManager.handleLevelWin(chapterType, currentLevel, plantRewards);
     }
 
-    public void addGamesPlayed(){
+    public void addGamesPlayed() {
         progressManager.addGamesPlayed();
     }
 
@@ -516,14 +514,14 @@ public class UsersManager {
         return loggedInUser.getUserProgress().isShowTileGrid();
     }
 
+    public boolean isDebugMode() {
+        return loggedInUser != null && loggedInUser.isDebugMode();
+    }
+
     public void setDebugMode(boolean debug) {
         if (loggedInUser != null) {
             loggedInUser.setDebugMode(debug);
             updateUser();
         }
-    }
-
-    public boolean isDebugMode() {
-        return loggedInUser != null && loggedInUser.isDebugMode();
     }
 }

@@ -33,26 +33,22 @@ public class IZombieScreen extends ScreenAdapter implements GamePlayMenuView {
     private static final float REACTION_LIFETIME = 3.5f;
 
     private final IZombie gamePlay;
-
+    private final List<ActiveReaction> activeReactions = new ArrayList<>();
+    private final Consumer<NetworkMessage> opponentGameStateListener = this::handleOpponentGameState;
     private OrthographicCamera camera;
     private ShapeRenderer shapeRenderer;
     private SpriteBatch batch;
     private TextureBank textureBank;
     private PamPlayer player;
     private BitmapFont hudFont;
-
     private GamePlayModals modals;
+    private final Consumer<NetworkMessage> opponentDisconnectedListener = this::handleOpponentDisconnected;
     private IZombieWorldRenderer worldRenderer;
     private IZombieHudRenderer hudRenderer;
     private IZombieHudInputState hudInputState;
-
     private float stateTime = 0f;
-    private float tickAccumulator = 0f;
-    private final List<ActiveReaction> activeReactions = new ArrayList<>();
-
-    private final Consumer<NetworkMessage> opponentGameStateListener = this::handleOpponentGameState;
     private final Consumer<NetworkMessage> reactionReceivedListener = this::handleReactionReceived;
-    private final Consumer<NetworkMessage> opponentDisconnectedListener = this::handleOpponentDisconnected;
+    private float tickAccumulator = 0f;
     private boolean networkListenersRegistered = false;
 
     public IZombieScreen(IZombie gamePlay) {
@@ -139,7 +135,8 @@ public class IZombieScreen extends ScreenAdapter implements GamePlayMenuView {
             int index = intValue(data, "index");
             String fromUsername = stringValue(data, "fromUsername");
             activeReactions.add(new ActiveReaction(category, index, fromUsername != null ? fromUsername : "Opponent", stateTime));
-        } catch (IllegalArgumentException ignored) {}
+        } catch (IllegalArgumentException ignored) {
+        }
     }
 
     private void handleOpponentDisconnected(NetworkMessage message) {
@@ -192,7 +189,7 @@ public class IZombieScreen extends ScreenAdapter implements GamePlayMenuView {
         batch.setProjectionMatrix(camera.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
 
-        activeReactions.removeIf(reaction -> stateTime - reaction.spawnStateTime > REACTION_LIFETIME);
+        activeReactions.removeIf(reaction -> stateTime - reaction.spawnStateTime() > REACTION_LIFETIME);
 
         worldRenderer.render(batch, shapeRenderer, gamePlay, stateTime, activeReactions);
         hudRenderer.render(batch, shapeRenderer, gamePlay, hudInputState, stateTime, activeReactions);
@@ -256,8 +253,12 @@ public class IZombieScreen extends ScreenAdapter implements GamePlayMenuView {
         }
     }
 
-    @Override public void showCurrentMenu() {}
-    @Override public void showError(String errorMessage) {
+    @Override
+    public void showCurrentMenu() {
+    }
+
+    @Override
+    public void showError(String errorMessage) {
         UIManager.showToast(errorMessage, ERROR_BG_ASSET_ID);
     }
 }

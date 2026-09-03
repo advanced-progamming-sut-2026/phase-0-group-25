@@ -5,7 +5,7 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 
 public class Flying implements Ability {
-    private static int TILE_X_LENGTH = 200;
+    private static final int TILE_X_LENGTH = 200;
     private boolean isActivated = false;
 
     @Override
@@ -14,8 +14,8 @@ public class Flying implements Ability {
             Zombie zombie = (Zombie) entity;
 
             zombie.setPosition(new Position(
-                    zombie.getPosition().getX() - TILE_X_LENGTH,
-                    zombie.getPosition().getY()
+                zombie.getPosition().getX() - TILE_X_LENGTH,
+                zombie.getPosition().getY()
             ));
 
             this.isActivated = false;
@@ -31,11 +31,11 @@ public class Flying implements Ability {
         }
     }
 
-    public void setActivated(boolean isActivated) {
-        this.isActivated = isActivated;
-    }
-
     public boolean isActivated() {
         return isActivated;
+    }
+
+    public void setActivated(boolean isActivated) {
+        this.isActivated = isActivated;
     }
 }

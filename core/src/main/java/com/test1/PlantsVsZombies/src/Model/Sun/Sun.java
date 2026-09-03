@@ -3,16 +3,15 @@ package com.test1.PlantsVsZombies.src.Model.Sun;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
 
 public class Sun {
+    private static final double X_DISTANCE = 10;
+    private static final double Y_DISTANCE = 10;
     private final int numberOfSun;
-    private Position position;
+    private final Position position;
     private double timeToReach;
-    private double targetY;
+    private final double targetY;
     private boolean isCollected = false;
     private boolean isFromSky;
-    private float fallSpeed = 120f;
-
-    private static double X_DISTANCE = 10;
-    private static double Y_DISTANCE = 10;
+    private final float fallSpeed = 120f;
 
     public Sun(int numberOfSun, Position position) {
         this.numberOfSun = numberOfSun;

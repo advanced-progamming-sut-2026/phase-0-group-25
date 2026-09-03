@@ -13,8 +13,10 @@ import java.util.List;
 import java.util.Random;
 
 public class ShopManager {
+    private static final int DAILY_OFFER_PRICE = 1600;
+    private static final int DAILY_OFFER_SEED_PACKET_COUNT = 10;
     private static ShopManager instance;
-    private List<ShopItem> permanentItems;
+    private final List<ShopItem> permanentItems;
     private DailyOffer dailyOffer;
 
     private ShopManager() {
@@ -43,9 +45,6 @@ public class ShopManager {
         permanentItems.add(new ShopItem(5, "Currency Exchange", ShopItemType.CURRENCY_EXCHANGE, 5, WalletType.DIAMOND, 500, 0,
             "Exchange 5 gems for 500 coins"));
     }
-
-    private static final int DAILY_OFFER_PRICE = 1600;
-    private static final int DAILY_OFFER_SEED_PACKET_COUNT = 10;
 
     /**
      * Picks a brand-new random unlocked plant for today and persists it to

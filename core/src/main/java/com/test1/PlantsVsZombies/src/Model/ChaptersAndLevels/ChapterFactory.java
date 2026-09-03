@@ -2,7 +2,6 @@ package com.test1.PlantsVsZombies.src.Model.ChaptersAndLevels;
 
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Enums.GamePlayType;
-import com.test1.PlantsVsZombies.src.Enums.PlantType;
 
 public class ChapterFactory {
 

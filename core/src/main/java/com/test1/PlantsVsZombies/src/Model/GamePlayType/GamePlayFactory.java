@@ -10,7 +10,7 @@ import java.util.Set;
 public class GamePlayFactory {
 
     public static GamePlay createGamePlay(GamePlayType type, ChapterType chapterType, int level, int difficulty, User user, ArrayList<String> plants, ArrayList<String> zombies
-            , Set<String> boosted) {
+        , Set<String> boosted) {
         if (type == null) {
             type = GamePlayType.SIMPLE;
         }

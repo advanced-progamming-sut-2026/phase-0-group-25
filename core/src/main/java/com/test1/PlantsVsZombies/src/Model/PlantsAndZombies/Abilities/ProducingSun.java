@@ -1,6 +1,5 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 
-import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
@@ -9,7 +8,7 @@ import com.test1.PlantsVsZombies.src.Model.Sun.Sun;
 import java.util.List;
 
 public class ProducingSun implements Ability {
-    private GamePlay GAME = GamePlay.activeInstance;
+    private final GamePlay GAME = GamePlay.activeInstance;
 
     private boolean isCollected = false;
     private boolean isProduced = false;
@@ -59,10 +58,8 @@ public class ProducingSun implements Ability {
         double timeDifference = 10 * (currentTime - plant.getEffectedTime());
         timeDifference = Math.floor(timeDifference);
         timeDifference /= 10;
-        if ((timeDifference % 1) == 0) {//every second, sun producers execute their special ability
-            return true;
-        }
-        return false;
+        //every second, sun producers execute their special ability
+        return (timeDifference % 1) == 0;
     }
 
     private void plantFoodEffect(BattlePlant plant) {

@@ -3,14 +3,12 @@ package com.test1.PlantsVsZombies.src.Model.MiniGames.WallnutBowlingGame;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 
 public class BowlingWalnut extends Walnut {
+    private static final float MIN_LAWN_Y = 205f;
+    private static final float MAX_LAWN_Y = 805f;
     private final int NORMAL_DAMAGE = 400;
     private double velocityX = 1.0;
     private double velocityY = 0.0;
     private int hitCount = 0;
-
-
-    private static final float MIN_LAWN_Y = 205f;
-    private static final float MAX_LAWN_Y = 805f;
 
     public BowlingWalnut(double x, double y) {
         super(x, y);
@@ -25,9 +23,7 @@ public class BowlingWalnut extends Walnut {
         if (y <= MIN_LAWN_Y && velocityY < 0) {
             y = MIN_LAWN_Y;
             velocityY = -velocityY;
-        }
-
-        else if (y >= MAX_LAWN_Y && velocityY > 0) {
+        } else if (y >= MAX_LAWN_Y && velocityY > 0) {
             y = MAX_LAWN_Y;
             velocityY = -velocityY;
         }

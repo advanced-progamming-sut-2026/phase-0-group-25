@@ -15,7 +15,9 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Enums.MenuType;
 import com.test1.PlantsVsZombies.src.Menu.MenuManager;
-import com.test1.PlantsVsZombies.src.Model.GamePlayType.*;
+import com.test1.PlantsVsZombies.src.Model.GamePlayType.ConveyorBelt;
+import com.test1.PlantsVsZombies.src.Model.GamePlayType.ConveyorCard;
+import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.Mower;
 import com.test1.PlantsVsZombies.src.Model.Sun.Sun;
 import com.test1.PlantsVsZombies.src.Model.User.User;
@@ -28,6 +30,7 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     private static final String ERROR_BG_ASSET_ID = "IMAGE_UI_GENERIC_TIMER_RIBBON_RED";
 
     private final GamePlay gamePlay;
+    private final float TICK_RATE = 0.1f;
     private OrthographicCamera camera;
     private ShapeRenderer shapeRenderer;
     private SpriteBatch batch;
@@ -35,11 +38,8 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     private TextureBank textureBank;
     private PamPlayer player;
     private BitmapFont hudFont;
-
     private float stateTime = 0;
     private float timeAccumulator = 0f;
-    private final float TICK_RATE = 0.1f;
-
     private GamePlayModals modals;
     private IntroDialogueCutscene introCutscene;
     private GamePlayWorldRenderer worldRenderer;
@@ -168,7 +168,8 @@ public class GamePlayScreen extends ScreenAdapter implements GamePlayMenuView {
     }
 
     @Override
-    public void showCurrentMenu() {}
+    public void showCurrentMenu() {
+    }
 
     @Override
     public void showError(String errorMessage) {

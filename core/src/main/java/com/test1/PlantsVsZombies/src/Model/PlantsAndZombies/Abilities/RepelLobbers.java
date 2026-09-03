@@ -1,6 +1,5 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 
-import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.LobbedProjectile;
@@ -8,7 +7,7 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projecti
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 
 public class RepelLobbers implements Ability {
-    private GamePlay GAME = GamePlay.activeInstance;
+    private final GamePlay GAME = GamePlay.activeInstance;
 
     @Override
     public void executeAbility(Entity entity) {

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 public class QuestManager {
     private static QuestManager instance;
-    private List<Quest> allQuests;
+    private final List<Quest> allQuests;
     private User currentUser;
 
     private QuestManager() {
@@ -184,7 +184,7 @@ public class QuestManager {
                         break;
                     }
                 }
-                if(plantToUnlock == null)
+                if (plantToUnlock == null)
                     UIManager.showToast("no plant to unlock!", "IMAGE_UI_GENERIC_TIMER_RIBBON_RED");
                 else {
                     um.unlockPlant(plantToUnlock);

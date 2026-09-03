@@ -1,16 +1,18 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
-import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 
 
 public class Moving implements Ability {
-    private static int SNORKEL_X_LIMIT = 1403;
-    private static int PIANO_ACTION_INTERVAL = 20;
-    private GamePlay GAME = GamePlay.activeInstance;
+    private static final int SNORKEL_X_LIMIT = 1403;
+    private static final int PIANO_ACTION_INTERVAL = 20;
+    private final GamePlay GAME = GamePlay.activeInstance;
 
 
     private boolean isActivated = true;
@@ -39,11 +41,7 @@ public class Moving implements Ability {
                     zombie.setLastActionTime(GAME.getTotalTimePassed());
                 }
             } else if ((zombie.getZombieStats().getName().equals("SNORKEL"))) {
-                if (zombie.getPosition().getX() <= SNORKEL_X_LIMIT) {
-                    zombie.setSubmarine(false);
-                } else {
-                    zombie.setSubmarine(true);
-                }
+                zombie.setSubmarine(!(zombie.getPosition().getX() <= SNORKEL_X_LIMIT));
             }
             Tile zombieTile = GAME.getTileByPosition(zombie.getColumn(), zombie.getRow());
             if (zombieTile == null) {
@@ -198,24 +196,17 @@ public class Moving implements Ability {
 
     public boolean isFlyable(BattlePlant plant) {
         if (plant.getPlantStats().getCategory().equals("Wall-nut")) {
-            if (plant.getPlantStats().getName().equals(PlantType.TALL_NUT.getName())) {
-                return false;
-            }
-            return true;
+            return !plant.getPlantStats().getName().equals(PlantType.TALL_NUT.getName());
         } else if (plant.getPlantStats().getCategory().equals("Explosive")) {
             return true;
-        } else if (plant.getPlantStats().getTags().contains("move-zombies")) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public void setActivated(boolean isActivated) {
-        this.isActivated = isActivated;
+        } else return plant.getPlantStats().getTags().contains("move-zombies");
     }
 
     public boolean isActivated() {
         return isActivated;
+    }
+
+    public void setActivated(boolean isActivated) {
+        this.isActivated = isActivated;
     }
 }

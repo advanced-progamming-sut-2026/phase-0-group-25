@@ -12,9 +12,23 @@ public class Brain {
         this.y = y;
     }
 
-    public int getRow() { return row; }
-    public float getX() { return x; }
-    public float getY() { return y; }
-    public boolean isEaten() { return eaten; }
-    public void setEaten(boolean eaten) { this.eaten = eaten; }
+    public int getRow() {
+        return row;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public boolean isEaten() {
+        return eaten;
+    }
+
+    public void setEaten(boolean eaten) {
+        this.eaten = eaten;
+    }
 }

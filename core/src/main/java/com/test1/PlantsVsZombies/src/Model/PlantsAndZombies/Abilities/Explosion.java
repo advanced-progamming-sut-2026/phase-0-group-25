@@ -1,7 +1,6 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
-import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
@@ -14,8 +13,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Explosion implements Ability {
-    private static Random RANDOM = new Random();
-    private GamePlay GAME = GamePlay.activeInstance;
+    private static final Random RANDOM = new Random();
+    private final GamePlay GAME = GamePlay.activeInstance;
 
     @Override
     public void executeAbility(Entity entity) {
@@ -61,10 +60,7 @@ public class Explosion implements Ability {
     private boolean isNotArmored(BattlePlant plant) {
         if (plant.getPlantStats().getTags().contains("charge")) {
             int armTime = (int) plant.getPlantStats().getAttributes().get("armTime");
-            if ((GAME.getTotalTimePassed() - plant.getPlantTime()) < armTime) {
-                return true;
-            }
-            return false;
+            return (GAME.getTotalTimePassed() - plant.getPlantTime()) < armTime;
         }
 
         return false;

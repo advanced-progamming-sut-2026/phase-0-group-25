@@ -1,49 +1,38 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies;
 
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
-import com.test1.PlantsVsZombies.src.Enums.PlantCategory;
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities.*;
-import com.test1.PlantsVsZombies.src.Model.Quests.Events.ExplosiveUsedEvent;
-import com.test1.PlantsVsZombies.src.Model.Quests.QuestManager;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class BattlePlant extends Plant {
-    private static int PLANT_FOOD_EFFECT_TIME = 2;
-    private static int OCTOPUS_BASE_HP = 100;
+    private static final int PLANT_FOOD_EFFECT_TIME = 2;
+    private static final int OCTOPUS_BASE_HP = 100;
+    private final AnimationState animationState = new AnimationState();
     private boolean isEffected = false;
     private double effectedTime = 0;
     private double effectedLifeSpan;
     private double currentCoolDown;
-
     private double lastActionTime;
     private double plantTime;
-    private PlantStats plantStats;
-
+    private final PlantStats plantStats;
     private ArrayList<Ability> originalAbilities;
-
     private boolean frozen;
     private int iceTime;
     private double iceHP;
-
     private boolean isOctopusated = false;
     private double octopusHP;
-
     private boolean isCat = false;
     private Zombie wizard = null;
-
     private String status = "idle";
     private double armorHP = 0.0;
     private double dieTime;
-
     private double attackTime;
-
-    private GamePlay GAME = GamePlay.activeInstance;
-    private final AnimationState animationState = new AnimationState();
+    private final GamePlay GAME = GamePlay.activeInstance;
 
     public BattlePlant(PlantStats plantStats, String name) {
         this.plantStats = plantStats;
@@ -331,6 +320,10 @@ public class BattlePlant extends Plant {
         return lastActionTime;
     }
 
+    public void setLastActionTime(double lastActionTime) {
+        this.lastActionTime = lastActionTime;
+    }
+
     public boolean isTimeForAction() {
         boolean actionIntervalBoolean = ((GAME.getTotalTimePassed() - this.lastActionTime) >= this.plantStats.getActionInterval());
       /*  if (this.name.equals(PlantType.CITRON.getName())) {
@@ -405,11 +398,6 @@ public class BattlePlant extends Plant {
     public void setStatus(String status) {
         this.status = status;
     }
-
-    public void setLastActionTime(double lastActionTime) {
-        this.lastActionTime = lastActionTime;
-    }
-
 
     public void checkSunProducer() {
         float difference = (float) (GAME.getTotalTimePassed() - this.lastActionTime);
@@ -616,11 +604,11 @@ public class BattlePlant extends Plant {
     }
 
     private void checkWizard() {
-        if(wizard == null){
+        if (wizard == null) {
             return;
         }
         if ((wizard.getCurrentHP() <= 0) ||
-            !(wizard.isAlive())){
+            !(wizard.isAlive())) {
             this.isCat = false;
         }
     }
