@@ -2,7 +2,6 @@ package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
-import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
@@ -11,13 +10,13 @@ import com.test1.PlantsVsZombies.src.Model.Tile;
 import java.util.List;
 
 public class Shooting implements Ability {
-    private static int TILE_Y_LENGTH = 150;
-    private static int X_RIGHT_LIMIT = 1860;
-    private static int Y_UP_LIMIT = 880;
-    private static int Y_DOWN_LIMIT = 130;
-    private static int X_LEFT_LIMIT = 490;
+    private static final int TILE_Y_LENGTH = 150;
+    private static final int X_RIGHT_LIMIT = 1860;
+    private static final int Y_UP_LIMIT = 880;
+    private static final int Y_DOWN_LIMIT = 130;
+    private static final int X_LEFT_LIMIT = 490;
 
-    private GamePlay GAME = GamePlay.activeInstance;
+    private final GamePlay GAME = GamePlay.activeInstance;
     private BattlePlant plant;
     private int startingPoint;
 
@@ -37,8 +36,8 @@ public class Shooting implements Ability {
     }
 
     private void runAbility(BattlePlant plant) {
-        List<Integer> damageAttributes = (List<Integer>) (Object) plant.getPlantStats().getAttributes().get("damage");
-        List<List<Integer>> directionAttributes = (List<List<Integer>>) (Object) plant.getPlantStats().getAttributes().get("direction");
+        List<Integer> damageAttributes = (List<Integer>) plant.getPlantStats().getAttributes().get("damage");
+        List<List<Integer>> directionAttributes = (List<List<Integer>>) plant.getPlantStats().getAttributes().get("direction");
         List<List<Double>> offsetAttributes = (List<List<Double>>) plant.getPlantStats().getAttributes().get("offset");
 
         int rangeAmount;
@@ -165,10 +164,8 @@ public class Shooting implements Ability {
         double timeDifference = 10 * (currentTime - plant.getEffectedTime());
         timeDifference = Math.floor(timeDifference);
         timeDifference /= 10;
-        if ((timeDifference % 0.5) == 0) {//every 0.5 second, shooters & strike-throughs execute their special ability
-            return true;
-        }
-        return false;
+        //every 0.5 second, shooters & strike-throughs execute their special ability
+        return (timeDifference % 0.5) == 0;
     }
 
     private void plantFoodEffect(BattlePlant plant) {
@@ -236,8 +233,8 @@ public class Shooting implements Ability {
 
     private void checkMegaProjectile(BattlePlant plant) {
         if (plant.getPlantStats().getPlantFoodEffect().containsKey("megaProjectile")) {
-            List<Integer> damageAttributes = (List<Integer>) (Object) plant.getPlantStats().getAttributes().get("damage");
-            List<List<Integer>> directionAttributes = (List<List<Integer>>) (Object) plant.getPlantStats().getAttributes().get("direction");
+            List<Integer> damageAttributes = (List<Integer>) plant.getPlantStats().getAttributes().get("damage");
+            List<List<Integer>> directionAttributes = (List<List<Integer>>) plant.getPlantStats().getAttributes().get("direction");
             List<List<Double>> offsetAttributes = (List<List<Double>>) plant.getPlantStats().getAttributes().get("offset");
 
             int rangeAmount = 11;
@@ -270,9 +267,9 @@ public class Shooting implements Ability {
     }
 
     private void strike_throughPlantFoodEffect(BattlePlant plant) {
-        List<Integer> damageAttributes = (List<Integer>) (Object) plant.getPlantStats().getPlantFoodEffect().get("damage");
-        List<List<Integer>> directionAttributes = (List<List<Integer>>) (Object) plant.getPlantStats().getPlantFoodEffect().get("direction");
-        List<List<Double>> offsetAttributes = (List<List<Double>>) (Object) plant.getPlantStats().getAttributes().get("offset");
+        List<Integer> damageAttributes = (List<Integer>) plant.getPlantStats().getPlantFoodEffect().get("damage");
+        List<List<Integer>> directionAttributes = (List<List<Integer>>) plant.getPlantStats().getPlantFoodEffect().get("direction");
+        List<List<Double>> offsetAttributes = (List<List<Double>>) plant.getPlantStats().getAttributes().get("offset");
 
         int rangeAmount;
         int pierce = 1;

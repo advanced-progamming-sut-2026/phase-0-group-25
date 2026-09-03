@@ -10,15 +10,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Mower {
-    private int row;
-    private float x;
-    private float y;
-    private boolean isActivated = false;
-    private boolean isDone = false;
-    private float speed = 750f;
-    private String currentAnimState = "idle";
     private final String animationPath = "768/INITIAL/MOWERS/MOWER_TUTORIAL/MOWER_TUTORIAL.PAM";
     private final Set<Zombie> crushedZombies = new HashSet<>();
+    private final int row;
+    private float x;
+    private final float y;
+    private boolean isActivated = false;
+    private boolean isDone = false;
+    private final float speed = 750f;
+    private String currentAnimState = "idle";
 
     public Mower(int row, float startX, float startY) {
         this.row = row;
@@ -62,12 +62,35 @@ public class Mower {
         }
     }
 
-    public float getX() { return x; }
-    public float getY() { return y; }
-    public int getRow() { return row; }
-    public boolean isActivated() { return isActivated; }
-    public boolean isDone() { return isDone; }
-    public boolean isUsed() { return isActivated || isDone; }
-    public String getCurrentAnimState() { return currentAnimState; }
-    public String getAnimationPath() { return animationPath; }
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public boolean isActivated() {
+        return isActivated;
+    }
+
+    public boolean isDone() {
+        return isDone;
+    }
+
+    public boolean isUsed() {
+        return isActivated || isDone;
+    }
+
+    public String getCurrentAnimState() {
+        return currentAnimState;
+    }
+
+    public String getAnimationPath() {
+        return animationPath;
+    }
 }

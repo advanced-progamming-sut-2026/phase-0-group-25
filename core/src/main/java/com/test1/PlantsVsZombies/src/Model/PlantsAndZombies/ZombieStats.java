@@ -18,7 +18,6 @@ public class ZombieStats {
     private Map<String, String> status;
 
 
-
     public String getName() {
         return name;
     }

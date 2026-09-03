@@ -2,6 +2,7 @@ package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -19,10 +20,17 @@ import pvz.libpvz.textures.TextureBank;
 import java.util.ArrayList;
 
 public class GamePlayHudRenderer {
+    private static final float CARD_X = 45f, CARD_START_Y = 980f, CARD_WIDTH = 160f, CARD_HEIGHT = 105f, CARD_SPACING = 11f;
+    private static final float SUN_PLUS_X = 190f, SUN_PLUS_Y = 1120f, PF_PLUS_X = 269f, PF_PLUS_Y = 1120f, PLUS_BTN_SIZE = 40f;
+    private static final float PF_BTN_X = 1675f, PF_BTN_Y = 30f, PF_BTN_SIZE = 100f;
+    private static final float SHOVEL_BTN_X = 1770f, SHOVEL_BTN_Y = 30f, SHOVEL_BTN_SIZE = 100f;
+    private static final float PAUSE_BTN_X = 1810f, PAUSE_BTN_Y = 1105f, PAUSE_BTN_SIZE = 75f;
+    private static final float START_WAVE_BTN_X = 1450f, START_WAVE_BTN_Y = 1100f, START_WAVE_BTN_W = 220f, START_WAVE_BTN_H = 75f;
+    private static final float DEADLINE_X = 943f;
+    private static final float BELT_SEGMENT_HEIGHT = 20f, BELT_WIDTH = 175f, BELT_SCROLL_SPEED = 60f;
     private final TextureBank textureBank;
     private final PamPlayer player;
     private final BitmapFont hudFont;
-
     private final TextureRegion sunIcon;
     private final TextureRegion plantFoodIcon;
     private final TextureRegion bgHud;
@@ -39,15 +47,6 @@ public class GamePlayHudRenderer {
     private final TextureRegion getPlantFoodIconInGame;
     private final TextureRegion pauseBtnRegion;
     private final TextureRegion conveyorTrackRegion;
-
-    private static final float CARD_X = 45f, CARD_START_Y = 980f, CARD_WIDTH = 160f, CARD_HEIGHT = 105f, CARD_SPACING = 11f;
-    private static final float SUN_PLUS_X = 190f, SUN_PLUS_Y = 1120f, PF_PLUS_X = 269f, PF_PLUS_Y = 1120f, PLUS_BTN_SIZE = 40f;
-    private static final float PF_BTN_X = 1675f, PF_BTN_Y = 30f, PF_BTN_SIZE = 100f;
-    private static final float SHOVEL_BTN_X = 1770f, SHOVEL_BTN_Y = 30f, SHOVEL_BTN_SIZE = 100f;
-    private static final float PAUSE_BTN_X = 1810f, PAUSE_BTN_Y = 1105f, PAUSE_BTN_SIZE = 75f;
-    private static final float START_WAVE_BTN_X = 1450f, START_WAVE_BTN_Y = 1100f, START_WAVE_BTN_W = 220f, START_WAVE_BTN_H = 75f;
-    private static final float DEADLINE_X = 943f;
-    private static final float BELT_SEGMENT_HEIGHT = 20f, BELT_WIDTH = 175f, BELT_SCROLL_SPEED = 60f;
 
     public GamePlayHudRenderer(TextureBank textureBank, PamPlayer player, BitmapFont hudFont) {
         this.textureBank = textureBank;
@@ -87,12 +86,14 @@ public class GamePlayHudRenderer {
         }
         TextureRegion foodBank = textureBank.region("IMAGE_UI_HUD_INGAME_PLANTFOOD_BANK");
         batch.draw((foodBank != null) ? foodBank : bgHud, 240, 1100, 230, 80);
-        if (pauseBtnRegion != null) batch.draw(pauseBtnRegion, PAUSE_BTN_X, PAUSE_BTN_Y, PAUSE_BTN_SIZE, PAUSE_BTN_SIZE);
+        if (pauseBtnRegion != null)
+            batch.draw(pauseBtnRegion, PAUSE_BTN_X, PAUSE_BTN_Y, PAUSE_BTN_SIZE, PAUSE_BTN_SIZE);
 
 
         User currentUser = UsersManager.getInstance().getLoggedInUser();
         if (currentUser != null && currentUser.isDebugMode() && plusIcon != null) {
-            if (!(gamePlay instanceof ConveyorBelt)) batch.draw(plusIcon, SUN_PLUS_X, SUN_PLUS_Y, PLUS_BTN_SIZE, PLUS_BTN_SIZE);
+            if (!(gamePlay instanceof ConveyorBelt))
+                batch.draw(plusIcon, SUN_PLUS_X, SUN_PLUS_Y, PLUS_BTN_SIZE, PLUS_BTN_SIZE);
             batch.draw(plusIcon, PF_PLUS_X, PF_PLUS_Y, PLUS_BTN_SIZE, PLUS_BTN_SIZE);
         }
 
@@ -159,7 +160,8 @@ public class GamePlayHudRenderer {
             float scrollOffset = (stateTime * BELT_SCROLL_SPEED) % BELT_SEGMENT_HEIGHT;
             for (float y = 120f - BELT_SEGMENT_HEIGHT; y <= 1110f + BELT_SEGMENT_HEIGHT; y += BELT_SEGMENT_HEIGHT) {
                 float drawY = y + scrollOffset;
-                if (drawY >= 120f && drawY <= 1110f) batch.draw(conveyorTrackRegion, CARD_X - 7f, drawY, BELT_WIDTH, BELT_SEGMENT_HEIGHT);
+                if (drawY >= 120f && drawY <= 1110f)
+                    batch.draw(conveyorTrackRegion, CARD_X - 7f, drawY, BELT_WIDTH, BELT_SEGMENT_HEIGHT);
             }
             for (ConveyorCard card : ((ConveyorBelt) gamePlay).getConveyorCards()) {
                 BattlePlant p = card.getPlant();
@@ -211,7 +213,7 @@ public class GamePlayHudRenderer {
             batch.end();
 
 
-            Gdx.gl.glEnable(Gdx.gl.GL_BLEND);
+            Gdx.gl.glEnable(GL20.GL_BLEND);
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.setColor(new Color(0.1f, 0.1f, 0.1f, 0.85f));
             shapeRenderer.rect(bossBarX + 15, bossBarY + 6, bossBarW - 30, bossBarH - 12);
@@ -221,7 +223,7 @@ public class GamePlayHudRenderer {
                 shapeRenderer.rect(bossBarX + 15, bossBarY + 6, (bossBarW - 30) * hpRatio, bossBarH - 12);
             }
             shapeRenderer.end();
-            Gdx.gl.glDisable(Gdx.gl.GL_BLEND);
+            Gdx.gl.glDisable(GL20.GL_BLEND);
 
             batch.begin();
 
@@ -249,8 +251,10 @@ public class GamePlayHudRenderer {
             String strOfIdle = PlantType.fromName(selectedPlant.getName()).getStateName();
             player.draw(batch, selectedPlant.getPlantStats().getAnimation(), strOfIdle, stateTime, mouse.x, mouse.y, true);
         }
-        if (input.isShovelSelected() && shovelIconInGame != null) batch.draw(shovelIconInGame, mouse.x - 40, mouse.y - 10, 80, 80);
-        if (input.isPlantFoodSelected() && getPlantFoodIconInGame != null) batch.draw(getPlantFoodIconInGame, mouse.x - 30, mouse.y - 30, 60, 60);
+        if (input.isShovelSelected() && shovelIconInGame != null)
+            batch.draw(shovelIconInGame, mouse.x - 40, mouse.y - 10, 80, 80);
+        if (input.isPlantFoodSelected() && getPlantFoodIconInGame != null)
+            batch.draw(getPlantFoodIconInGame, mouse.x - 30, mouse.y - 30, 60, 60);
 
         batch.end();
     }
@@ -260,7 +264,7 @@ public class GamePlayHudRenderer {
         float barWidth = 450f, barLeftX = (1920f - barWidth) / 2f, barRightX = barLeftX + barWidth, barY = 1130f;
         float greenWidth = barRightX - (barRightX - (barWidth * gamePlay.getProgressPercentage()));
 
-        Gdx.gl.glEnable(Gdx.gl.GL_BLEND);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
 
@@ -320,7 +324,7 @@ public class GamePlayHudRenderer {
             }
             shapeRenderer.end();
         }
-        Gdx.gl.glDisable(Gdx.gl.GL_BLEND);
+        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     private void renderMiniGamePanels(SpriteBatch batch, GamePlay gamePlay, float stateTime) {

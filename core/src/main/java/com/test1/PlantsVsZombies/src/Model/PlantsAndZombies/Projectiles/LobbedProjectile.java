@@ -15,25 +15,25 @@ public class LobbedProjectile extends Projectile {
     private static final double MAX_FLIGHT_TIME = 2.5;
     private static final double GRAVITY = 100.0;
 
-    private double startX;
-    private double startY;
-    private double targetX;
-    private double targetY;
+    private final double startX;
+    private final double startY;
+    private final double targetX;
+    private final double targetY;
 
     private int targetColumn = -1;
     private int targetRow = -1;
 
-    private double velocityX;
+    private final double velocityX;
     private double velocityY;
 
     private double elapsedTime;
-    private double flightTime;
+    private final double flightTime;
 
-    private int AoEDamage;
-    private int AoERange;
-    private int damage;
+    private final int AoEDamage;
+    private final int AoERange;
+    private final int damage;
 
-    private GamePlay GAME = GamePlay.activeInstance;
+    private final GamePlay GAME = GamePlay.activeInstance;
 
     public LobbedProjectile(
         BattlePlant plant,

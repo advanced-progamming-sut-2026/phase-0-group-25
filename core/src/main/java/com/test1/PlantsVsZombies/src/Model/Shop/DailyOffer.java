@@ -5,10 +5,10 @@ import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import java.time.LocalDate;
 
 public class DailyOffer {
-    private PlantType plantType;
-    private int price;
-    private int seedPacketCount;
-    private LocalDate date;
+    private final PlantType plantType;
+    private final int price;
+    private final int seedPacketCount;
+    private final LocalDate date;
 
     public DailyOffer(PlantType plantType, int price, int seedPacketCount, LocalDate date) {
         this.plantType = plantType;

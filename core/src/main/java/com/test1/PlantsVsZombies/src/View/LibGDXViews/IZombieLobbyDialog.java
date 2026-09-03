@@ -2,11 +2,7 @@ package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
@@ -23,22 +19,15 @@ import java.util.Random;
 import java.util.function.Consumer;
 
 public class IZombieLobbyDialog extends BorderedTable {
-    private enum Mode { CHOOSE, SEARCHING, CHALLENGE_INPUT, CHALLENGE_PENDING }
-
     private static final float BTN_WIDTH = 160f;
     private static final float BTN_HEIGHT = 48f;
-
     private final Skin skin;
     private final Runnable onClose;
-
     private Mode mode = Mode.CHOOSE;
+    private final Consumer<NetworkMessage> challengeReceivedListener = this::handleChallengeReceivedPush;
     private String statusMessage = "";
     private String pendingChallengeTarget;
     private TextField usernameField;
-
-    private final Consumer<NetworkMessage> challengeResponseListener = this::handleChallengeResponsePush;
-    private final Consumer<NetworkMessage> matchFoundListener = this::handleMatchFoundPush;
-    private final Consumer<NetworkMessage> challengeReceivedListener = this::handleChallengeReceivedPush;
 
     public IZombieLobbyDialog(Skin skin, Runnable onClose) {
         super();
@@ -52,7 +41,7 @@ public class IZombieLobbyDialog extends BorderedTable {
         ServerConnection.getInstance().addPushListener(MessageType.CHALLENGE_USER, challengeReceivedListener);
 
         buildUI();
-    }
+    }    private final Consumer<NetworkMessage> challengeResponseListener = this::handleChallengeResponsePush;
 
     private void buildUI() {
         this.clearChildren();
@@ -77,7 +66,7 @@ public class IZombieLobbyDialog extends BorderedTable {
                 buildChallengePendingView();
                 break;
         }
-    }
+    }    private final Consumer<NetworkMessage> matchFoundListener = this::handleMatchFoundPush;
 
     private void buildChooseView() {
         TextButton randomBtn = new TextButton("Random Matchmaking", skin, "green");
@@ -400,4 +389,10 @@ public class IZombieLobbyDialog extends BorderedTable {
             }
         };
     }
+
+    private enum Mode {CHOOSE, SEARCHING, CHALLENGE_INPUT, CHALLENGE_PENDING}
+
+
+
+
 }

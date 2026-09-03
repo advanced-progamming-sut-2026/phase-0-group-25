@@ -2,6 +2,7 @@ package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -15,29 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IntroDialogueCutscene {
-    public static class DialogueLine {
-        public final String speakerName;
-        public final String text;
-        public final boolean isLeftSpeaker;
-
-        public DialogueLine(String speakerName, String text, boolean isLeftSpeaker) {
-            this.speakerName = speakerName;
-            this.text = text;
-            this.isLeftSpeaker = isLeftSpeaker;
-        }
-    }
-
-    private final List<DialogueLine> lines = new ArrayList<>();
-    private int currentIndex = 0;
-    private boolean finished = false;
-
-
     private static final String DAVE_ANIM_PATH = "768/INITIAL/CRAZYDAVE/CRAZYDAVE/CRAZYDAVE.PAM";
     private static final String WINNIE_ANIM_PATH = "768/INITIAL/WINNIE/WINNIE/WINNIE.PAM";
-
-    private TextureRegion dialogBoxRegion;
+    private final List<DialogueLine> lines = new ArrayList<>();
     private final GlyphLayout glyphLayout = new GlyphLayout();
-
+    private int currentIndex = 0;
+    private boolean finished = false;
+    private TextureRegion dialogBoxRegion;
     public IntroDialogueCutscene(TextureBank textureBank) {
         if (textureBank != null) {
             dialogBoxRegion = textureBank.region("IMAGE_UI_MAINMENU_MM_SETTINGS_TAB");
@@ -67,7 +52,7 @@ public class IntroDialogueCutscene {
         DialogueLine currentLine = lines.get(currentIndex);
 
 
-        Gdx.gl.glEnable(Gdx.gl.GL_BLEND);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(new Color(0f, 0f, 0f, 0.55f));
         shapeRenderer.rect(0, 0, 1920, 1200);
@@ -81,13 +66,13 @@ public class IntroDialogueCutscene {
         shapeRenderer.setColor(new Color(0.12f, 0.08f, 0.05f, 0.9f));
         shapeRenderer.rect(boxX, boxY, boxW, boxH);
         shapeRenderer.end();
-        Gdx.gl.glDisable(Gdx.gl.GL_BLEND);
+        Gdx.gl.glDisable(GL20.GL_BLEND);
 
 
         batch.begin();
 
         if (dialogBoxRegion != null) {
-            batch.draw(dialogBoxRegion, boxX - 10, boxY , boxW + 20, boxH + 20);
+            batch.draw(dialogBoxRegion, boxX - 10, boxY, boxW + 20, boxH + 20);
         }
 
         if (currentLine.isLeftSpeaker) {
@@ -127,5 +112,8 @@ public class IntroDialogueCutscene {
         font.setColor(Color.WHITE);
         batch.setColor(Color.WHITE);
         batch.end();
+    }
+
+    public record DialogueLine(String speakerName, String text, boolean isLeftSpeaker) {
     }
 }

@@ -8,23 +8,19 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 import java.util.ArrayList;
 
 public class Tile {
-    private ArrayList<BattlePlant> plants;
-    private ArrayList<Zombie> zombies;
-    private ArrayList<Projectile> projectiles;
+    private final ArrayList<BattlePlant> plants;
+    private final ArrayList<Zombie> zombies;
+    private final ArrayList<Projectile> projectiles;
     private int HP;
-    private Position position;
+    private final Position position;
     private boolean isArable;
     private boolean firing;
     private boolean isHole = false;
-
-    public enum GraveType {NORMAL, PLANT_FOOD, SUN}
-
     private GraveType graveType = GraveType.NORMAL;
     private boolean isNecromancy = false;
     private boolean necromancyTriggered = false;
     private boolean isLowTide = false;
     private boolean lowTideTriggered = false;
-
     public Tile(Position position, Boolean isArable, int HP) {
         this.position = position;
         this.isArable = isArable;
@@ -128,4 +124,6 @@ public class Tile {
     public void setFiring(boolean firing) {
         this.firing = firing;
     }
+
+    public enum GraveType {NORMAL, PLANT_FOOD, SUN}
 }

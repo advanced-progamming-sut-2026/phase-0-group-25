@@ -30,6 +30,7 @@ public class UIManager {
 
         toastStage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
     }
+
     public static void changeScreen(Screen screen) {
         if (main != null) {
             main.setScreen(screen);

@@ -1,7 +1,5 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 
-import com.test1.PlantsVsZombies.src.Enums.PlantType;
-import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
@@ -16,7 +14,7 @@ import java.util.Collections;
 import java.util.Map;
 
 public class Homing implements Ability {
-    private GamePlay GAME = GamePlay.activeInstance;
+    private final GamePlay GAME = GamePlay.activeInstance;
 
     @Override
     public void executeAbility(Entity entity) {
@@ -37,10 +35,8 @@ public class Homing implements Ability {
         double timeDifference = 10 * (currentTime - plant.getEffectedTime());
         timeDifference = Math.floor(timeDifference);
         timeDifference /= 10;
-        if ((timeDifference % 0.4) == 0) {//every 0.4 second, homings execute their special ability
-            return true;
-        }
-        return false;
+        //every 0.4 second, homings execute their special ability
+        return (timeDifference % 0.4) == 0;
     }
 
 
@@ -154,10 +150,7 @@ public class Homing implements Ability {
     private boolean isNotArmored(BattlePlant plant) {
         if (plant.getPlantStats().getTags().contains("charge")) {
             int armTime = (int) plant.getPlantStats().getAttributes().get("armTime");
-            if ((GAME.getTotalTimePassed() - plant.getPlantTime()) < armTime) {
-                return true;
-            }
-            return false;
+            return (GAME.getTotalTimePassed() - plant.getPlantTime()) < armTime;
         }
 
         return false;

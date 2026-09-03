@@ -408,7 +408,7 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
         TextButton boostButton;
         if (boosted) {
             boostButton = createSkinButton("Boosted", "purple", null);
-            boostButton.addListener(new ClickListener(){
+            boostButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     showError("This plant is already boosted.");
@@ -479,10 +479,12 @@ public class ChoosePlantScreen extends AbstractScreen implements ChoosePlantMenu
     // ============================================================
 
     @Override
-    public void showAllPlants(List<String> plantNames) {}
+    public void showAllPlants(List<String> plantNames) {
+    }
 
     @Override
-    public void showAvailablePlants(List<String> plantNames) {}
+    public void showAvailablePlants(List<String> plantNames) {
+    }
 
     @Override
     public void showPlantAddedSuccess(String plantName) {

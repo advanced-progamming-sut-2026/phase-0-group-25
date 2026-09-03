@@ -38,8 +38,7 @@ public class ProfessionalPlantKillerQuest extends Quest {
 
     @Override
     public void check(Event event) {
-        if (event instanceof ZombieKilledEvent) {
-            ZombieKilledEvent e = (ZombieKilledEvent) event;
+        if (event instanceof ZombieKilledEvent e) {
             if (targetPlant != null && targetPlant.getName().equalsIgnoreCase(e.getPlantName())) {
                 incrementProgress(1);
             }

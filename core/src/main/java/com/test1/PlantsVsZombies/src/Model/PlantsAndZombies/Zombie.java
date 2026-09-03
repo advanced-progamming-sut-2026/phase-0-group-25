@@ -18,21 +18,19 @@ import java.util.Random;
 
 
 public class Zombie extends Entity {
-    private static int FROZEN_TIME = 8;
-    private static int TILE_Y_LENGTH = 150;
-    private static int BUTTER_TIME = 8;
-    private static int CHILL_TIME = 3;
-    private static Random RANDOM = new Random();
-    private GamePlay GAME = GamePlay.activeInstance;
+    private static final int FROZEN_TIME = 8;
+    private static final int TILE_Y_LENGTH = 150;
+    private static final int BUTTER_TIME = 8;
+    private static final int CHILL_TIME = 3;
+    private static final Random RANDOM = new Random();
     private final AnimationState animationState = new AnimationState();
-
     protected ZombieStats zombieStats;
+    protected double currentVelocity;
+    protected double lastActionTime;
+    private GamePlay GAME = GamePlay.activeInstance;
     private Entity rival;
     private int waveNum;
-
-    protected double currentVelocity;
-    private ArrayList<Ability> originalAbilities = new ArrayList<>();
-
+    private final ArrayList<Ability> originalAbilities = new ArrayList<>();
     private boolean isHalated;
     private boolean isHypnotized = false;
     private boolean isFrozen;
@@ -42,10 +40,7 @@ public class Zombie extends Entity {
     private double timeWhenButtered;
     private boolean isChilled = false;
     private double timeWhenChilled;
-
-
-    private ArrayList<Armor> activeArmors;
-    protected double lastActionTime;
+    private final ArrayList<Armor> activeArmors;
     private double spawnTime;
     private double dieTime;
     private boolean isDeadByExplosion = false;

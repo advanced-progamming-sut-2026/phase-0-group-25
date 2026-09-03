@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.Set;
 
 public class Chapter {
-    private ChapterType chapterType;
-    private ArrayList<Level> levels;
+    private final ChapterType chapterType;
+    private final ArrayList<Level> levels;
 
     public Chapter(ChapterType chapterType) {
         this.chapterType = chapterType;
@@ -38,7 +38,7 @@ public class Chapter {
     }
 
     public GamePlay makeGame(int levelNumber, int difficulty, User user, ArrayList<String> plants, ArrayList<String> zombies
-            , Set<String> boosted) {
+        , Set<String> boosted) {
         Level level = getLevel(levelNumber);
         if (level != null) {
             GamePlay gamePlay = level.createGame(chapterType, difficulty, user, plants, zombies, boosted);

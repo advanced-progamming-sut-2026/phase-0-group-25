@@ -4,14 +4,14 @@ import com.test1.PlantsVsZombies.src.Enums.ShopItemType;
 import com.test1.PlantsVsZombies.src.Enums.WalletType;
 
 public class ShopItem {
-    private int id;
-    private String name;
-    private ShopItemType type;
-    private int price;
-    private WalletType currency;
-    private int unitSize;
-    private int maxTotal;
-    private String description;
+    private final int id;
+    private final String name;
+    private final ShopItemType type;
+    private final int price;
+    private final WalletType currency;
+    private final int unitSize;
+    private final int maxTotal;
+    private final String description;
 
     public ShopItem(int id, String name, ShopItemType type, int price, WalletType currency,
                     int unitSize, int maxTotal, String description) {

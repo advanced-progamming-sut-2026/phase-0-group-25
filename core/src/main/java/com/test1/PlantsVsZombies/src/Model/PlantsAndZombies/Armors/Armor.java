@@ -3,11 +3,11 @@ package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Armors;
 import java.util.List;
 
 public class Armor {
-    private String type;
-    private int baseHP;
+    private final String type;
+    private final int baseHP;
     private int currentHP;
-    private boolean isMetallic;
-    private List<String> animations;
+    private final boolean isMetallic;
+    private final List<String> animations;
 
     public Armor(String type, int baseHP, boolean isMetallic, List<String> animations) {
         this.type = type;
@@ -17,6 +17,14 @@ public class Armor {
         this.animations = animations;
     }
 
+    public static Armor findArmor(String name) {
+        for (ArmorConfig armor : ArmorConfig.values()) {
+            if (armor.getType().equals(name)) {
+                return armor.createArmor();
+            }
+        }
+        return null;
+    }
 
     public int takeDamage(int damage) {
         if (currentHP >= damage) {
@@ -63,15 +71,6 @@ public class Armor {
         } else {
             return this.animations.get(2);
         }
-    }
-
-    public static Armor findArmor(String name) {
-        for (ArmorConfig armor : ArmorConfig.values()) {
-            if (armor.getType().equals(name)) {
-                return armor.createArmor();
-            }
-        }
-        return null;
     }
 
     public int getBaseHP() {

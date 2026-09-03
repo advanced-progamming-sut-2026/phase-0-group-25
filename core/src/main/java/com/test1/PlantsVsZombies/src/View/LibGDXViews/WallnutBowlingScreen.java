@@ -1,11 +1,8 @@
 package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -18,59 +15,50 @@ import com.test1.PlantsVsZombies.src.Enums.MiniGameType;
 import com.test1.PlantsVsZombies.src.Menu.MenuManager;
 import com.test1.PlantsVsZombies.src.Model.MiniGames.WallnutBowlingGame.*;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
+import com.test1.PlantsVsZombies.src.Model.User.User;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.GamePlayMenuView;
 import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
-import com.test1.PlantsVsZombies.src.Model.User.User;
 
 import java.util.ArrayList;
 
 public class WallnutBowlingScreen extends ScreenAdapter implements GamePlayMenuView {
-    private final WalnutBowling gamePlay;
-    private OrthographicCamera camera;
-    private SpriteBatch batch;
-    private ShapeRenderer shapeRenderer;
-    private ScreenViewport viewport;
-    private TextureBank textureBank;
-    private PamPlayer player;
-
-    private TextureRegion bgRegion;
-    private TextureRegion conveyorTrackRegion;
-    private TextureRegion cardBgRegion;
-
-    private TextureRegion normalNutIcon;
-    private TextureRegion explodeNutIcon;
-    private TextureRegion bigNutIcon;
-
-    private TextureRegion progressBarFrame;
-    private TextureRegion flagIcon;
-    private TextureRegion zombieHeadIcon;
-
-    private BowlingCard selectedBowlingCard = null;
-    private final Vector3 mouseWorldPos = new Vector3();
-    private float stateTime = 0f;
-    private float timeAccumulator = 0f;
-    private final float TICK_RATE = 0.1f;
-
+    public static final String PAUSE_BTN_ASSET_ID = "IMAGE_UI_HUD_INGAME_PAUSE_BUTTON";
     private static final float CARD_X = 45f;
     private static final float CARD_WIDTH = 160f;
     private static final float CARD_HEIGHT = 105f;
     private static final float BELT_SEGMENT_HEIGHT = 20f;
     private static final float BELT_WIDTH = 175f;
     private static final float BELT_SCROLL_SPEED = 60f;
-
     private static final float RED_LINE_X = 490f + (3 * 152.2f) - 5f;
-
     private static final String NUT_NORMAL_ANIM = "768/FULL/EFFECTS/BOWLINGBULB_PROJECTILE1/BOWLINGBULB_PROJECTILE1.PAM";
     private static final String NUT_BIG_ANIM = "768/FULL/EFFECTS/BOWLINGBULB_PROJECTILE3/BOWLINGBULB_PROJECTILE3.PAM";
     private static final String NUT_EXPLODE_ANIM = "768/FULL/EFFECTS/BOWLINGBULB_PLANTFOOD_PROJECTILE/BOWLINGBULB_PLANTFOOD_PROJECTILE.PAM";
-
-    public static final String PAUSE_BTN_ASSET_ID = "IMAGE_UI_HUD_INGAME_PAUSE_BUTTON";
-    private TextureRegion pauseBtnRegion;
     private static final float PAUSE_BTN_X = 1810f;
     private static final float PAUSE_BTN_Y = 1105f;
     private static final float PAUSE_BTN_SIZE = 75f;
-
+    private final WalnutBowling gamePlay;
+    private final Vector3 mouseWorldPos = new Vector3();
+    private final float TICK_RATE = 0.1f;
+    private OrthographicCamera camera;
+    private SpriteBatch batch;
+    private ShapeRenderer shapeRenderer;
+    private ScreenViewport viewport;
+    private TextureBank textureBank;
+    private PamPlayer player;
+    private TextureRegion bgRegion;
+    private TextureRegion conveyorTrackRegion;
+    private TextureRegion cardBgRegion;
+    private TextureRegion normalNutIcon;
+    private TextureRegion explodeNutIcon;
+    private TextureRegion bigNutIcon;
+    private TextureRegion progressBarFrame;
+    private TextureRegion flagIcon;
+    private TextureRegion zombieHeadIcon;
+    private BowlingCard selectedBowlingCard = null;
+    private float stateTime = 0f;
+    private float timeAccumulator = 0f;
+    private TextureRegion pauseBtnRegion;
     private GamePlayModals modals;
 
     public WallnutBowlingScreen(WalnutBowling gamePlay) {
@@ -105,8 +93,6 @@ public class WallnutBowlingScreen extends ScreenAdapter implements GamePlayMenuV
         }
 
         UIManager.resizeToasts(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-
 
 
         modals = new GamePlayModals(
@@ -269,16 +255,17 @@ public class WallnutBowlingScreen extends ScreenAdapter implements GamePlayMenuV
 
         if (selectedBowlingCard != null) {
             switch (selectedBowlingCard.getNutType()) {
-                case "ExplodingWalnut" -> player.draw(batch, NUT_EXPLODE_ANIM, "animation", stateTime, mouseWorldPos.x, mouseWorldPos.y, true);
+                case "ExplodingWalnut" ->
+                    player.draw(batch, NUT_EXPLODE_ANIM, "animation", stateTime, mouseWorldPos.x, mouseWorldPos.y, true);
                 case "BigWalnut" -> {
                     player.draw(batch, NUT_BIG_ANIM, "animation", stateTime, mouseWorldPos.x, mouseWorldPos.y, true);
                 }
-                default -> player.draw(batch, NUT_NORMAL_ANIM, "animation", stateTime, mouseWorldPos.x, mouseWorldPos.y, true);
+                default ->
+                    player.draw(batch, NUT_NORMAL_ANIM, "animation", stateTime, mouseWorldPos.x, mouseWorldPos.y, true);
             }
         }
 
         batch.end();
-
 
 
         float barWidth = 450f;
@@ -292,7 +279,7 @@ public class WallnutBowlingScreen extends ScreenAdapter implements GamePlayMenuV
         float greenWidth = innerBarWidth * progress;
         float headX = (barRightX - 15f) - greenWidth;
 
-        Gdx.gl.glEnable(Gdx.gl.GL_BLEND);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
         shapeRenderer.setProjectionMatrix(camera.combined);
 
 
@@ -313,7 +300,7 @@ public class WallnutBowlingScreen extends ScreenAdapter implements GamePlayMenuV
         Gdx.gl.glLineWidth(6);
         shapeRenderer.line(RED_LINE_X, 130f, RED_LINE_X, 130f + (5 * 150f));
         shapeRenderer.end();
-        Gdx.gl.glDisable(Gdx.gl.GL_BLEND);
+        Gdx.gl.glDisable(GL20.GL_BLEND);
 
 
         batch.begin();
@@ -372,7 +359,8 @@ public class WallnutBowlingScreen extends ScreenAdapter implements GamePlayMenuV
     }
 
     @Override
-    public void showCurrentMenu() {}
+    public void showCurrentMenu() {
+    }
 
     @Override
     public void showError(String errorMessage) {

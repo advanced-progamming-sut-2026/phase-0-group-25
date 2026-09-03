@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.test1.PlantsVsZombies.src.Audio.SoundManager;
-import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Enums.MenuType;
 import com.test1.PlantsVsZombies.src.Menu.MainMenu;
 import com.test1.PlantsVsZombies.src.Menu.MenuManager;
@@ -45,11 +44,16 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
     private Table bottomTable;
 
     // Store unread messages snapshot before marking them read
-    private ArrayList<String> unreadMessages = new ArrayList<>();
+    private final ArrayList<String> unreadMessages = new ArrayList<>();
+    private boolean showUnread = true;
 
     public void setMenuController(MainMenu menuController) {
         this.menuController = menuController;
     }
+
+    // ============================================================
+    // TOP BAR
+    // ============================================================
 
     @Override
     public void show() {
@@ -119,10 +123,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         rootTable.add(screenStack).grow();
     }
 
-    // ============================================================
-    // TOP BAR
-    // ============================================================
-
     private Table createTopLeftTable() {
         Table table = new Table();
         table.add(createCurrencyHud()).left().row();
@@ -138,6 +138,10 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
             topLeftTable.invalidateHierarchy();
         }
     }
+
+    // ============================================================
+    // BOTTOM BAR & NEWS BUTTON
+    // ============================================================
 
     private Actor createUserBadge() {
         Table userBadgeTable = new Table();
@@ -160,10 +164,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
 
         return userBadgeTable;
     }
-
-    // ============================================================
-    // BOTTOM BAR & NEWS BUTTON
-    // ============================================================
 
     private boolean hasUnreadNews() {
         User user = UsersManager.getInstance().getLoggedInUser();
@@ -257,13 +257,17 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         bottomTable.invalidateHierarchy();
     }
 
+    // ============================================================
+    // SETTINGS BUTTON
+    // ============================================================
+
     private void refreshNewsButton() {
         rebuildBottomTable();
     }
 
-    // ============================================================
-    // SETTINGS BUTTON
-    // ============================================================
+    // ================================================================
+    // SETTINGS MODAL
+    // ================================================================
 
     private Actor createSettingsButton() {
         TextureRegion settingsRegion = textureBank.region(SETTINGS_BUTTON_ASSET_ID);
@@ -295,7 +299,7 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
     }
 
     // ================================================================
-    // SETTINGS MODAL
+    // NEWS MODAL
     // ================================================================
 
     private void showSettingsDialog() {
@@ -493,12 +497,6 @@ public class MainMenuScreen extends AbstractScreen implements MainMenuView {
         wrapper.add(box).size(480, 720);
         showModal(wrapper);
     }
-
-    // ================================================================
-    // NEWS MODAL
-    // ================================================================
-
-    private boolean showUnread = true;
 
     private void showNewsDialog() {
         User user = UsersManager.getInstance().getLoggedInUser();

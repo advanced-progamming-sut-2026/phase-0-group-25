@@ -4,8 +4,8 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
 
 public abstract class Jar {
-    private Position position;
-    private Entity content;
+    private final Position position;
+    private final Entity content;
     private boolean isBroken;
 
     public Jar(Position position, Entity content) {

@@ -4,19 +4,11 @@ import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Enums.ZombieType;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.PlantFactory;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.ZombieFactory;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 import com.test1.PlantsVsZombies.src.Model.User.User;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class IZombie extends GamePlay {
     public static final int MATCH_DURATION_SECONDS = 120;
@@ -26,12 +18,10 @@ public class IZombie extends GamePlay {
     private final String opponentUsername;
     private final long roomSeed;
     private final long startTimeMillis;
-
-    private int zombieBrainPoints = 1500;
-    private float matchTimeRemaining = MATCH_DURATION_SECONDS;
     private final Brain[] brains = new Brain[5];
     private final Map<String, Integer> zombieDeck = new LinkedHashMap<>();
-
+    private int zombieBrainPoints = 1500;
+    private float matchTimeRemaining = MATCH_DURATION_SECONDS;
     private boolean matchOver = false;
     private boolean matchWon = false;
 
@@ -217,8 +207,15 @@ public class IZombie extends GamePlay {
         this.isPaused = true;
     }
 
-    @Override public boolean isGameOver() { return matchOver; }
-    @Override public boolean hasWon() { return matchWon; }
+    @Override
+    public boolean isGameOver() {
+        return matchOver;
+    }
+
+    @Override
+    public boolean hasWon() {
+        return matchWon;
+    }
 
     public int getSecondsRemaining() {
         if (isLocalCouchPlay) {
@@ -230,16 +227,47 @@ public class IZombie extends GamePlay {
         return Math.max(0, (int) Math.ceil(remainingMs / 1000.0));
     }
 
-    public Brain[] getBrains() { return brains; }
-    public Map<String, Integer> getZombieDeck() { return zombieDeck; }
-    public int getZombieBrainPoints() { return zombieBrainPoints; }
-    public Faction getMyFaction() { return myFaction; }
-    public boolean isLocalCouchPlay() { return isLocalCouchPlay; }
-    public boolean isNetworkGame() { return !isLocalCouchPlay; }
-    public String getOpponentUsername() { return opponentUsername; }
-    public long getRoomSeed() { return roomSeed; }
-    public long getStartTimeMillis() { return startTimeMillis; }
+    public Brain[] getBrains() {
+        return brains;
+    }
 
-    public boolean plantDefenseAction(BattlePlant plant, int col, int row) { return placePlant(plant, col, row); }
-    public boolean spawnZombieAction(String zombieName, int row) { return spawnZombie(zombieName, row); }
+    public Map<String, Integer> getZombieDeck() {
+        return zombieDeck;
+    }
+
+    public int getZombieBrainPoints() {
+        return zombieBrainPoints;
+    }
+
+    public Faction getMyFaction() {
+        return myFaction;
+    }
+
+    public boolean isLocalCouchPlay() {
+        return isLocalCouchPlay;
+    }
+
+    public boolean isNetworkGame() {
+        return !isLocalCouchPlay;
+    }
+
+    public String getOpponentUsername() {
+        return opponentUsername;
+    }
+
+    public long getRoomSeed() {
+        return roomSeed;
+    }
+
+    public long getStartTimeMillis() {
+        return startTimeMillis;
+    }
+
+    public boolean plantDefenseAction(BattlePlant plant, int col, int row) {
+        return placePlant(plant, col, row);
+    }
+
+    public boolean spawnZombieAction(String zombieName, int row) {
+        return spawnZombie(zombieName, row);
+    }
 }

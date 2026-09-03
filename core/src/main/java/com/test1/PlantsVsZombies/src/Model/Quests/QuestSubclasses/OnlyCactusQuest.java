@@ -27,8 +27,7 @@ public class OnlyCactusQuest extends Quest {
 
     @Override
     public void check(Event event) {
-        if (event instanceof ZombieKilledEvent) {
-            ZombieKilledEvent e = (ZombieKilledEvent) event;
+        if (event instanceof ZombieKilledEvent e) {
             if ("CACTUS".equalsIgnoreCase(e.getPlantName())) {
                 incrementProgress(1);
             }

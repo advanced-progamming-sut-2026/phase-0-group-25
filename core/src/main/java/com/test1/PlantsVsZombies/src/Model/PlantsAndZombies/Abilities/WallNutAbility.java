@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 
 public class WallNutAbility implements Ability {
-    private GamePlay GAME = GamePlayMenu.getGamePlay();
+    private final GamePlay GAME = GamePlayMenu.getGamePlay();
 
     @Override
     public void executeAbility(Entity entity) {

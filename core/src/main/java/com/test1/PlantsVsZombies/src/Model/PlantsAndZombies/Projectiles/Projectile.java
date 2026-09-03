@@ -4,43 +4,45 @@ import com.test1.PlantsVsZombies.src.Audio.SoundManager;
 import com.test1.PlantsVsZombies.src.Enums.AudioType;
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.ZombieFactory;
 import com.test1.PlantsVsZombies.src.Model.Sun.Sun;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 
 import java.util.Random;
 
 public class Projectile {
-    private static int X_RIGHT_LIMIT = 1860;
-    private static int Y_UP_LIMIT = 880;
-    private static int Y_DOWN_LIMIT = 130;
-    private static int X_LEFT_LIMIT = 490;
-    private static int TILE_Y_LENGTH = 150;
-    private static double TILE_X_LENGTH = 152.2;
-    private static double VELOCITY_MULTIPLIER = 4;
+    private static final int X_RIGHT_LIMIT = 1860;
+    private static final int Y_UP_LIMIT = 880;
+    private static final int Y_DOWN_LIMIT = 130;
+    private static final int X_LEFT_LIMIT = 490;
+    private static final int TILE_Y_LENGTH = 150;
+    private static final double TILE_X_LENGTH = 152.2;
+    private static final double VELOCITY_MULTIPLIER = 4;
 
     protected boolean isActive = true;
     protected boolean icy;
     protected boolean firing;
     protected boolean poisonous;
     protected BattlePlant plant;
+    protected Position position;
+    protected String name;
+    protected Position offset;
     private double velocityX;
     private double velocityY;
     private int damage;
-    protected Position position;
     private Position basePosition;
     private int pierceAmount;
     private int range;
     private int knockback;
     private boolean isHypnotizer;
-    protected String name;
     private boolean blueFiring = false;
     private boolean isForZomboss = false;
-
-    protected Position offset;
     private Position target;
 
-    private GamePlay GAME = GamePlay.activeInstance;
+    private final GamePlay GAME = GamePlay.activeInstance;
 
     public Projectile() {
         SoundManager.getInstance().playSound(AudioType.PROJECTILE_SHOOT);

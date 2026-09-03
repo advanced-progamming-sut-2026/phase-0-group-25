@@ -3,11 +3,11 @@ package com.test1.PlantsVsZombies.src.Model.GamePlayType;
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
 import com.test1.PlantsVsZombies.src.Enums.PlantCategory;
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
-import com.test1.PlantsVsZombies.src.Model.*;
 import com.test1.PlantsVsZombies.src.Model.ChaptersAndLevels.Level;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
+import com.test1.PlantsVsZombies.src.Model.*;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities.Ability;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities.ProducingSun;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Dynamite;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
 import com.test1.PlantsVsZombies.src.Model.PlayGroundType.PlayGround;
@@ -27,10 +27,11 @@ import java.util.*;
 
 public abstract class GamePlay {
     public static GamePlay activeInstance;
-    protected float[] killedZombiesCostPerWave = new float[50];
     public static int effectedTime = 3;
     public static int spawnX = 1800;
-
+    private final List<Integer> rowBag = new ArrayList<>();
+    public boolean isPaused;
+    protected float[] killedZombiesCostPerWave = new float[50];
     protected ArrayList<BattlePlant> plants = new ArrayList<>();
     protected ArrayList<Zombie> gameZombies = new ArrayList<>();
     protected ArrayList<BattlePlant> gamePlants = new ArrayList<>();
@@ -40,12 +41,10 @@ public abstract class GamePlay {
     protected ArrayList<Mower> mowers = new ArrayList<>();
     protected ArrayList<Sun> activeSuns = new ArrayList<>();
     protected ArrayList<Wave> allWaves = new ArrayList<>();
-
     protected ArrayList<BattlePlant> pendingNewPlants = new ArrayList<>();
     protected boolean updatingPlants = false;
     protected ArrayList<Zombie> pendingNewZombies = new ArrayList<>();
     protected boolean updatingZombies = false;
-
     protected int level;
     protected ChapterType chapterType;
     protected Level levelObject;
@@ -56,12 +55,10 @@ public abstract class GamePlay {
     protected int numOfPlantFood;
     protected int mySuns;
     protected PlayGround playGround;
-    public boolean isPaused;
     protected int numOfWaves;
     protected int totalTicksPassed = 0;
     protected int lostPlants = 0;
     protected boolean settedThePlants = false;
-    private final List<Integer> rowBag = new ArrayList<>();
     protected double totalTimePassed;
     protected ArrayList<DroppedPlantFood> activePlantFoods = new ArrayList<>();
     protected ArrayList<SandstormEffect> activeSandstorms = new ArrayList<>();
@@ -75,7 +72,7 @@ public abstract class GamePlay {
     public GamePlay(ChapterType chapterType, int level, int difficulty, User thisUser,
                     ArrayList<String> plants, ArrayList<String> zombies, Set<String> boosted) {
         this.numOfPlantFood = thisUser.getUserProgress().getPlantFoodCount();
-        this.mySuns = 50;
+        this.mySuns = 100;
         this.isPaused = false;
         this.level = level;
         this.chapterType = chapterType;
@@ -121,6 +118,7 @@ public abstract class GamePlay {
         int waveMultiplier = (waveNumber - 1) * 550;
         return baseDifficultyForStage + waveMultiplier;
     }
+
     public int calculateWaves(ChapterType chapterType, int level) {
         int chapterNumber = (chapterType != null) ? chapterType.ordinal() + 1 : 2;
         int levelNumber = (Set.of(1, 2, 3, 4).contains(level)) ? level : 1;
@@ -128,7 +126,9 @@ public abstract class GamePlay {
         int globalLevel = ((chapterNumber - 1) * stagesPerChapter) + levelNumber;
         return Math.max(1, (int) Math.floor(1.1 + (globalLevel * 0.26)));
     }
+
     public abstract void update();
+
     public Boolean checkingTheEndOfTheGame() {
         if (this.allWaves.isEmpty()) return false;
         for (Wave wave : this.allWaves) {
@@ -136,6 +136,7 @@ public abstract class GamePlay {
         }
         return this.gameZombies.isEmpty();
     }
+
     public void sunMaker() {
         ticksSinceLastDrop++;
         double t = totalTicksPassed / 10.0;
@@ -176,6 +177,7 @@ public abstract class GamePlay {
             }
         }
     }
+
     public void checkingSunMakers() {
         for (BattlePlant p : this.gamePlants) {
             if (p.getCategory() == PlantCategory.SUN_PRODUCER) {
@@ -187,6 +189,7 @@ public abstract class GamePlay {
             }
         }
     }
+
     public boolean tryCollectSunByClick(float clickX, float clickY) {
         Sun targetSun = null;
         for (Sun sun : activeSuns) {
@@ -230,6 +233,7 @@ public abstract class GamePlay {
         activeSuns.remove(targetSun);
         return true;
     }
+
     private void handleRadioActiveExploration(RadioActiveSun radSun) {
         int sunX = (int) radSun.getPosition().getX();
         int sunY = (int) radSun.getPosition().getY();
@@ -244,6 +248,7 @@ public abstract class GamePlay {
             }
         }
     }
+
     private boolean hasFrozen(Tile thisTile) {
         if (thisTile == null) return false;
         for (BattlePlant p : thisTile.getPlants()) {
@@ -251,6 +256,7 @@ public abstract class GamePlay {
         }
         return false;
     }
+
     public void planting(BattlePlant thisPlant, Position thisPosition) {
         Tile thisTile = getTileByPosition((int) thisPosition.getX(), (int) thisPosition.getY());
         if (thisTile == null) return;
@@ -294,6 +300,7 @@ public abstract class GamePlay {
             this.mySuns = Math.max(0, this.mySuns - thisPlant.getPlantStats().getCost());
         }
     }
+
     public BattlePlant plantFromPlantFood(BattlePlant sourcePlant, Position position) {
         Tile tile = getTileByPosition(
             (int) position.getX(),
@@ -356,6 +363,7 @@ public abstract class GamePlay {
 
         return newPlant;
     }
+
     public Zombie addZombieFromAbility(Zombie zombie) {
         if (zombie == null) return null;
 
@@ -367,6 +375,7 @@ public abstract class GamePlay {
 
         return zombie;
     }
+
     public void plucking(Position thisPosition) {
         Tile thisTile = getTileByPosition((int) thisPosition.getX(), (int) thisPosition.getY());
         if (thisTile != null && !thisTile.getPlants().isEmpty()) {
@@ -374,6 +383,7 @@ public abstract class GamePlay {
             thisTile.removePlant();
         }
     }
+
     public void onWin() {
         if (levelObject != null) levelObject.completeLevel();
 
@@ -396,6 +406,7 @@ public abstract class GamePlay {
             sunProducersCount, emptyColumns, emptyRows
         ));
     }
+
     public void killAward(User thisUser) {
         if (Math.random() >= 0.9) {
             int kindOfAward = (int) (Math.random() * 3) + 1;
@@ -415,10 +426,12 @@ public abstract class GamePlay {
             }
         }
     }
+
     public void glowingAward(Position zombiePosition) {
         activePlantFoods.add(new DroppedPlantFood(new Position(zombiePosition.getX(), zombiePosition.getY())));
         UIManager.showToast("Plant Food dropped!", "IMAGE_UI_GENERIC_VTB");
     }
+
     public boolean tryCollectPlantFoodByHover(float mouseX, float mouseY) {
         DroppedPlantFood target = null;
         for (DroppedPlantFood pf : activePlantFoods) {
@@ -434,6 +447,7 @@ public abstract class GamePlay {
         }
         return false;
     }
+
     public void updateZombieTiles() {
         for (Tile tile : tiles) {
             tile.getZombies().clear();
@@ -478,6 +492,7 @@ public abstract class GamePlay {
             }
         }
     }
+
     public void updatePlantTiles() {
         for (Tile tile : tiles) {
             if (tile != null && tile.getPlants() != null) {
@@ -493,6 +508,7 @@ public abstract class GamePlay {
             }
         }
     }
+
     public void triggerLowTide() {
         if (chapterType != ChapterType.BIG_WAVE_BEACH) return;
         boolean spawnedAny = false;
@@ -513,6 +529,7 @@ public abstract class GamePlay {
             UIManager.showToast("Low Tide! Zombies rising from the water!", "IMAGE_UI_GENERIC_TIMER_RIBBON_RED");
         }
     }
+
     public void applyIcyWind() {
         if (chapterType == ChapterType.FROSTBITE_CAVES && Math.random() < 0.012) {
             int randomNumber = new Random().nextInt(5) + 1;
@@ -524,6 +541,7 @@ public abstract class GamePlay {
             }
         }
     }
+
     public float getProgressPercentage() {
         if (allWaves.isEmpty()) return 1.0f;
         int total = allWaves.size();
@@ -539,6 +557,7 @@ public abstract class GamePlay {
 
         return Math.min(baseProgress + (fraction * (1.0f / total)), 1.0f);
     }
+
     public boolean usePlantFood(int gridX, int gridY) {
         if (this.numOfPlantFood <= 0) return false;
         Tile tile = getTileByPosition(gridX, gridY);
@@ -550,38 +569,47 @@ public abstract class GamePlay {
         }
         return false;
     }
+
     public void applyPlantFood(int x, int y) {
         Tile thisTile = getTileByPosition(x, y);
         if (thisTile != null) {
             for (BattlePlant p : thisTile.getPlants()) p.setEffected(true, effectedTime);
         }
     }
+
     public boolean isPlantBoosted(String plantName) {
         if (boostedPlants.contains(plantName)) return true;
         PlantType type = PlantType.fromName(plantName);
         return type != null && thisUser != null && thisUser.getUserProgress() != null && thisUser.getUserProgress().hasGreenhouseBoost(type);
     }
+
     public void addPlantFood() {
         this.numOfPlantFood = Math.min(this.numOfPlantFood + 1, 3);
         UsersManager.getInstance().addPlantFood(1);
     }
+
     public void addSun(Sun sun) {
         this.mySuns += sun.getNumberOfSun();
     }
+
     public void cheatAddSun(int sun) {
         this.mySuns += sun;
     }
+
     public void incrementLostPlants() {
         this.lostPlants++;
     }
+
     public void addKilledZombieCost(int waveNum, float cost) {
         if (waveNum >= 0 && waveNum < killedZombiesCostPerWave.length) killedZombiesCostPerWave[waveNum] += cost;
     }
+
     protected void endGame(boolean won) {
         this.won = won;
         this.gameOver = true;
         this.isPaused = true;
     }
+
     public int getNextRandomY() {
         if (rowBag.isEmpty()) {
             for (int i = 1; i <= 5; i++) rowBag.add(i);
@@ -589,107 +617,139 @@ public abstract class GamePlay {
         }
         return rowBag.remove(0);
     }
+
     public int getRandomTime() {
         int[] numbers = {200, 350, 300, 450};
         return numbers[(int) (Math.random() * numbers.length)];
     }
+
     public int getLevelOfPlant(String plantName) {
         PlantType t = PlantType.valueOf(plantName);
         Integer lvl = thisUser.getUserProgress().getUnlockedPlantsAndTheirLevels().get(t);
         return lvl != null ? lvl : 1;
     }
+
     public int getRealX(int gridX) {
         return (int) Math.round(566.1 + ((gridX - 1) * 152.2));
     }
+
     public int getRealY(int gridY) {
         return 205 + ((gridY - 1) * 150);
     }
+
     public Tile getTileByPosition(int x, int y) {
         return tiles.stream().filter(t -> (int) t.getPosition().getX() == x && (int) t.getPosition().getY() == y).findFirst().orElse(null);
     }
+
     public int getNumOfPlantFood() {
         return numOfPlantFood;
     }
+
     public ArrayList<Zombie> getGameZombies() {
         return gameZombies;
     }
-    public void setMySuns(int mySuns) {
-        this.mySuns = mySuns;
-    }
+
     public Level getLevelObject() {
         return levelObject;
     }
+
     public void setLevelObject(Level levelObject) {
         this.levelObject = levelObject;
     }
+
     public int getLevel() {
         return level;
     }
+
     public ChapterType getChapterType() {
         return chapterType;
     }
+
     public ArrayList<BattlePlant> getPlants() {
         return plants;
     }
+
     public ArrayList<BattlePlant> getGamePlants() {
         return gamePlants;
     }
+
     public ArrayList<Sun> getActiveSuns() {
         return activeSuns;
     }
+
     public int getTotalTicksPassed() {
         return totalTicksPassed;
     }
+
     public double getTotalTimePassed() {
         return totalTimePassed;
     }
+
     public void setTotalTimePassed(double totalTimePassed) {
         this.totalTimePassed = totalTimePassed;
     }
+
     public ArrayList<Projectile> getProjectiles() {
         return projectiles;
     }
+
     public ArrayList<Dynamite> getDynamites() {
         return dynamites;
     }
+
     public ArrayList<Tile> getTiles() {
         return tiles;
     }
+
     public ArrayList<Mower> getMowers() {
         return mowers;
     }
+
     public ArrayList<DroppedPlantFood> getActivePlantFoods() {
         return activePlantFoods;
     }
+
     public ArrayList<SandstormEffect> getActiveSandstorms() {
         return activeSandstorms;
     }
+
     public void addSandstormEffect(float x, float y) {
         activeSandstorms.add(new SandstormEffect(x, y));
     }
+
     public ArrayList<IcyWindEffect> getActiveIcyWinds() {
         return activeIcyWinds;
     }
+
     public User getThisUser() {
         return thisUser;
     }
+
     public boolean isPaused() {
         return isPaused;
     }
+
     public boolean isGameOver() {
         return gameOver;
     }
+
     public boolean hasWon() {
         return won;
     }
+
     public String getLevelObjectives() {
         return levelObjectives;
     }
+
     public void setLevelObjectives(String levelObjectives) {
         this.levelObjectives = levelObjectives;
     }
 
     public int getMySuns() {
         return mySuns;
+    }
+
+    public void setMySuns(int mySuns) {
+        this.mySuns = mySuns;
     }
 }

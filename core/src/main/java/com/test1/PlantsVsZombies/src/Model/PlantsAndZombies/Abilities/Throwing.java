@@ -1,6 +1,5 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 
-import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
@@ -13,16 +12,16 @@ import java.util.Random;
 
 public class
 Throwing implements Ability {
-    private static double TILE_X_LENGTH = 152.2;
-    private static int TOMB_RAISER_ACTION_INTERVAL = 20;
-    private static int HUNTER_ACTION_INTERVAL = 20;
-    private static int OCTOPUS_ACTION_INTERVAL = 20;
-    private static int FISHERMAN_ACTION_INTERVAL = 20;
-    private static int KING_ACTION_INTERVAL = 20;
-    private static int WIZARD_ACTION_INTERVAL = 20;
-    private static Random RANDOM = new Random();
+    private static final double TILE_X_LENGTH = 152.2;
+    private static final int TOMB_RAISER_ACTION_INTERVAL = 20;
+    private static final int HUNTER_ACTION_INTERVAL = 20;
+    private static final int OCTOPUS_ACTION_INTERVAL = 20;
+    private static final int FISHERMAN_ACTION_INTERVAL = 20;
+    private static final int KING_ACTION_INTERVAL = 20;
+    private static final int WIZARD_ACTION_INTERVAL = 20;
+    private static final Random RANDOM = new Random();
 
-    private GamePlay GAME = GamePlay.activeInstance;
+    private final GamePlay GAME = GamePlay.activeInstance;
 
     private boolean isActivated = false;
 
@@ -207,10 +206,7 @@ Throwing implements Ability {
         }
 
         if (tile.isArable()) {
-            if (tile.getPlants().isEmpty()) {
-                return true;
-            }
-            return false;
+            return tile.getPlants().isEmpty();
         }
 
         return false;

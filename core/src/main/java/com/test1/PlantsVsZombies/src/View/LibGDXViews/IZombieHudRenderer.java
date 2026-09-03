@@ -1,6 +1,7 @@
 package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -43,46 +44,23 @@ public class IZombieHudRenderer {
         "animation_lrg",
         "eat"
     };
-
-
-    private static final float PREVIEW_ANIM_SCALE = 0.45f;
-
-
     public static final float CARD_X = 45f, CARD_START_Y = 980f, CARD_WIDTH = 160f, CARD_HEIGHT = 105f, CARD_SPACING = 11f;
     public static final float ZOMBIE_CARD_X = 1715f;
-
     public static final float PLANT_CURRENCY_X = 20f, PLANT_CURRENCY_Y = 1100f, CURRENCY_BOX_W = 215f, CURRENCY_BOX_H = 80f;
     public static final float ZOMBIE_CURRENCY_X = 1685f, ZOMBIE_CURRENCY_Y = 1100f;
-
-
     public static final float DRAWER_TOGGLE_X = 1780f, DRAWER_TOGGLE_Y = 30f, DRAWER_TOGGLE_SIZE = 100f;
-
-
     public static final float PAUSE_BTN_X = 1670f, PAUSE_BTN_Y = 30f, PAUSE_BTN_SIZE = 100f;
-
-
     public static final float TIMER_BOX_X = 850f, TIMER_BOX_Y = 1100f, TIMER_BOX_W = 220f, TIMER_BOX_H = 80f;
-
-
     public static final float DRAWER_PANEL_X = 1160f, DRAWER_PANEL_Y = 150f, DRAWER_PANEL_W = 720f, DRAWER_PANEL_H = 330f;
     public static final float DRAWER_BTN_W = 220f, DRAWER_BTN_H = 90f;
     public static final float DRAWER_COL_GAP = 20f, DRAWER_ROW_GAP = 10f, DRAWER_MARGIN = 20f;
-
-    public static float drawerButtonX(int col) {
-        return DRAWER_PANEL_X + DRAWER_MARGIN + col * (DRAWER_BTN_W + DRAWER_COL_GAP);
-    }
-    public static float drawerButtonY(int row) {
-        return DRAWER_PANEL_Y + DRAWER_MARGIN + row * (DRAWER_BTN_H + DRAWER_ROW_GAP);
-    }
-
+    private static final float PREVIEW_ANIM_SCALE = 0.45f;
     private static final float EMOTE_POPUP_CENTER_X = 960f, EMOTE_POPUP_Y = 880f;
     private static final float EMOTE_POPUP_DURATION = 3.2f;
-
     private final TextureBank textureBank;
     private final PamPlayer player;
     private final BitmapFont hudFont;
     private final GlyphLayout glyphLayout = new GlyphLayout();
-
     private final TextureRegion sunIcon;
     private final TextureRegion brainIcon;
     private final TextureRegion bgHud;
@@ -90,7 +68,6 @@ public class IZombieHudRenderer {
     private final TextureRegion pauseBtnRegion;
     private final TextureRegion drawerToggleRegion;
     private final TextureRegion[] emojiRegions = new TextureRegion[REACTION_EMOJI_ASSET_IDS.length];
-
     public IZombieHudRenderer(TextureBank textureBank, PamPlayer player, BitmapFont hudFont) {
         this.textureBank = textureBank;
         this.player = player;
@@ -113,6 +90,14 @@ public class IZombieHudRenderer {
         for (int i = 0; i < REACTION_EMOJI_ASSET_IDS.length; i++) {
             emojiRegions[i] = textureBank.region(REACTION_EMOJI_ASSET_IDS[i]);
         }
+    }
+
+    public static float drawerButtonX(int col) {
+        return DRAWER_PANEL_X + DRAWER_MARGIN + col * (DRAWER_BTN_W + DRAWER_COL_GAP);
+    }
+
+    public static float drawerButtonY(int row) {
+        return DRAWER_PANEL_Y + DRAWER_MARGIN + row * (DRAWER_BTN_H + DRAWER_ROW_GAP);
     }
 
     public void render(SpriteBatch batch, ShapeRenderer shapeRenderer, IZombie gamePlay,
@@ -262,13 +247,13 @@ public class IZombieHudRenderer {
         if (lane < 1 || lane > 5) return;
 
         float laneY = 130f + (lane - 1) * 150f + 75f;
-        com.badlogic.gdx.Gdx.gl.glEnable(com.badlogic.gdx.Gdx.gl.GL_BLEND);
+        com.badlogic.gdx.Gdx.gl.glEnable(GL20.GL_BLEND);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(new Color(0.4f, 0.9f, 0.4f, 0.18f));
 
         shapeRenderer.rect(490f, laneY - 75f, 1370f, 150f);
         shapeRenderer.end();
-        com.badlogic.gdx.Gdx.gl.glDisable(com.badlogic.gdx.Gdx.gl.GL_BLEND);
+        com.badlogic.gdx.Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     private void renderDrawerToggleAndPanel(SpriteBatch batch, IZombieHudInputState input, float stateTime) {
@@ -332,18 +317,18 @@ public class IZombieHudRenderer {
         float currentCenterY = EMOTE_POPUP_Y;
 
         for (ActiveReaction reaction : activeReactions) {
-            float age = stateTime - reaction.spawnStateTime;
+            float age = stateTime - reaction.spawnStateTime();
             if (age < 0 || age > EMOTE_POPUP_DURATION) continue;
 
             float alpha = (age > EMOTE_POPUP_DURATION - 0.8f)
                 ? Math.max(0f, (EMOTE_POPUP_DURATION - age) / 0.8f)
                 : 1f;
 
-            if (reaction.category == ActiveReaction.Category.TEXT) {
-                String text = (reaction.index >= 0 && reaction.index < REACTION_TEXTS.length)
-                    ? REACTION_TEXTS[reaction.index]
+            if (reaction.category() == ActiveReaction.Category.TEXT) {
+                String text = (reaction.index() >= 0 && reaction.index() < REACTION_TEXTS.length)
+                    ? REACTION_TEXTS[reaction.index()]
                     : "";
-                String fullText = reaction.fromLabel + ": " + text;
+                String fullText = reaction.fromLabel() + ": " + text;
 
                 float boxW = 820f;
                 float boxH = 110f;
@@ -364,9 +349,9 @@ public class IZombieHudRenderer {
 
                 currentCenterY -= 130f;
 
-            } else if (reaction.category == ActiveReaction.Category.EMOJI) {
-                if (reaction.index >= 0 && reaction.index < emojiRegions.length && emojiRegions[reaction.index] != null) {
-                    TextureRegion icon = emojiRegions[reaction.index];
+            } else if (reaction.category() == ActiveReaction.Category.EMOJI) {
+                if (reaction.index() >= 0 && reaction.index() < emojiRegions.length && emojiRegions[reaction.index()] != null) {
+                    TextureRegion icon = emojiRegions[reaction.index()];
                     float size = 150f;
                     batch.setColor(1f, 1f, 1f, alpha);
                     batch.draw(icon, EMOTE_POPUP_CENTER_X - (size / 2f), currentCenterY - (size / 2f), size, size);
@@ -374,22 +359,22 @@ public class IZombieHudRenderer {
 
                     hudFont.getData().setScale(0.6f);
                     hudFont.setColor(1f, 1f, 1f, alpha);
-                    hudFont.draw(batch, reaction.fromLabel, EMOTE_POPUP_CENTER_X - 150f, currentCenterY - (size / 2f) - 10f, 300f, Align.center, false);
+                    hudFont.draw(batch, reaction.fromLabel(), EMOTE_POPUP_CENTER_X - 150f, currentCenterY - (size / 2f) - 10f, 300f, Align.center, false);
                     hudFont.setColor(Color.WHITE);
                     hudFont.getData().setScale(1f);
 
                     currentCenterY -= 180f;
                 }
 
-            } else if (reaction.category == ActiveReaction.Category.STICKER) {
-                if (player != null && reaction.index >= 0 && reaction.index < STICKER_ANIM_PATHS.length) {
+            } else if (reaction.category() == ActiveReaction.Category.STICKER) {
+                if (player != null && reaction.index() >= 0 && reaction.index() < STICKER_ANIM_PATHS.length) {
                     batch.setColor(1f, 1f, 1f, alpha);
                     batch.setTransformMatrix(batch.getTransformMatrix().idt()
                         .translate(EMOTE_POPUP_CENTER_X, currentCenterY, 0)
                         .scale(1.8f, 1.8f, 1)
                         .translate(-EMOTE_POPUP_CENTER_X, -currentCenterY, 0));
 
-                    player.draw(batch, STICKER_ANIM_PATHS[reaction.index], STICKER_STATE_NAMES[reaction.index],
+                    player.draw(batch, STICKER_ANIM_PATHS[reaction.index()], STICKER_STATE_NAMES[reaction.index()],
                         age, EMOTE_POPUP_CENTER_X, currentCenterY, true);
 
                     batch.setTransformMatrix(batch.getTransformMatrix().idt());
@@ -397,7 +382,7 @@ public class IZombieHudRenderer {
 
                     hudFont.getData().setScale(0.6f);
                     hudFont.setColor(1f, 1f, 1f, alpha);
-                    hudFont.draw(batch, reaction.fromLabel, EMOTE_POPUP_CENTER_X - 150f, currentCenterY - 90f, 300f, Align.center, false);
+                    hudFont.draw(batch, reaction.fromLabel(), EMOTE_POPUP_CENTER_X - 150f, currentCenterY - 90f, 300f, Align.center, false);
                     hudFont.setColor(Color.WHITE);
                     hudFont.getData().setScale(1f);
 
@@ -418,7 +403,7 @@ public class IZombieHudRenderer {
     }
 
     private void renderCooldownOverlays(ShapeRenderer shapeRenderer, IZombie gamePlay, boolean showPlantSide, boolean showZombieSide) {
-        com.badlogic.gdx.Gdx.gl.glEnable(com.badlogic.gdx.Gdx.gl.GL_BLEND);
+        com.badlogic.gdx.Gdx.gl.glEnable(GL20.GL_BLEND);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
         if (showPlantSide) {
@@ -435,6 +420,6 @@ public class IZombieHudRenderer {
         }
 
         shapeRenderer.end();
-        com.badlogic.gdx.Gdx.gl.glDisable(com.badlogic.gdx.Gdx.gl.GL_BLEND);
+        com.badlogic.gdx.Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 }

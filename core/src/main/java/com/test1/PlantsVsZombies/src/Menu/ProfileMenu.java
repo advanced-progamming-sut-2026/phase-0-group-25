@@ -1,13 +1,10 @@
 package com.test1.PlantsVsZombies.src.Menu;
 
-import com.test1.PlantsVsZombies.src.Enums.Command;
 import com.test1.PlantsVsZombies.src.Enums.MenuType;
 import com.test1.PlantsVsZombies.src.Model.User.User;
 import com.test1.PlantsVsZombies.src.Model.User.UsersManager;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.BaseView;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.ProfileMenuView;
-
-import java.util.regex.Matcher;
 
 public class ProfileMenu extends Menu {
     private final ProfileMenuView profileMenuView;
@@ -45,7 +42,7 @@ public class ProfileMenu extends Menu {
     }
 
     private void changePassword(String newPassword, String newPasswordConfirmed, String oldPassword) {
-        String error = UsersManager.getInstance().validateAndChangePassword(newPassword, newPasswordConfirmed,oldPassword);
+        String error = UsersManager.getInstance().validateAndChangePassword(newPassword, newPasswordConfirmed, oldPassword);
         if (error != null) {
             getView().showError(error);
             return;
@@ -68,7 +65,6 @@ public class ProfileMenu extends Menu {
 
         profileMenuView.showInfo(username, nickname, totalLevelsPassed, gemsCount, coinsCount);
     }
-
 
 
     @Override

@@ -1,7 +1,6 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities;
 
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
-import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
 import com.test1.PlantsVsZombies.src.Model.Tile;
@@ -12,8 +11,8 @@ import java.util.Random;
 
 
 public class MeleeAttacking implements Ability {
-    private static Random RANDOM = new Random();
-    private GamePlay GAME = GamePlay.activeInstance;
+    private static final Random RANDOM = new Random();
+    private final GamePlay GAME = GamePlay.activeInstance;
 
 
     @Override
@@ -155,10 +154,8 @@ public class MeleeAttacking implements Ability {
         double timeDifference = 10 * (currentTime - plant.getEffectedTime());
         timeDifference = Math.floor(timeDifference);
         timeDifference /= 10;
-        if ((timeDifference % 0.8) == 0) {//every 0.8 second, melee attackers execute their special ability
-            return true;
-        }
-        return false;
+        //every 0.8 second, melee attackers execute their special ability
+        return (timeDifference % 0.8) == 0;
     }
 
     private void plantFoodEffect(BattlePlant plant, ArrayList<String> tags) {
@@ -182,7 +179,6 @@ public class MeleeAttacking implements Ability {
         if (plantFoodEffect.containsKey("range")) {
             int range = (int) plantFoodEffect.get("range");
             rangeDamage(plant.getPosition(), range, damage);
-            return;
         }
 
     }

@@ -6,12 +6,13 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 import com.test1.PlantsVsZombies.src.Model.Tile;
+
 import java.util.ArrayList;
 import java.util.Random;
 
 public class PlantFood {
-    private GamePlay GAME = GamePlay.activeInstance;
-    private static Random RANDOM = new Random();
+    private static final Random RANDOM = new Random();
+    private final GamePlay GAME = GamePlay.activeInstance;
 
     public void plantFoodEffect(BattlePlant plant, ArrayList<String> tags) {
         if (plant.getPlantStats().getCategory().equals("Wall-nut")) {

@@ -14,12 +14,7 @@ import com.test1.PlantsVsZombies.src.Enums.PlantCategory;
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Enums.ZombieType;
 import com.test1.PlantsVsZombies.src.Menu.CollectionMenu;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.PlantFactory;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.PlantStats;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.ZombieFactory;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.ZombieStats;
+import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.*;
 import com.test1.PlantsVsZombies.src.Model.User.User;
 import com.test1.PlantsVsZombies.src.Model.User.UserProgress;
 import com.test1.PlantsVsZombies.src.Model.User.UserProgressManager;
@@ -34,29 +29,20 @@ import java.util.Set;
 
 public class CollectionMenuScreen extends AbstractScreen implements CollectionMenuView {
 
-    private enum Tab { PLANTS, ZOMBIES }
-
-    private enum FilterDimension { NONE, FAMILY, LOCK_STATUS, UPGRADABILITY }
-
     private static final String BACKGROUND_ASSET_ID = "IMAGE_MAINMENU_BACKGROUND";
     private static final String ERROR_BG_ASSET_ID = "IMAGE_UI_GENERIC_TIMER_RIBBON_RED";
     private static final String SUCCESS_BG_ASSET_ID = "IMAGE_UI_GENERIC_VTB";
-
     private static final String PLANT_ICON_BOX_ASSET_ID = "IMAGE_UI_PACKETS_SELECTED_PREMIUM";
     private static final String ZOMBIE_ICON_BOX_ASSET_ID = "IMAGE_UI_ALMANAC_PACKETS_ZOMBIES_READY";
-
     private static final float CARD_CELL_WIDTH = 160f;
     private static final float CARD_CELL_HEIGHT = 190f;
     private static final float ANIMATION_BOX_HEIGHT = 400f;
     private static final float ANIMATION_BOX_WIDTH = 350f;
-
+    private final Set<PlantCategory> filterFamilies = new HashSet<>();
     private CollectionMenu menuController;
-
     private Tab currentTab = Tab.PLANTS;
     private Table gridContainer;
-
     private FilterDimension activeFilterDimension = FilterDimension.NONE;
-    private final Set<PlantCategory> filterFamilies = new HashSet<>();
     private boolean filterWantsUnlocked = true;
     private boolean filterWantsUpgradable = true;
 
@@ -161,10 +147,6 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
         refreshGrid();
     }
 
-    // ============================================================
-    // GRID
-    // ============================================================
-
     private void refreshGrid() {
         if (gridContainer == null) return;
         gridContainer.clearChildren();
@@ -254,6 +236,10 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
         return card;
     }
 
+    // ============================================================
+    // GRID
+    // ============================================================
+
     private Actor buildZombieCard(ZombieType type, UserProgress progress) {
         boolean unlocked = progress != null && progress.getUnlockedZombies().contains(type);
 
@@ -274,10 +260,6 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
         card.add(contentStack);
         return card;
     }
-
-    // ============================================================
-    // FILTERING
-    // ============================================================
 
     private boolean passesActivePlantFilter(PlantType type, UserProgress progress) {
         if (activeFilterDimension == FilterDimension.NONE) return true;
@@ -313,6 +295,10 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
         int requiredSeeds = UserProgressManager.getRequiredSeedPacketsForUpgrade(level);
         return progress.getCoinsCount() >= requiredCoins && progress.hasEnoughSeedPackets(type, requiredSeeds);
     }
+
+    // ============================================================
+    // FILTERING
+    // ============================================================
 
     private PlantCategory resolveCategory(PlantType type, int level) {
         try {
@@ -455,10 +441,6 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
         showModal(wrapper);
     }
 
-    // ============================================================
-    // BUY DIALOG
-    // ============================================================
-
     private void openBuyDialog(PlantType type) {
         Table box = new BorderedTable();
         box.pad(30);
@@ -503,10 +485,6 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
 
         showModal(box);
     }
-
-    // ============================================================
-    // DETAIL DIALOGS
-    // ============================================================
 
     private void openPlantDetailDialog(PlantType type) {
         User user = UsersManager.getInstance().getLoggedInUser();
@@ -579,12 +557,17 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
         showModal(box);
     }
 
+    // ============================================================
+    // BUY DIALOG
+    // ============================================================
+
     private void openZombieDetailDialog(ZombieType type) {
         ZombieStats stats = null;
         try {
             Zombie zombie = ZombieFactory.createZombie(type.getName());
             if (zombie != null) stats = zombie.getZombieStats();
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         Table box = new BorderedTable();
         box.pad(50);
@@ -625,7 +608,7 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
     }
 
     // ============================================================
-    // FORMATTING HELPERS
+    // DETAIL DIALOGS
     // ============================================================
 
     private String formatPlantName(PlantType type) {
@@ -637,26 +620,36 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
     }
 
     // ============================================================
+    // FORMATTING HELPERS
+    // ============================================================
+
+    @Override
+    public void showPlants(List<String> plantNames) {
+    }
+
+    @Override
+    public void showAllPlants(List<String> plantNames) {
+    }
+
+    // ============================================================
     // CollectionMenuView / BaseView
     // ============================================================
 
     @Override
-    public void showPlants(List<String> plantNames) {}
+    public void showZombies(List<String> zombieNames) {
+    }
 
     @Override
-    public void showAllPlants(List<String> plantNames) {}
+    public void showAllZombies(List<String> zombieNames) {
+    }
 
     @Override
-    public void showZombies(List<String> zombieNames) {}
+    public void showPlantDetails(String plantName, int cost, int baseHP, String category) {
+    }
 
     @Override
-    public void showAllZombies(List<String> zombieNames) {}
-
-    @Override
-    public void showPlantDetails(String plantName, int cost, int baseHP, String category) {}
-
-    @Override
-    public void showZombieDetails(String zombieName, double velocity, int baseHP, String category) {}
+    public void showZombieDetails(String zombieName, double velocity, int baseHP, String category) {
+    }
 
     @Override
     public void showPlantPurchased(String plantName) {
@@ -681,4 +674,8 @@ public class CollectionMenuScreen extends AbstractScreen implements CollectionMe
     public void showCurrentMenu() {
         updateCurrencyHud();
     }
+
+    private enum Tab {PLANTS, ZOMBIES}
+
+    private enum FilterDimension {NONE, FAMILY, LOCK_STATUS, UPGRADABILITY}
 }

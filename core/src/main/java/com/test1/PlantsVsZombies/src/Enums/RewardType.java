@@ -11,6 +11,7 @@ public enum RewardType {
 
 
     private final String id;
+
     RewardType(String id) {
         this.id = id;
     }

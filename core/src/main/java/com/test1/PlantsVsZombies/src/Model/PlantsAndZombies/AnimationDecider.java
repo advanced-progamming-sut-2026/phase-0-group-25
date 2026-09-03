@@ -1,24 +1,20 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies;
 
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
-import com.test1.PlantsVsZombies.src.Enums.PlantCategory;
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
-import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Abilities.*;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Armors.Armor;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Armors.ArmorConfig;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 import com.test1.PlantsVsZombies.src.View.LibGDXViews.ScreenShake;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class AnimationDecider {
-    private GamePlay GAME = GamePlay.activeInstance;
+    private final GamePlay GAME = GamePlay.activeInstance;
 
     public String plantDecider(BattlePlant plant, float stateTime) {
         Map<String, String> status = plant.getPlantStats().getStatus();
@@ -191,7 +187,7 @@ public class AnimationDecider {
     private String getWrampUpPlantsAnimation(BattlePlant plant, Map<String, String> status, float stateTime) {
         ArrayList<Integer> growthTimeStages = (ArrayList<Integer>) plant.getPlantStats().getAttributes().get("growth_time");
 
-        double differenceTime = (double) (GAME.getTotalTimePassed() - plant.getPlantTime());
+        double differenceTime = GAME.getTotalTimePassed() - plant.getPlantTime();
         String stage = "";
 
         if (differenceTime >= growthTimeStages.get(1)) {

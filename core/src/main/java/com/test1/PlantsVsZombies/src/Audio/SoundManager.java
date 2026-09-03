@@ -8,21 +8,19 @@ import com.test1.PlantsVsZombies.src.Enums.AudioType;
 import java.util.HashMap;
 
 public class SoundManager {
+    // Caps the max music output to 20% so computer master volume can be turned up
+    private static final float MUSIC_MAX_CEILING = 0.20f;
     private static SoundManager instance;
     private final HashMap<AudioType, Sound> sfxMap = new HashMap<>();
-
     private Music currentBackGroundMusic = null;
     private AudioType currentBackGroundMusicType = null;
-
     private float musicVolume = 0.5f;
     private float sfxVolume = 1.0f;
     private boolean musicEnabled = true;
     private boolean sfxEnabled = true;
 
-    // Caps the max music output to 20% so computer master volume can be turned up
-    private static final float MUSIC_MAX_CEILING = 0.20f;
-
-    private SoundManager() {}
+    private SoundManager() {
+    }
 
     public static SoundManager getInstance() {
         if (instance == null) {
@@ -66,24 +64,6 @@ public class SoundManager {
         updateBackGroundMusicState();
     }
 
-    public void setMusicVolume(float volume) {
-        musicVolume = Math.max(0f, Math.min(1f, volume));
-        updateBackGroundMusicState();
-    }
-
-    public void setSfxVolume(float volume) {
-        sfxVolume = Math.max(0f, Math.min(1f, volume));
-    }
-
-    public void setMusicEnabled(boolean enabled) {
-        musicEnabled = enabled;
-        updateBackGroundMusicState();
-    }
-
-    public void setSfxEnabled(boolean enabled) {
-        sfxEnabled = enabled;
-    }
-
     private void updateBackGroundMusicState() {
         if (currentBackGroundMusic != null) {
             if (musicEnabled) {
@@ -101,16 +81,34 @@ public class SoundManager {
         return musicVolume;
     }
 
+    public void setMusicVolume(float volume) {
+        musicVolume = Math.max(0f, Math.min(1f, volume));
+        updateBackGroundMusicState();
+    }
+
     public float getSfxVolume() {
         return sfxVolume;
+    }
+
+    public void setSfxVolume(float volume) {
+        sfxVolume = Math.max(0f, Math.min(1f, volume));
     }
 
     public boolean isMusicEnabled() {
         return musicEnabled;
     }
 
+    public void setMusicEnabled(boolean enabled) {
+        musicEnabled = enabled;
+        updateBackGroundMusicState();
+    }
+
     public boolean isSfxEnabled() {
         return sfxEnabled;
+    }
+
+    public void setSfxEnabled(boolean enabled) {
+        sfxEnabled = enabled;
     }
 
     public void dispose() {

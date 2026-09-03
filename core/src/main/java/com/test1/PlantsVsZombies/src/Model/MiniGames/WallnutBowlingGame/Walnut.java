@@ -14,8 +14,19 @@ public abstract class Walnut {
 
     public abstract void update(WalnutBowling game, float delta);
 
-    public double getX() { return x; }
-    public double getY() { return y; }
-    public boolean isActive() { return isActive; }
-    public void setActive(boolean active) { isActive = active; }
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
 }

@@ -169,9 +169,28 @@ public class IZombieCouchPlayInputHandler extends InputAdapter implements IZombi
         return x >= rx && x <= rx + rw && y >= ry && y <= ry + rh;
     }
 
-    @Override public int getSelectedZombieLane() { return selectedZombieLane; }
-    @Override public Vector3 getMouseWorldPos() { return mouseWorldPos; }
-    @Override public BattlePlant getSelectedPlantCard() { return selectedPlantCard; }
-    @Override public String getSelectedZombieCardType() { return selectedZombieCardType; }
-    @Override public boolean isReactionDrawerOpen() { return reactionDrawerOpen; }
+    @Override
+    public int getSelectedZombieLane() {
+        return selectedZombieLane;
+    }
+
+    @Override
+    public Vector3 getMouseWorldPos() {
+        return mouseWorldPos;
+    }
+
+    @Override
+    public BattlePlant getSelectedPlantCard() {
+        return selectedPlantCard;
+    }
+
+    @Override
+    public String getSelectedZombieCardType() {
+        return selectedZombieCardType;
+    }
+
+    @Override
+    public boolean isReactionDrawerOpen() {
+        return reactionDrawerOpen;
+    }
 }

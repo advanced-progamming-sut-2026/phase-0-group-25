@@ -1,9 +1,9 @@
 package com.test1.PlantsVsZombies.src.Model;
 
 public class IcyWindEffect {
-    private int row;
+    private final int row;
     private float animTime = 0f;
-    private float duration = 2.5f;
+    private final float duration = 2.5f;
 
     public IcyWindEffect(int row) {
         this.row = row;
@@ -17,7 +17,11 @@ public class IcyWindEffect {
         return animTime >= duration;
     }
 
-    public int getRow() { return row; }
+    public int getRow() {
+        return row;
+    }
 
-    public float getAnimTime() { return animTime; }
+    public float getAnimTime() {
+        return animTime;
+    }
 }

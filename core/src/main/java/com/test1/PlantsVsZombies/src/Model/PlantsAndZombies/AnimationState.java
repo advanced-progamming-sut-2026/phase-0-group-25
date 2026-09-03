@@ -12,12 +12,12 @@ public class AnimationState {
 
     /**
      * Updates the animation state.
-     *
+     * <p>
      * If the clip has changed:
-     *      restart it from frame 0.
-     *
+     * restart it from frame 0.
+     * <p>
      * If the clip is the same:
-     *      continue from its previous frame.
+     * continue from its previous frame.
      */
     public void update(String newClip, float delta) {
 

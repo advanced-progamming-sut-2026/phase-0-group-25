@@ -14,8 +14,8 @@ public class ShopMenuTerminalView extends AbstractTerminalView implements ShopMe
         System.out.printf("%-4s %-22s %-10s %-8s %-6s %s\n", "ID", "Name", "Price", "Currency", "Unit", "Description");
         for (ShopItem item : items) {
             System.out.printf("%-4d %-22s %-10d %-8s %-6d %s\n",
-                    item.getId(), item.getName(), item.getPrice(),
-                    item.getCurrency().getName(), item.getUnitSize(), item.getDescription());
+                item.getId(), item.getName(), item.getPrice(),
+                item.getCurrency().getName(), item.getUnitSize(), item.getDescription());
         }
         System.out.println("(Use 'shop buy -i <id> -n <count> [-t plant]' to purchase)");
     }

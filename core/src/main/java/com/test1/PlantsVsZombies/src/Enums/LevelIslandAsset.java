@@ -30,14 +30,6 @@ public enum LevelIslandAsset {
         this.assetId = assetId;
     }
 
-    public ChapterType getChapterType() {
-        return chapterType;
-    }
-
-    public String getAssetId() {
-        return assetId;
-    }
-
     public static String getAssetId(ChapterType chapterType) {
         for (LevelIslandAsset asset : values()) {
             if (asset.chapterType == chapterType) {
@@ -46,5 +38,13 @@ public enum LevelIslandAsset {
         }
 
         return null;
+    }
+
+    public ChapterType getChapterType() {
+        return chapterType;
+    }
+
+    public String getAssetId() {
+        return assetId;
     }
 }

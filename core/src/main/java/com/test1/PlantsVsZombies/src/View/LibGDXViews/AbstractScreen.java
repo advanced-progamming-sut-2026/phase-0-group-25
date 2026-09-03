@@ -38,27 +38,24 @@ import pvz.libpvz.textures.TextureBank;
 import java.util.HashMap;
 
 public abstract class AbstractScreen implements Screen {
-    protected Stage stage;
-    protected Skin skin;
-    protected TextureBank textureBank;
-    protected Table rootTable;
-    private Stack mainStack;
-    private Stack modalStack;
-    private Stack toastStack;
-    private com.badlogic.gdx.graphics.Texture modalScrimTexture;
-    private Texture fallbackBoxTexture;
-
-    private int lastWidth = -1;
-    private int lastHeight = -1;
-
-    protected Label coinCountLabel;
-    protected Label gemCountLabel;
-
     protected static final String CURRENCY_BOX_BG_ASSET_ID = "IMAGE_UI_HUD_INGAME_BACKGROUND_3SLICE";
     protected static final String COIN_ICON_ASSET_ID = "IMAGE_UI_THYMED_EVENTS_ECS_CONVRT_COIN";
     protected static final String GEM_ICON_ASSET_ID = "IMAGE_EFFECTS_COIN_DIAMOND_COIN_DIAMOND_141X146";
     protected static final String PLUS_BUTTON_ASSET_ID = "IMAGE_UI_HUD_INGAME_COIN_BUY";
     protected static final String BACK_BUTTON_ASSET_ID = "IMAGE_UI_ALMANAC_BUTTONS_HUD_BACK_SELECTED";
+    protected Stage stage;
+    protected Skin skin;
+    protected TextureBank textureBank;
+    protected Table rootTable;
+    protected Label coinCountLabel;
+    protected Label gemCountLabel;
+    private Stack mainStack;
+    private Stack modalStack;
+    private Stack toastStack;
+    private com.badlogic.gdx.graphics.Texture modalScrimTexture;
+    private Texture fallbackBoxTexture;
+    private int lastWidth = -1;
+    private int lastHeight = -1;
 
     @Override
     public void show() {
@@ -499,6 +496,45 @@ public abstract class AbstractScreen implements Screen {
         return new PamAnimationActor(Main.getInstance().getPamPlayer(), animationPath, stateName, visibility);
     }
 
+    public Label createLabel(
+        String text,
+        String fontName,
+        Color fontColor
+    ) {
+        BitmapFont font = skin.get(fontName, BitmapFont.class);
+
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = font;
+        style.fontColor = fontColor;
+
+        return new Label(text, style);
+    }
+
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void resume() {
+    }
+
+    @Override
+    public void hide() {
+    }
+
+    @Override
+    public void dispose() {
+        if (stage != null) {
+            stage.dispose();
+        }
+        if (modalScrimTexture != null) {
+            modalScrimTexture.dispose();
+        }
+        if (fallbackBoxTexture != null) {
+            fallbackBoxTexture.dispose();
+        }
+    }
+
     private static class PamAnimationActor extends Actor {
         private final PamPlayer player;
         private final String animationPath;
@@ -525,37 +561,6 @@ public abstract class AbstractScreen implements Screen {
             float centerX = getX() + getWidth() / 2f;
             float centerY = getY() + getHeight() / 4f;
             player.draw(batch, animationPath, stateName, stateTime, centerX, centerY, true, visibility);
-        }
-    }
-
-    public Label createLabel(
-        String text,
-        String fontName,
-        Color fontColor
-    ) {
-        BitmapFont font = skin.get(fontName, BitmapFont.class);
-
-        Label.LabelStyle style = new Label.LabelStyle();
-        style.font = font;
-        style.fontColor = fontColor;
-
-        return new Label(text, style);
-    }
-
-    @Override public void pause() {}
-    @Override public void resume() {}
-    @Override public void hide() {}
-
-    @Override
-    public void dispose() {
-        if (stage != null) {
-            stage.dispose();
-        }
-        if (modalScrimTexture != null) {
-            modalScrimTexture.dispose();
-        }
-        if (fallbackBoxTexture != null) {
-            fallbackBoxTexture.dispose();
         }
     }
 }

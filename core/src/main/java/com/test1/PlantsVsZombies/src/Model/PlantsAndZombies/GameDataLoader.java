@@ -20,8 +20,8 @@ public class GameDataLoader {
         .configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false)
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         .build();
-    private static Map<String, List<PlantStats>> plantRegistry = new HashMap<>();
-    private static Map<String, ZombieStats> zombieRegistry = new HashMap<>();
+    private static final Map<String, List<PlantStats>> plantRegistry = new HashMap<>();
+    private static final Map<String, ZombieStats> zombieRegistry = new HashMap<>();
 
     public static void loadGameData() {
         loadPlantData();

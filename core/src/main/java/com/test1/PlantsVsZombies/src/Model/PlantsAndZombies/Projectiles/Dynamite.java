@@ -1,16 +1,15 @@
 package com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles;
 
-import com.test1.PlantsVsZombies.src.Menu.GamePlayMenu;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
 
 public class Dynamite {
-    private double velocity = 200;
+    private final double velocity = 200;
     private Position position;
-    private double damage = 30;
+    private final double damage = 30;
 
-    private GamePlay GAME = GamePlay.activeInstance;
+    private final GamePlay GAME = GamePlay.activeInstance;
 
     public Dynamite(Position position) {
         this.position = position;

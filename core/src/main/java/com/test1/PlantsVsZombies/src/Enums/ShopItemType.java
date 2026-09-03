@@ -6,5 +6,5 @@ public enum ShopItemType {
     RANDOM_SEED_PACKET,
     SELECTIVE_SEED_PACKET,
     CURRENCY_EXCHANGE,
-    DAILY_OFFER;
+    DAILY_OFFER
 }

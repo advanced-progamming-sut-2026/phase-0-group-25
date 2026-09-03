@@ -4,7 +4,6 @@ import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.LobbedProjectile;
-import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Position;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 import com.test1.PlantsVsZombies.src.Model.Tile;
 
@@ -12,8 +11,8 @@ import java.util.List;
 import java.util.Random;
 
 public class Lobbing implements Ability {
-    private static Random RANDOM = new Random();
-    private GamePlay GAME = GamePlay.activeInstance;
+    private static final Random RANDOM = new Random();
+    private final GamePlay GAME = GamePlay.activeInstance;
 
     private int targetColumn = -1;
     private int targetRow = -1;
@@ -128,7 +127,8 @@ public class Lobbing implements Ability {
 
             for (Zombie zombie : tile.getZombies()) {
                 if (zombie.getCurrentHP() > 0) {
-                    targetColumn = i;targetRow = row;
+                    targetColumn = i;
+                    targetRow = row;
                     return tile;
                 }
             }
@@ -163,11 +163,7 @@ public class Lobbing implements Ability {
         timeDifference = Math.floor(timeDifference);
         timeDifference /= 10;
 
-        if ((timeDifference % 0.6) == 0) {
-            return true;
-        }
-
-        return false;
+        return (timeDifference % 0.6) == 0;
     }
 
     private void plantFoodEffect(BattlePlant plant) {

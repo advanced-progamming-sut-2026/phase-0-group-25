@@ -64,7 +64,8 @@ public class VaseBreaker extends GamePlay {
     }
 
     @Override
-    public void sunMaker() {}
+    public void sunMaker() {
+    }
 
     public BattlePlant breakJar(int x, int y) {
         Jar targetJar = null;

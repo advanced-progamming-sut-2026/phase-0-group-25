@@ -14,9 +14,9 @@ import java.util.Set;
 public class Level {
 
     private ChapterType chapterType;
-    private int levelNumber;
-    private GamePlayType gamePlayType;
-    private ArrayList<PlantType> plantRewards;
+    private final int levelNumber;
+    private final GamePlayType gamePlayType;
+    private final ArrayList<PlantType> plantRewards;
 
     public Level(ChapterType chapterType, int levelNumber, GamePlayType gamePlayType) {
         this.chapterType = chapterType;

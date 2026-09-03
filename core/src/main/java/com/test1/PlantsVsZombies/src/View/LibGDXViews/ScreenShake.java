@@ -4,12 +4,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
 
 public class ScreenShake {
+    private static final float BASE_X = 1920f / 2f;
+    private static final float BASE_Y = 1200f / 2f;
     private static float timeRemaining = 0f;
     private static float totalDuration = 0f;
     private static float intensity = 0f;
-    private static final float BASE_X = 1920f / 2f;
-    private static final float BASE_Y = 1200f / 2f;
-
 
     public static void shake(float duration, float power) {
         timeRemaining = duration;

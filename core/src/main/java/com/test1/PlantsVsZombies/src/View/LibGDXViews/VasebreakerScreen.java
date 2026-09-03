@@ -1,11 +1,8 @@
 package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -21,13 +18,14 @@ import com.test1.PlantsVsZombies.src.Enums.MiniGameType;
 import com.test1.PlantsVsZombies.src.Enums.PlantType;
 import com.test1.PlantsVsZombies.src.Menu.MenuManager;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
-import com.test1.PlantsVsZombies.src.Model.MiniGames.VasebreakerGame.*;
-import com.test1.PlantsVsZombies.src.Model.Mower;
+import com.test1.PlantsVsZombies.src.Model.MiniGames.VasebreakerGame.GargantuarJar;
+import com.test1.PlantsVsZombies.src.Model.MiniGames.VasebreakerGame.Jar;
+import com.test1.PlantsVsZombies.src.Model.MiniGames.VasebreakerGame.PlantJar;
+import com.test1.PlantsVsZombies.src.Model.MiniGames.VasebreakerGame.VaseBreaker;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.ProjectileConfig;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
-import com.test1.PlantsVsZombies.src.Model.Tile;
 import com.test1.PlantsVsZombies.src.View.ViewInterfaces.GamePlayMenuView;
 import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
@@ -35,7 +33,13 @@ import pvz.libpvz.textures.TextureBank;
 import java.util.ArrayList;
 
 public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView {
-    private VaseBreaker gamePlay;
+    // ---- Pause button (top-right corner, matches GamePlayScreen's) ----
+    public static final String PAUSE_BTN_ASSET_ID = "IMAGE_UI_HUD_INGAME_PAUSE_BUTTON";
+    private static final float PAUSE_BTN_X = 1810f;
+    private static final float PAUSE_BTN_Y = 1105f;
+    private static final float PAUSE_BTN_SIZE = 75f;
+    private final float TICK_RATE = 0.1f;
+    private final VaseBreaker gamePlay;
     private OrthographicCamera camera;
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
@@ -50,20 +54,11 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
     private TextureRegion progressBarFrame;
     private TextureRegion peaRegion;
     private BitmapFont hudFont;
-
     private float stateTime = 0;
     private float timeAccumulator = 0f;
-    private final float TICK_RATE = 0.1f;
-    private int selectedCardIndex = -1;
-    private Vector3 mouseWorldPos = new Vector3();
-
-    // ---- Pause button (top-right corner, matches GamePlayScreen's) ----
-    public static final String PAUSE_BTN_ASSET_ID = "IMAGE_UI_HUD_INGAME_PAUSE_BUTTON";
+    private final int selectedCardIndex = -1;
+    private final Vector3 mouseWorldPos = new Vector3();
     private TextureRegion pauseBtnRegion;
-    private static final float PAUSE_BTN_X = 1810f;
-    private static final float PAUSE_BTN_Y = 1105f;
-    private static final float PAUSE_BTN_SIZE = 75f;
-
     // ---- Objectives / pause / end-of-game modal system (shared component) ----
     private GamePlayModals modals;
 
@@ -153,7 +148,7 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
                 }
 
                 int gridX = (int) Math.round((wx - 566.1) / 152.2) + 1;
-                int gridY = (int) Math.round((wy - 205) / 150) + 1;
+                int gridY = Math.round((wy - 205) / 150) + 1;
 
                 if (gridX >= 1 && gridX <= 9 && gridY >= 1 && gridY <= 5) {
                     if (heldPlant != null) {
@@ -322,13 +317,13 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
         float barY = 1130f;
         float fillWidth = (barWidth - 30f) * jarProgress;
 
-        Gdx.gl.glEnable(Gdx.gl.GL_BLEND);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
         if (heldPlant != null) {
             int hoverCol = (int) Math.round((mouseWorldPos.x - 566.1) / 152.2) + 1;
-            int hoverRow = (int) Math.round((mouseWorldPos.y - 205) / 150) + 1;
+            int hoverRow = Math.round((mouseWorldPos.y - 205) / 150) + 1;
 
             if (hoverCol >= 1 && hoverCol <= 9 && hoverRow >= 1 && hoverRow <= 5) {
                 float tileX = (float) (566.1 + (hoverCol - 1) * 152.2) - 75f;
@@ -348,7 +343,7 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
         }
 
         shapeRenderer.end();
-        Gdx.gl.glDisable(Gdx.gl.GL_BLEND);
+        Gdx.gl.glDisable(GL20.GL_BLEND);
 
         batch.begin();
         if (progressBarFrame != null) {
@@ -406,7 +401,8 @@ public class VasebreakerScreen extends ScreenAdapter implements GamePlayMenuView
     }
 
     @Override
-    public void showCurrentMenu() {}
+    public void showCurrentMenu() {
+    }
 
     @Override
     public void showError(String errorMessage) {

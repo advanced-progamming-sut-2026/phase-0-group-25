@@ -1,24 +1,19 @@
 package com.test1.PlantsVsZombies.src.View.LibGDXViews;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.test1.PlantsVsZombies.src.Enums.ChapterType;
-import com.test1.PlantsVsZombies.src.Model.DroppedPlantFood;
+import com.test1.PlantsVsZombies.src.Model.*;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.GamePlay;
 import com.test1.PlantsVsZombies.src.Model.GamePlayType.SaveOurSeeds;
-import com.test1.PlantsVsZombies.src.Model.IcyWindEffect;
-import com.test1.PlantsVsZombies.src.Model.Mower;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.BattlePlant;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Dynamite;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.LobbedProjectile;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.Projectile;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Projectiles.ProjectileConfig;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
-import com.test1.PlantsVsZombies.src.Model.SandstormEffect;
 import com.test1.PlantsVsZombies.src.Model.Sun.Sun;
-import com.test1.PlantsVsZombies.src.Model.Tile;
 import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
 
@@ -26,11 +21,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class GamePlayWorldRenderer {
+    private static final String JALAPENO_FIRE_ANIM_PATH = "768/INITIAL/EFFECTS/JALAPENO_FIRE/JALAPENO_FIRE.PAM";
+    private static final String BEACH_WATER_ANIM_PATH = "768/FULL/BACKGROUNDS/WAVE_UPPERLAYER/WAVE_UPPERLAYER.PAM";
+    private static final String BEACH_TIDELINE_ANIM_PATH = "768/FULL/BACKGROUNDS/WATER_TIDE_LINE/WATER_TIDE_LINE.PAM";
+    private static final String ICY_WIND_ANIM_PATH = "768/FULL/EFFECTS/FROSTBITE_CHILL_WIND/FROSTBITE_CHILL_WIND.PAM";
+    private static final String SANDSTORM_ANIM_PATH = "768/INITIAL/EFFECTS/SANDSTORM_TOP/SANDSTORM_TOP.PAM";
+    private static final String PLANT_FOOD_GLOW_ANIM_PATH = "768/INITIAL/EFFECTS/PLANTFOOD_FX/PLANTFOOD_FX.PAM";
+    private static final float GRAVE_MAX_HP = 700f;
+    private static final float TIDELINE_X = 1595f, TIDELINE_Y = 505f;
+    private static final float WATER_BASE_X = 2220f, WATER_BASE_Y = 505f, WATER_MOVE_RANGE = 76f;
     private final TextureBank textureBank;
     private final PamPlayer player;
     private final TextureRegion region;
-
-
     private final TextureRegion sosTileRegion;
     private final TextureRegion iceSliderRegion;
     private final TextureRegion iceBlockTexture;
@@ -42,17 +44,6 @@ public class GamePlayWorldRenderer {
     private final TextureRegion[] darkNormalGraveRegions = new TextureRegion[5];
     private final TextureRegion[] darkPlantFoodGraveRegions = new TextureRegion[5];
     private final TextureRegion[] darkSunGraveRegions = new TextureRegion[5];
-
-    private static final String JALAPENO_FIRE_ANIM_PATH = "768/INITIAL/EFFECTS/JALAPENO_FIRE/JALAPENO_FIRE.PAM";
-    private static final String BEACH_WATER_ANIM_PATH = "768/FULL/BACKGROUNDS/WAVE_UPPERLAYER/WAVE_UPPERLAYER.PAM";
-    private static final String BEACH_TIDELINE_ANIM_PATH = "768/FULL/BACKGROUNDS/WATER_TIDE_LINE/WATER_TIDE_LINE.PAM";
-    private static final String ICY_WIND_ANIM_PATH = "768/FULL/EFFECTS/FROSTBITE_CHILL_WIND/FROSTBITE_CHILL_WIND.PAM";
-    private static final String SANDSTORM_ANIM_PATH = "768/INITIAL/EFFECTS/SANDSTORM_TOP/SANDSTORM_TOP.PAM";
-    private static final String PLANT_FOOD_GLOW_ANIM_PATH = "768/INITIAL/EFFECTS/PLANTFOOD_FX/PLANTFOOD_FX.PAM";
-
-    private static final float GRAVE_MAX_HP = 700f;
-    private static final float TIDELINE_X = 1595f, TIDELINE_Y = 505f;
-    private static final float WATER_BASE_X = 2220f, WATER_BASE_Y = 505f, WATER_MOVE_RANGE = 76f;
 
     public GamePlayWorldRenderer(TextureBank textureBank, PamPlayer player, ChapterType chapterType) {
         this.textureBank = textureBank;

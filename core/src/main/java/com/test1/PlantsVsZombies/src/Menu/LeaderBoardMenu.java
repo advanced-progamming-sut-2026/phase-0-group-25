@@ -26,6 +26,54 @@ public class LeaderBoardMenu extends Menu {
         this.view = view;
     }
 
+    /**
+     * Returns the sorted list of users based on the specified column and direction.
+     */
+    public static List<User> getSortedUsers(SortColumn column, boolean ascending) {
+        Collection<User> allUsers = UsersManager.getInstance().getAllUsers();
+        return UserSorter.sortUsers(allUsers, column, ascending);
+    }
+
+    /**
+     * Extracts and formats the last chapter and level played for a given user.
+     */
+    public static String getLastChapterAndLevel(User user) {
+        if (user == null || user.getUserProgress() == null) return "None";
+        UserProgress progress = user.getUserProgress();
+        Map<ChapterType, Integer> unlocked = progress.getUnlockedChaptersAndLevels();
+        if (unlocked == null || unlocked.isEmpty()) return "None";
+
+        ChapterType highestChapter = null;
+        int maxChapterNum = -1;
+
+        for (ChapterType ct : unlocked.keySet()) {
+            if (ct != ChapterType.MINI_GAME && ct.getChapterNumber() > maxChapterNum && unlocked.get(ct) > 0) {
+                maxChapterNum = ct.getChapterNumber();
+                highestChapter = ct;
+            }
+        }
+
+        if (highestChapter == null) return "None";
+
+        int level = unlocked.getOrDefault(highestChapter, 1);
+        String formattedChapter = formatName(highestChapter.getName());
+        return formattedChapter + " - Lvl " + level;
+    }
+
+    private static String formatName(String rawName) {
+        if (rawName == null) return "Unknown";
+        String[] words = rawName.split("_|\\s+");
+        StringBuilder sb = new StringBuilder();
+        for (String w : words) {
+            if (!w.isEmpty()) {
+                sb.append(Character.toUpperCase(w.charAt(0)))
+                    .append(w.substring(1).toLowerCase())
+                    .append(" ");
+            }
+        }
+        return sb.toString().trim();
+    }
+
     @Override
     public void onEnter() {
         showLeaderBoard();
@@ -51,54 +99,6 @@ public class LeaderBoardMenu extends Menu {
     public void showLeaderBoard() {
         List<User> sorted = getSortedUsers(sortColumn, ascending);
         view.showLeaderBoard(sorted, sortColumn, ascending);
-    }
-
-    /**
-     * Returns the sorted list of users based on the specified column and direction.
-     */
-    public static List<User> getSortedUsers(SortColumn column, boolean ascending) {
-        Collection<User> allUsers = UsersManager.getInstance().getAllUsers();
-        return UserSorter.sortUsers(allUsers, column, ascending);
-    }
-
-    /**
-     * Extracts and formats the last chapter and level played for a given user.
-     */
-    public static String getLastChapterAndLevel(User user) {
-        if (user == null || user.getUserProgress() == null) return "None";
-        UserProgress progress = user.getUserProgress();
-        Map<ChapterType, Integer> unlocked = progress.getUnlockedChaptersAndLevels();
-        if (unlocked == null || unlocked.isEmpty()) return "None";
-
-        ChapterType highestChapter = null;
-        int maxChapterNum = -1;
-
-        for (ChapterType ct : unlocked.keySet()) {
-            if (ct != ChapterType.MINI_GAME && ct.getChapterNumber() > maxChapterNum && unlocked.get(ct)>0) {
-                maxChapterNum = ct.getChapterNumber();
-                highestChapter = ct;
-            }
-        }
-
-        if (highestChapter == null) return "None";
-
-        int level = unlocked.getOrDefault(highestChapter, 1);
-        String formattedChapter = formatName(highestChapter.getName());
-        return formattedChapter + " - Lvl " + level;
-    }
-
-    private static String formatName(String rawName) {
-        if (rawName == null) return "Unknown";
-        String[] words = rawName.split("_|\\s+");
-        StringBuilder sb = new StringBuilder();
-        for (String w : words) {
-            if (!w.isEmpty()) {
-                sb.append(Character.toUpperCase(w.charAt(0)))
-                    .append(w.substring(1).toLowerCase())
-                    .append(" ");
-            }
-        }
-        return sb.toString().trim();
     }
 
     @Override

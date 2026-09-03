@@ -14,7 +14,7 @@ import java.util.HashSet;
 
 public class ProfessionalDemolisherQuest extends Quest {
     private final int required = 3;
-    private HashSet<String > explosivesUsed;
+    private final HashSet<String> explosivesUsed;
 
     public ProfessionalDemolisherQuest(String id, QuestCategory category, QuestPriority priority, boolean dailyReset, QuestPage page) {
         super(id, category, priority, dailyReset, page);
@@ -33,7 +33,7 @@ public class ProfessionalDemolisherQuest extends Quest {
     @Override
     public void check(Event event) {
         if (event instanceof ExplosiveUsedEvent) {
-            if(!explosivesUsed.contains(((ExplosiveUsedEvent) event).getPlantName())){
+            if (!explosivesUsed.contains(((ExplosiveUsedEvent) event).getPlantName())) {
                 incrementProgress(1);
                 explosivesUsed.add(((ExplosiveUsedEvent) event).getPlantName());
             }
