@@ -5,7 +5,7 @@ import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Entity;
 import com.test1.PlantsVsZombies.src.Model.PlantsAndZombies.Zombie;
 
 public class Eating implements Ability {
-    private static int SNORKEL_X_LIMIT = 1403;
+    private static int SNORKEL_X_LIMIT = 1556;
     private boolean isActivated = false;
 
     @Override
