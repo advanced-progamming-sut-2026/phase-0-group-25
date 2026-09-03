@@ -102,7 +102,6 @@ public class ExplosionWithLifespan implements Ability {
         if (plant.getPlantStats().getTags().contains("shoot")) {
             int bounce = (int) plant.getPlantStats().getAttributes().get("bounce");
             for (int i = 0; i < bounce; i++) {
-                //todo
                 Projectile projectile = new Projectile(plant, 50, 0, plant.getPosition(), 10, 1, 0, 0);
                 GAME.getProjectiles().add(projectile);
             }

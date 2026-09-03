@@ -8,7 +8,7 @@ import com.test1.PlantsVsZombies.src.Model.Tile;
 
 
 public class Moving implements Ability {
-    private static int SNORKEL_X_LIMIT = 1403;
+    private static int SNORKEL_X_LIMIT = 1556;
     private static int PIANO_ACTION_INTERVAL = 20;
     private GamePlay GAME = GamePlay.activeInstance;
 

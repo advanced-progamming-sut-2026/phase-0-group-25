@@ -134,7 +134,6 @@ public class Zombie extends Entity {
     public void update() {
         checkFreezeAndButter();
 
-        // System.out.println(this.zombieStats.getEatdps());
         if (this.isFrozen ||
             this.isButtered) {
             return;
